@@ -1,6 +1,6 @@
-# snap2flatpak
+# 2flatpak
 
-snap2flatpak converts snap manifests to flatpak manifests.
+2flatpak is a repository of scripts to generate flatpak manifests from different other build systems.
 
 ## Install
 
