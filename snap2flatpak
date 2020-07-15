@@ -3,11 +3,16 @@ import yaml
 import json
 import sys
 
-
 # Snapcraft top-level metadata
-# The top-level keys and values in snapcraft.yaml provide the snap build process, and the store, with the overarching details of a snap.
-# See Snapcraft app metadata and Snapcraft parts metadata for details on how apps and parts are configured within snapcraft.yaml.
-# Top-level details include a snap’s name, version and description, alongside operational values such as its confinement level and supported architecture.
+# See https://snapcraft.io/docs/snapcraft-yaml-reference for the full YAML reference.
+# TODO is https://snapcraft.io/docs/snapcraft-advanced-grammar relevant?
+# TODO is it worth it to download and use
+# https://github.com/snapcore/snapcraft/blob/master/schema/snapcraft.json ???
+# The top-level keys and values in snapcraft.yaml provide the snap build process, and the store,
+# with the overarching details of a snap. See Snapcraft app metadata and Snapcraft parts metadata for
+# details on how apps and parts are configured within snapcraft.yaml.
+# Top-level details include a snap’s name, version and description, alongside operational values
+# such as its confinement level and supported architecture.
 SNAP_MANIFEST_TOP_LEVEL_TAGS = [
     # Type: string (optional)
     # Incorporate external metadata via the referenced part.
