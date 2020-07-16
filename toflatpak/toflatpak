@@ -12,14 +12,13 @@ import snap
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(prog='2flatpak', description='')
-    parser.add_argument('--f --input-format', dest='input_format', choices=['snap', 'deb', 'pyproject'], required=True,
+    parser.add_argument('-f --input-format', dest='input_format', choices=['snap', 'deb', 'pyproject'], required=True,
                         help='The format of the input artifact.')
     # We support json and yaml because this is what Flatpak supports.
-    parser.add_argument('--o --output-format', dest='output_format', choices=['json', 'yaml'], default='yaml',
+    parser.add_argument('-o --output-format', dest='output_format', choices=['json', 'yaml'], default='yaml',
                         help='The format of the resulting flatpak manifest.')
+    parser.add_argument('-v', '--version', action='store_true', help="Print the current version number and exit.")
     args = parser.parse_args(sys.argv[1:])
-
-    # TODO use parser.print_help() if the help option is set.
 
     # Otherwise the format is JSON, as both formats are supported by Flatpak.
     format_is_yaml = True
