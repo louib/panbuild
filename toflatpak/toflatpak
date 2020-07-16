@@ -5,6 +5,7 @@ import json
 import sys
 import argparse
 
+from . import snap
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(prog='2flatpak', description='')
@@ -15,21 +16,26 @@ if __name__ == '__main__':
     parser.add_argument('--o --output-format', dest='output_format', action='store_string', default='yaml',
                         help='The format of the resulting flatpak manifest. Flatpak supports [json|yaml], and we default to yaml.')
     args = parser.parse_args(sys.argv)
-    # parser.print_help()
 
-    print('the output format is...', args.output_format)
+    # TODO use parser.print_help() if the help option is set.
 
     if len(sys.argv) < 2:
+        # TODO use parser.print_help()
         sys.stderr.write("Usage: snap2flatpak snapcraft.yaml [options]")
 
     # Otherwise the format is JSON, as both formats are supported by Flatpak.
     format_is_yaml = True
+    input_format = 'snap'
     print(dir(parser))
 
     input_path = sys.argv[1]
 
-    snap_manifest = yaml.load(open(input_path, 'r'))
     flatpak_manifest = {}
+    if input_format == 'snap':
+        flatpak_manifest = snap.to_flatpak(input_path)
+    else:
+        sys.stderr.write("{0} is not a valid input format! Available choices are [snap].".format(input_format))
+        sys.exit(1)
 
     if format_is_yaml:
         print(yaml.dump(

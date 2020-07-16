@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+import yaml
+import sys
+
 # TODO is it relevant ? https://snapcraft.io/docs/environment-variables
 
 # Snapcraft top-level metadata
@@ -350,6 +353,7 @@ SNAP_MANIFEST_APP_TAGS = [
     # Requires daemon to be set as the snap type.
     "timer",
 ]
+
 # The main building blocks of a snap are parts. They are used to declare pieces of code that will be pulled into your snap package. The parts keys and values in snapcraft.yaml detail how parts are configured and built by the snapcraft command.
 #
 # See Snapcraft top-level metadata and Snapcraft apps and services metadata for details on how apps and parts are configured within snapcraft.yaml.
@@ -588,6 +592,14 @@ SNAPCRAFT_PARTS_TAGS = [
 ]
 
 
-def to_flatpak():
+def to_flatpak(snap_manifest_path):
     flatpak_manifest = {}
+    snap_manifest = yaml.load(open(snap_manifest_path, 'r'))
+    print(snap_manifest)
+
+    for tag_name in snap_manifest:
+        if tag_name not in SNAP_MANIFEST_TOP_LEVEL_TAGS:
+            sys.stderr.write("{0} is not a valid snap top-level tag!".format(tag_name))
+            sys.exit(1)
+
     return flatpak_manifest
