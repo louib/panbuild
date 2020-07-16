@@ -1,12 +1,14 @@
+---
 app-id: net.louib.2flatpak
 runtime: org.gnome.Platform
-runtime-version: 3.38
+runtime-version: "3.38"
 sdk: org.gnome.Sdk
 command: gnome-clocks
 tags: []
 cleanup: []
 modules:
-  name: requests
+  -
+    name: requests
     buildsystem: simple
     build-commands:
       - pip3 install --prefix=/app --no-deps .
@@ -14,7 +16,8 @@ modules:
       - type: archive
         url: https://files.pythonhosted.org/packages/source/r/requests/requests-2.18.4.tar.gz
         sha256: 9c443e7324ba5b85070c4a818ade28bfabedf16ea10206da1132edaa6dda237e
-  name: 2flatpak
+  -
+    name: 2flatpak
     buildsystem: simple
     build-commands:
       - pip3 install --prefix=/app --no-deps .
