@@ -2,7 +2,8 @@ app-id: net.louib.toflatpak
 runtime: org.gnome.Platform
 runtime-version: "3.36"
 sdk: org.gnome.Sdk
-command: 2flatpak
+# FIXME this is not the correct command!
+command: yml2json
 tags: []
 cleanup: []
 modules:
