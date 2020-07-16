@@ -29,24 +29,14 @@ LICENSE = "???"
 PLATFORMS = "Any"
 URL = "https://github.com/louib/2flatpak"
 DOWNLOAD_URL = "https://github.com/louib/2flatpak/releases/"
+
+# See https://pypi.org/classifiers/ for the list of classifiers accepted
+# by PyPi
 CLASSIFIERS = [
-    # "Development Status :: 5 - Production/Stable",
-    # "Intended Audience :: Developers",
-    # "License :: OSI Approved :: MIT License",
-    # "Operating System :: OS Independent",
-    # "Programming Language :: Cython",
-    # "Programming Language :: Python",
-    # "Programming Language :: Python :: 2",
-    # "Programming Language :: Python :: 2.7",
-    # "Programming Language :: Python :: 3",
-    # "Programming Language :: Python :: 3.5",
-    # "Programming Language :: Python :: 3.6",
-    # "Programming Language :: Python :: 3.7",
-    # "Programming Language :: Python :: 3.8",
-    # "Programming Language :: Python :: Implementation :: CPython",
-    # "Programming Language :: Python :: Implementation :: PyPy",
-    # "Topic :: Software Development :: Libraries :: Python Modules",
-    # "Topic :: Text Processing :: Markup",
+    "License :: OSI Approved :: BSD License",
+    "Natural Language :: English",
+    "Operating System :: POSIX :: Linux ",
+    "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 
 
