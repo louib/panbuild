@@ -292,6 +292,7 @@ if __name__ == '__main__':
         # FIXME we should only have one script here: 2flatpak
         scripts=[
             'scripts/yml2json',
+            'toflatpak/toflatpak',
         ],
         # package_dir={'': {2: 'toflatpak', 3: 'toflatpak'}[sys.version_info[0]]},
         packages=['toflatpak'],
