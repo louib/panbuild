@@ -16,6 +16,8 @@ if __name__ == '__main__':
         prog='2flatpak',
         description='2flatpak generates flatpak manifests from other packaging systems.'
     )
+    # https://docs.python.org/3/library/argparse.html#the-add-argument-method
+    # For the add_argument reference.
     parser.add_argument('-f --input-file', dest='input_file', help='An input file to create a Flatpak manifest from.')
     parser.add_argument('--input-format', dest='input_format', choices=['snap', 'deb', 'pyproject'], required=True,
                         help='The format of the input artifact.')
