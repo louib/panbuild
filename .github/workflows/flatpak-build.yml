@@ -17,6 +17,8 @@ jobs:
       run: flatpak --version
     - name: printing flatpak-builder version
       run: flatpak-builder --version
+    - name: adding flathub repo
+      run: flatpak remote-add --if-not-exists --user flathub https://flathub.org/repo/flathub.flatpakrepo
     - name: installing the flatpak runtime
       run: flatpak install -y --user flathub org.gnome.Platform/x86_64/3.36
     - name: building the flatpak
