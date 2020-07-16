@@ -490,6 +490,8 @@ SNAPCRAFT_PARTS_TAGS = [
     #
     # Every part drives its build through a plugin, this entry declares the plugin that will drive the build process for <part-name>.
     # Refer to snapcraft plugins for more information on the available plugins and the specific attributes they add to the parts.<part-name>. namespace.
+    # See https://snapcraft.io/docs/supported-plugins for the available
+    # plugins.
     "plugin",
 
     # Type: multiline string
