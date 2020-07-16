@@ -289,6 +289,13 @@ if __name__ == '__main__':
         keywords=KEYWORDS,
         install_requires=INSTALL_REQUIRES,
 
+        # This is the only way I see to install a manpage from the setup.py
+        # script.
+        # See https://github.com/pypa/packaging-problems/issues/72 for
+        # details
+        # FIXME I'm not even sure this is working.
+        data_files=[('man/man1', ['manpages/2flatpak.1'])],
+
         # FIXME we should only have one script here: 2flatpak
         scripts=[
             'scripts/yml2json',
