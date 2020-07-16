@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 from os import listdir, system
 from os.path import isfile, join
 
-from toflatpak import snap_to_flatpak
+# FIXME fix that import.
+# from .toflatpak.toflatpak import snap_to_flatpak
 
+current_script_path = __file__
 
 # FIXME make this relative to the current script.
 FIXTURES_DIR = "tests/fixtures"
@@ -30,5 +33,5 @@ if __name__ == '__main__':
         test_case_name = fixtures_file[-4]
         fixture_body = open(path, 'r')
 
-        flatpak_manifest = snap_to_flatpak(fixture_body)
-        print(flatpak_manifest)
+        # flatpak_manifest = snap_to_flatpak(fixture_body)
+        # print(flatpak_manifest)
