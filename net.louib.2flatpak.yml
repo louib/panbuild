@@ -2,8 +2,7 @@ app-id: net.louib.toflatpak
 runtime: org.gnome.Platform
 runtime-version: "3.36"
 sdk: org.gnome.Sdk
-# TODO Can we have multiple commands? Is this just a test command?
-command: snap2flatpak
+command: 2flatpak
 tags: []
 cleanup: []
 modules:
