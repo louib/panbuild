@@ -275,7 +275,7 @@ if __name__ == '__main__':
             'scripts/snap2flatpak',
         ],
         package_dir={'': {2: 'lib', 3: 'lib3'}[sys.version_info[0]]},
-        packages=['yaml'],
+        packages=['2flatpak'],
 
         distclass=Distribution,
         cmdclass=cmdclass,
