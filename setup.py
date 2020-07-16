@@ -62,7 +62,7 @@ if 'sdist' in sys.argv:
     with_cython = True
 try:
     from Cython.Distutils.extension import Extension as _Extension
-    from Cython.Distutils import build_ext as _build_ext  # noqa: W0404
+    from Cython.Distutils import build_ext as _build_ext  # noqa: F811
     with_cython = True
 except ImportError:
     if with_cython:
