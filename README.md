@@ -1,4 +1,5 @@
 # 2flatpak
+![GitHub CI badge](https://github.com/louib/2flatpak/workflows/pep8/badge.svg)
 
 2flatpak is a repository of scripts to generate flatpak manifests from other build systems.
 
