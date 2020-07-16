@@ -16,6 +16,8 @@ from distutils.errors import DistutilsError,\
     DistutilsPlatformError
 
 
+# The name is 2flatpak even though the directory layer does not allow a number
+# as the first character
 NAME = '2flatpak'
 VERSION = '0.0.1'
 DESCRIPTION = """
@@ -281,11 +283,10 @@ if __name__ == '__main__':
 
         # FIXME we should only have one script here: 2flatpak
         scripts=[
-            'src/snap2flatpak',
-            'src/yml2json',
+            'scripts/yml2json',
         ],
-        # package_dir={'': {2: 'src', 3: 'src'}[sys.version_info[0]]},
-        # packages=['2flatpak'],
+        package_dir={'': {2: 'toflatpak', 3: 'toflatpak'}[sys.version_info[0]]},
+        packages=['toflatpak'],
 
         distclass=Distribution,
         cmdclass=cmdclass,
