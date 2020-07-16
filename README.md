@@ -5,7 +5,7 @@
 ![Flatpak-install CI job status](https://github.com/louib/2flatpak/workflows/flatpak-install/badge.svg)
 [![GitHub release](https://img.shields.io/github/license/louib/2flatpak)](https://github.com/louib/2flatpak/blob/master/LICENSE)
 
-2flatpak is a repository of scripts to generate flatpak manifests from other build systems.
+2flatpak generates flatpak manifests from other packaging systems.
 
 ## Install
 
