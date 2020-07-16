@@ -15,5 +15,9 @@ jobs:
       run: sudo apt-get install -y python3 python3-pip
     - name: installing flake8 linter
       run: sudo pip3 install flake8
-    - name: running linter on python files
+    - name: running linter on the python script files
       run: flake8 scripts/
+    # - name: running linter on the python source files
+      # run: flake8 src/
+    - name: running linter on the setup.py file
+      run: flake8 setup.py
