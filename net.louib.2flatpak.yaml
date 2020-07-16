@@ -1,5 +1,5 @@
 ---
-app-id: net.louib.2flatpak
+app-id: net.louib.toflatpak
 runtime: org.gnome.Platform
 runtime-version: "3.36"
 sdk: org.gnome.Sdk
@@ -15,7 +15,7 @@ modules:
     sources:
       - type: archive
         url: https://files.pythonhosted.org/packages/64/c2/b80047c7ac2478f9501676c988a5411ed5572f35d1beff9cae07d321512c/PyYAML-5.3.1.tar.gz
-        sha256: 9c443e7324ba5b85070c4a818ade28bfabedf16ea10206da1132edaa6dda237e
+        sha256: b8eac752c5e14d3eca0e6dd9199cd627518cb5ec06add0de9d32baeee6fe645d
   -
     name: 2flatpak
     buildsystem: simple
@@ -23,5 +23,5 @@ modules:
       - pip3 install --prefix=/app --no-deps .
     sources:
       - type: git
-        url: git@github.com:louib/2flatpak.git
+        url: https://github.com/louib/2flatpak.git
         branch: master
