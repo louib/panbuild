@@ -1,0 +1,17 @@
+name: flatpak-install
+
+on: [push, pull_request]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: updating available system dependencies
+      run: sudo apt-get update
+    - name: installing flatpak
+      run: sudo apt-get install -y flatpak
+    - name: adding flathub repo
+      run: flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
