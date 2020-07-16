@@ -24,4 +24,4 @@ jobs:
     - name: converting manifest to JSON
       run: python3 scripts/yml2json net.louib.2flatpak.yml > net.louib.2flatpak.json
     - name: building the flatpak
-      run: flatpak-builder --force-clean build net.louib.2flatpak.json
+      run: flatpak-builder --user --force-clean build net.louib.2flatpak.json
