@@ -16,6 +16,8 @@ from distutils.errors import DistutilsError,\
     DistutilsPlatformError
 
 
+# The name is 2flatpak even though the directory layer does not allow a number
+# as the first character
 NAME = '2flatpak'
 VERSION = '0.0.1'
 DESCRIPTION = """
@@ -25,28 +27,30 @@ LONG_DESCRIPTION = """
 """
 AUTHOR = "louib"
 AUTHOR_EMAIL = 'code@louib.net'
-LICENSE = "???"
+LICENSE = "BSD-3"
 PLATFORMS = "Any"
+KEYWORDS = [
+    "flatpak",
+    "snap",
+    "package-manager",
+    "package",
+    "packages",
+    "manifest",
+    "snapcraft",
+]
+INSTALL_REQUIRES = [
+    'PyYaml',
+]
 URL = "https://github.com/louib/2flatpak"
 DOWNLOAD_URL = "https://github.com/louib/2flatpak/releases/"
+
+# See https://pypi.org/classifiers/ for the list of classifiers accepted
+# by PyPi
 CLASSIFIERS = [
-    # "Development Status :: 5 - Production/Stable",
-    # "Intended Audience :: Developers",
-    # "License :: OSI Approved :: MIT License",
-    # "Operating System :: OS Independent",
-    # "Programming Language :: Cython",
-    # "Programming Language :: Python",
-    # "Programming Language :: Python :: 2",
-    # "Programming Language :: Python :: 2.7",
-    # "Programming Language :: Python :: 3",
-    # "Programming Language :: Python :: 3.5",
-    # "Programming Language :: Python :: 3.6",
-    # "Programming Language :: Python :: 3.7",
-    # "Programming Language :: Python :: 3.8",
-    # "Programming Language :: Python :: Implementation :: CPython",
-    # "Programming Language :: Python :: Implementation :: PyPy",
-    # "Topic :: Software Development :: Libraries :: Python Modules",
-    # "Topic :: Text Processing :: Markup",
+    "License :: OSI Approved :: BSD License",
+    "Natural Language :: English",
+    "Operating System :: POSIX :: Linux ",
+    "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 
 
@@ -282,14 +286,15 @@ if __name__ == '__main__':
         url=URL,
         download_url=DOWNLOAD_URL,
         classifiers=CLASSIFIERS,
+        keywords=KEYWORDS,
+        install_requires=INSTALL_REQUIRES,
 
         # FIXME we should only have one script here: 2flatpak
         scripts=[
-            'src/snap2flatpak',
-            'src/yml2json',
+            'scripts/yml2json',
         ],
-        # package_dir={'': {2: 'src', 3: 'src'}[sys.version_info[0]]},
-        # packages=['2flatpak'],
+        package_dir={'': {2: 'toflatpak', 3: 'toflatpak'}[sys.version_info[0]]},
+        packages=['toflatpak'],
 
         distclass=Distribution,
         cmdclass=cmdclass,

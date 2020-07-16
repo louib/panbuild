@@ -2,3 +2,4 @@
 build/
 .coverage
 htmlcov/
+net.louib.2flatpak.json

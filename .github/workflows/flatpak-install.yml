@@ -13,5 +13,7 @@ jobs:
       run: sudo apt-get update
     - name: installing flatpak
       run: sudo apt-get install -y flatpak
+    - name: printing flatpak version
+      run: flatpak --version
     - name: adding flathub repo
       run: flatpak remote-add --if-not-exists --user flathub https://flathub.org/repo/flathub.flatpakrepo

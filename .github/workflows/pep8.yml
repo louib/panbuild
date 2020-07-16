@@ -13,13 +13,17 @@ jobs:
       run: sudo apt-get update
     - name: installing system dependencies
       run: sudo apt-get install -y python3 python3-pip
+    - name: printing python version
+      run: python3 --version
+    - name: printing pip version
+      run: pip3 --version
     - name: installing flake8 linter
       run: sudo pip3 install flake8
     - name: running linter on the python source files
-      run: flake8 --max-line-length=120 src/
+      run: flake8 --ignore=E501 --max-line-length=120 toflatpak/
     - name: running linter on the python test files
       run: flake8 --max-line-length=120 tests/
-    # - name: running linter on the python script files
-      # run: flake8 --max-line-length=120 scripts/
+    - name: running linter on the python script files
+      run: flake8 --max-line-length=120 scripts/
     - name: running linter on the setup.py file
       run: flake8 --max-line-length=120 setup.py

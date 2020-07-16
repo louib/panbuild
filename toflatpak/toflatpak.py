@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 import yaml
 import json
 import sys
+import argparse
+
 
 # TODO is it relevant ? https://snapcraft.io/docs/environment-variables
 
@@ -590,14 +593,31 @@ SNAPCRAFT_PARTS_TAGS = [
     "stage-snaps",
 ]
 
+
+def snap_to_flatpak():
+
+    ...
+
+
 if __name__ == '__main__':
-    # TODO add argument parsing stuff.
+    parser = argparse.ArgumentParser(prog='2flatpak', description='')
+    parser.add_argument('integers', metavar='N', type=int, nargs='+',
+                        help='an integer for the accumulator')
+    parser.add_argument('--f --input-format', dest='input_format', action='store_string',
+                        help='The format of the input artifact. Currently only [snap] supported')
+    parser.add_argument('--o --output-format', dest='output_format', action='store_string', default='yaml',
+                        help='The format of the resulting flatpak manifest. Flatpak supports [json|yaml], and we default to yaml.')
+    args = parser.parse_args(sys.argv)
+    # parser.print_help()
+
+    print('the output format is...', args.output_format)
 
     if len(sys.argv) < 2:
         sys.stderr.write("Usage: snap2flatpak snapcraft.yaml [options]")
 
     # Otherwise the format is JSON, as both formats are supported by Flatpak.
     format_is_yaml = True
+    print(dir(parser))
 
     input_path = sys.argv[1]
 
