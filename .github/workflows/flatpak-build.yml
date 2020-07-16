@@ -21,5 +21,7 @@ jobs:
       run: flatpak remote-add --if-not-exists --user flathub https://flathub.org/repo/flathub.flatpakrepo
     - name: installing the flatpak runtime
       run: flatpak install -y --user flathub org.gnome.Platform/x86_64/3.36
+    - name: converting manifest to JSON
+      run: python3 scripts/yml2json net.louib.2flatpak.yml > net.louib.2flatpak.json
     - name: building the flatpak
-      run: flatpak-builder --force-clean build net.louib.2flatpak.yml
+      run: flatpak-builder --force-clean build net.louib.2flatpak.json

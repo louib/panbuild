@@ -3,6 +3,8 @@ import yaml
 import json
 import sys
 
+# TODO is it relevant ? https://snapcraft.io/docs/environment-variables
+
 # Snapcraft top-level metadata
 # See https://snapcraft.io/docs/snapcraft-yaml-reference for the full YAML reference.
 # TODO is https://snapcraft.io/docs/snapcraft-advanced-grammar relevant?
