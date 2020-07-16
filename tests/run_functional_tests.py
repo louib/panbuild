@@ -2,7 +2,7 @@
 from os import listdir, system
 from os.path import isfile, join
 
-from .src import snap2flatpak
+from toflatpak import snap_to_flatpak
 
 
 # FIXME make this relative to the current script.
@@ -30,5 +30,5 @@ if __name__ == '__main__':
         test_case_name = fixtures_file[-4]
         fixture_body = open(path, 'r')
 
-        converted = snap2flatpak(fixture_body)
-        # Call convert method from the src module
+        flatpak_manifest = snap_to_flatpak(fixture_body)
+        print(flatpak_manifest)
