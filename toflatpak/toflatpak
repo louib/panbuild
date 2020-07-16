@@ -28,13 +28,13 @@ if __name__ == '__main__':
     args = parser.parse_args(sys.argv[1:])
 
     # Otherwise the format is JSON, as both formats are supported by Flatpak.
-    format_is_yaml = parser.output_format == 'yaml'
+    format = args.output_format
+
     input_format = args.input_format
 
     input_content = None
-    if len(args) > 1:
-        input_path = sys.argv[1]
-        input_content = open(input_path, 'r')
+    if args.input_file:
+        input_content = open(args.input_file, 'r')
         # I'm so sure I have to do something about the encoding...
     else:
         input_content = ''
@@ -48,7 +48,7 @@ if __name__ == '__main__':
         sys.stderr.write("{0} is not a valid input format! Available choices are [snap].".format(input_format))
         sys.exit(1)
 
-    if format_is_yaml:
+    if format == 'yaml':
         print(yaml.dump(
             flatpak_manifest,
             default_flow_style=False,

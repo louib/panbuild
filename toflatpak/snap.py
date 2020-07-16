@@ -592,9 +592,9 @@ SNAPCRAFT_PARTS_TAGS = [
 ]
 
 
-def to_flatpak(snap_manifest_path):
+def to_flatpak(snap_manifest):
     flatpak_manifest = {}
-    snap_manifest = yaml.load(open(snap_manifest_path, 'r'))
+    snap_manifest = yaml.load(snap_manifest)
     print(snap_manifest)
 
     for tag_name in snap_manifest:
