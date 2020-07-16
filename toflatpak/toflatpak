@@ -12,7 +12,10 @@ import snap
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(prog='2flatpak', description='')
+    parser = argparse.ArgumentParser(
+        prog='2flatpak',
+        description='2flatpak generates flatpak manifests from other packaging systems.'
+    )
     parser.add_argument('-f --input-file', dest='input_file', help='An input file to create a Flatpak manifest from.')
     parser.add_argument('--input-format', dest='input_format', choices=['snap', 'deb', 'pyproject'], required=True,
                         help='The format of the input artifact.')
