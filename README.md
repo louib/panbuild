@@ -20,7 +20,7 @@ pip3 install -r requirements.txt
 
 ## Building the flatpak
 ```
-flatpak-builder --force-clean build net.louib.2flatpak.yaml
+flatpak-builder --force-clean build net.louib.2flatpak.yml
 ```
 
 ## Other related tools
