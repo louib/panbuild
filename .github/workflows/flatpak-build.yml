@@ -1,4 +1,4 @@
-name: pep8
+name: flatpak-build
 
 on: [push, pull_request]
 
