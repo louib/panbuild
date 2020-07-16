@@ -293,7 +293,7 @@ if __name__ == '__main__':
         scripts=[
             'scripts/yml2json',
         ],
-        package_dir={'': {2: 'toflatpak', 3: 'toflatpak'}[sys.version_info[0]]},
+        # package_dir={'': {2: 'toflatpak', 3: 'toflatpak'}[sys.version_info[0]]},
         packages=['toflatpak'],
 
         distclass=Distribution,
