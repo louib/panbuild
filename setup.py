@@ -1,3 +1,16 @@
+import sys
+import os.path
+import platform
+import warnings
+
+from distutils import log
+from distutils.core import setup, Command
+from distutils.core import Distribution as _Distribution
+from distutils.command.build_ext import build_ext as _build_ext
+from distutils.command.bdist_rpm import bdist_rpm as _bdist_rpm
+from distutils.errors import DistutilsError, CompileError, LinkError, DistutilsPlatformError
+
+
 NAME = '2flatpak'
 VERSION = '0.0.1'
 DESCRIPTION = "2flatpak is a repository of scripts to generate flatpak manifests from other build systems."
@@ -29,16 +42,6 @@ CLASSIFIERS = [
     # "Topic :: Text Processing :: Markup",
 ]
 
-
-import sys, os.path, platform, warnings
-
-from distutils import log
-from distutils.core import setup, Command
-from distutils.core import Distribution as _Distribution
-from distutils.core import Extension as _Extension
-from distutils.command.build_ext import build_ext as _build_ext
-from distutils.command.bdist_rpm import bdist_rpm as _bdist_rpm
-from distutils.errors import DistutilsError, CompileError, LinkError, DistutilsPlatformError
 
 if 'setuptools.extension' in sys.modules:
     _Extension = sys.modules['setuptools.extension']._Extension
@@ -76,6 +79,7 @@ windows_ignore_warnings = [
 if platform.system() == 'Windows':
     for w in windows_ignore_warnings:
         warnings.filterwarnings('ignore', w)
+
 
 class Distribution(_Distribution):
 
@@ -120,8 +124,9 @@ class Distribution(_Distribution):
 
 class Extension(_Extension):
 
-    def __init__(self, name, sources, feature_name, feature_description,
-            feature_check, **kwds):
+    def __init__(
+        self, name, sources, feature_name, feature_description, feature_check, **kwds
+    ):
         if not with_cython:
             for filename in sources[:]:
                 base, ext = os.path.splitext(filename)
