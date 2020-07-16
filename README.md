@@ -16,6 +16,14 @@ source env/bin/activate
 pip3 install -r requirements.txt
 ```
 
+## Building the flatpak
+```
+flatpak-builder --force-clean build net.louib.2flatpak
+```
+
+## Other related tools
+* https://github.com/flatpak/flatpak-builder-tools
+
 ## License
 
 ??

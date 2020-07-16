@@ -8,10 +8,10 @@ tags: []
 cleanup: []
 modules:
   -
-    name: pyyaml
+    name: PyYAML
     buildsystem: simple
     build-commands:
-      - pip3 install --exists-action=i --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} \"pyyaml\"
+      - pip3 install --exists-action=i --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} \"PyYAML\"
     sources:
       - type: archive
         url: https://files.pythonhosted.org/packages/64/c2/b80047c7ac2478f9501676c988a5411ed5572f35d1beff9cae07d321512c/PyYAML-5.3.1.tar.gz
