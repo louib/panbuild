@@ -29,10 +29,18 @@ AUTHOR = "louib"
 AUTHOR_EMAIL = 'code@louib.net'
 LICENSE = "BSD-3"
 PLATFORMS = "Any"
-KEYWORDS = ['', 'MEANINGFULL', 'KEYWORDS'],
+KEYWORDS = [
+    "flatpak",
+    "snap",
+    "package-manager",
+    "package",
+    "packages",
+    "manifest",
+    "snapcraft",
+]
 INSTALL_REQUIRES = [
     'PyYaml',
-],
+]
 URL = "https://github.com/louib/2flatpak"
 DOWNLOAD_URL = "https://github.com/louib/2flatpak/releases/"
 
