@@ -30,4 +30,4 @@ flatpak-builder --force-clean build net.louib.2flatpak.yml
 
 ## License
 
-??
+BSD-3
