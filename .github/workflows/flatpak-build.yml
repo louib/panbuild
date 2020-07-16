@@ -14,8 +14,8 @@ jobs:
     - name: installing flatpak and flatpak-builder
       run: sudo apt-get install -y flatpak flatpak-builder
     - name: printing flatpak version
-      run: flatpak -v
+      run: flatpak --version
     - name: printing flatpak-builder version
-      run: flatpak-builder -v
+      run: flatpak-builder --version
     - name: building the flatpak
       run: flatpak-builder --force-clean build net.louib.2flatpak.yml
