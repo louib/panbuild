@@ -1,20 +1,20 @@
 ---
 app-id: net.louib.2flatpak
 runtime: org.gnome.Platform
-runtime-version: "3.38"
+runtime-version: "3.36"
 sdk: org.gnome.Sdk
 command: gnome-clocks
 tags: []
 cleanup: []
 modules:
   -
-    name: requests
+    name: pyyaml
     buildsystem: simple
     build-commands:
       - pip3 install --prefix=/app --no-deps .
     sources:
       - type: archive
-        url: https://files.pythonhosted.org/packages/source/r/requests/requests-2.18.4.tar.gz
+        url: https://files.pythonhosted.org/packages/64/c2/b80047c7ac2478f9501676c988a5411ed5572f35d1beff9cae07d321512c/PyYAML-5.3.1.tar.gz
         sha256: 9c443e7324ba5b85070c4a818ade28bfabedf16ea10206da1132edaa6dda237e
   -
     name: 2flatpak
