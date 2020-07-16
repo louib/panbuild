@@ -25,8 +25,12 @@ LONG_DESCRIPTION = """
 """
 AUTHOR = "louib"
 AUTHOR_EMAIL = 'code@louib.net'
-LICENSE = "???"
+LICENSE = "BSD-3"
 PLATFORMS = "Any"
+KEYWORDS = ['', 'MEANINGFULL', 'KEYWORDS'],
+INSTALL_REQUIRES = [
+    'PyYaml',
+],
 URL = "https://github.com/louib/2flatpak"
 DOWNLOAD_URL = "https://github.com/louib/2flatpak/releases/"
 
@@ -272,6 +276,8 @@ if __name__ == '__main__':
         url=URL,
         download_url=DOWNLOAD_URL,
         classifiers=CLASSIFIERS,
+        keywords=KEYWORDS,
+        install_requires=INSTALL_REQUIRES,
 
         # FIXME we should only have one script here: 2flatpak
         scripts=[
