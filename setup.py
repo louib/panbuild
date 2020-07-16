@@ -283,8 +283,10 @@ if __name__ == '__main__':
         download_url=DOWNLOAD_URL,
         classifiers=CLASSIFIERS,
 
+        # FIXME we should only have one script here: 2flatpak
         scripts=[
-            'scripts/snap2flatpak',
+            'src/snap2flatpak',
+            'src/yml2json',
         ],
         # package_dir={'': {2: 'src', 3: 'src'}[sys.version_info[0]]},
         # packages=['2flatpak'],

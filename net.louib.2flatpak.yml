@@ -11,12 +11,20 @@ modules:
     name: PyYAML
     buildsystem: simple
     build-commands:
-      # - pip3 install --exists-action=i --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} \"PyYAML\"
       - pip3 install --prefix=/app --no-deps .
     sources:
       - type: archive
         url: https://files.pythonhosted.org/packages/64/c2/b80047c7ac2478f9501676c988a5411ed5572f35d1beff9cae07d321512c/PyYAML-5.3.1.tar.gz
         sha256: b8eac752c5e14d3eca0e6dd9199cd627518cb5ec06add0de9d32baeee6fe645d
+  -
+    name: coverage-badge
+    buildsystem: simple
+    build-commands:
+      - pip3 install --prefix=/app --no-deps .
+    sources:
+      - type: archive
+        url: https://files.pythonhosted.org/packages/95/5c/2a63322cc0211c41e8cb2bd7c7d7b183871fe5a9f5239d71d531002fac91/coverage-badge-1.0.1.tar.gz
+        sha256: 142fd121f3bd14956aff3c45bff6f8bc37bd74c6350626a950ebb6accb24276e
   -
     name: 2flatpak
     buildsystem: simple
