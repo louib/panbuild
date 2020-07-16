@@ -1,7 +1,8 @@
 # 2flatpak
-![PEP8 CI Job](https://github.com/louib/2flatpak/workflows/pep8/badge.svg)
-![Flatpak-build CI job](https://github.com/louib/2flatpak/workflows/flatpak-build/badge.svg)
-![Flatpak-install CI job](https://github.com/louib/2flatpak/workflows/flatpak-install/badge.svg)
+![Functional tests status](https://github.com/louib/2flatpak/workflows/tests/badge.svg)
+![PEP8 CI job status](https://github.com/louib/2flatpak/workflows/pep8/badge.svg)
+![Flatpak-build CI job status](https://github.com/louib/2flatpak/workflows/flatpak-build/badge.svg)
+![Flatpak-install CI job status](https://github.com/louib/2flatpak/workflows/flatpak-install/badge.svg)
 [![GitHub release](https://img.shields.io/github/license/louib/2flatpak)](https://github.com/louib/2flatpak/blob/master/LICENSE)
 
 2flatpak is a repository of scripts to generate flatpak manifests from other build systems.

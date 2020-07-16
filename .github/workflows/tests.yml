@@ -1,0 +1,27 @@
+name: tests
+
+on: [push, pull_request]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: updating available system dependencies
+      run: sudo apt-get update
+    - name: installing various utils
+      run: sudo apt-get install -y flatpak flatpak-builder shellcheck
+    - name: printing flatpak version
+      run: flatpak --version
+    - name: printing flatpak-builder version
+      run: flatpak-builder --version
+    - name: printing shellcheck version
+      run: shellcheck --version
+    - name: printing shellcheck version
+      run: shellcheck --version
+    - name: running shellcheck on shell files
+      run: shellcheck tests/*.sh
+    - name: run the functional tests
+      run: bash tests/run_functional_tests.sh

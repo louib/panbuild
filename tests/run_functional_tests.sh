@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-FIXTURES_DIRS="./fixtures/"
+FIXTURES_DIR="./fixtures/"
 
 echo "🔍 Starting functional test suite for 2flatpak."
 fixtures_files=$(find "$FIXTURES_DIR")
