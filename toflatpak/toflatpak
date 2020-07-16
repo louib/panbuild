@@ -5,7 +5,8 @@ import json
 import sys
 import argparse
 
-from . import snap
+# Local imports
+from toflatpak import snap
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(prog='2flatpak', description='')
