@@ -1,4 +1,3 @@
----
 app-id: net.louib.toflatpak
 runtime: org.gnome.Platform
 runtime-version: "3.36"
