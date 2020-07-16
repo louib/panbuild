@@ -588,6 +588,6 @@ SNAPCRAFT_PARTS_TAGS = [
 ]
 
 
-def snap_to_flatpak():
-
-    ...
+def to_flatpak():
+    flatpak_manifest = {}
+    return flatpak_manifest

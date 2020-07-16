@@ -18,4 +18,4 @@ jobs:
     - name: printing flatpak-builder version
       run: flatpak-builder --version
     - name: run the functional tests
-      run: python3 tests/run_functional_tests.py
+      run: flatpak-builder --run build net.louib.2flatpak.yml python3 tests/run_functional_tests.py
