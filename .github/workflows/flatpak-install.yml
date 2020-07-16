@@ -14,4 +14,4 @@ jobs:
     - name: installing flatpak
       run: sudo apt-get install -y flatpak
     - name: adding flathub repo
-      run: flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+      run: flatpak remote-add --if-not-exists --user flathub https://flathub.org/repo/flathub.flatpakrepo
