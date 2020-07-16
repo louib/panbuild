@@ -35,6 +35,26 @@ modules:
         url: https://github.com/flathub/shared-modules.git
         branch: master
   -
+    name: flatpak-builder-tools
+    buildsystem: simple
+    build-commands:
+      - echo "Not installing the tools just yet."
+    sources:
+      - type: git
+        url: https://github.com/flatpak/flatpak-builder-tools.git
+        branch: master
+    modules:
+      -
+        name: requirements-parser
+        buildsystem: simple
+        build-commands:
+          - pip3 install --prefix=/app --no-deps .
+        sources:
+          - type: archive
+            url: https://files.pythonhosted.org/packages/03/80/eb6ba1dd0429089436e90e556db50884ea21da060b10f2e5668c4cac99da/requirements-parser-0.2.0.tar.gz
+            sha256: 5963ee895c2d05ae9f58d3fc641082fb38021618979d6a152b6b1398bd7d4ed4
+
+  -
     name: 2flatpak
     buildsystem: simple
     build-commands:
