@@ -19,5 +19,7 @@ jobs:
       run: flatpak-builder --version
     - name: converting manifest to JSON
       run: python3 scripts/yml2json net.louib.2flatpak.yml > net.louib.2flatpak.json
+    - name: building the flatpak
+      run: flatpak-builder --user --force-clean build net.louib.2flatpak.json
     - name: run the functional tests
       run: flatpak-builder --run build net.louib.2flatpak.json python3 tests/run_functional_tests.py
