@@ -10,9 +10,11 @@ import argparse
 # FIXME why no over flatpak directly?
 import snap
 
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(prog='2flatpak', description='')
-    parser.add_argument('-f --input-format', dest='input_format', choices=['snap', 'deb', 'pyproject'], required=True,
+    parser.add_argument('-f --input-file', dest='input_file', help='An input file to create a Flatpak manifest from.')
+    parser.add_argument('--input-format', dest='input_format', choices=['snap', 'deb', 'pyproject'], required=True,
                         help='The format of the input artifact.')
     # We support json and yaml because this is what Flatpak supports.
     parser.add_argument('-o --output-format', dest='output_format', choices=['json', 'yaml'], default='yaml',
