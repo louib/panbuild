@@ -600,7 +600,6 @@ if __name__ == '__main__':
     format_is_yaml = True
 
     input_path = sys.argv[1]
-    output_path = sys.argv[2]
 
     snap_manifest = yaml.load(open(input_path, 'r'))
     flatpak_manifest = {}
