@@ -1,0 +1,17 @@
+name: pep8
+
+on: [push, pull_request]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: updating available system dependencies
+      run: sudo apt-get update
+    - name: installing flatpak and flatpak-builder
+      run: sudo apt-get install -y flatpak flatpak-builder
+    - name: building the flatpak
+      run: flatpak-builder --force-clean build net.louib.2flatpak
