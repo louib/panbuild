@@ -7,6 +7,10 @@
 
 [2flatpak](https://github.com/louib/2flatpak) generates flatpak manifests from other packaging systems.
 
+The currently supported packaging systems are:
+* snap;
+* debian packages (via debian `control` files).
+
 ## Install
 
 ## Python3 virtual env
