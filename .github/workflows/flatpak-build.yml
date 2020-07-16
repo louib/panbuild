@@ -18,6 +18,6 @@ jobs:
     - name: printing flatpak-builder version
       run: flatpak-builder --version
     - name: installing the flatpak runtime
-      run: flatpak install -y --user org.gnome.Platform/x86_64/3.36
+      run: flatpak install -y --user flathub org.gnome.Platform/x86_64/3.36
     - name: building the flatpak
       run: flatpak-builder --force-clean build net.louib.2flatpak.yml
