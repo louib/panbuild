@@ -38,7 +38,9 @@ modules:
     name: flatpak-builder-tools
     buildsystem: simple
     build-commands:
-      - echo "Not installing the tools just yet."
+      - echo "What do?"
+      # Is /app/bin the place for that?
+      - install "pip/flatpak-pip-generator" /app/bin/
     sources:
       - type: git
         url: https://github.com/flatpak/flatpak-builder-tools.git
