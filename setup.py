@@ -1,3 +1,5 @@
+# See https://docs.python.org/3/distutils/setupscript.html
+# For documentation on the setup.py script.
 import sys
 import os.path
 import platform
@@ -55,7 +57,7 @@ if 'sdist' in sys.argv:
     with_cython = True
 try:
     from Cython.Distutils.extension import Extension as _Extension
-    from Cython.Distutils import build_ext as _build_ext
+    from Cython.Distutils import build_ext as _build_ext  # noqa: W0404
     with_cython = True
 except ImportError:
     if with_cython:
