@@ -16,10 +16,10 @@ jobs:
     - name: installing flake8 linter
       run: sudo pip3 install flake8
     - name: running linter on the python source files
-      run: flake8 src/
+      run: flake8 --max-line-length=120 src/
     - name: running linter on the python test files
-      run: flake8 tests/
+      run: flake8 --max-line-length=120 tests/
     # - name: running linter on the python script files
-      # run: flake8 scripts/
+      # run: flake8 --max-line-length=120 scripts/
     - name: running linter on the setup.py file
       run: flake8 --max-line-length=120 setup.py
