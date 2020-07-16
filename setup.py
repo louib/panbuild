@@ -10,14 +10,19 @@ from distutils.core import setup, Command
 from distutils.core import Distribution as _Distribution
 from distutils.command.build_ext import build_ext as _build_ext
 from distutils.command.bdist_rpm import bdist_rpm as _bdist_rpm
-from distutils.errors import DistutilsError, CompileError, LinkError, DistutilsPlatformError
+from distutils.errors import DistutilsError,\
+    CompileError,\
+    LinkError,\
+    DistutilsPlatformError
 
 
 NAME = '2flatpak'
 VERSION = '0.0.1'
-DESCRIPTION = "2flatpak is a repository of scripts to generate flatpak manifests from other build systems."
-LONG_DESCRIPTION = """\
-."""
+DESCRIPTION = """
+flatpak is a repository of scripts to generate flatpak manifests from other build systems.
+"""
+LONG_DESCRIPTION = """
+"""
 AUTHOR = "louib"
 AUTHOR_EMAIL = 'code@louib.net'
 LICENSE = "???"

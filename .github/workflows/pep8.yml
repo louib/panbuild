@@ -20,4 +20,4 @@ jobs:
     # - name: running linter on the python source files
       # run: flake8 src/
     - name: running linter on the setup.py file
-      run: flake8 setup.py
+      run: flake8 --max-line-length=120 setup.py
