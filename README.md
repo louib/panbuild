@@ -9,20 +9,15 @@
 
 The currently supported packaging systems are:
 * snap;
-* debian packages (via debian `control` files).
+* debian packages (via debian `control` files);
+* pip (via requirements.txt and pyproject.toml).
 
 ## Install
 
-## Python3 virtual env
-Make sure you have your Python stuff installed.
 ```
-sudo apt-get install python3 python3-pip python3-virtualenv
-```
-
-```
-python3 -m venv env
-source env/bin/activate
-pip3 install -r requirements.txt
+# Make sure you have flathub installed.
+# This is not working yet.
+flatpak install net.louib.2flatpak
 ```
 
 ## Building the flatpak
