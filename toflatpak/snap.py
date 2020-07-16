@@ -182,6 +182,13 @@ SNAP_MANIFEST_TOP_LEVEL_TAGS = [
     # A set of slots that the snap provides, applied to all the apps.
     "slots",
 ]
+SNAP_MANIFEST_TOP_LEVEL_REQUIRED_TAGS = [
+    "description",
+    "grade",
+    "name",
+    "summary",
+    "version",
+]
 
 # TODO: handle plugs attribute
 # plugs.<plug-name>
@@ -592,14 +599,24 @@ SNAPCRAFT_PARTS_TAGS = [
 ]
 
 
+# See `man flatpak-manifest` for the flatpak manifest specs.
 def to_flatpak(snap_manifest):
     flatpak_manifest = {}
     snap_manifest = yaml.load(snap_manifest)
-    print(snap_manifest)
+
+    for required_tag_name in SNAP_MANIFEST_TOP_LEVEL_REQUIRED_TAGS:
+        if required_tag_name not in snap_manifest:
+            sys.stderr.write("{0} required field not found in snap manifest!".format(required_tag_name))
+            sys.exit(1)
 
     for tag_name in snap_manifest:
         if tag_name not in SNAP_MANIFEST_TOP_LEVEL_TAGS:
             sys.stderr.write("{0} is not a valid snap top-level tag!".format(tag_name))
             sys.exit(1)
 
+    flatpak_manifest['app-id'] = snap_manifest['name']
+    # TODO description handle the description
+    # TODO description handle the grade
+    # TODO description handle the summary
+    # TODO description handle the version
     return flatpak_manifest

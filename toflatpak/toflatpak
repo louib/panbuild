@@ -28,7 +28,7 @@ if __name__ == '__main__':
     args = parser.parse_args(sys.argv[1:])
 
     # Otherwise the format is JSON, as both formats are supported by Flatpak.
-    format = args.output_format
+    output_format = args.output_format
 
     input_format = args.input_format
 
@@ -48,17 +48,20 @@ if __name__ == '__main__':
         sys.stderr.write("{0} is not a valid input format! Available choices are [snap].".format(input_format))
         sys.exit(1)
 
-    if format == 'yaml':
+    if output_format == 'yaml':
         print(yaml.dump(
             flatpak_manifest,
             default_flow_style=False,
             explicit_start=True,
             allow_unicode=True,
         ))
-    else:
+    elif output_format == 'json':
         print(json.dump(
             flatpak_manifest,
             default_flow_style=False,
             explicit_start=True,
             allow_unicode=True,
         ))
+    else:
+        sys.stderr.write("{0} is not a valid output format.".format(output_format))
+        sys.exit(1)
