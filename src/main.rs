@@ -8,6 +8,7 @@ use std::fs;
 use std::path;
 
 mod manifest;
+mod snap;
 
 fn main() {
     let matches = App::new("panbuild")
