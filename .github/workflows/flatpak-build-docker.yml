@@ -5,7 +5,7 @@ on: [push, pull_request]
 jobs:
   build:
 
-    runs-on: [self-hosted, linux]
+    runs-on: ubuntu-latest
 
     steps:
     - uses: louib/flatpak-action@v1
