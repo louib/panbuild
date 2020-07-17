@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: louib/flatpak-action@v1
+    - uses: louib/flatpak-action@1.0.0
     - name: updating available system dependencies
       run: sudo apt-get update
     - name: printing flatpak version
