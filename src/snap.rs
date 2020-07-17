@@ -1,0 +1,3 @@
+struct SnapManifest {
+    name: str
+}
