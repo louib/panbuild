@@ -10,6 +10,9 @@ runs:
 
 jobs:
   build:
+
+    runs-on: self-hosted
+
     steps:
     - uses: actions/checkout@v1
     - name: updating available system dependencies
