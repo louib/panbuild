@@ -599,7 +599,6 @@ SNAPCRAFT_PARTS_TAGS = [
 ]
 
 
-# See `man flatpak-manifest` for the flatpak manifest specs.
 def to_flatpak(snap_manifest):
     flatpak_manifest = {}
     snap_manifest = yaml.load(snap_manifest)
