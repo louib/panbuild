@@ -55,6 +55,35 @@ class FlatpakManifest:
     # boolean
     _build_extension = False
 
+    # base (string)
+    # Start with the files from the specified application.
+    # This can be used to create applications that extend another application.
+    _base = ""
+
+    # base-version (string)
+    # Use this specific version of the application specified in base. If unspecified, this uses the value specified in branch
+    _base_version = ""
+
+    # array of string
+    _base_extensions = []
+    # Install these extra extensions from the base application when
+    # initializing the application directory.
+
+    # array of strings
+    # Inherit these extra extensions points from the base application or sdk when finishing the build.
+    _inherit_extensions = []
+
+    # array of strings
+    # Inherit these extra extensions points from the base application or sdk when finishing the build, but do not inherit them into the platform.
+    _inherit_sdk_extensions = []
+
+    # array of strings
+    # Inherit these extra extensions points from the base application or sdk when finishing the build, but do not inherit them into the platform.
+    _build_options = []
+
+    # Add these tags to the metadata file.
+    # tags (array of strings)
+
     _modules = []
 
     def __init__(self, path):
