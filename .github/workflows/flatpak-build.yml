@@ -22,6 +22,6 @@ jobs:
     - name: installing the flatpak runtime and SDK
       run: flatpak install -y --user flathub org.gnome.Platform/x86_64/3.36 org.gnome.Sdk/x86_64/3.36
     - name: converting manifest to JSON
-      run: python3 scripts/yml2json net.louib.2flatpak.yml > net.louib.2flatpak.json
+      run: python3 scripts/yml2json net.louib.panbuild.yml > net.louib.panbuild.json
     - name: building the flatpak
-      run: flatpak-builder --user --force-clean build net.louib.2flatpak.json
+      run: flatpak-builder --user --force-clean build net.louib.panbuild.json

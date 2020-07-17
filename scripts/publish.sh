@@ -12,10 +12,9 @@ fi
 
 flatpak remote-add --user --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 flatpak install --user -y flathub org.gnome.Platform/x86_64/3.36 org.gnome.Sdk/x86_64/3.36
-python3 scripts/yml2json net.louib.2flatpak.yml > net.louib.2flatpak.json
-flatpak-builder --force-clean --user build net.louib.2flatpak.json
-flatpak-builder --user --run build net.louib.2flatpak.json python3 setup.py sdist
+flatpak-builder --force-clean --user build net.louib.panbuild.json
+flatpak-builder --user --run build net.louib.panbuild.json python3 setup.py sdist
 
-echo "📦 Published the new PyPi package."
+echo "📦 Published the new flatpak package."
 
 # TODO publish on flathub.
