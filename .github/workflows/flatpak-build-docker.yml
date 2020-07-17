@@ -2,11 +2,14 @@ name: flatpak-build
 
 on: [push, pull_request]
 
+runs:
+  using: docker
+  image: flatpak/flatpak-builder
+  args: []
+
+
 jobs:
   build:
-
-    runs-on: flatpak/flatpak-builder
-
     steps:
     - uses: actions/checkout@v1
     - name: updating available system dependencies
