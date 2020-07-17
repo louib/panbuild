@@ -9,7 +9,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
-    - name: updating available system dependencies
     - name: printing rust version
       run: rustc --version
     - name: printing cargo version
