@@ -3,8 +3,8 @@ name: flatpak-build
 on: [push, pull_request]
 
 runs:
-  using: docker
-  image: flatpak/flatpak-builder
+  using: 'docker'
+  image: "docker://flatpak:flatpak-builder"
   args: []
 
 
