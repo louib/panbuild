@@ -37,6 +37,7 @@ modules:
     buildsystem: simple
     build-commands:
       - mkdir -p /app/bin
+      - cargo build --bins
       - cargo install --path .
     sources:
       - type: git
