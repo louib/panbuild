@@ -9,6 +9,7 @@ use std::path;
 
 mod manifest;
 mod snap;
+mod flatpak;
 
 fn main() {
     let matches = App::new("panbuild")
