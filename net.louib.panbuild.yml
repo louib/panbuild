@@ -2,6 +2,8 @@ app-id: net.louib.panbuild
 runtime: org.gnome.Platform
 runtime-version: "3.36"
 sdk: org.gnome.Sdk
+sdk-extensions:
+  - org.freedesktop.Sdk.Extension.rust-stable
 command: panbuild
 tags: []
 cleanup: []
@@ -24,28 +26,6 @@ modules:
       - type: git
         url: https://github.com/flathub/shared-modules.git
         branch: master
-  -
-    name: flatpak-builder-tools
-    buildsystem: simple
-    build-commands:
-      - echo "What do?"
-      # Is /app/bin the place for that?
-      - install "pip/flatpak-pip-generator" /app/bin/
-    sources:
-      - type: git
-        url: https://github.com/flatpak/flatpak-builder-tools.git
-        branch: master
-    modules:
-      -
-        name: requirements-parser
-        buildsystem: simple
-        build-commands:
-          - pip3 install --prefix=/app --no-deps .
-        sources:
-          - type: archive
-            url: https://files.pythonhosted.org/packages/03/80/eb6ba1dd0429089436e90e556db50884ea21da060b10f2e5668c4cac99da/requirements-parser-0.2.0.tar.gz
-            sha256: 5963ee895c2d05ae9f58d3fc641082fb38021618979d6a152b6b1398bd7d4ed4
-
   -
     name: panbuild
     buildsystem: simple
