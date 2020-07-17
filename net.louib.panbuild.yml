@@ -4,6 +4,13 @@ runtime-version: "3.36"
 sdk: org.gnome.Sdk
 sdk-extensions:
   - org.freedesktop.Sdk.Extension.rust-stable
+build-options:
+  append-path: "/usr/lib/sdk/rust-stable/bin"
+  build-args:
+    - "--share=network"
+  env:
+    RUSTFLAGS: "--remap-path-prefix =../"
+    CARGO_HOME: "/run/build/pandoc/cargo"
 command: panbuild
 tags: []
 cleanup: []
@@ -30,7 +37,8 @@ modules:
     name: panbuild
     buildsystem: simple
     build-commands:
-      - cargo install
+      - mkdir -p /app/bin
+      - cargo install --path .
     sources:
       - type: git
         url: https://github.com/louib/panbuild.git
