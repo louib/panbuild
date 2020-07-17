@@ -1,11 +1,11 @@
-# panbuild
+# [panbuild](https://github.com/louib/panbuild)
 ![Functional tests status](https://github.com/louib/panbuild/workflows/tests/badge.svg)
 ![PEP8 CI job status](https://github.com/louib/panbuild/workflows/pep8/badge.svg)
 ![Flatpak-build CI job status](https://github.com/louib/panbuild/workflows/flatpak-build/badge.svg)
 ![Flatpak-install CI job status](https://github.com/louib/panbuild/workflows/flatpak-install/badge.svg)
 [![GitHub release](https://img.shields.io/github/license/louib/panbuild)](https://github.com/louib/panbuild/blob/master/LICENSE)
 
-[panbuild](https://github.com/louib/panbuild) The universal build manifest converter.
+The universal build manifest converter.
 
 The supported packaging systems are:
 * snap;
