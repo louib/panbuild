@@ -10,7 +10,7 @@ build-options:
     - "--share=network"
   env:
     RUSTFLAGS: "--remap-path-prefix =../"
-# command: panbuild
+command: panbuild
 tags: []
 cleanup: []
 modules:

@@ -1,0 +1,45 @@
+= panbuild(1)
+:docdate: 2020-07-15
+:doctype: manpage
+:manmanual: General Commands Manual
+
+== NAME
+panbuild - The universal build manifest converter.
+
+== SYNOPSIS
+*panbuild* _command_ [_options_]
+
+== DESCRIPTION
+
+The supported packaging systems are:
+* snap;
+* debian packages (via debian `control` files);
+* pip (via requirements.txt and pyproject.toml).
+* cargo (via Cargo.toml).
+However, some translation combinations might not be available. Run `panbuild show-map` to show
+the map of supported translation paths.
+
+== EXAMPLES
+```
+pandoc snapcraft.yaml -o flatpak > com.example.app.yaml
+```
+
+== COMMANDS
+*show-map* [_options_]::
+  Show the map of supported translation paths.
+
+*ls* [_options_] <__path__>::
+
+== OPTIONS
+=== General options
+*-h*, *--help*::
+  Displays help information.
+
+*-v*, *--version*::
+  Displays the program version.
+
+== REPORTING BUGS
+Bugs and feature requests can be reported on GitHub at https://github.com/louib/panbuild/issues.
+
+== AUTHOR
+louib <code@louib.net>
