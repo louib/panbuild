@@ -2,19 +2,13 @@ name: flatpak-build
 
 on: [push, pull_request]
 
-runs:
-  using: 'docker'
-  image: "docker://flatpak:flatpak-builder"
-  args: []
-
-
 jobs:
   build:
 
     runs-on: self-hosted
 
     steps:
-    - uses: actions/checkout@v1
+    - uses: louib/flatpak-action@v1
     - name: updating available system dependencies
       run: sudo apt-get update
     - name: printing flatpak version
