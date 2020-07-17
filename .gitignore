@@ -2,5 +2,7 @@
 build/
 .coverage
 htmlcov/
-net.louib.2flatpak.json
 __pycache__/
+target/
+
+net.louib.2flatpak.json
