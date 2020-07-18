@@ -45,7 +45,7 @@ pub fn get_type(manifest_path: String, ret: &str) -> &str {
     return ret;
 }
 
-pub fn get_manifest(manifest_content: String, manifest_type: String) {
+pub fn parse(manifest_content: String, manifest_type: String) {
     let manifest = YamlLoader::load_from_str(&manifest_content);
 
     return;

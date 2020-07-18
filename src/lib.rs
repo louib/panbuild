@@ -30,7 +30,7 @@ pub fn run(command_name: &str, args: &ArgMatches) -> i32 {
         let manifest_type: &str = "snap";
         manifest::get_type(input_file.to_string(), manifest_type);
 
-        let manifest = manifest::get_manifest(manifest_content, manifest_type.to_string());
+        let manifest = manifest::parse(manifest_content, manifest_type.to_string());
         return 0;
     }
 
