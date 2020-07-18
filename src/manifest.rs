@@ -1,5 +1,7 @@
 // Base interface for a build manifest.
 trait Manifest {
+    // Parse a manifest file.
+    fn parse(&self);
 
     fn to_string(&self) -> String;
 
