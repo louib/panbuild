@@ -5,13 +5,13 @@ sdk: org.gnome.Sdk
 sdk-extensions:
   - org.freedesktop.Sdk.Extension.rust-stable
 build-options:
-  append-path: "/usr/lib/sdk/rust-stable/bin:~/.cargo/bin"
+  append-path: "/usr/lib/sdk/rust-stable/bin:~/.target/release"
   build-args:
     - "--share=network"
   env:
     RUSTFLAGS: "--remap-path-prefix =../"
     RUST_BACKTRACE: "1"
-command: panbuild
+# command: panbuild
 tags: []
 cleanup: []
 modules:
@@ -30,7 +30,7 @@ modules:
     build-commands:
       - cargo build --bins --release
       - cargo install --path .
-      - mkdir -p /app/bin && install /run/build/panbuild /app/bin
+      # - mkdir -p /app/bin && install ./target/release/panbuild /app/bin/
     sources:
       - type: git
         url: https://github.com/louib/panbuild.git

@@ -7,8 +7,9 @@ struct FlatpakManifest {
     // A string defining the application id.
     app_id: String,
 
-    // The branch to use when exporting the application. If this is unset the defaults come from the default-branch option.
-
+    // The branch to use when exporting the application.
+    // If this is unset the defaults come from the default-branch option.
+    //
     // This key overrides both the default-branch key, and the --default-branch commandline option.
     // Unless you need a very specific branchname (like for a runtime or an extension) it is recommended
     // to use the default-branch key instead, because you can then override the default using
@@ -50,63 +51,64 @@ struct FlatpakManifest {
     // This can be used to create applications that extend another application.
     base: String,
 
-    // Use this specific version of the application specified in base. If unspecified, this uses the value specified in branch
+    // Use this specific version of the application specified in base.
+    // If unspecified, this uses the value specified in branch
     base_version: String,
 
     // Install these extra extensions from the base application when
     // initializing the application directory.
-    base_extensions: [String;5],
+    base_extensions: Vec<String>,
 
     // Inherit these extra extensions points from the base application or sdk when finishing the build.
-    inherit_extensions: [String;5],
+    inherit_extensions: Vec<String>,
 
     // Inherit these extra extensions points from the base application or sdk when finishing the build,
     // but do not inherit them into the platform.
-    inherit_sdk_extensions: [String;5],
+    inherit_sdk_extensions: Vec<String>,
 
     // Inherit these extra extensions points from the base application or sdk when finishing the build,
     // but do not inherit them into the platform.
-    build_options: [String;5],
+    build_options: Vec<String>,
 
     // Add these tags to the metadata file.
-    tags: [String;5],
+    tags: Vec<String>,
 
     // An array of objects specifying the modules to be built in order.
     // String members in the array are interpreted as the name of a separate
     // json or yaml file that contains a module. See below for details.
-    modules: [Module;5],
+    modules: Vec<Module>,
 
     // This is a dictionary of extension objects.
     // The key is the name of the extension.
     // See below for details.
-    add_extensions: [Extension;5],
+    add_extensions: Vec<Extension>,
 
     // This is a dictionary of extension objects similar to add-extensions.
     // The main difference is that the extensions are added early and are
     // available for use during the build.
-    add_build_extensions: [BuildExtension;5],
+    add_build_extensions: Vec<BuildExtension>,
 
     // An array of file patterns that should be removed at the end.
     // Patterns starting with / are taken to be full pathnames (without the /app prefix),
     // otherwise they just match the basename.
-    cleanup: [String;5],
+    cleanup: Vec<String>,
 
     // An array of commandlines that are run during the cleanup phase.
-    cleanup_commands: [String;5],
+    cleanup_commands: Vec<String>,
 
     // Extra files to clean up in the platform.
-    cleanup_platform: [String;5],
+    cleanup_platform: Vec<String>,
 
     // An array of commandlines that are run during the cleanup phase of the platform.
-    cleanup_platform_commands: [String;5],
+    cleanup_platform_commands: Vec<String>,
 
     // An array of commandlines that are run after importing the base platform,
     // but before applying the new files from the sdk. This is a good place to e.g. delete
     // things from the base that may conflict with the files added in the sdk.
-    prepare_platform_commands: [String;5],
+    prepare_platform_commands: Vec<String>,
 
     // An array of arguments passed to the flatpak build-finish command.
-    finish_args: [String;5],
+    finish_args: Vec<String>,
 
     // Any desktop file with this name will be renamed to a name based on id during the cleanup phase.
     rename_desktop_file: String,

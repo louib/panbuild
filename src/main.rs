@@ -35,6 +35,8 @@ fn main() {
                                     .value_name("MANIFEST")
                                     .required(false)
                                     .help("Path of the input build manifest.")))
+                          .subcommand(SubCommand::with_name("spec")
+                               .about("Show the spec for a manifest type."))
                           .get_matches();
 
     if matches.is_present("version") {
