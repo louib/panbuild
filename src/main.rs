@@ -1,4 +1,3 @@
-use std::collections::HashMap;
 // TODO tune built-in attributes
 // From https://doc.rust-lang.org/reference/items/modules.html#attributes-on-modules
 // The built-in attributes that have meaning on a module are cfg, deprecated, doc,
@@ -7,8 +6,6 @@ use std::collections::HashMap;
 extern crate clap;
 
 use clap::{Arg, App, ArgMatches, SubCommand};
-use std::fs;
-use std::path;
 use std::process::{exit};
 
 mod manifest;
@@ -55,7 +52,7 @@ fn main() {
     match matches.subcommand_name() {
         Some(command_name)   => {
             if let Some(subcommand_matches) = matches.subcommand_matches(command_name) {
-                let exit_code = run(command_name, subcommand_matches);
+                let exit_code = panbuild::run(command_name, subcommand_matches);
                 exit(exit_code);
             }
         },
@@ -70,34 +67,4 @@ fn main() {
             exit(1);
         },
     }
-
-
-}
-
-fn run(command_name: &str, args: &ArgMatches) -> i32 {
-    println!("running command {}.", command_name);
-
-    if command_name == "convert" {
-        if ! args.is_present("input_file") {
-            // TODO handle reading from stdin.
-            return 0;
-        }
-
-        let input_file = args.value_of("input_file").unwrap();
-        let input_file_path = path::Path::new(input_file);
-
-        let manifest_content = fs::read_to_string(input_file_path).unwrap();
-
-        let manifest_type: &str = "snap";
-        manifest::get_type(input_file.to_string(), manifest_type);
-
-        let manifest = manifest::get_manifest(manifest_content, manifest_type.to_string());
-        return 0;
-    }
-
-    if command_name == "ls" {
-        return 0;
-    }
-
-    return 0;
 }
