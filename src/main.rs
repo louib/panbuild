@@ -3,7 +3,7 @@ extern crate clap;
 
 // use yaml_rust::{YamlLoader, YamlEmitter};
 use yaml_rust::{YamlLoader};
-use clap::{Arg, App, ArgMatches};
+use clap::{Arg, App, ArgMatches, SubCommand};
 use std::fs;
 use std::path;
 use std::process::{exit};
@@ -21,18 +21,20 @@ fn main() {
                           .version("0.0.1")
                           .author("louib <code@louib.net>")
                           .about("The universal build manifest converter.")
-                          .arg(Arg::with_name("input_file")
-                               .short("i")
-                               .long("input-file")
-                               .takes_value(true)
-                               .value_name("MANIFEST")
-                               .required(false)
-                               .help("Path of the input build manifest."))
                           .arg(Arg::with_name("version")
                                .short("V")
                                .long("version")
                                .required(false)
                                .help("Show the version and exit."))
+                          .subcommand(SubCommand::with_name("convert")
+                               .about("convert a manifest file.")
+                               .arg(Arg::with_name("input_file")
+                                    .short("i")
+                                    .long("input-file")
+                                    .takes_value(true)
+                                    .value_name("MANIFEST")
+                                    .required(false)
+                                    .help("Path of the input build manifest.")))
                           .get_matches();
 
     if matches.is_present("version") {
