@@ -54,6 +54,12 @@ fn main() {
     //    // TODO show help.
     //    exit(1)
     //}
+    match matches.subcommand_name() {
+        Some("convert")  => {},
+        Some("ls")   => {},
+        None => {},
+        _ => {},
+    }
 
     if command_name == "convert" {
         println!("convert.");
