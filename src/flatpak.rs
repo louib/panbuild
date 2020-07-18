@@ -1,4 +1,6 @@
 // See `man flatpak-manifest` for the flatpak manifest specs.
+// TODO The hyphens in the attribute names were replaced to underscores.
+// Not sure how to manage that yet.
 struct FlatpakManifest {
     name: String,
 
@@ -69,5 +71,72 @@ struct FlatpakManifest {
     // Add these tags to the metadata file.
     tags: [String;5],
 
-    // modules = [Module]
+    // An array of objects specifying the modules to be built in order.
+    // String members in the array are interpreted as the name of a separate
+    // json or yaml file that contains a module. See below for details.
+    modules: [Module;5],
+
+    // This is a dictionary of extension objects.
+    // The key is the name of the extension.
+    // See below for details.
+    add_extensions: [Extension;5],
+
+    // This is a dictionary of extension objects similar to add-extensions.
+    // The main difference is that the extensions are added early and are
+    // available for use during the build.
+    add_build_extensions: [BuildExtension;5],
+
+    // An array of file patterns that should be removed at the end.
+    // Patterns starting with / are taken to be full pathnames (without the /app prefix),
+    // otherwise they just match the basename.
+    cleanup: [String;5],
+
+    // An array of commandlines that are run during the cleanup phase.
+    cleanup_commands: [String;5],
+
+    // Extra files to clean up in the platform.
+    cleanup_platform: [String;5],
+
+    // An array of commandlines that are run during the cleanup phase of the platform.
+    cleanup_platform_commands: [String;5],
+
+    // An array of commandlines that are run after importing the base platform,
+    // but before applying the new files from the sdk. This is a good place to e.g. delete
+    // things from the base that may conflict with the files added in the sdk.
+    prepare_platform_commands: [String;5],
+
+    // An array of arguments passed to the flatpak build-finish command.
+    finish_args: [String;5],
+
+    // Any desktop file with this name will be renamed to a name based on id during the cleanup phase.
+    rename_desktop_file: String,
+
+    // Any appdata file with this name will be renamed to a name based on id during the cleanup phase.
+    rename_appdata_file: String,
+
+    // Any icon with this name will be renamed to a name based on id during the cleanup phase.
+    // Note that this is the icon name, not the full filenames, so it should
+    // not include a filename extension.
+    rename_icon: String,
+
+    // Replace the appdata project_license field with this string.
+    // This is useful as the upstream license is typically only about the application itself,
+    // whereas the bundled app can contain other licenses too.
+    appdata_license: String,
+
+    // If rename-icon is set, keep a copy of the old icon file.
+    copy_icon: bool,
+
+    // This string will be prefixed to the Name key in the main application desktop file.
+    desktop_file_name_prefix: String,
+
+    // This string will be suffixed to the Name key in the main application desktop file.
+    desktop_file_name_suffix: String,
+}
+
+struct Module {
+}
+struct Extension {
+}
+struct BuildExtension {
 }

@@ -36,8 +36,6 @@ fn main() {
         println!("0.0.1");
         exit(0);
     }
-    exit(0);
-
 
     let input_file = matches.value_of("input_file").unwrap();
     let input_file_path = path::Path::new(input_file);
@@ -46,4 +44,6 @@ fn main() {
     let manifest = YamlLoader::load_from_str(&manifest_content);
 
     println!("Hello, world!");
+    exit(0);
+
 }
