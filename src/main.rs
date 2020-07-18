@@ -13,6 +13,7 @@ mod snap;
 mod npm;
 mod flatpak;
 mod pyproject;
+mod utils;
 
 fn main() {
     let matches: ArgMatches = App::new("panbuild")
