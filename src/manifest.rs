@@ -1,3 +1,5 @@
+use std::error::Error;
+
 extern crate yaml_rust;
 
 pub mod manifest {
