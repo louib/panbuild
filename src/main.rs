@@ -20,7 +20,7 @@ mod pyproject;
 mod utils;
 
 fn main() {
-    let matches: ArgMatches = App::new("panbuild")
+    let pandoc_app: App = App::new("panbuild")
                           .version("0.0.1")
                           .author("louib <code@louib.net>")
                           .about("The universal build manifest converter.")
@@ -39,15 +39,24 @@ fn main() {
                                     .required(false)
                                     .help("Path of the input build manifest.")))
                           .subcommand(SubCommand::with_name("spec")
-                               .about("Show the spec for a manifest type."))
-                          .get_matches();
+                               .about("Show the spec for a manifest type."));
+    let matches: ArgMatches = pandoc_app.get_matches();
 
     if matches.is_present("version") {
         println!("0.0.1");
         exit(0);
     }
 
-    if let Some(matches) = matches.subcommand_matches("convert") {
+    let command_name = matches.subcommand_name().unwrap();
+
+    //if ! command_name {
+    //    println!("please specify a command.");
+    //    // TODO show help.
+    //    exit(1)
+    //}
+
+    if command_name == "convert" {
+        println!("convert.");
         if ! matches.is_present("input_file") {
             // TODO handle reading from stdin.
             exit(0);
@@ -62,16 +71,15 @@ fn main() {
         manifest::get_type(input_file.to_string(), manifest_type);
 
         let manifest = manifest::get_manifest(manifest_content, manifest_type.to_string());
-        println!("end converted.");
         exit(0);
     }
 
-    if let Some(matches) = matches.subcommand_matches("ls") {
+    if command_name == "ls" {
         exit(0);
     }
 
     // TODO this should print to stderr.
-    println!("Unknown command");
+    println!("Unknown command {0}.", command_name);
     exit(1);
 
 }
