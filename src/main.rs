@@ -10,6 +10,7 @@ use std::process::{exit};
 
 mod manifest;
 mod snap;
+mod npm;
 mod flatpak;
 mod pyproject;
 

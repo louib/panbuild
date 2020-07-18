@@ -4,5 +4,6 @@ build/
 htmlcov/
 __pycache__/
 target/
+tests/.output/
 
 net.louib.panbuild.json
