@@ -19,7 +19,13 @@ pub fn run(command_name: &str, args: &ArgMatches) -> i32 {
         let input_file = args.value_of("input_file").unwrap();
         let input_file_path = path::Path::new(input_file);
 
-        let manifest_content = fs::read_to_string(input_file_path).unwrap();
+        let fs_read_result = fs::read_to_string(input_file_path);
+        if fs_read_result.is_err() {
+            println!("could not read file {}.", input_file);
+            return 1;
+        }
+
+        let manifest_content = fs_read_result.unwrap();
 
         let manifest_type: &str = "snap";
         manifest::get_type(input_file.to_string(), manifest_type);
