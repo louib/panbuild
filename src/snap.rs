@@ -13,6 +13,7 @@ use std::collections::HashMap;
 // such as its confinement level and supported architecture.
 // TODO The hyphens in the attribute names were replaced to underscores.
 // Not sure how to manage that yet.
+#[allow(dead_code)]
 struct SnapManifest {
     // (optional)
     // Incorporate external metadata via the referenced part.
@@ -195,6 +196,7 @@ struct SnapManifest {
 // devmode: a special mode for snap creators and developers.
 // classic: allows access to your system’s resources in much the same way traditional packages do.
 // For more information, refer to https://snapcraft.io/docs/snap-confinement.
+#[allow(dead_code)]
 enum Confinement {
     strict,
     devmode,
@@ -203,11 +205,13 @@ enum Confinement {
 
 // devel (i.e. a development version of the snap, so not to be published to the stable or candidate channels).
 // stable (i.e. a stable release or release candidate, which can be released to all channels).
+#[allow(dead_code)]
 enum Grade {
     stable,
     devel,
 }
 
+#[allow(dead_code)]
 enum Type {
     app,
     core,
@@ -216,6 +220,7 @@ enum Type {
     base,
 }
 
+#[allow(dead_code)]
 struct Architecture {
     name: String,
 }
@@ -243,6 +248,7 @@ struct Architecture {
 // The name exposed to run a program inside the snap.
 // If <app-name> is the same as name, the program will be invoked as app-name. However, if they differ,
 // the program will be exposed as <snap-name>.<app-name>.
+#[allow(dead_code)]
 struct App {
     // Can be one of the following:
     //   none (Disables the creation of an env variable wrapper.)
@@ -361,6 +367,7 @@ struct App {
 }
 
 // Refer to systemd.service manual for details.
+#[allow(dead_code)]
 enum RestartCondition {
     on_failure,
     on_success,
@@ -371,6 +378,7 @@ enum RestartCondition {
 
 }
 
+#[allow(dead_code)]
 enum Daemon {
     // the command is the main process.
     simple,
@@ -384,6 +392,7 @@ enum Daemon {
 }
 
 // For more information, refer to the output of snapcraft help plugins .
+#[allow(dead_code)]
 enum BuildAttributes {
     // Plugins that support the concept of build types build in Release mode by default.
     // Setting the ‘debug’ attribute requests that they instead build in debug mode.
@@ -408,6 +417,7 @@ enum BuildAttributes {
 // then referenced by the command line tool (i.e. snapcraft).
 //
 // The following are keys that can be used within parts. (for example, parts.<part-name>.plugin):
+#[allow(dead_code)]
 struct part {
     // Ensures that all the <part-names> listed in after are staged before this part begins its lifecycle.
     after: Vec<String>,
@@ -619,6 +629,7 @@ struct part {
     stage_snaps: Vec<String>,
 }
 
+#[allow(dead_code)]
 enum SourceType {
     bzr,
     deb,
