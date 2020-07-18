@@ -38,6 +38,11 @@ fn main() {
         exit(0);
     }
 
+    if ! matches.is_present("input_file") {
+        // TODO handle reading from stdin.
+        exit(0);
+    }
+
     let input_file = matches.value_of("input_file").unwrap();
     let input_file_path = path::Path::new(input_file);
 
