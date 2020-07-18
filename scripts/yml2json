@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import yaml
+import json
 import sys
 
 if __name__ == '__main__':
@@ -7,4 +8,7 @@ if __name__ == '__main__':
         print("Usage: yml2json com.domain.appName.yml")
 
     input_path = sys.argv[1]
-    print(yaml.load(open(input_path, 'r')))
+    print(json.dumps(
+        yaml.load(open(input_path, 'r')),
+        indent=2
+    ))
