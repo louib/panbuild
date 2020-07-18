@@ -22,13 +22,14 @@ struct SnapManifest {
     // (optional)
     // List of build and run architectures.
     // For more details, see https://snapcraft.io/docs/architectures
-    architectures: [Architecture;5],
+    architectures: Vec<Architecture>,
 
     // (optional)
     //
     // A list of features that must be supported by the core in order for this snap to install.
     //
-    // For example to make the snap only installable on certain recent version of snapd(like 2.38) you can specify:
+    // For example to make the snap only installable on certain recent
+    // version of snapd(like 2.38) you can specify:
     //   assumes:
     //   - snapd2.38
     //
@@ -36,7 +37,7 @@ struct SnapManifest {
     //   common-data-dir: support for common data directory across revisions of a snap.
     //   snap-env: support for the “Environment:” feature in snap.yaml
     //   command-chain: support for the “command-chain” feature for apps and hooks in snap.yaml
-    assumes: [String;5],
+    assumes: Vec<String>,
 
     // (optional)
     //
@@ -70,12 +71,16 @@ struct SnapManifest {
 
     // (optional)
     //
-    // Path to icon image that represents the snap in the snapcraft.io store pages and other graphical store fronts.
+    // Path to icon image that represents the snap in the snapcraft.io
+    // store pages and other graphical store fronts.
     //
-    // Note that the desktop menu does not use this icon. It uses the icon in the .desktop file of the application.
+    // Note that the desktop menu does not use this icon.
+    // It uses the icon in the .desktop file of the application.
     //
-    // It is a relative path to a .png/.svg file from the source tree root. The recommended size is 256x256 pixels.
-    // Aspect ratio needs to be 1:1. Image size can vary from 40x40 to 512x512 px and the file size should not be larger than 256 KB.
+    // It is a relative path to a .png/.svg file from the source tree root.
+    // The recommended size is 256x256 pixels.
+    // Aspect ratio needs to be 1:1. Image size can vary from 40x40 to 512x512 px and
+    // the file size should not be larger than 256 KB.
     //
     // Examples: _package_name_.svg, or snap/gui/logo.png
     icon: String,
@@ -84,11 +89,14 @@ struct SnapManifest {
     //
     // A license for the snap in the form of an SPDX expression for the license.
     //
-    // In the legacy Snapcraft syntax (not using the base key), this key is only available through the passthrough key.
+    // In the legacy Snapcraft syntax (not using the base key), this key is only
+    // available through the passthrough key.
     //
-    // Currently, only SPDX 2.1 expressions are supported. A list of supported values are also available at snapd/licenses.go at master · snapcore/snapd.
+    // Currently, only SPDX 2.1 expressions are supported. A list of supported values
+    // are also available at snapd/licenses.go at master · snapcore/snapd.
     //
-    // For “or later” and “with exception” license styles refer to the Appendix IV of the SPDX Specification 2.1.
+    // For “or later” and “with exception” license styles refer to the Appendix IV
+    // of the SPDX Specification 2.1.
     //
     // Examples: GPL-3.0+, MIT, Proprietary
     license: String,
@@ -97,7 +105,8 @@ struct SnapManifest {
     //
     // The identifying name of the snap.
     //
-    // It must start with an ASCII character and can only contain letters in lower case, numbers, and hyphens, and it can’t start or end with a hyphen.
+    // It must start with an ASCII character and can only contain letters in lower case, numbers, and
+    // hyphens, and it can’t start or end with a hyphen.
     // The name must be unique if you want to publish to the Snap Store.
     //
     // For help on choosing a name and registering it on the Snap Store, see Registering your app name.
@@ -126,7 +135,8 @@ struct SnapManifest {
     //
     // Max length 40 characters.
     //
-    // In the legacy Snapcraft syntax (not using the base key), this key is only available through the passthrough key.
+    // In the legacy Snapcraft syntax (not using the base key),
+    // this key is only available through the passthrough key.
     title: String,
 
     // (optional)
@@ -143,7 +153,8 @@ struct SnapManifest {
     //
     // A user facing version to display.
     //
-    // Max len. 32 chars. Needs to be wrapped with single-quotes when the value will be interpreted by the YAML parser as non-string.
+    // Max len. 32 chars. Needs to be wrapped with single-quotes when the value will be
+    // interpreted by the YAML parser as non-string.
     //
     // Examples: '1', '1.2', '1.2.3', git (will be replaced by a git describe based version string)
     version: String,
@@ -163,7 +174,8 @@ struct SnapManifest {
     // Value of the attribute.
     // Example: all for read attribute of the home interface.
     //
-    // These plugs apply to all apps and differs from apps.<app-name>.plugs in that the type is in a dict rather than a list format,
+    // These plugs apply to all apps and differs from apps.<app-name>.plugs in that the type is in a dict
+    // rather than a list format,
     // :(colon) must be postfixed to the interface name and shouldn’t start with -(dash-space).
     // TODO Handle plugs parsing
     plugs: HashMap<String, String>,
@@ -250,7 +262,9 @@ struct App {
     autostart: String,
 
     // The command to run inside the snap when <app-name> is invoked.
-    // The command can be in either a snap runtime’s command path, $SNAP/usr/sbin:$SNAP/usr/bin:$SNAP/sbin:$SNAP/bin, or an executable path relative to $SNAP.
+    // The command can be in either a snap runtime’s command path,
+    // $SNAP/usr/sbin:$SNAP/usr/bin:$SNAP/sbin:$SNAP/bin, or an executable path relative to $SNAP.
+    //
     // If daemon is set, this will be the command to run the service.
     // Only a snap with classic confinement can use a relative path because PATH isn’t modified by a wrapper in classic confinement.
     // See Classic confinement for more details.
@@ -260,7 +274,7 @@ struct App {
     // A list of command to be executed, in order, before the command referenced by apps.<app-name>.command.
     //   See Proposal: support command-chain in apps and hooks for further details.
     // To ensure that the Snapd distribution user running supports this feature, add the command-chain value to the assumes property.
-    command_chain: [String;5],
+    command_chain: Vec<String>,
 
     // An identifier to a desktop-id within an external appstream file.
     // See Using external metadata for more details.
@@ -270,7 +284,8 @@ struct App {
     daemon: Daemon,
 
     // Location of the .desktop file.
-    // A path relative to the prime directory pointing to a desktop file, commonly used to add an application to the launch menu. Snapcraft will take care of the rest.
+    // A path relative to the prime directory pointing to a desktop file,
+    // commonly used to add an application to the launch menu. Snapcraft will take care of the rest.
     //   Examples: usr/share/applications/my-app.desktop and share/applications/my-app.desktop
     desktop: String,
 
@@ -282,7 +297,7 @@ struct App {
 
     // Extensions to apply to this application.
     //   Example: [gnome-3-28]
-    extensions: [String;5],
+    extensions: Vec<String>,
 
     // The socket abstract name or socket path.
     // Sockets should go to a map of <socket-name>\ to objects which specify the listen-stream and (optionally) the socket-mode.
@@ -298,12 +313,13 @@ struct App {
 
     // <app-name> attributes to pass through to snap.yaml without snapcraft validation.
     // See Using in-development features for further details.
-    passthrough: [String;5],
+    passthrough: Vec<String>,
 
     // Plugs for interfaces to connect to.
-    // <app-name> will make these plug connections when running in strict confinement For interfaces that need attributes, see top-level plugs.
+    // <app-name> will make these plug connections when running in strict confinement.
+    // For interfaces that need attributes, see top-level plugs.
     //   Example: [home, removable-media, raw-usb]
-    plugs: [String;5],
+    plugs: Vec<String>,
 
     // Runs a command from inside the snap after a service stops.
     // Requires daemon to be set as the snap type.
@@ -314,9 +330,10 @@ struct App {
     restart_condition: RestartCondition,
 
     // Slots for interfaces to connect to.
-    // <app-name> will make these slot connections when running in strict confinement only. For interfaces that need attributes, see top-level slots.
+    // <app-name> will make these slot connections when running in strict confinement only.
+    // For interfaces that need attributes, see top-level slots.
     //   Example: [home, removable-media, raw-usb]
-    slots: [String;5],
+    slots: Vec<String>,
 
     // Type: dict
     // Maps a daemon’s sockets to services and activates them.
@@ -332,7 +349,8 @@ struct App {
     stop_command: String,
 
     // The length of time to wait before terminating a service.
-    // Time duration units can be 10ns, 10us, 10ms, 10s, 10m. Termination is via SIGTERM (and SIGKILL if that doesn’t work).
+    // Time duration units can be 10ns, 10us, 10ms, 10s, 10m.
+    // Termination is via SIGTERM (and SIGKILL if that doesn’t work).
     // Requires daemon to be set as the snap type.
     stop_timeout: String,
 
@@ -358,7 +376,8 @@ enum Daemon {
     simple,
     // the configured command will exit after completion
     oneshot,
-    // the configured command calls fork() as part of its start-up. The parent process is then expected to exit when start-up is complete
+    // the configured command calls fork() as part of its start-up.
+    // The parent process is then expected to exit when start-up is complete
     forking,
     // the command configured will send a signal to systemd to indicate that it’s running.
     notify,
@@ -373,13 +392,15 @@ enum BuildAttributes {
     keep_execstack,
     // Do not patch ELF files.
     no_patchelf,
-    // Do not run the install target provided by the plugin’s build system. (Only supported by the kbuild plugin)
+    // Do not run the install target provided by the plugin’s build system.
+    // (Only supported by the kbuild plugin)
     no_install,
 }
 
 // The main building blocks of a snap are parts.
 // They are used to declare pieces of code that will be pulled into your snap package.
-// The parts keys and values in snapcraft.yaml detail how parts are configured and built by the snapcraft command.
+// The parts keys and values in snapcraft.yaml detail how parts are configured and built
+// by the snapcraft command.
 //
 // See Snapcraft top-level metadata and Snapcraft apps and services metadata for
 // details on how apps and parts are configured within snapcraft.yaml.
@@ -389,10 +410,10 @@ enum BuildAttributes {
 // The following are keys that can be used within parts. (for example, parts.<part-name>.plugin):
 struct part {
     // Ensures that all the <part-names> listed in after are staged before this part begins its lifecycle.
-    after: [String;5],
+    after: Vec<String>,
 
     // A list of named attributes to modify the behaviour of plugins.
-    build_attributes: [String;5],
+    build_attributes: Vec<String>,
 
     // A list of environment variable assignments that is applied during the build step,
     // it is exported in order which allows for later values to override (or modify) earlier values.
@@ -402,15 +423,16 @@ struct part {
     //    build-environment:
     //    - LANG: C.UTF-8
     //    - LC_ALL: C.UTF-8
-    build_environment: [String;5],
+    build_environment: Vec<String>,
 
     // A list of packages required to build a snap.
     //
-    // Packages are installed using the host’s package manager, such as apt or dnf, and are required for <part-name> to build correctly.
+    // Packages are installed using the host’s package manager, such as apt or dnf,
+    // and are required for <part-name> to build correctly.
     // This entry supports additional syntax, for more information refer to Advanced grammar.
     //
     // Example: [ libssl-dev, libssh-dev, libncursesw5-dev]
-    build_packages: [String;5],
+    build_packages: Vec<String>,
 
     // A list of snap names to install that are necessary to build <part-name>.
     //
@@ -418,17 +440,19 @@ struct part {
     // This entry supports additional syntax, for more information refer to Advanced grammar
     //
     // Example: build-snaps: [go/1.13/stable]
-    build_snaps: [String;5],
+    build_snaps: Vec<String>,
 
     // A key to represent a group of files, or a single file.
     //
     // See Snapcraft filesets for further details.
-    filesets: [String;5],
+    filesets: Vec<String>,
 
     // Runs a script after the plugin’s build step.
     //
-    // The shell script defined here is run after the build step of the plugin defined in parts.<part-name>.plugin starts.
-    // The working directory is the base build directory for the given part. The defined script is run with /bin/sh and set -e.
+    // The shell script defined here is run after the build step of the
+    // plugin defined in parts.<part-name>.plugin starts.
+    // The working directory is the base build directory for the given part.
+    // The defined script is run with /bin/sh and set -e.
     // A set of Environment Variables will be available to the script.
     //
     // The release of Snapcraft 3.0 made this key obsolete. Use override-build instead.
@@ -436,15 +460,19 @@ struct part {
 
     // A map of files to rename.
     //
-    // In the key/value pair, the key represents the path of a file inside the part and the value represents how the file is going to be staged.
+    // In the key/value pair, the key represents the path of a file inside the part
+    // and the value represents how the file is going to be staged.
     //
     // Example: bin/snapcraftctl: bin/scriptlet-bin/snapcraftctl
     organize: HashMap<String, String>,
 
     // Replaces a plugin’s default build process with a script.
     //
-    // The shell script defined here replaces the build step of the plugin, defined in parts.<part-name>.plugin.
-    // The working directory is the base build directory for the given part. The defined script is run with /bin/sh and set -e.
+    // The shell script defined here replaces the build step of the plugin,
+    // defined in parts.<part-name>.plugin.
+    //
+    // The working directory is the base build directory for the given part.
+    // The defined script is run with /bin/sh and set -e.
     // A set of Environment Variables will be available to the script.
     //
     // To run Snapcraft’s original build implementation from within override-build, run snapcraftctl build.
@@ -453,18 +481,23 @@ struct part {
 
     // Replaces a plugin’s default prime process with a script.
     //
-    // The shell script defined here replaces the prime step of the plugin, defined in parts.<part-name>.plugin.
-    // The working directory is the base prime directory for the given part. The defined script is run with /bin/sh and set -e.
+    // The shell script defined here replaces the prime step of the plugin,
+    // defined in parts.<part-name>.plugin.
+    // The working directory is the base prime directory for the given part.
+    // The defined script is run with /bin/sh and set -e.
     // A set of Environment Variables will be available to the script.
     //
-    // To run Snapcraft’s original prime step implementation from within override-prime, run snapcraftctl prime.
+    // To run Snapcraft’s original prime step implementation from within override-prime,
+    // run snapcraftctl prime.
     // This can be run before or after any custom script, or omitted entirely.
     override_prime: String,
 
     // Replaces a plugin’s default pull process with a script.
     //
-    // The shell script defined here replaces the pull step of the plugin, defined in parts.<part-name>.plugin.
-    // The working directory is the base pull directory for the given part. The defined script is run with /bin/sh and set -e.
+    // The shell script defined here replaces the pull step of the plugin,
+    // defined in parts.<part-name>.plugin.
+    // The working directory is the base pull directory for the given part.
+    // The defined script is run with /bin/sh and set -e.
     // A set of Environment Variables will be available to the script.
     //
     // To run Snapcraft’s original pull stage implementation from within override-pull, run snapcraftctl pull.
@@ -473,8 +506,10 @@ struct part {
 
     // Replaces a plugin’s default stage process with a script.
     //
-    // The shell script defined here replaces the stage step of the plugin, defined in parts.<part-name>.plugin.
-    // The working directory is the base stage directory for the given part. The defined script is run with /bin/sh and set -e.
+    // The shell script defined here replaces the stage step of the plugin,
+    // defined in parts.<part-name>.plugin.
+    // The working directory is the base stage directory for the given part.
+    // The defined script is run with /bin/sh and set -e.
     // A set of Environment Variables will be available to the script.
     //
     // To run Snapcraft’s original stage implementation from within override-stage, run snapcraftctl stage.
@@ -491,16 +526,18 @@ struct part {
 
     // The plugin to drive the build process.
     //
-    // Every part drives its build through a plugin, this entry declares the plugin that will drive the build process for <part-name>.
-    // Refer to snapcraft plugins for more information on the available plugins and the specific attributes they add to the parts.<part-name>. namespace.
-    // See https://snapcraft.io/docs/supported-plugins for the available
-    // plugins.
+    // Every part drives its build through a plugin, this entry declares the
+    // plugin that will drive the build process for <part-name>.
+    // Refer to snapcraft plugins for more information on the available plugins and the
+    // specific attributes they add to the parts.<part-name>. namespace.
+    // See https://snapcraft.io/docs/supported-plugins for the available plugins.
     plugin: String,
 
     // Runs a script before the plugin’s build step.
     //
     // The script is run before the build step defined for parts.<part-name>.plugin starts.
-    // The working directory is the base build directory for the given part. The defined script is run with /bin/sh and set -e.
+    // The working directory is the base build directory for the given part.
+    // The defined script is run with /bin/sh and set -e.
     // A set of Environment Variables will be available to the script.
     //
     // The release of Snapcraft 3.0 made this key obsolete. Use override-build instead.
@@ -511,11 +548,12 @@ struct part {
     // Rules applying to the list here are the same as those of filesets.
     // Referencing of fileset keys is done with a $ prefixing the fileset key,
     // which will expand with the value of such key.
-    prime: [String;5],
+    prime: Vec<String>,
 
     // A URL or path to a source tree to build.
     //
-    // This can be a local path or remote, and can refer to a directory tree, a compressed archive or a revision control repository.
+    // This can be a local path or remote, and can refer to a directory tree,
+    // a compressed archive or a revision control repository.
     // This entry supports additional syntax, for more information refer to Advanced grammar
     source: String,  // ⚓
 
@@ -558,8 +596,9 @@ struct part {
     // A list of files from <part-name> to stage.
     //
     // Rules applying to the list here are the same as those of filesets.
-    // Referencing of fileset keys is done with a $ prefixing the fileset key, which will expand with the value of such key.
-    stage: [String;5],
+    // Referencing of fileset keys is done with a $ prefixing the fileset key,
+    // which will expand with the value of such key.
+    stage: Vec<String>,
 
     // A list of packages required at runtime by a snap.
     //
@@ -568,7 +607,7 @@ struct part {
     // This entry supports additional syntax, for more information refer to Advanced grammar.
     //
     // Example: [python-zope.interface, python-bcrypt]
-    stage_packages: [String;5],
+    stage_packages: Vec<String>,
 
     // A list of snaps required at runtime by a snap.
     //
@@ -577,7 +616,7 @@ struct part {
     // for more information refer to Advanced grammar.
     //
     // Example: [hello, black/latest/edge]
-    stage_snaps: [String;5],
+    stage_snaps: Vec<String>,
 }
 
 enum SourceType {
