@@ -55,20 +55,37 @@ fn main() {
     //    exit(1)
     //}
     match matches.subcommand_name() {
-        Some("convert")  => {},
-        Some("ls")   => {},
-        None => {},
-        _ => {},
+        Some(command_name)   => {
+            if let Some(subcommand_matches) = matches.subcommand_matches(command_name) {
+                let exit_code = run(command_name, subcommand_matches);
+                exit(exit_code);
+            }
+        },
+        None => {
+            // TODO this should print to stderr.
+            println!("Please provide a command to execute.");
+            exit(1);
+        },
+        _ => {
+            // TODO this should print to stderr.
+            println!("Unknown command {0}.", command_name);
+            exit(1);
+        },
     }
 
+
+}
+
+fn run(command_name: &str, args: &ArgMatches) -> i32 {
+    println!("running command {}.", command_name);
+
     if command_name == "convert" {
-        println!("convert.");
-        if ! matches.is_present("input_file") {
+        if ! args.is_present("input_file") {
             // TODO handle reading from stdin.
-            exit(0);
+            return 0;
         }
 
-        let input_file = matches.value_of("input_file").unwrap();
+        let input_file = args.value_of("input_file").unwrap();
         let input_file_path = path::Path::new(input_file);
 
         let manifest_content = fs::read_to_string(input_file_path).unwrap();
@@ -77,19 +94,12 @@ fn main() {
         manifest::get_type(input_file.to_string(), manifest_type);
 
         let manifest = manifest::get_manifest(manifest_content, manifest_type.to_string());
-        exit(0);
+        return 0;
     }
 
     if command_name == "ls" {
-        exit(0);
+        return 0;
     }
 
-    // TODO this should print to stderr.
-    println!("Unknown command {0}.", command_name);
-    exit(1);
-
-}
-
-fn run(command_name: String, args: Vec<String>, options: HashMap<String, String>) -> i32 {
     return 0;
 }
