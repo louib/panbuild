@@ -10,20 +10,11 @@ build-options:
     - "--share=network"
   env:
     RUSTFLAGS: "--remap-path-prefix =../"
-    RUST_BACKTRACE: "1",
-command: /run/build/panbuild -h
+    RUST_BACKTRACE: "1"
+command: panbuild
 tags: []
 cleanup: []
 modules:
-  -
-    name: PyYAML
-    buildsystem: simple
-    build-commands:
-      - pip3 install --prefix=/app --no-deps .
-    sources:
-      - type: archive
-        url: https://files.pythonhosted.org/packages/64/c2/b80047c7ac2478f9501676c988a5411ed5572f35d1beff9cae07d321512c/PyYAML-5.3.1.tar.gz
-        sha256: b8eac752c5e14d3eca0e6dd9199cd627518cb5ec06add0de9d32baeee6fe645d
   -
     name: flatpak-shared-modules
     buildsystem: simple
@@ -39,7 +30,6 @@ modules:
     build-commands:
       - cargo build --bins --release
       - cargo install --path .
-      - ls -l /run/build
       - mkdir -p /app/bin && install /run/build/panbuild /app/bin
     sources:
       - type: git
