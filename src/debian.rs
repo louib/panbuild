@@ -30,5 +30,15 @@ struct DebianManifest {
 }
 
 struct Package {
+    name: String,
 
+    // Can be "any"
+    architecture: String,
+
+    multi_arch: String,
+
+    depends: Vec<String>,
+
+    // A multi-line string
+    description: String,
 }
