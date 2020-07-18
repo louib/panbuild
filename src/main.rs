@@ -1,3 +1,4 @@
+use std::collections::HashMap;
 // TODO tune built-in attributes
 // From https://doc.rust-lang.org/reference/items/modules.html#attributes-on-modules
 // The built-in attributes that have meaning on a module are cfg, deprecated, doc,
@@ -46,20 +47,35 @@ fn main() {
         exit(0);
     }
 
-    if ! matches.is_present("input_file") {
-        // TODO handle reading from stdin.
+    if let Some(matches) = matches.subcommand_matches("convert") {
+        if ! matches.is_present("input_file") {
+            // TODO handle reading from stdin.
+            exit(0);
+        }
+
+        let input_file = matches.value_of("input_file").unwrap();
+        let input_file_path = path::Path::new(input_file);
+
+        let manifest_content = fs::read_to_string(input_file_path).unwrap();
+
+        let manifest_type: &str = "snap";
+        manifest::get_type(input_file.to_string(), manifest_type);
+
+        let manifest = manifest::get_manifest(manifest_content, manifest_type.to_string());
+        println!("end converted.");
         exit(0);
     }
 
-    let input_file = matches.value_of("input_file").unwrap();
-    let input_file_path = path::Path::new(input_file);
+    if let Some(matches) = matches.subcommand_matches("ls") {
+        exit(0);
+    }
 
-    let manifest_content = fs::read_to_string(input_file_path).unwrap();
+    // TODO this should print to stderr.
+    println!("Unknown command");
+    exit(1);
 
-    let manifest_type: &str = "snap";
-    manifest::get_type(input_file.to_string(), manifest_type);
+}
 
-    let manifest = manifest::get_manifest(manifest_content, manifest_type.to_string());
-    println!("Hello, world!");
-    exit(0);
+fn run(command_name: String, args: Vec<String>, options: HashMap<String, String>) -> i32 {
+    return 0;
 }
