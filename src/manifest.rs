@@ -26,3 +26,14 @@ trait Package {
     // archive, git, etc...
     fn get_source_type(&self) -> String;
 }
+
+fn get_manifest_type(manifest_path: String, ret: &str) -> &str {
+    // TODO match agains regexes.
+
+    return ret;
+}
+
+fn get_manifest(manifest_content: String, manifest_type: String) {
+    return;
+
+}

@@ -53,9 +53,9 @@ fn main() {
     let input_file_path = path::Path::new(input_file);
 
     let manifest_content = fs::read_to_string(input_file_path).unwrap();
+
     let manifest = YamlLoader::load_from_str(&manifest_content);
 
     println!("Hello, world!");
     exit(0);
-
 }
