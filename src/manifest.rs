@@ -51,4 +51,6 @@ pub fn parse(manifest_content: String, manifest_type: String) {
     return;
 }
 
-pub fn convert() {}
+pub fn dump(manifest: &Manifest, destination_type: String) -> String {
+    return String::new();
+}
