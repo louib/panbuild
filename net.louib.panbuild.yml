@@ -10,7 +10,7 @@ build-options:
     - "--share=network"
   env:
     RUSTFLAGS: "--remap-path-prefix =../"
-command: panbuild
+command: panbuild -h
 tags: []
 cleanup: []
 modules:
@@ -38,7 +38,8 @@ modules:
     build-commands:
       - cargo build --bins --release
       - cargo install --path .
-      - mkdir -p /app/bin && install ~/.cargo/bin/panbuild /app/bin
+      - ls -l /run/build
+      - mkdir -p /app/bin && install /run/build/panbuild /app/bin
     sources:
       - type: git
         url: https://github.com/louib/panbuild.git
