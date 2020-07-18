@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 // TODO tune built-in attributes
 // From https://doc.rust-lang.org/reference/items/modules.html#attributes-on-modules
 // The built-in attributes that have meaning on a module are cfg, deprecated, doc,
@@ -48,6 +50,9 @@ fn main() {
     }
 
     let command_name = matches.subcommand_name().unwrap();
+    let flags: HashMap<String, bool> = HashMap::new();
+    // let options: HashMap<String, bool> = HashMap::new();
+    let arguments: HashMap<String, String> = HashMap::new();
 
     match matches.subcommand_name() {
         Some(command_name)   => {
