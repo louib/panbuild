@@ -12,6 +12,7 @@ mod manifest;
 mod snap;
 mod npm;
 mod flatpak;
+mod debian;
 mod pyproject;
 mod utils;
 
