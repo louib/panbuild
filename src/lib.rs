@@ -37,7 +37,7 @@ pub fn run(command_name: &str, args: &ArgMatches) -> i32 {
           content: "".to_string(),
         };
 
-        let manifest = manifest::parse(manifest_content, manifest_type.to_string(), &ctx);
+        let manifest = manifest::parse(manifest_content, &ctx);
         return 0;
     }
 

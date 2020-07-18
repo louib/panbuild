@@ -2,13 +2,6 @@ use std::error::Error;
 
 extern crate yaml_rust;
 
-pub mod manifest {
-    fn parse(manifest_path: String, manifest_content: String) -> String {
-        return "".to_string();
-    }
-
-}
-
 pub struct ConversionContext {
     pub source_type: String,
     pub destination_type: String,
@@ -53,8 +46,8 @@ pub fn get_type(manifest_path: String, ret: &str) -> &str {
     return ret;
 }
 
-pub fn parse(manifest_content: String, manifest_type: String, ctx: &ConversionContext) {
-    let manifest = YamlLoader::load_from_str(&manifest_content);
+pub fn parse(manifest_content: String, ctx: &ConversionContext) {
+    let yml_load_result = YamlLoader::load_from_str(&manifest_content);
 
     return;
 }
