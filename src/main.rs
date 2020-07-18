@@ -40,6 +40,9 @@ fn main() {
                                     .help("Path of the input build manifest.")))
                           .subcommand(SubCommand::with_name("spec")
                                .about("Show the spec for a manifest type."));
+
+    // Here we could use get_matches_safe and override the error messages.
+    // See https://docs.rs/clap/2.33.1/clap/struct.App.html#method.get_matches_safe
     let matches: ArgMatches = pandoc_app.get_matches();
 
     if matches.is_present("version") {
