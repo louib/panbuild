@@ -30,6 +30,8 @@ pandoc snapcraft.yaml -o flatpak > com.example.app.yaml
 
 *ls* [_options_] <__path__>::
 
+*convert* [_options_] <__path__>::
+
 == OPTIONS
 === General options
 *-h*, *--help*::
