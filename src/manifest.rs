@@ -9,6 +9,12 @@ pub mod manifest {
 
 }
 
+pub struct ConversionContext {
+    pub source_type: String,
+    pub destination_type: String,
+    pub content: String,
+}
+
 // use yaml_rust::{YamlLoader, YamlEmitter};
 use yaml_rust::{YamlLoader};
 
@@ -47,7 +53,7 @@ pub fn get_type(manifest_path: String, ret: &str) -> &str {
     return ret;
 }
 
-pub fn parse(manifest_content: String, manifest_type: String) {
+pub fn parse(manifest_content: String, manifest_type: String, ctx: &ConversionContext) {
     let manifest = YamlLoader::load_from_str(&manifest_content);
 
     return;
