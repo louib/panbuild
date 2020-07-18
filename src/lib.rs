@@ -11,8 +11,9 @@ pub fn run(command_name: &str, args: &ArgMatches) -> i32 {
 
     if command_name == "convert" {
         if ! args.is_present("input_file") {
+            println!("an input file is required when converting!");
             // TODO handle reading from stdin.
-            return 0;
+            return 1;
         }
 
         let input_file = args.value_of("input_file").unwrap();
