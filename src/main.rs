@@ -1,3 +1,8 @@
+// TODO tune built-in attributes
+// From https://doc.rust-lang.org/reference/items/modules.html#attributes-on-modules
+// The built-in attributes that have meaning on a module are cfg, deprecated, doc,
+// the lint check attributes, path, and no_implicit_prelude.
+// Modules also accept macro attributes.
 extern crate clap;
 
 use clap::{Arg, App, ArgMatches, SubCommand};

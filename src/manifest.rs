@@ -1,5 +1,12 @@
 extern crate yaml_rust;
 
+pub mod manifest {
+    fn parse(manifest_path: String, manifest_content: String) -> String {
+        return "".to_string();
+    }
+
+}
+
 // use yaml_rust::{YamlLoader, YamlEmitter};
 use yaml_rust::{YamlLoader};
 
