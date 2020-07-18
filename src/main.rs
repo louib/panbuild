@@ -52,11 +52,6 @@ fn main() {
 
     let command_name = matches.subcommand_name().unwrap();
 
-    //if ! command_name {
-    //    println!("please specify a command.");
-    //    // TODO show help.
-    //    exit(1)
-    //}
     match matches.subcommand_name() {
         Some(command_name)   => {
             if let Some(subcommand_matches) = matches.subcommand_matches(command_name) {
