@@ -1,3 +1,8 @@
+extern crate yaml_rust;
+
+// use yaml_rust::{YamlLoader, YamlEmitter};
+use yaml_rust::{YamlLoader};
+
 // Base interface for a build manifest.
 trait Manifest {
     fn get_name(&self);
@@ -27,13 +32,16 @@ trait Package {
     fn get_source_type(&self) -> String;
 }
 
-fn get_manifest_type(manifest_path: String, ret: &str) -> &str {
+pub fn get_type(manifest_path: String, ret: &str) -> &str {
     // TODO match agains regexes.
 
     return ret;
 }
 
-fn get_manifest(manifest_content: String, manifest_type: String) {
-    return;
+pub fn get_manifest(manifest_content: String, manifest_type: String) {
+    let manifest = YamlLoader::load_from_str(&manifest_content);
 
+    return;
 }
+
+pub fn convert() {}

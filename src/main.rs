@@ -1,8 +1,5 @@
-extern crate yaml_rust;
 extern crate clap;
 
-// use yaml_rust::{YamlLoader, YamlEmitter};
-use yaml_rust::{YamlLoader};
 use clap::{Arg, App, ArgMatches, SubCommand};
 use std::fs;
 use std::path;
@@ -54,8 +51,10 @@ fn main() {
 
     let manifest_content = fs::read_to_string(input_file_path).unwrap();
 
-    let manifest = YamlLoader::load_from_str(&manifest_content);
+    let manifest_type: &str = "snap";
+    manifest::get_type(input_file.to_string(), manifest_type);
 
+    let manifest = manifest::get_manifest(manifest_content, manifest_type.to_string());
     println!("Hello, world!");
     exit(0);
 }
