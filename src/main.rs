@@ -36,7 +36,7 @@ fn main() {
                                     .long("input-file")
                                     .takes_value(true)
                                     .value_name("MANIFEST")
-                                    .required(false)
+                                    .required(true)
                                     .help("Path of the input build manifest."))
                                .arg(Arg::with_name("input_format")
                                     .short("f")
@@ -44,7 +44,14 @@ fn main() {
                                     .takes_value(true)
                                     .value_name("FORMAT")
                                     .required(false)
-                                    .help("Format of the manifest provided for the conversion.")))
+                                    .help("Format of the manifest provided for the conversion."))
+                               .arg(Arg::with_name("destination_format")
+                                    .short("d")
+                                    .long("destination-format")
+                                    .takes_value(true)
+                                    .value_name("FORMAT")
+                                    .required(true)
+                                    .help("Format of the manifest to generate.")))
                           .subcommand(SubCommand::with_name("spec")
                                .about("Show the spec for a manifest type."));
 
@@ -58,14 +65,24 @@ fn main() {
     }
 
     let command_name = matches.subcommand_name().unwrap();
-    let flags: HashMap<String, bool> = HashMap::new();
-    // let options: HashMap<String, bool> = HashMap::new();
-    let arguments: HashMap<String, String> = HashMap::new();
+    let mut flags: HashMap<String, bool> = HashMap::new();
+    // let mut options: HashMap<String, bool> = HashMap::new();
+    let mut arguments: HashMap<String, String> = HashMap::new();
 
     match matches.subcommand_name() {
         Some(command_name)   => {
             if let Some(subcommand_matches) = matches.subcommand_matches(command_name) {
-                let exit_code = panbuild::run(command_name, subcommand_matches);
+                arguments.entry("input_format".to_string()).or_insert(
+                    subcommand_matches.value_of("input_format").unwrap_or("default").to_string()
+                );
+                arguments.entry("input_file".to_string()).or_insert(
+                    subcommand_matches.value_of("input_file").unwrap_or("default").to_string()
+                );
+                arguments.entry("destination_format".to_string()).or_insert(
+                    subcommand_matches.value_of("destination_format").unwrap_or("default").to_string()
+                );
+
+                let exit_code = panbuild::run(command_name, arguments);
                 exit(exit_code);
             }
         },
