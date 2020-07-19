@@ -147,3 +147,15 @@ struct Extension {
 }
 struct BuildExtension {
 }
+
+pub fn parse(ctx: &crate::execution_context::ExecutionContext) -> i32 {
+    // let yml_load_result = YamlLoader::load_from_str(&ctx.content);
+
+    // if yml_load_result.is_err() {
+        // return;
+    // }
+
+    // let manifest_content = yml_load_result.unwrap();
+    //
+    return 0;
+}

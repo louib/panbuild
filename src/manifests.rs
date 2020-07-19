@@ -10,38 +10,17 @@ pub mod abstract_manifest;
 
 pub fn parse(ctx: &crate::execution_context::ExecutionContext) -> i32 {
     if ctx.source_type == "debian" {
-        let lines = ctx.content.split("\n");
-        // let mut paragraphs = Vec<Vec<String>>;
-        let mut count = 0;
-        for line in lines {
-            print!("***** {}", line);
-            let mut only_spaces = true;
-            let mut indent_size = 0;
-            let is_empty_line: bool = line.starts_with(|c: char| {
-                if c == ' ' {
-                    indent_size = indent_size + 1;
-                    return true;
-                }
-                if c == '\t' {
-                    return true;
-                }
-                return false;
-            });
-            count = count + 1;
-        }
-        return 0;
+        return crate::manifests::debian::parse(ctx);
     }
 
     if ctx.source_type == "snap" {
-        // let yml_load_result = YamlLoader::load_from_str(&ctx.content);
-
-        // if yml_load_result.is_err() {
-            // return;
-        // }
-
-        // let manifest_content = yml_load_result.unwrap();
-        //
+        return crate::manifests::snap::parse(ctx);
     }
+
+    if ctx.source_type == "flatpak" {
+        return crate::manifests::flatpak::parse(ctx);
+    }
+
     return 1;
 }
 

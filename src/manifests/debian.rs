@@ -55,6 +55,25 @@ struct Package {
     description: String,
 }
 
-pub fn parse() {
-
+pub fn parse(ctx: &crate::execution_context::ExecutionContext) -> i32 {
+    let lines = ctx.content.split("\n");
+    // let mut paragraphs = Vec<Vec<String>>;
+    let mut count = 0;
+    for line in lines {
+        print!("***** {}", line);
+        let mut only_spaces = true;
+        let mut indent_size = 0;
+        let is_empty_line: bool = line.starts_with(|c: char| {
+            if c == ' ' {
+                indent_size = indent_size + 1;
+                return true;
+            }
+            if c == '\t' {
+                return true;
+            }
+            return false;
+        });
+        count = count + 1;
+    }
+    return 0;
 }

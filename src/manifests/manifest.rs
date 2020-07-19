@@ -1,16 +1,11 @@
 use std::error::Error;
 
-extern crate yaml_rust;
-
 // This is the syntax to import sibling modules.
 // #[path = "debian.rs"]
 // mod debian;
 //
 // It can also be on the same line!
 // #[path = "other_utils/debian.rs"] mod debian;
-
-// use yaml_rust::{YamlLoader, YamlEmitter};
-use yaml_rust::{YamlLoader};
 
 // Base interface for a build manifest.
 trait Manifest {
@@ -40,4 +35,3 @@ trait Package {
     // archive, git, etc...
     fn get_source_type(&self) -> String;
 }
-
