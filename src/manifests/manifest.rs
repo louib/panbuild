@@ -9,6 +9,24 @@ extern crate yaml_rust;
 // It can also be on the same line!
 // #[path = "other_utils/debian.rs"] mod debian;
 
+pub const DEFAULT_SOURCE_TYPE: &str = "snap";
+pub const DEFAULT_DESTINATION_TYPE: &str = "flatpak";
+
+pub struct AbstractModule {
+    name: String,
+    version: String,
+    url: String,
+    url_type: String,
+    install_instructions: String,
+}
+
+pub struct AbstractManifest {
+    package_name: String,
+    package_id: String,
+    package_version: String,
+
+    modules: Vec<AbstractModule>,
+}
 
 pub struct ConversionContext {
     pub source_filename: String,

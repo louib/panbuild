@@ -28,10 +28,8 @@ pub fn run(command_name: &str, args: &ArgMatches) -> i32 {
 
         let ctx = manifests::manifest::ConversionContext {
           source_filename: input_file_path.to_string(),
-          source_type: "snap".to_string(),
-          destination_type: "flatpak".to_string(),
-          // content: manifest_content,
-          // content: fs_read_result.unwrap(),
+          source_type: manifests::manifest::DEFAULT_SOURCE_TYPE.to_string(),
+          destination_type: manifests::manifest::DEFAULT_DESTINATION_TYPE.to_string(),
           content: manifest_content,
         };
         manifests::get_type(&ctx);
