@@ -125,7 +125,3 @@ pub fn parse(manifest_content: String, ctx: &ConversionContext) {
 
     return;
 }
-
-pub fn dump(manifest: &Manifest, destination_type: String) -> String {
-    return String::new();
-}
