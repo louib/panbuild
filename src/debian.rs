@@ -6,6 +6,7 @@ const DEFAULT_PRIORITY: &str = "optional";
 const DEFAULT_ARCH: &str = "any";
 const DEFAULT_MULTI_ARCH: &str = "same";
 
+// See https://www.debian.org/doc/debian-policy/ch-controlfields.html
 struct DebianManifest {
     // The name of the source described in this manifest.
     source: String,
@@ -50,3 +51,5 @@ struct Package {
     // A multi-line string
     description: String,
 }
+
+

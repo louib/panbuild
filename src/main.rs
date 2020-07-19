@@ -36,7 +36,14 @@ fn main() {
                                     .takes_value(true)
                                     .value_name("MANIFEST")
                                     .required(false)
-                                    .help("Path of the input build manifest.")))
+                                    .help("Path of the input build manifest."))
+                               .arg(Arg::with_name("input_format")
+                                    .short("f")
+                                    .long("input-format")
+                                    .takes_value(true)
+                                    .value_name("FORMAT")
+                                    .required(false)
+                                    .help("Format of the manifest provided for the conversion.")))
                           .subcommand(SubCommand::with_name("spec")
                                .about("Show the spec for a manifest type."));
 

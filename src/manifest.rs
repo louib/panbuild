@@ -54,6 +54,13 @@ pub fn parse(manifest_content: String, ctx: &ConversionContext) {
     // }
 
     // let manifest_content = yml_load_result.unwrap();
+
+    let lines = manifest_content.split("\n");
+    let mut count = 0;
+    for line in lines {
+        print!("***** {}", line);
+        count = count + 1;
+    }
     return;
 }
 
