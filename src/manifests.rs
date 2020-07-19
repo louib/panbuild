@@ -13,6 +13,6 @@ pub fn dump() {
     println!("called `manifests::dump()`");
 }
 
-pub fn match_filename() {
+pub fn get_type(filename: &str, file_content: &str) {
     println!("called `manifests::match_filename()`");
 }

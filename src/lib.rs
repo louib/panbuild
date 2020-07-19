@@ -27,9 +27,6 @@ pub fn run(command_name: &str, args: &ArgMatches) -> i32 {
 
         let manifest_content = fs_read_result.unwrap();
 
-        let manifest_type: &str = "snap";
-        manifests::manifest::get_type(input_file.to_string(), manifest_type);
-
         let ctx = manifests::manifest::ConversionContext {
           source_type: "snap".to_string(),
           destination_type: "flatpak".to_string(),
@@ -37,11 +34,9 @@ pub fn run(command_name: &str, args: &ArgMatches) -> i32 {
           content: "".to_string(),
         };
 
-        let manifest = manifests::manifest::parse(manifest_content, &ctx);
-
+        let manifest_type = manifests::get_type("filename.txt", &manifest_content);
         manifests::parse();
         manifests::dump();
-        manifests::match_filename();
         return 0;
     }
 
