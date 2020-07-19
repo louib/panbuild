@@ -17,6 +17,7 @@ pub struct AbstractModule {
     version: String,
     url: String,
     url_type: String,
+    build_system: String,
     install_instructions: String,
 }
 
@@ -28,11 +29,25 @@ pub struct AbstractManifest {
     modules: Vec<AbstractModule>,
 }
 
+impl Default for AbstractManifest {
+    fn default() -> Self {
+        return AbstractManifest {
+            package_name: String::from(""),
+            package_id: "".to_string(),
+            package_version: "".to_string(),
+
+            modules: vec![],
+        };
+    }
+}
+
+
 pub struct ConversionContext {
     pub source_filename: String,
     pub source_type: String,
     pub destination_type: String,
     pub content: String,
+    pub abstract_manifest: AbstractManifest,
 }
 
 // use yaml_rust::{YamlLoader, YamlEmitter};

@@ -27,10 +27,11 @@ pub fn run(command_name: &str, args: &ArgMatches) -> i32 {
         let manifest_content = fs_read_result.unwrap();
 
         let ctx = manifests::manifest::ConversionContext {
-          source_filename: input_file_path.to_string(),
-          source_type: manifests::manifest::DEFAULT_SOURCE_TYPE.to_string(),
-          destination_type: manifests::manifest::DEFAULT_DESTINATION_TYPE.to_string(),
-          content: manifest_content,
+            source_filename: input_file_path.to_string(),
+            source_type: manifests::manifest::DEFAULT_SOURCE_TYPE.to_string(),
+            destination_type: manifests::manifest::DEFAULT_DESTINATION_TYPE.to_string(),
+            content: manifest_content,
+            abstract_manifest: manifests::manifest::AbstractManifest::default(),
         };
         manifests::get_type(&ctx);
 
