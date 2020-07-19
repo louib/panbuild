@@ -47,32 +47,40 @@ pub fn get_type(manifest_path: String, ret: &str) -> &str {
 }
 
 pub fn parse(manifest_content: String, ctx: &ConversionContext) {
-    // let yml_load_result = YamlLoader::load_from_str(&manifest_content);
-
-    // if yml_load_result.is_err() {
-        // return;
-    // }
-
-    // let manifest_content = yml_load_result.unwrap();
-
-    let lines = manifest_content.split("\n");
-    let mut count = 0;
-    for line in lines {
-        print!("***** {}", line);
-        let mut only_spaces = true;
-        let mut indent_size = 0;
-        let is_empty_line: bool = line.starts_with(|c: char| {
-            if c == ' ' {
-                indent_size = indent_size + 1;
-                return true;
-            }
-            if c == '\t' {
-                return true;
-            }
-            return false;
-        });
-        count = count + 1;
+    if ctx.source_type == "debian" {
+        let lines = manifest_content.split("\n");
+        // let mut paragraphs = Vec<Vec<String>>;
+        let mut count = 0;
+        for line in lines {
+            print!("***** {}", line);
+            let mut only_spaces = true;
+            let mut indent_size = 0;
+            let is_empty_line: bool = line.starts_with(|c: char| {
+                if c == ' ' {
+                    indent_size = indent_size + 1;
+                    return true;
+                }
+                if c == '\t' {
+                    return true;
+                }
+                return false;
+            });
+            count = count + 1;
+        }
+        return;
     }
+
+    if ctx.source_type == "snap" {
+        // let yml_load_result = YamlLoader::load_from_str(&manifest_content);
+
+        // if yml_load_result.is_err() {
+            // return;
+        // }
+
+        // let manifest_content = yml_load_result.unwrap();
+        //
+    }
+
     return;
 }
 
