@@ -1,56 +1,60 @@
-mod debian {
-    // Debian control file constants.
-    const DEFAULT_SECTION: &str = "libs";
-    const DEFAULT_PRIORITY: &str = "optional";
+// mod abstract_manifest;
+// mod execution_context;
 
-    // Package constants.
-    const DEFAULT_ARCH: &str = "any";
-    const DEFAULT_MULTI_ARCH: &str = "same";
+// Debian control file constants.
+const DEFAULT_SECTION: &str = "libs";
+const DEFAULT_PRIORITY: &str = "optional";
 
-    // See https://www.debian.org/doc/debian-policy/ch-controlfields.html
-    struct DebianManifest {
-        // The name of the source described in this manifest.
-        source: String,
+// Package constants.
+const DEFAULT_ARCH: &str = "any";
+const DEFAULT_MULTI_ARCH: &str = "same";
 
-        // Can be:
-        //   * libs
-        section: String,
+// See https://www.debian.org/doc/debian-policy/ch-controlfields.html
+struct DebianManifest {
+    // The name of the source described in this manifest.
+    source: String,
 
-        // Can be:
-        //   * optional
-        priority: String,
+    // Can be:
+    //   * libs
+    section: String,
 
-        // Format is name <email@address.com>
-        maintainer: String,
+    // Can be:
+    //   * optional
+    priority: String,
 
-        build_depends: Vec<String>,
+    // Format is name <email@address.com>
+    maintainer: String,
 
-        // A semver reference to a "canonical" version.
-        standards_versions: String,
+    build_depends: Vec<String>,
 
-        homepage: String,
+    // A semver reference to a "canonical" version.
+    standards_versions: String,
 
-        // URL of a website to browser the source code.
-        vcs_browser: String,
+    homepage: String,
 
-        // URL of the git repo.
-        vcs_git: String,
+    // URL of a website to browser the source code.
+    vcs_browser: String,
 
-        packages: Vec<Package>,
-    }
+    // URL of the git repo.
+    vcs_git: String,
 
-    struct Package {
-        name: String,
+    packages: Vec<Package>,
+}
 
-        // Can be "any"
-        architecture: String,
+struct Package {
+    name: String,
 
-        multi_arch: String,
+    // Can be "any"
+    architecture: String,
 
-        depends: Vec<String>,
+    multi_arch: String,
 
-        // A multi-line string
-        description: String,
-    }
+    depends: Vec<String>,
+
+    // A multi-line string
+    description: String,
+}
+
+pub fn parse() {
 
 }
