@@ -11,6 +11,9 @@ The supported packaging systems are:
 * snap;
 * debian packages (via debian `control` files);
 
+Panbuild aims to make Unix system package managers inter-operable, whether they are distribution
+agnostic (snap, flatpak) or distribution based (deb, rpm, pacman, Homebrew).
+
 ## Install
 
 ```
