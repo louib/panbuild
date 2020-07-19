@@ -10,7 +10,6 @@ extern crate clap;
 use clap::{Arg, App, ArgMatches, SubCommand};
 use std::process::{exit};
 
-mod manifest;
 mod snap;
 mod npm;
 mod flatpak;
