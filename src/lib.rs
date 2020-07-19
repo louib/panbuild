@@ -8,11 +8,11 @@ use std::fs;
 use std::path;
 
 pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
-    println!("running command {}.", command_name);
+    eprintln!("running command {}.", command_name);
 
     if command_name == "convert" {
         if ! args.contains_key("input_file") {
-            println!("an input file is required when converting!");
+            eprintln!("an input file is required when converting!");
             // TODO handle reading from stdin.
             return 1;
         }
@@ -21,7 +21,7 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
 
         let fs_read_result = fs::read_to_string(path::Path::new(input_file_path));
         if fs_read_result.is_err() {
-            println!("could not read file {}.", input_file_path);
+            eprintln!("could not read file {}.", input_file_path);
             return 1;
         }
 
@@ -31,6 +31,7 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
         if args.contains_key("input_format") {
             let source_type = args.get("input_format").unwrap();
             if ! crate::manifests::has_type(source_type.to_string()) {
+                eprintln!("{} is an invalid manifest type.", source_type);
                 return 1;
             }
             ctx.source_type = source_type.to_string();
@@ -39,6 +40,7 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
         if args.contains_key("output_format") {
             let destination_type = args.get("output_format").unwrap();
             if ! crate::manifests::has_type(destination_type.to_string()) {
+                eprintln!("{} is an invalid manifest type.", destination_type);
                 return 1;
             }
             ctx.destination_type = destination_type.to_string();
@@ -66,5 +68,6 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
         return 0;
     }
 
+    eprintln!("Finishing...");
     return 0;
 }
