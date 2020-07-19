@@ -28,6 +28,22 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
         let mut ctx = crate::execution_context::ExecutionContext::default();
         ctx.content = fs_read_result.unwrap();
 
+        if args.contains_key("input_format") {
+            let source_type = args.get("input_format").unwrap();
+            if ! crate::manifests::has_type(source_type.to_string()) {
+                return 1;
+            }
+            ctx.source_type = source_type.to_string();
+        }
+
+        if args.contains_key("output_format") {
+            let destination_type = args.get("output_format").unwrap();
+            if ! crate::manifests::has_type(destination_type.to_string()) {
+                return 1;
+            }
+            ctx.destination_type = destination_type.to_string();
+        }
+
         let mut exit_code: i32 = manifests::get_type(&ctx);
         if exit_code != 0 {
             return exit_code;

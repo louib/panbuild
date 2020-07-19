@@ -8,6 +8,19 @@ pub mod manifest;
 // FIXME should not be public.
 pub mod abstract_manifest;
 
+pub fn has_type(type_name: String) -> bool {
+    if type_name == "debian" {
+        return true;
+    }
+    if type_name == "flatpak" {
+        return true;
+    }
+    if type_name == "snap" {
+        return true;
+    }
+    return false;
+}
+
 pub fn parse(ctx: &crate::execution_context::ExecutionContext) -> i32 {
     if ctx.source_type == "debian" {
         return crate::manifests::debian::parse(ctx);
