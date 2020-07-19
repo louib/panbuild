@@ -3,6 +3,7 @@ pub mod npm;
 pub mod debian;
 pub mod flatpak;
 pub mod pyproject;
+pub mod manifest;
 
 pub fn parse() {
     println!("called `manifests::parse()`");

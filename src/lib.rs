@@ -1,7 +1,6 @@
 // FIXME this dependency should be removed.
 use clap::{ArgMatches};
 
-mod manifest;
 mod manifests;
 
 use std::fs;
@@ -29,16 +28,16 @@ pub fn run(command_name: &str, args: &ArgMatches) -> i32 {
         let manifest_content = fs_read_result.unwrap();
 
         let manifest_type: &str = "snap";
-        manifest::get_type(input_file.to_string(), manifest_type);
+        manifests::manifest::get_type(input_file.to_string(), manifest_type);
 
-        let ctx = manifest::ConversionContext {
+        let ctx = manifests::manifest::ConversionContext {
           source_type: "snap".to_string(),
           destination_type: "flatpak".to_string(),
           // content: manifest_content,
           content: "".to_string(),
         };
 
-        let manifest = manifest::parse(manifest_content, &ctx);
+        let manifest = manifests::manifest::parse(manifest_content, &ctx);
 
         manifests::parse();
         manifests::dump();
