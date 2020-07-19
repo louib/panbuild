@@ -2,6 +2,7 @@
 use clap::{ArgMatches};
 
 mod manifest;
+mod manifests;
 
 use std::fs;
 use std::path;
@@ -38,6 +39,10 @@ pub fn run(command_name: &str, args: &ArgMatches) -> i32 {
         };
 
         let manifest = manifest::parse(manifest_content, &ctx);
+
+        manifests::parse();
+        manifests::dump();
+        manifests::match_filename();
         return 0;
     }
 
