@@ -1,3 +1,11 @@
+// Debian control file constants.
+const DEFAULT_SECTION: &str = "libs";
+const DEFAULT_PRIORITY: &str = "optional";
+
+// Package constants.
+const DEFAULT_ARCH: &str = "any";
+const DEFAULT_MULTI_ARCH: &str = "same";
+
 struct DebianManifest {
     // The name of the source described in this manifest.
     source: String,
