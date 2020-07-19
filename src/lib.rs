@@ -25,7 +25,6 @@ pub fn run(command_name: &str, args: &ArgMatches) -> i32 {
         }
 
         let manifest_content = fs_read_result.unwrap();
-
         let ctx = manifests::manifest::ConversionContext {
             source_filename: input_file_path.to_string(),
             source_type: manifests::manifest::DEFAULT_SOURCE_TYPE.to_string(),
@@ -33,10 +32,22 @@ pub fn run(command_name: &str, args: &ArgMatches) -> i32 {
             content: manifest_content,
             abstract_manifest: manifests::manifest::AbstractManifest::default(),
         };
-        manifests::get_type(&ctx);
 
-        manifests::parse(&ctx);
-        manifests::dump(&ctx);
+        let mut exit_code: i32 = manifests::get_type(&ctx);
+        if exit_code != 0 {
+            return exit_code;
+        }
+
+        exit_code = manifests::parse(&ctx);
+        if exit_code != 0 {
+            return exit_code;
+        }
+
+        exit_code = manifests::dump(&ctx);
+        if exit_code != 0 {
+            return exit_code;
+        }
+
         return 0;
     }
 
