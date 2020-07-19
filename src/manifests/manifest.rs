@@ -41,8 +41,3 @@ trait Package {
     fn get_source_type(&self) -> String;
 }
 
-// Determines if the filename is a potential manifest
-// of any supported build system.
-pub fn match_filename(filename: String) -> bool {
-    return false;
-}

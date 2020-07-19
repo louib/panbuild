@@ -49,6 +49,9 @@ pub fn dump(ctx: &crate::execution_context::ExecutionContext) -> i32 {
     return 0;
 }
 
+// Determines if the filename is a potential manifest
+// of any supported build system. Empty string means the detection
+// failed.
 pub fn get_type(ctx: &crate::execution_context::ExecutionContext) -> i32 {
     return 0;
 }
