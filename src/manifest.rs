@@ -5,6 +5,9 @@ extern crate yaml_rust;
 // This is the syntax to import sibling modules.
 // #[path = "debian.rs"]
 // mod debian;
+//
+// It can also be on the same line!
+// #[path = "other_utils/debian.rs"] mod debian;
 
 
 pub struct ConversionContext {

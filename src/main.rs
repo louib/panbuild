@@ -13,7 +13,6 @@ use std::process::{exit};
 mod npm;
 mod flatpak;
 mod debian;
-mod pyproject;
 mod utils;
 
 fn main() {

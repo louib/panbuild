@@ -1,4 +1,5 @@
 pub mod snap;
+pub mod pyproject;
 
 pub fn parse() {
     println!("called `manifests::parse()`");
