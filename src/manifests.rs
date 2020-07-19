@@ -25,12 +25,35 @@ pub fn parse(ctx: &crate::execution_context::ExecutionContext) -> i32 {
 }
 
 pub fn dump(ctx: &crate::execution_context::ExecutionContext) -> i32 {
-    return 0;
+    if ctx.destination_type == "debian" {
+        return crate::manifests::debian::dump(ctx);
+    }
+
+    if ctx.destination_type == "snap" {
+        return crate::manifests::snap::dump(ctx);
+    }
+
+    if ctx.destination_type == "flatpak" {
+        return crate::manifests::flatpak::dump(ctx);
+    }
+
+    return 1;
 }
 
 // Determines if the filename is a potential manifest
-// of any supported build system. Empty string means the detection
-// failed.
+// of any supported build system.
 pub fn get_type(ctx: &crate::execution_context::ExecutionContext) -> i32 {
-    return 0;
+    if crate::manifests::debian::is_type(ctx) {
+        //ctx.source_type = "debian".to_string();
+    }
+
+    if crate::manifests::snap::is_type(ctx) {
+        //ctx.source_type = "snap".to_string();
+    }
+
+    if crate::manifests::flatpak::is_type(ctx) {
+        //ctx.source_type = "flatpak".to_string();
+    }
+
+    return 1;
 }
