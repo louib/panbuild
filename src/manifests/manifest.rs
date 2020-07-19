@@ -9,47 +9,6 @@ extern crate yaml_rust;
 // It can also be on the same line!
 // #[path = "other_utils/debian.rs"] mod debian;
 
-pub const DEFAULT_SOURCE_TYPE: &str = "snap";
-pub const DEFAULT_DESTINATION_TYPE: &str = "flatpak";
-
-pub struct AbstractModule {
-    name: String,
-    version: String,
-    url: String,
-    url_type: String,
-    build_system: String,
-    install_instructions: String,
-}
-
-pub struct AbstractManifest {
-    package_name: String,
-    package_id: String,
-    package_version: String,
-
-    modules: Vec<AbstractModule>,
-}
-
-impl Default for AbstractManifest {
-    fn default() -> Self {
-        return AbstractManifest {
-            package_name: String::from(""),
-            package_id: "".to_string(),
-            package_version: "".to_string(),
-
-            modules: vec![],
-        };
-    }
-}
-
-
-pub struct ConversionContext {
-    pub source_filename: String,
-    pub source_type: String,
-    pub destination_type: String,
-    pub content: String,
-    pub abstract_manifest: AbstractManifest,
-}
-
 // use yaml_rust::{YamlLoader, YamlEmitter};
 use yaml_rust::{YamlLoader};
 
