@@ -6,17 +6,17 @@ pub struct ExecutionContext {
     pub source_type: String,
     pub destination_type: String,
     pub content: String,
-    pub abstract_manifest: AbstractManifest,
+    pub abstract_manifest: crate::manifests::abstract_manifest::AbstractManifest,
 }
 
 impl Default for ExecutionContext {
     fn default() -> Self {
         return ExecutionContext {
-            source_filename: input_file_path.to_string(),
+            source_filename: "".to_string(),
             source_type: DEFAULT_SOURCE_TYPE.to_string(),
             destination_type: DEFAULT_DESTINATION_TYPE.to_string(),
             content: "".to_string(),
-            abstract_manifest: manifests::manifest::AbstractManifest::default(),
+            abstract_manifest: crate::manifests::abstract_manifest::AbstractManifest::default(),
         };
     }
 }

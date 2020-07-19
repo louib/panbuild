@@ -10,8 +10,6 @@ extern crate clap;
 use clap::{Arg, App, ArgMatches, SubCommand};
 use std::process::{exit};
 
-mod utils;
-
 fn main() {
     let pandoc_app: App = App::new("panbuild")
                           .version("0.0.1")
