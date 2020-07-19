@@ -1,4 +1,7 @@
 pub mod snap;
+pub mod npm;
+pub mod debian;
+pub mod flatpak;
 pub mod pyproject;
 
 pub fn parse() {
