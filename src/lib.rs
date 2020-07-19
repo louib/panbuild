@@ -16,27 +16,28 @@ pub fn run(command_name: &str, args: &ArgMatches) -> i32 {
             return 1;
         }
 
-        let input_file = args.value_of("input_file").unwrap();
-        let input_file_path = path::Path::new(input_file);
+        let input_file_path = args.value_of("input_file").unwrap();
 
-        let fs_read_result = fs::read_to_string(input_file_path);
+        let fs_read_result = fs::read_to_string(path::Path::new(input_file_path));
         if fs_read_result.is_err() {
-            println!("could not read file {}.", input_file);
+            println!("could not read file {}.", input_file_path);
             return 1;
         }
 
         let manifest_content = fs_read_result.unwrap();
 
         let ctx = manifests::manifest::ConversionContext {
+          source_filename: input_file_path.to_string(),
           source_type: "snap".to_string(),
           destination_type: "flatpak".to_string(),
           // content: manifest_content,
-          content: "".to_string(),
+          // content: fs_read_result.unwrap(),
+          content: manifest_content,
         };
+        manifests::get_type(&ctx);
 
-        let manifest_type = manifests::get_type("filename.txt", &manifest_content);
-        manifests::parse();
-        manifests::dump();
+        manifests::parse(&ctx);
+        manifests::dump(&ctx);
         return 0;
     }
 

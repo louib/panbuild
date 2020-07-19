@@ -5,14 +5,11 @@ pub mod flatpak;
 pub mod pyproject;
 pub mod manifest;
 
-pub fn parse() {
-    println!("called `manifests::parse()`");
+pub fn parse(ctx: &manifest::ConversionContext) {
 }
 
-pub fn dump() {
-    println!("called `manifests::dump()`");
+pub fn dump(ctx: &manifest::ConversionContext) {
 }
 
-pub fn get_type(filename: &str, file_content: &str) {
-    println!("called `manifests::match_filename()`");
+pub fn get_type(ctx: &manifest::ConversionContext) {
 }

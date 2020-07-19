@@ -11,6 +11,7 @@ extern crate yaml_rust;
 
 
 pub struct ConversionContext {
+    pub source_filename: String,
     pub source_type: String,
     pub destination_type: String,
     pub content: String,
@@ -52,12 +53,6 @@ trait Package {
 // of any supported build system.
 pub fn match_filename(filename: String) -> bool {
     return false;
-}
-
-pub fn get_type(manifest_path: String, ret: &str) -> &str {
-    // TODO match agains regexes.
-
-    return ret;
 }
 
 pub fn parse(manifest_content: String, ctx: &ConversionContext) {
