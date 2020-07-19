@@ -7,10 +7,9 @@
 The universal build manifest converter.
 
 The supported packaging systems are:
+* flatpak;
 * snap;
 * debian packages (via debian `control` files);
-* pip (via requirements.txt and pyproject.toml).
-* cargo (via Cargo.toml).
 
 ## Install
 
