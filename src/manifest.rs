@@ -2,6 +2,10 @@ use std::error::Error;
 
 extern crate yaml_rust;
 
+// This is the syntax to import sibling modules.
+// #[path = "debian.rs"]
+// mod debian;
+
 
 pub struct ConversionContext {
     pub source_type: String,
