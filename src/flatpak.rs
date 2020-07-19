@@ -1,3 +1,8 @@
+// Other choices are org.gnome.Platform and org.kde.Platform
+const DEFAULT_RUNTIME: &str = "org.freedesktop.Platform";
+// Other choices are org.gnome.Sdk and org.kde.Sdk
+const DEFAULT_SDK: &str = "org.freedesktop.Sdk";
+
 // See `man flatpak-manifest` for the flatpak manifest specs.
 // TODO The hyphens in the attribute names were replaced to underscores.
 // Not sure how to manage that yet.

@@ -47,13 +47,13 @@ pub fn get_type(manifest_path: String, ret: &str) -> &str {
 }
 
 pub fn parse(manifest_content: String, ctx: &ConversionContext) {
-    let yml_load_result = YamlLoader::load_from_str(&manifest_content);
+    // let yml_load_result = YamlLoader::load_from_str(&manifest_content);
 
-    if yml_load_result.is_err() {
-        return;
-    }
+    // if yml_load_result.is_err() {
+        // return;
+    // }
 
-    let manifest_content = yml_load_result.unwrap();
+    // let manifest_content = yml_load_result.unwrap();
     return;
 }
 
