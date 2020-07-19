@@ -2,6 +2,7 @@ use std::error::Error;
 
 extern crate yaml_rust;
 
+
 pub struct ConversionContext {
     pub source_type: String,
     pub destination_type: String,
