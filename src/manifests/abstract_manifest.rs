@@ -81,7 +81,6 @@ const jessie: OSVersion = OSVersion {
     // codename: String::from("stretch"),
 };
 
-
 // TODO Should we allow those systems to be available
 // when the generated manifest will be used? We could
 // consider optionally downloading those dependencies
@@ -114,9 +113,10 @@ pub enum BuildSystem {
     // mono??
 }
 
+pub const DEFAULT_BUILD_SYSTEM: BuildSystem = BuildSystem::make;
 
 impl Default for BuildSystem {
-    fn default() -> Self { BuildSystem::make }
+    fn default() -> Self { DEFAULT_BUILD_SYSTEM }
 }
 
 #[derive(Default)]

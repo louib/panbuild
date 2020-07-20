@@ -34,6 +34,13 @@ pub fn get_type(ctx: &crate::execution_context::ExecutionContext) -> i32 {
     return 0;
 }
 
+// Get the top-level build system for the project.
+pub fn get_build_system(
+    ctx: &crate::execution_context::ExecutionContext
+) -> crate::manifests::abstract_manifest::BuildSystem {
+    return crate::manifests::abstract_manifest::DEFAULT_BUILD_SYSTEM;
+}
+
 pub fn parse(ctx: &crate::execution_context::ExecutionContext) -> i32 {
     if ctx.source_type == "debian" {
         return crate::manifests::debian::parse(ctx);
