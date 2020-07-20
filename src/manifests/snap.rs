@@ -664,15 +664,16 @@ pub fn parse(ctx: &crate::execution_context::ExecutionContext) -> i32 {
 
     // TODO we should validate that there was only one YAML top-level document,
     // or remove support for that feature.
+    // let manifest_content = &yml_load_result.unwrap()[0];
     let manifest_content = &yml_load_result.unwrap()[0];
 
     let mut abstract_manifest = crate::manifests::abstract_manifest::AbstractManifest::default();
-    abstract_manifest.package_name = manifest_content["name"].as_str().unwrap().to_string();
+    abstract_manifest.package_name = manifest_content["name"].as_str().unwrap_or("").to_string();
     // Defaulting to the name here...
-    abstract_manifest.package_id = manifest_content["name"].as_str().unwrap().to_string();
-    abstract_manifest.package_version = manifest_content["version"].as_str().unwrap().to_string();
-    abstract_manifest.description = manifest_content["description"].as_str().unwrap().to_string();
-    abstract_manifest.short_description = manifest_content["summary"].as_str().unwrap().to_string();
+    abstract_manifest.package_id = manifest_content["name"].as_str().unwrap_or("").to_string();
+    abstract_manifest.package_version = manifest_content["version"].as_str().unwrap_or("").to_string();
+    abstract_manifest.description = manifest_content["description"].as_str().unwrap_or("").to_string();
+    abstract_manifest.short_description = manifest_content["summary"].as_str().unwrap_or("").to_string();
 
     let architectures = manifest_content["architectures"].as_vec().unwrap();
     if architectures.len() != 0 {
@@ -687,7 +688,6 @@ pub fn parse(ctx: &crate::execution_context::ExecutionContext) -> i32 {
             abstract_manifest.architecture = crate::manifests::abstract_manifest::Architecture::any;
         }
     }
-    // abstract_manifest.architecture
 
     let confinement = manifest_content["confinement"].as_str().unwrap();
     let grade = manifest_content["grade"].as_str().unwrap();
@@ -696,16 +696,13 @@ pub fn parse(ctx: &crate::execution_context::ExecutionContext) -> i32 {
         abstract_manifest.package_type = crate::manifests::abstract_manifest::PackageType::release;
     }
 
-    // let slots = manifest_content["slots"].as_hash().unwrap();
-    // let plugs = manifest_content["slots"].as_hash().unwrap();
- 
-    let apps = manifest_content["slots"].as_hash().unwrap();
+    let apps = manifest_content["apps"].as_hash().unwrap();
     for executable_name in apps.keys() {
         println!("executable: {}", executable_name.as_str().unwrap());
         let executable = crate::manifests::abstract_manifest::AbstractExecutable::default();
     }
 
-    let parts = manifest_content["slots"].as_hash().unwrap();
+    let parts = manifest_content["parts"].as_hash().unwrap();
     for module_name in parts.keys() {
         println!("module: {}", module_name.as_str().unwrap());
         let module = crate::manifests::abstract_manifest::AbstractModule::default();
