@@ -12,7 +12,9 @@ The supported packaging systems are:
 * debian packages (via debian `control` files);
 
 Panbuild aims to make Unix system package managers inter-operable, whether they are distribution
-agnostic (snap, flatpak) or distribution based (deb, rpm, pacman, Homebrew).
+agnostic (snap, flatpak) or distribution based (deb, rpm, pacman, Homebrew). The executable is
+portable and comes with an internal database of projects that can be installed through
+various build systems.
 
 ## Install
 
