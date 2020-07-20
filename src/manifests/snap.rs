@@ -667,25 +667,25 @@ pub fn parse(ctx: &mut crate::execution_context::ExecutionContext) -> i32 {
     // let manifest_content = &yml_load_result.unwrap()[0];
     let manifest_content = &yml_load_result.unwrap()[0];
 
-    let mut abstract_manifest = crate::manifests::abstract_manifest::AbstractManifest::default();
-    abstract_manifest.package_name = manifest_content["name"].as_str().unwrap_or("").to_string();
+    let mut manifest = crate::manifests::manifest::AbstractManifest::default();
+    manifest.package_name = manifest_content["name"].as_str().unwrap_or("").to_string();
     // Defaulting to the name here...
-    abstract_manifest.package_id = manifest_content["name"].as_str().unwrap_or("").to_string();
-    abstract_manifest.package_version = manifest_content["version"].as_str().unwrap_or("").to_string();
-    abstract_manifest.description = manifest_content["description"].as_str().unwrap_or("").to_string();
-    abstract_manifest.short_description = manifest_content["summary"].as_str().unwrap_or("").to_string();
+    manifest.package_id = manifest_content["name"].as_str().unwrap_or("").to_string();
+    manifest.package_version = manifest_content["version"].as_str().unwrap_or("").to_string();
+    manifest.description = manifest_content["description"].as_str().unwrap_or("").to_string();
+    manifest.short_description = manifest_content["summary"].as_str().unwrap_or("").to_string();
 
     let architectures = manifest_content["architectures"].as_vec().unwrap();
     if architectures.len() != 0 {
         let arch = architectures[0].as_str().unwrap().to_string();
         if arch == "amd64" {
-            abstract_manifest.architecture = crate::manifests::abstract_manifest::Architecture::amd64;
+            manifest.architecture = crate::manifests::manifest::Architecture::amd64;
         }
         if arch == "armhf" {
-            abstract_manifest.architecture = crate::manifests::abstract_manifest::Architecture::armhf;
+            manifest.architecture = crate::manifests::manifest::Architecture::armhf;
         }
         if arch == "any" {
-            abstract_manifest.architecture = crate::manifests::abstract_manifest::Architecture::any;
+            manifest.architecture = crate::manifests::manifest::Architecture::any;
         }
     }
 
@@ -693,19 +693,19 @@ pub fn parse(ctx: &mut crate::execution_context::ExecutionContext) -> i32 {
     let grade = manifest_content["grade"].as_str().unwrap();
 
     if grade != "devel" || confinement != "devmode" {
-        abstract_manifest.package_type = crate::manifests::abstract_manifest::PackageType::release;
+        manifest.package_type = crate::manifests::manifest::PackageType::release;
     }
 
     let apps = manifest_content["apps"].as_hash().unwrap();
     for executable_name in apps.keys() {
         println!("executable: {}", executable_name.as_str().unwrap());
-        let mut executable = crate::manifests::abstract_manifest::AbstractExecutable::default();
+        let mut executable = crate::manifests::manifest::AbstractExecutable::default();
     }
 
     let parts = manifest_content["parts"].as_hash().unwrap();
     for module_name in parts.keys() {
         println!("module: {}", module_name.as_str().unwrap());
-        let mut module = crate::manifests::abstract_manifest::AbstractModule::default();
+        let mut module = crate::manifests::manifest::AbstractModule::default();
         let snap_module = parts.get(module_name).unwrap();
 
         let mut prime_paths = vec![];
@@ -721,18 +721,18 @@ pub fn parse(ctx: &mut crate::execution_context::ExecutionContext) -> i32 {
         // This one should be required if source??
         let build_system = snap_module["plugin"].as_str().unwrap_or("").to_string();
         if build_system == "cmake" {
-            module.build_system = crate::manifests::abstract_manifest::BuildSystem::cmake;
+            module.build_system = crate::manifests::manifest::BuildSystem::cmake;
         }
         // This means apt-get packages in the case of snaps.
         if build_system == "nil" {
-            module.build_system = crate::manifests::abstract_manifest::BuildSystem::native;
+            module.build_system = crate::manifests::manifest::BuildSystem::native;
         }
         if build_system == "autotools" {
-            module.build_system = crate::manifests::abstract_manifest::BuildSystem::autotools;
+            module.build_system = crate::manifests::manifest::BuildSystem::autotools;
         }
         // This is used for file info packages.
         if build_system == "dump" {
-            module.build_system = crate::manifests::abstract_manifest::BuildSystem::manual;
+            module.build_system = crate::manifests::manifest::BuildSystem::manual;
         }
 
         module.config_options = snap_module["configflags"].as_str().unwrap_or("").to_string();

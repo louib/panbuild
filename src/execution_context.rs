@@ -6,7 +6,7 @@ pub struct ExecutionContext {
     pub source_type: String,
     pub destination_type: String,
     pub content: String,
-    pub manifest: crate::manifests::abstract_manifest::AbstractManifest,
+    pub manifest: crate::manifests::manifest::AbstractManifest,
 }
 
 impl Default for ExecutionContext {
@@ -16,7 +16,7 @@ impl Default for ExecutionContext {
             source_type: DEFAULT_SOURCE_TYPE.to_string(),
             destination_type: DEFAULT_DESTINATION_TYPE.to_string(),
             content: "".to_string(),
-            manifest: crate::manifests::abstract_manifest::AbstractManifest::default(),
+            manifest: crate::manifests::manifest::AbstractManifest::default(),
         };
     }
 }

@@ -234,7 +234,7 @@ pub fn parse(ctx: &mut crate::execution_context::ExecutionContext) -> i32 {
     let mut paragraphs: Vec<String> = vec![];
     parse_paragraphs(&ctx.content, &mut paragraphs);
 
-    ctx.manifest = crate::manifests::abstract_manifest::AbstractManifest::default();
+    ctx.manifest = crate::manifests::manifest::AbstractManifest::default();
 
     let mut debian_manifest = DebianManifest::default();
     // TODO validate that there is more than 1 paragraph?

@@ -1,7 +1,7 @@
 pub mod snap;
 pub mod debian;
 pub mod flatpak;
-pub mod abstract_manifest;
+pub mod manifest;
 
 pub fn has_type(type_name: String) -> bool {
     if type_name == "debian" {
@@ -37,30 +37,30 @@ pub fn get_type(ctx: &mut crate::execution_context::ExecutionContext) -> i32 {
 // Get the top-level build system for the project.
 pub fn get_build_system(
     ctx: &mut crate::execution_context::ExecutionContext
-) -> crate::manifests::abstract_manifest::BuildSystem {
+) -> crate::manifests::manifest::BuildSystem {
     if ctx.source_filename.ends_with("meson_options.txt") {
-        return crate::manifests::abstract_manifest::BuildSystem::meson;
+        return crate::manifests::manifest::BuildSystem::meson;
     }
     if ctx.source_filename.ends_with("control") {
-        // return crate::manifests::abstract_manifest::BuildSystem::debian;
+        // return crate::manifests::manifest::BuildSystem::debian;
     }
     if ctx.source_filename.ends_with("package.json") {
-        return crate::manifests::abstract_manifest::BuildSystem::npm;
+        return crate::manifests::manifest::BuildSystem::npm;
     }
     if ctx.source_filename.ends_with("Gemfile") {
-        // return crate::manifests::abstract_manifest::BuildSystem::ruby;
+        // return crate::manifests::manifest::BuildSystem::ruby;
     }
     if ctx.source_filename.ends_with("requirements.txt") {
         // We could also default to pip3...
-        return crate::manifests::abstract_manifest::BuildSystem::pip3;
+        return crate::manifests::manifest::BuildSystem::pip3;
     }
     if ctx.source_filename.ends_with(".spec") {
-        // return crate::manifests::abstract_manifest::BuildSystem::fedora;
+        // return crate::manifests::manifest::BuildSystem::fedora;
     }
     if ctx.source_filename.ends_with("Makefile") {
-        return crate::manifests::abstract_manifest::BuildSystem::make;
+        return crate::manifests::manifest::BuildSystem::make;
     }
-    return crate::manifests::abstract_manifest::DEFAULT_BUILD_SYSTEM;
+    return crate::manifests::manifest::DEFAULT_BUILD_SYSTEM;
 }
 
 pub fn parse(ctx: &mut crate::execution_context::ExecutionContext) -> i32 {
