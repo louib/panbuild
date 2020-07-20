@@ -1,6 +1,3 @@
-// mod abstract_manifest;
-// mod execution_context;
-
 // Debian control file constants.
 const DEFAULT_SECTION: &str = "libs";
 const DEFAULT_PRIORITY: &str = "optional";
