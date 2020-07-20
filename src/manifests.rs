@@ -1,8 +1,6 @@
 pub mod snap;
-pub mod npm;
 pub mod debian;
 pub mod flatpak;
-pub mod pyproject;
 pub mod abstract_manifest;
 
 pub fn has_type(type_name: String) -> bool {
