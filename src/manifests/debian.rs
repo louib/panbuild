@@ -6,6 +6,8 @@ const DEFAULT_PRIORITY: &str = "optional";
 const DEFAULT_ARCH: &str = "any";
 const DEFAULT_MULTI_ARCH: &str = "same";
 
+const CONTROL_FILE_SEPARATOR: &str = ":";
+
 // See https://www.debian.org/doc/debian-policy/ch-controlfields.html
 struct DebianManifest {
     // The name of the source described in this manifest.
@@ -38,6 +40,23 @@ struct DebianManifest {
     packages: Vec<DebianPackage>,
 }
 
+impl Default for DebianManifest {
+    fn default() -> Self {
+        return DebianManifest {
+            source: "".to_string(),
+            section: DEFAULT_SECTION.to_string(),
+            priority: DEFAULT_PRIORITY.to_string(),
+            maintainer: "".to_string(),
+            build_depends: vec![],
+            standards_versions: "".to_string(),
+            homepage: "".to_string(),
+            vcs_browser: "".to_string(),
+            vcs_git: "".to_string(),
+            packages: vec![],
+        };
+    }
+}
+
 struct DebianPackage {
     name: String,
 
@@ -56,16 +75,10 @@ impl Default for DebianPackage {
     fn default() -> Self {
         return DebianPackage {
             name: "".to_string(),
-
-            // Can be "any"
             architecture: DEFAULT_ARCH.to_string(),
-
             multi_arch: DEFAULT_MULTI_ARCH.to_string(),
-
-            depends: vec![],
-
-            // A multi-line string
             description: "".to_string(),
+            depends: vec![],
         };
     }
 }
