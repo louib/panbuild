@@ -52,6 +52,15 @@ fn main() {
                                     .value_name("FORMAT")
                                     .required(true)
                                     .help("Format of the manifest to generate.")))
+                          .subcommand(SubCommand::with_name("install")
+                               .about("install a package.")
+                               .arg(Arg::with_name("package_name")
+                                    .short("i")
+                                    .long("install")
+                                    .takes_value(true)
+                                    .value_name("PACKAGE_APP_OR_LIB")
+                                    .required(true)
+                                    .help("The name of the package or app to install.")))
                           .subcommand(SubCommand::with_name("spec")
                                .about("Show the spec for a manifest type."));
 

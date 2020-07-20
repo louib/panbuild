@@ -742,10 +742,10 @@ pub fn parse(ctx: &mut crate::execution_context::ExecutionContext) -> i32 {
     return 0;
 }
 
-pub fn dump(ctx: &crate::execution_context::ExecutionContext) -> i32 {
+pub fn dump(ctx: &mut crate::execution_context::ExecutionContext) -> i32 {
     return 0;
 }
 
-pub fn is_type(ctx: &crate::execution_context::ExecutionContext) -> bool {
+pub fn is_type(ctx: &mut crate::execution_context::ExecutionContext) -> bool {
     return false;
 }

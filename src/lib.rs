@@ -1,6 +1,7 @@
 use std::collections::HashMap;
 
 mod manifests;
+mod projects;
 mod execution_context;
 mod utils;
 
@@ -46,7 +47,7 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
             ctx.destination_type = destination_type.to_string();
         }
 
-        let mut exit_code: i32 = manifests::get_type(&ctx);
+        let mut exit_code: i32 = manifests::get_type(&mut ctx);
         if exit_code != 0 {
             return exit_code;
         }
@@ -56,7 +57,7 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
             return exit_code;
         }
 
-        exit_code = manifests::dump(&ctx);
+        exit_code = manifests::dump(&mut ctx);
         if exit_code != 0 {
             return exit_code;
         }

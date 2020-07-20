@@ -1,0 +1,170 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+name: inkscape
+adopt-info: inkscape
+summary: Vector Graphics Editor
+license: GPL-3.0
+description: >
+ An Open Source vector graphics editor, with capabilities similar to
+ Illustrator, CorelDraw, or Xara X, using the W3C standard Scalable Vector
+ Graphics (SVG) file format.
+
+ Inkscape supports many advanced SVG features (markers, clones, alpha blending,
+ etc.) and great care is taken in designing a streamlined interface.
+ It is very easy to edit nodes, perform complex path operations, trace
+ bitmaps and much more.
+
+ We also aim to maintain a thriving user and developer community by using
+ open, community-oriented development.
+confinement: strict
+grade: stable
+base: core18
+
+plugs:
+  dot-config-inkscape:
+    interface: personal-files
+    write: [ $HOME/.config/inkscape ]
+
+slots:
+  inkscape-dbus:
+    interface: dbus
+    bus: session
+    name: org.inkscape.Inkscape
+
+parts:
+  inkscape:
+    plugin: cmake
+    source: .
+    configflags:
+      - '-DWITH_DBUS=ON'
+      - '-DWITH_JEMALLOC=ON'
+    build-packages:
+      - cmake
+      - intltool
+      - libart-2.0-dev
+      - libboost-dev
+      - libcdr-dev
+      - libdbus-glib-1-dev
+      - libdouble-conversion-dev
+      - libgc-dev
+      - libgdl-3-dev
+      - libglib2.0-dev
+      - libgnomevfs2-dev
+      - libgsl-dev
+      - libgspell-1-dev
+      - libgtk-3-dev
+      - libgtkmm-3.0-dev
+      - libharfbuzz-dev
+      - libjemalloc-dev
+      - liblcms2-dev
+      - libmagick++-dev
+      - libpango1.0-dev
+      - libpoppler-glib-dev
+      - libpoppler-private-dev
+      - libpotrace-dev
+      - librevenge-dev
+      - libsigc++-2.0-dev
+      - libsoup2.4-dev
+      - libtool
+      - libvisio-dev
+      - libwpg-dev
+      - libxml-parser-perl
+      - libxml2-dev
+      - libxslt1-dev
+      - pkg-config
+      - zlib1g-dev
+    stage-packages:
+      - libatkmm-1.6-1v5
+      - libcairomm-1.0-1v5
+      - libcdr-0.1-1
+      - libdouble-conversion1
+      - libgc1c2
+      - libgdk-pixbuf2.0-0
+      - libgdl-3-5
+      - libglibmm-2.4-1v5
+      - libglib2.0-bin
+      - libgnomevfs2-0
+      - libgsl23
+      - libgslcblas0
+      - libgspell-1-1
+      - libgtkmm-3.0-1v5
+      - liblcms2-2
+      - libjemalloc1
+      - libmagick++-6.q16-7
+      - libpangomm-1.4-1v5
+      - libpoppler-glib8
+      - libpotrace0
+      - librevenge-0.0-0
+      - libvisio-0.1-1
+      - libwpg-0.3-3
+      - libxslt1.1
+      - aspell
+      - imagemagick
+      - libimage-magick-perl
+      - libwmf-bin
+      - transfig
+      - libsvg-perl
+      - libxml-xql-perl
+      - ruby
+      - python3-gi
+      - python3-gi-cairo
+    prime:
+      - -lib/inkscape/*.a
+    override-build: |
+      sed -i.bak -e 's|Icon=${INKSCAPE_ICONPATH}|Icon=${SNAP}/share/inkscape/branding/inkscape.svg|g' $SNAPCRAFT_PART_SRC/org.inkscape.Inkscape.desktop.template
+      snapcraftctl build
+      INKSCAPE_VERSION=`g++ -I${SNAPCRAFT_PART_SRC}/src ${SNAPCRAFT_PART_BUILD}/src/inkscape-version.cpp ${SNAPCRAFT_PROJECT_DIR}/snap/local/print-inkscape-version.cpp -o print-inkscape-version && ./print-inkscape-version`
+      echo "Inkscape Version: ${INKSCAPE_VERSION}"
+      snapcraftctl set-version "${INKSCAPE_VERSION}"
+  python-deps:
+    plugin: python
+    python-version: python3
+    python-packages:
+      - lxml
+      - numpy
+      - scour
+    stage-packages:
+      - pstoedit
+  snap-helpers:
+    plugin: dump
+    source: snap/local/scripts
+
+apps:
+  inkscape:
+    command: bin/inkscape
+    command-chain: [ private-fontcache ]
+    plugs:
+      - home
+      - gsettings
+      - unity7
+      - cups-control
+      - removable-media
+      - dot-config-inkscape
+    slots:
+      - inkscape-dbus
+    desktop: share/applications/org.inkscape.Inkscape.desktop
+    environment:
+      AAREALHOME: ${SNAP_USER_DATA}/../../..
+      INKSCAPE_PROFILE_DIR: ${AAREALHOME}/.config/inkscape
+      INKSCAPE_LOCALEDIR: ${SNAP}/share/locale
+      INKSCAPE_DATADIR: ${SNAP}/share
+    extensions: [ gnome-3-28 ]
+  viewer:
+    command: bin/inkview
+    command-chain: [ private-fontcache ]
+    plugs:
+      - home
+      - gsettings
+      - unity7
+      - removable-media
+      - dot-config-inkscape
+    environment:
+      AAREALHOME: ${SNAP_USER_DATA}/../../..
+      INKSCAPE_PROFILE_DIR: ${AAREALHOME}/.config/inkscape
+      INKSCAPE_LOCALEDIR: ${SNAP}/share/locale
+      INKSCAPE_DATADIR: ${SNAP}/share
+    extensions: [ gnome-3-28 ]
+
+hooks:
+  configure:
+    plugs:
+      - desktop
