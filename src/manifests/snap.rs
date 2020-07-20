@@ -662,7 +662,23 @@ pub fn parse(ctx: &crate::execution_context::ExecutionContext) -> i32 {
         return 1;
     }
 
-    let manifest_content = yml_load_result.unwrap();
+    // TODO we should validate that there was only one YAML top-level document,
+    // or remove support for that feature.
+    let manifest_content = &yml_load_result.unwrap()[0];
+
+    let name = manifest_content["name"].as_str().unwrap();
+    let version = manifest_content["version"].as_str().unwrap();
+    let summary = manifest_content["summary"].as_str().unwrap();
+    let description = manifest_content["description"].as_str().unwrap();
+    let confinement = manifest_content["confinement"].as_str().unwrap();
+    let grade = manifest_content["grade"].as_str().unwrap();
+    let architectures = manifest_content["architectures"].as_vec().unwrap();
+    let slots = manifest_content["slots"].as_hash().unwrap();
+    let plugs = manifest_content["slots"].as_hash().unwrap();
+    let apps = manifest_content["slots"].as_hash().unwrap();
+    let parts = manifest_content["slots"].as_hash().unwrap();
+
+    eprintln!("{:?}", manifest_content);
 
     return 0;
 }
