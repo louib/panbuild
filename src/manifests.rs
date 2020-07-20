@@ -38,6 +38,15 @@ pub fn get_type(ctx: &crate::execution_context::ExecutionContext) -> i32 {
 pub fn get_build_system(
     ctx: &crate::execution_context::ExecutionContext
 ) -> crate::manifests::abstract_manifest::BuildSystem {
+    if ctx.source_filename.ends_with("meson_options.txt") {
+        return crate::manifests::abstract_manifest::BuildSystem::meson;
+    }
+    if ctx.source_filename.ends_with("control") {
+        // return crate::manifests::abstract_manifest::BuildSystem::debian;
+    }
+    if ctx.source_filename.ends_with("Makefile") {
+        return crate::manifests::abstract_manifest::BuildSystem::make;
+    }
     return crate::manifests::abstract_manifest::DEFAULT_BUILD_SYSTEM;
 }
 
