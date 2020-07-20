@@ -11,6 +11,8 @@ pub enum Architecture {
     any,
 }
 
+pub const DEFAULT_ARCH: Architecture = Architecture::any;
+
 pub struct AbstractManifest {
     pub package_name: String,
     pub package_id: String,
@@ -35,7 +37,7 @@ impl Default for AbstractManifest {
             short_description: "".to_string(),
             description: "".to_string(),
             package_type: DEFAULT_PACKAGE_TYPE,
-            architecture: Architecture::armhf,
+            architecture: DEFAULT_ARCH,
 
             modules: vec![],
             permissions: vec![],

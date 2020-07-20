@@ -676,13 +676,25 @@ pub fn parse(ctx: &crate::execution_context::ExecutionContext) -> i32 {
 
     let architectures = manifest_content["architectures"].as_vec().unwrap();
     if architectures.len() != 0 {
-        abstract_manifest.architecture = crate::manifests::abstract_manifest::Architecture::armhf;
+        let arch = architectures[0].as_str().unwrap().to_string();
+        if arch == "amd64" {
+            abstract_manifest.architecture = crate::manifests::abstract_manifest::Architecture::amd64;
+        }
+        if arch == "armhf" {
+            abstract_manifest.architecture = crate::manifests::abstract_manifest::Architecture::armhf;
+        }
+        if arch == "any" {
+            abstract_manifest.architecture = crate::manifests::abstract_manifest::Architecture::any;
+        }
     }
     // abstract_manifest.architecture
 
     let confinement = manifest_content["confinement"].as_str().unwrap();
     let grade = manifest_content["grade"].as_str().unwrap();
 
+    if grade != "devel" || confinement != "devmode" {
+        abstract_manifest.package_type = crate::manifests::abstract_manifest::PackageType::release;
+    }
 
     let slots = manifest_content["slots"].as_hash().unwrap();
     let plugs = manifest_content["slots"].as_hash().unwrap();
