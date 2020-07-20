@@ -1,3 +1,4 @@
+#[derive(Default)]
 pub struct Project {
     id: String,
     name: String,
@@ -8,10 +9,11 @@ pub struct Project {
     dependencies: Vec<Project>,
 }
 
+#[derive(Default)]
 pub struct Version {
     project: Project,
+    semver: String,
 }
-
 
 pub fn get_all() -> Vec<String> {
     return vec![];
