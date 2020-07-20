@@ -1,5 +1,13 @@
+extern crate yaml_rust;
+
+use yaml_rust::{YamlLoader, YamlEmitter};
+
 use std::collections::HashMap;
+
+
 // TODO is it relevant ? https://snapcraft.io/docs/environment-variables
+//
+//
 
 // Snapcraft top-level metadata
 // See https://snapcraft.io/docs/snapcraft-yaml-reference for the full YAML reference.
@@ -647,14 +655,15 @@ enum SourceType {
 }
 
 pub fn parse(ctx: &crate::execution_context::ExecutionContext) -> i32 {
-    // let yml_load_result = YamlLoader::load_from_str(&ctx.content);
+    let yml_load_result = YamlLoader::load_from_str(&ctx.content);
 
-    // if yml_load_result.is_err() {
-        // return;
-    // }
+    if yml_load_result.is_err() {
+        eprintln!("Could not parse yaml file");
+        return 1;
+    }
 
-    // let manifest_content = yml_load_result.unwrap();
-    //
+    let manifest_content = yml_load_result.unwrap();
+
     return 0;
 }
 
