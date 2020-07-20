@@ -7,7 +7,9 @@ pub const DEFAULT_PACKAGE_TYPE: PackageType = PackageType::dev;
 
 pub enum Architecture {
     amd64,
+    i386,
     armhf,
+    spark,
     any,
 }
 
@@ -46,14 +48,73 @@ impl Default for AbstractManifest {
     }
 }
 
+pub enum NetTool {
+    // https://github.com/curl/curl
+    curl,
+    // http://git.savannah.gnu.org/cgit/wget.git
+    wget,
+}
+
+pub enum OS {
+    bsd,
+    mac,
+    ios,
+    linux,
+    android,
+    symbian,
+    // Add RT Oses??
+    // Add misc Oses like calculators and PAs???
+}
+
+// Also called distribution.
+pub struct OSVersion {
+    pub os: OS,
+    pub is_distribution: bool,
+    // pub name: String,
+    // pub codename: String,
+}
+
+const jessie: OSVersion = OSVersion {
+    os: OS::linux,
+    is_distribution: true,
+    // name: String::from("jessie"),
+    // codename: String::from("stretch"),
+};
+
+
+// TODO Should we allow those systems to be available
+// when the generated manifest will be used? We could
+// consider optionally downloading those dependencies
+// to ensure the version of the build system...
 pub enum BuildSystem {
     make,
     cmake,
     autotools,
-    ninja,
+    meson,
+    cargo,
+    maven,
+    xcode,
+    npm,
+    // if ever http://git.savannah.gnu.org/cgit/bash.git
+    // git@github.com:bminor/bash.git
+    bash,
+    pip,
+    pip3,
+    // if ever git@github.com:PowerShell/PowerShell.git
+    // powershell,
     manual,
+    // if ever git@github.com:apple/swift.git.
+    swift,
     native,
+    // perl ??
+    // ruby ??
+    // simple?
+    // haskell??
+    // LaTeX??
+    // mono??
 }
+
+
 impl Default for BuildSystem {
     fn default() -> Self { BuildSystem::make }
 }
