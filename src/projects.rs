@@ -1,20 +1,11 @@
-#[derive(Default)]
-pub struct Project {
-    id: String,
-    name: String,
-    urls: Vec<String>,
-    available_versions: Vec<String>,
-    maintainers: Vec<String>,
-    source_urls: Vec<String>,
-    dependencies: Vec<Project>,
+pub mod project;
+pub mod db;
+
+// Dump the project in the format required by the database.rs file.
+pub fn dump_project() -> String {
+    return "".to_string();
 }
 
-#[derive(Default)]
-pub struct Version {
-    project: Project,
-    semver: String,
-}
-
-pub fn get_all() -> Vec<String> {
-    return vec![];
+pub fn get_projects() -> Vec<project::Project> {
+    return db::get_all();
 }
