@@ -1,0 +1,94 @@
+app-id: com.hamrick.VueScan
+runtime: org.gnome.Platform
+runtime-version: '3.36'
+sdk: org.gnome.Sdk
+command: vuescan
+tags:
+  - proprietary
+finish-args:
+  - --share=ipc
+  - --socket=x11
+  - --socket=pulseaudio
+  - --filesystem=xdg-pictures
+  - --filesystem=xdg-documents
+  # Networked scanners
+  - --share=network
+  # License file
+  - --persist=.
+  - --persist=.vuescan
+  - --device=all
+modules:
+  - shared-modules/gtk2/gtk2.json
+
+  - name: vuescan
+    buildsystem: simple
+    build-commands:
+      - install -D -t "${FLATPAK_DEST}/bin/" apply_extra
+      - install -D -t "${FLATPAK_DEST}/bin/" vuescan
+      - install -Dm644 -t "${FLATPAK_DEST}/share/appdata/" com.hamrick.VueScan.appdata.xml
+      - install -Dm644 -t "${FLATPAK_DEST}/share/applications/" com.hamrick.VueScan.desktop
+      - install -Dm644 icon16x16.png "${FLATPAK_DEST}/share/icons/hicolor/16x16/apps/${FLATPAK_ID}.png"
+      - install -Dm644 icon32x32.png "${FLATPAK_DEST}/share/icons/hicolor/32x32/apps/${FLATPAK_ID}.png"
+      - install -Dm644 icon48x48.png "${FLATPAK_DEST}/share/icons/hicolor/48x48/apps/${FLATPAK_ID}.png"
+      - install -Dm644 icon128x128.png "${FLATPAK_DEST}/share/icons/hicolor/128x128/apps/${FLATPAK_ID}.png"
+    sources:
+      - type: extra-data
+        filename: vuescan.tgz
+        only-arches: [i386]
+        url: https://d2bwyyzfw77fhf.cloudfront.net/vuex3297.tgz
+        sha256: 64342abe8ebf42fab5064d96f0ba65f4366a779cc6e192d62c89a474eb3734d7
+        size: 9853803
+        x-checker-data:
+          type: rotating-url
+          url: https://www.hamrick.com/files/vuex3297.tgz
+      - type: extra-data
+        filename: vuescan.tgz
+        only-arches: [x86_64]
+        url: https://d2bwyyzfw77fhf.cloudfront.net/vuex6497.tgz
+        sha256: 763b51ef0b1285b70fff0579506bf64c00265566550b1dad4fbbc357ac31c0f2
+        size: 9897262
+        x-checker-data:
+          type: rotating-url
+          url: https://www.hamrick.com/files/vuex6497.tgz
+      - type: extra-data
+        filename: vuescan.tgz
+        only-arches: [arm]
+        url: https://d2bwyyzfw77fhf.cloudfront.net/vuea3297.tgz
+        sha256: 5cfd407ab096d1a4900574ed647263514bd6c25c5645c8bfa9d24f7cc212d9ce
+        size: 9379606
+        x-checker-data:
+          type: rotating-url
+          url: https://www.hamrick.com/files/vuea3297.tgz
+      - type: extra-data
+        filename: vuescan.tgz
+        only-arches: [aarch64]
+        url: https://d2bwyyzfw77fhf.cloudfront.net/vuea6497.tgz
+        sha256: 386f5f2ca6b33f75206fde6972a90cc7b54ed0b29c81949272a7c6444b5d5804
+        size: 9999490
+        x-checker-data:
+          type: rotating-url
+          url: https://www.hamrick.com/files/vuea6497.tgz
+      - type: script
+        dest-filename: apply_extra
+        commands:
+          - tar xof vuescan.tgz
+          - rm vuescan.tgz
+          - mv VueScan/* .
+          - rm vuescan.svg  # This is just a JPEG embedded in an SVG container, prefer PNGs
+          - rmdir VueScan
+      - type: script
+        dest-filename: vuescan
+        commands:
+          - exec /app/extra/vuescan "$@"
+      - type: file
+        path: com.hamrick.VueScan.appdata.xml
+      - type: file
+        path: com.hamrick.VueScan.desktop
+      - type: file
+        path: icons/icon16x16.png
+      - type: file
+        path: icons/icon32x32.png
+      - type: file
+        path: icons/icon48x48.png
+      - type: file
+        path: icons/icon128x128.png
