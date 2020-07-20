@@ -67,6 +67,10 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
     }
 
     if command_name == "ls" {
+        let projects: Vec<crate::projects::project::Project> = crate::projects::db::get_all();
+        for project in projects {
+            println!("{0}: {1}", project.name, project.summary);
+        }
         return 0;
     }
 

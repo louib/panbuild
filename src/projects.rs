@@ -3,12 +3,16 @@ pub mod db;
 
 // Dump the project in the format required by the database.rs file.
 pub fn dump_project(project: crate::projects::project::Project) -> String {
-    let mut response: String = String::from("    crate::projects::project::Project {\n");
+    let mut response: String = String::from("");
+    response.push_str("    crate::projects::project::Project {\n");
     response.push_str("        id: \"{id}\".to_string(),");
     response.push_str("        name: \"{name}\".to_string(),");
+    response.push_str("        summary: \"{name}\".to_string(),");
+    response.push_str("        description: \"{name}\".to_string(),");
     response.push_str("        homepage: \"{homepage}\".to_string(),");
     response.push_str("        urls: \"{homepage}\".to_string(),");
     response.push_str("        maintainers: vec![],");
+    response.push_str("        keywords: vec![],");
     response.push_str("        dependencies: vec![],");
     if project.versions.len() != 0 {
         response.push_str("        versions: vec![\n");
