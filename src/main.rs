@@ -88,12 +88,12 @@ fn main() {
         },
         None => {
             // TODO this should print to stderr.
-            println!("Please provide a command to execute.");
+            eprintln!("Please provide a command to execute.");
             exit(1);
         },
         _ => {
             // TODO this should print to stderr.
-            println!("Unknown command {0}.", command_name);
+            eprintln!("Unknown command {0}.", command_name);
             exit(1);
         },
     }

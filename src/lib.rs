@@ -61,6 +61,7 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
             return exit_code;
         }
 
+        eprintln!("Finishing...");
         return 0;
     }
 

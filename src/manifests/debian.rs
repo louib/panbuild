@@ -60,7 +60,7 @@ pub fn parse(ctx: &crate::execution_context::ExecutionContext) -> i32 {
     // let mut paragraphs = Vec<Vec<String>>;
     let mut count = 0;
     for line in lines {
-        print!("***** {}", line);
+        eprintln!("***** {}", line);
         let mut only_spaces = true;
         let mut indent_size = 0;
         let is_empty_line: bool = line.starts_with(|c: char| {
@@ -75,6 +75,7 @@ pub fn parse(ctx: &crate::execution_context::ExecutionContext) -> i32 {
         });
         count = count + 1;
     }
+    eprintln!("***** finished parsing debian control file.");
     return 0;
 }
 

@@ -68,5 +68,5 @@ pub fn get_type(ctx: &crate::execution_context::ExecutionContext) -> i32 {
         //ctx.source_type = "flatpak".to_string();
     }
 
-    return 1;
+    return 0;
 }
