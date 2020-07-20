@@ -1,6 +1,7 @@
 extern crate yaml_rust;
+use std::collections::BTreeMap;
 
-use yaml_rust::{YamlLoader, YamlEmitter};
+use yaml_rust::{YamlLoader, YamlEmitter, Yaml};
 
 
 // Other choices are org.gnome.Platform and org.kde.Platform
@@ -166,6 +167,20 @@ pub fn dump(ctx: &crate::execution_context::ExecutionContext) -> i32 {
 
     // let manifest_content = yml_load_result.unwrap();
     //
+    //
+
+    let top_level_document: Yaml = Yaml::Array(vec![
+        Yaml::Integer(1), Yaml::Integer(2),
+    ]);
+    let output_document: Yaml = Yaml::Integer(1);
+    // let yaml_doc: Yaml = Yaml::Hash(1)
+
+    // Dump the YAML object
+    let mut out_str = String::new();
+    {
+        let mut emitter = YamlEmitter::new(&mut out_str);
+        emitter.dump(&output_document).unwrap(); // dump the YAML object to a String
+    }
 
 
     return 0;
