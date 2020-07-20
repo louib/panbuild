@@ -3,9 +3,6 @@ pub mod npm;
 pub mod debian;
 pub mod flatpak;
 pub mod pyproject;
-pub mod manifest;
-
-// FIXME should not be public.
 pub mod abstract_manifest;
 
 pub fn has_type(type_name: String) -> bool {
@@ -19,6 +16,24 @@ pub fn has_type(type_name: String) -> bool {
         return true;
     }
     return false;
+}
+
+// Determines if the filename is a potential manifest
+// of any supported build system.
+pub fn get_type(ctx: &crate::execution_context::ExecutionContext) -> i32 {
+    if crate::manifests::debian::is_type(ctx) {
+        //ctx.source_type = "debian".to_string();
+    }
+
+    if crate::manifests::snap::is_type(ctx) {
+        //ctx.source_type = "snap".to_string();
+    }
+
+    if crate::manifests::flatpak::is_type(ctx) {
+        //ctx.source_type = "flatpak".to_string();
+    }
+
+    return 0;
 }
 
 pub fn parse(ctx: &crate::execution_context::ExecutionContext) -> i32 {
@@ -51,22 +66,4 @@ pub fn dump(ctx: &crate::execution_context::ExecutionContext) -> i32 {
     }
 
     return 1;
-}
-
-// Determines if the filename is a potential manifest
-// of any supported build system.
-pub fn get_type(ctx: &crate::execution_context::ExecutionContext) -> i32 {
-    if crate::manifests::debian::is_type(ctx) {
-        //ctx.source_type = "debian".to_string();
-    }
-
-    if crate::manifests::snap::is_type(ctx) {
-        //ctx.source_type = "snap".to_string();
-    }
-
-    if crate::manifests::flatpak::is_type(ctx) {
-        //ctx.source_type = "flatpak".to_string();
-    }
-
-    return 0;
 }

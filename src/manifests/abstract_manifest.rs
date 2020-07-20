@@ -1,12 +1,3 @@
-pub struct AbstractModule {
-    name: String,
-    version: String,
-    url: String,
-    url_type: String,
-    build_system: String,
-    install_instructions: String,
-}
-
 pub struct AbstractManifest {
     package_name: String,
     package_id: String,
@@ -25,4 +16,13 @@ impl Default for AbstractManifest {
             modules: vec![],
         };
     }
+}
+
+pub struct AbstractModule {
+    name: String,
+    version: String,
+    url: String,
+    url_type: String,
+    build_system: String,
+    install_instructions: String,
 }
