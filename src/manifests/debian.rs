@@ -35,10 +35,10 @@ struct DebianManifest {
     // URL of the git repo.
     vcs_git: String,
 
-    packages: Vec<Package>,
+    packages: Vec<DebianPackage>,
 }
 
-struct Package {
+struct DebianPackage {
     name: String,
 
     // Can be "any"
@@ -52,6 +52,14 @@ struct Package {
     description: String,
 }
 
+fn read_manifest_paragraph(paragraph: String, manifest: &DebianManifest) {
+
+}
+
+fn read_package_paragraph(paragraph: String, package: &DebianPackage) {
+
+}
+
 pub fn parse(ctx: &crate::execution_context::ExecutionContext) -> i32 {
     let lines = ctx.content.split("\n");
     // let mut paragraphs = Vec<Vec<String>>;
@@ -60,7 +68,7 @@ pub fn parse(ctx: &crate::execution_context::ExecutionContext) -> i32 {
     for line in lines {
         let mut only_spaces = true;
         let mut indent_size = 0;
-        let spaces_before: bool = line.starts_with(|c: char| {
+        line.starts_with(|c: char| {
             if c == ' ' {
                 indent_size = indent_size + 1;
                 return true;
