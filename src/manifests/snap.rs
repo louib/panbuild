@@ -717,11 +717,26 @@ pub fn parse(ctx: &crate::execution_context::ExecutionContext) -> i32 {
         module.url = snap_module["source"].as_str().unwrap_or("").to_string();
         module.url_type = snap_module["source"].as_str().unwrap_or("").to_string();
         module.tag = snap_module["tag"].as_str().unwrap_or("").to_string();
+
         // This one should be required if source??
-        module.build_system = snap_module["plugin"].as_str().unwrap_or("").to_string();
+        let build_system = snap_module["plugin"].as_str().unwrap_or("").to_string();
+        if build_system == "cmake" {
+            module.build_system = crate::manifests::abstract_manifest::BuildSystem::cmake;
+        }
+        // This means apt-get packages in the case of snaps.
+        if build_system == "nil" {
+            module.build_system = crate::manifests::abstract_manifest::BuildSystem::native;
+        }
+        if build_system == "autotools" {
+            module.build_system = crate::manifests::abstract_manifest::BuildSystem::autotools;
+        }
+        // This is used for file info packages.
+        if build_system == "dump" {
+            module.build_system = crate::manifests::abstract_manifest::BuildSystem::manual;
+        }
+
         module.config_options = snap_module["configflags"].as_str().unwrap_or("").to_string();
         // module.dependencies = snap_module["tag"].as_str().unwrap_or("").to_string();
-
     }
 
     return 0;

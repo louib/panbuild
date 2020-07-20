@@ -46,13 +46,25 @@ impl Default for AbstractManifest {
     }
 }
 
+pub enum BuildSystem {
+    make,
+    cmake,
+    autotools,
+    ninja,
+    manual,
+    native,
+}
+impl Default for BuildSystem {
+    fn default() -> Self { BuildSystem::make }
+}
+
 #[derive(Default)]
 pub struct AbstractModule {
     pub name: String,
     pub version: String,
     pub url: String,
     pub url_type: String,
-    pub build_system: String,
+    pub build_system: BuildSystem,
     pub install_instructions: String,
     pub install_path: String,
     // The tag associated with the module, if any.

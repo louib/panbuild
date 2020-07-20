@@ -1,3 +1,8 @@
+extern crate yaml_rust;
+
+use yaml_rust::{YamlLoader, YamlEmitter};
+
+
 // Other choices are org.gnome.Platform and org.kde.Platform
 const DEFAULT_RUNTIME: &str = "org.freedesktop.Platform";
 // Other choices are org.gnome.Sdk and org.kde.Sdk
@@ -149,6 +154,10 @@ struct BuildExtension {
 }
 
 pub fn parse(ctx: &crate::execution_context::ExecutionContext) -> i32 {
+    return 0;
+}
+
+pub fn dump(ctx: &crate::execution_context::ExecutionContext) -> i32 {
     // let yml_load_result = YamlLoader::load_from_str(&ctx.content);
 
     // if yml_load_result.is_err() {
@@ -157,10 +166,8 @@ pub fn parse(ctx: &crate::execution_context::ExecutionContext) -> i32 {
 
     // let manifest_content = yml_load_result.unwrap();
     //
-    return 0;
-}
 
-pub fn dump(ctx: &crate::execution_context::ExecutionContext) -> i32 {
+
     return 0;
 }
 
