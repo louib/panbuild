@@ -699,13 +699,29 @@ pub fn parse(ctx: &crate::execution_context::ExecutionContext) -> i32 {
     let apps = manifest_content["apps"].as_hash().unwrap();
     for executable_name in apps.keys() {
         println!("executable: {}", executable_name.as_str().unwrap());
-        let executable = crate::manifests::abstract_manifest::AbstractExecutable::default();
+        let mut executable = crate::manifests::abstract_manifest::AbstractExecutable::default();
     }
 
     let parts = manifest_content["parts"].as_hash().unwrap();
     for module_name in parts.keys() {
         println!("module: {}", module_name.as_str().unwrap());
-        let module = crate::manifests::abstract_manifest::AbstractModule::default();
+        let mut module = crate::manifests::abstract_manifest::AbstractModule::default();
+        let snap_module = parts.get(module_name).unwrap();
+
+        let mut prime_paths = vec![];
+        prime_paths = snap_module["prime"].as_vec().unwrap_or(&prime_paths).to_vec();
+        if prime_paths.len() != 0 {
+            module.install_path = prime_paths[0].as_str().unwrap_or("").to_string();
+        }
+
+        module.url = snap_module["source"].as_str().unwrap_or("").to_string();
+        module.url_type = snap_module["source"].as_str().unwrap_or("").to_string();
+        module.tag = snap_module["tag"].as_str().unwrap_or("").to_string();
+        // This one should be required if source??
+        module.build_system = snap_module["plugin"].as_str().unwrap_or("").to_string();
+        module.config_options = snap_module["configflags"].as_str().unwrap_or("").to_string();
+        // module.dependencies = snap_module["tag"].as_str().unwrap_or("").to_string();
+
     }
 
     return 0;

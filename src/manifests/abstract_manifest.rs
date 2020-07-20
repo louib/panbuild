@@ -48,38 +48,37 @@ impl Default for AbstractManifest {
 
 #[derive(Default)]
 pub struct AbstractModule {
-    name: String,
-    version: String,
-    url: String,
-    url_type: String,
-    build_system: String,
-    install_instructions: String,
+    pub name: String,
+    pub version: String,
+    pub url: String,
+    pub url_type: String,
+    pub build_system: String,
+    pub install_instructions: String,
+    pub install_path: String,
     // The tag associated with the module, if any.
-    tag: String,
+    pub tag: String,
     // The hash of the commit associated with the module, if any.
-    commit: String,
+    pub commit: String,
     // The sha256 checksum of the modules.
-    sha256: Option<String>,
-    config_options: Option<String>,
+    pub sha256: String,
+    pub config_options: String,
     // Array of files and directories to cleanup after installing.
-    cleanup_files: Vec<String>,
-
-    misc_config: String,
+    pub cleanup_files: Vec<String>,
 }
 
 #[derive(Default)]
 pub struct AbstractExecutable {
-    name: String,
-    path: String,
-    is_desktop: bool,
-    is_daemon: bool,
+    pub name: String,
+    pub path: String,
+    pub is_desktop: bool,
+    pub is_daemon: bool,
     // Whether or not this is the primary executable of the bundle.
-    is_primary: bool,
-    icon_path: String,
+    pub is_primary: bool,
+    pub icon_path: String,
 }
 
 #[derive(Default)]
 pub struct AbstractPermission {
-    name: String,
-    description: String,
+    pub name: String,
+    pub description: String,
 }
