@@ -4,6 +4,8 @@ pub struct AbstractManifest {
     package_version: String,
 
     modules: Vec<AbstractModule>,
+    permissions: Vec<AbstractPermission>,
+    executables: Vec<AbstractExecutable>,
 }
 
 impl Default for AbstractManifest {
@@ -14,6 +16,8 @@ impl Default for AbstractManifest {
             package_version: "".to_string(),
 
             modules: vec![],
+            permissions: vec![],
+            executables: vec![],
         };
     }
 }
@@ -25,4 +29,16 @@ pub struct AbstractModule {
     url_type: String,
     build_system: String,
     install_instructions: String,
+}
+
+pub struct AbstractExecutable {
+    name: String,
+    path: String,
+    is_desktop: bool,
+    icon_path: String,
+}
+
+pub struct AbstractPermission {
+    name: String,
+    description: String,
 }
