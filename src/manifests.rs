@@ -44,6 +44,16 @@ pub fn get_build_system(
     if ctx.source_filename.ends_with("control") {
         // return crate::manifests::abstract_manifest::BuildSystem::debian;
     }
+    if ctx.source_filename.ends_with("package.json") {
+        return crate::manifests::abstract_manifest::BuildSystem::npm;
+    }
+    if ctx.source_filename.ends_with("Gemfile") {
+        // return crate::manifests::abstract_manifest::BuildSystem::ruby;
+    }
+    if ctx.source_filename.ends_with("requirements.txt") {
+        // We could also default to pip3...
+        return crate::manifests::abstract_manifest::BuildSystem::pip3;
+    }
     if ctx.source_filename.ends_with("Makefile") {
         return crate::manifests::abstract_manifest::BuildSystem::make;
     }
