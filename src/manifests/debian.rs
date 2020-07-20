@@ -52,6 +52,24 @@ struct DebianPackage {
     description: String,
 }
 
+impl Default for DebianPackage {
+    fn default() -> Self {
+        return DebianPackage {
+            name: "".to_string(),
+
+            // Can be "any"
+            architecture: DEFAULT_ARCH.to_string(),
+
+            multi_arch: DEFAULT_MULTI_ARCH.to_string(),
+
+            depends: vec![],
+
+            // A multi-line string
+            description: "".to_string(),
+        };
+    }
+}
+
 fn read_manifest_paragraph(paragraph: String, manifest: &DebianManifest) {
 
 }
@@ -60,11 +78,11 @@ fn read_package_paragraph(paragraph: String, package: &DebianPackage) {
 
 }
 
-pub fn parse(ctx: &crate::execution_context::ExecutionContext) -> i32 {
-    let lines = ctx.content.split("\n");
-    // let mut paragraphs = Vec<Vec<String>>;
+fn parse_paragraphs(content: &str, mut paragraphs: Vec<String>) {
+    let content_str = content.to_string();
+    let lines = content_str.split("\n");
     let mut paragraph: String = String::from("");
-    let mut paragraphs: Vec<String> = vec![];
+
     for line in lines {
         let mut only_spaces = true;
         let mut indent_size = 0;
@@ -94,6 +112,15 @@ pub fn parse(ctx: &crate::execution_context::ExecutionContext) -> i32 {
     for paragraph in paragraphs {
         eprintln!("***** paragraph is: {}\n", paragraph);
     }
+
+}
+
+pub fn parse(ctx: &crate::execution_context::ExecutionContext) -> i32 {
+    let mut paragraphs: Vec<String> = vec![];
+    parse_paragraphs(&ctx.content, paragraphs);
+
+    let mut debian_package = DebianPackage::default();
+    let mut packages: Vec<DebianPackage> = vec![];
 
     eprintln!("finished parsing debian control file.");
     return 0;
