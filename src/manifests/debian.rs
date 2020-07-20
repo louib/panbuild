@@ -55,24 +55,39 @@ struct Package {
 pub fn parse(ctx: &crate::execution_context::ExecutionContext) -> i32 {
     let lines = ctx.content.split("\n");
     // let mut paragraphs = Vec<Vec<String>>;
-    let mut count = 0;
+    let mut paragraph: String = String::from("");
+    let mut paragraphs: Vec<String> = vec![];
     for line in lines {
-        eprintln!("***** {}", line);
         let mut only_spaces = true;
         let mut indent_size = 0;
-        let is_empty_line: bool = line.starts_with(|c: char| {
+        let spaces_before: bool = line.starts_with(|c: char| {
             if c == ' ' {
                 indent_size = indent_size + 1;
                 return true;
             }
             if c == '\t' {
+                indent_size = indent_size + 1;
                 return true;
             }
             return false;
         });
-        count = count + 1;
+        let is_empty_line: bool = indent_size == line.len();
+        if ! is_empty_line {
+            paragraph.push_str(line);
+            paragraph.push_str("\n");
+        }
+        if is_empty_line && ! paragraph.is_empty() {
+            paragraphs.push(paragraph);
+            paragraph = String::from("");
+        }
     }
-    eprintln!("***** finished parsing debian control file.");
+
+    eprintln!("***** there was {} paragraphs.", paragraphs.len());
+    for paragraph in paragraphs {
+        eprintln!("***** paragraph is: {}\n", paragraph);
+    }
+
+    eprintln!("finished parsing debian control file.");
     return 0;
 }
 
