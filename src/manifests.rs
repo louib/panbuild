@@ -54,6 +54,9 @@ pub fn get_build_system(
         // We could also default to pip3...
         return crate::manifests::abstract_manifest::BuildSystem::pip3;
     }
+    if ctx.source_filename.ends_with(".spec") {
+        // return crate::manifests::abstract_manifest::BuildSystem::fedora;
+    }
     if ctx.source_filename.ends_with("Makefile") {
         return crate::manifests::abstract_manifest::BuildSystem::make;
     }
