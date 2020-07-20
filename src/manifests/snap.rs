@@ -696,12 +696,20 @@ pub fn parse(ctx: &crate::execution_context::ExecutionContext) -> i32 {
         abstract_manifest.package_type = crate::manifests::abstract_manifest::PackageType::release;
     }
 
-    let slots = manifest_content["slots"].as_hash().unwrap();
-    let plugs = manifest_content["slots"].as_hash().unwrap();
+    // let slots = manifest_content["slots"].as_hash().unwrap();
+    // let plugs = manifest_content["slots"].as_hash().unwrap();
+ 
     let apps = manifest_content["slots"].as_hash().unwrap();
-    let parts = manifest_content["slots"].as_hash().unwrap();
+    for executable_name in apps.keys() {
+        println!("executable: {}", executable_name.as_str().unwrap());
+        let executable = crate::manifests::abstract_manifest::AbstractExecutable::default();
+    }
 
-    eprintln!("{:?}", manifest_content);
+    let parts = manifest_content["slots"].as_hash().unwrap();
+    for module_name in parts.keys() {
+        println!("module: {}", module_name.as_str().unwrap());
+        let module = crate::manifests::abstract_manifest::AbstractModule::default();
+    }
 
     return 0;
 }

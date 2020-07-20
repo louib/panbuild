@@ -67,6 +67,7 @@ pub struct AbstractModule {
     misc_config: String,
 }
 
+#[derive(Default)]
 pub struct AbstractExecutable {
     name: String,
     path: String,
@@ -77,6 +78,7 @@ pub struct AbstractExecutable {
     icon_path: String,
 }
 
+#[derive(Default)]
 pub struct AbstractPermission {
     name: String,
     description: String,
