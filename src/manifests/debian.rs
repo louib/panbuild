@@ -132,8 +132,11 @@ pub fn parse(ctx: &crate::execution_context::ExecutionContext) -> i32 {
     let mut paragraphs: Vec<String> = vec![];
     parse_paragraphs(&ctx.content, paragraphs);
 
+    let mut debian_manifest = DebianManifest::default();
     let mut debian_package = DebianPackage::default();
     let mut packages: Vec<DebianPackage> = vec![];
+
+    // TODO validate that there is more than 1 paragraph?
 
     eprintln!("finished parsing debian control file.");
     return 0;
