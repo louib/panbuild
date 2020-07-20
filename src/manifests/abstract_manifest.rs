@@ -2,7 +2,6 @@ pub enum PackageType {
     dev,
     release,
 }
-
 pub const DEFAULT_PACKAGE_TYPE: PackageType = PackageType::dev;
 
 pub enum Architecture {
@@ -12,8 +11,19 @@ pub enum Architecture {
     spark,
     any,
 }
-
 pub const DEFAULT_ARCH: Architecture = Architecture::any;
+
+pub enum License {
+    gpl2,
+    gpl3,
+    mit,
+    bsd2,
+    bsd3,
+    proprietary,
+    other,
+}
+pub const DEFAULT_LICENSE: License = License::gpl2;
+
 
 pub struct AbstractManifest {
     pub package_name: String,
@@ -23,6 +33,7 @@ pub struct AbstractManifest {
     pub description: String,
     pub package_type: PackageType,
     pub architecture: Architecture,
+    pub license: License,
 
     pub modules: Vec<AbstractModule>,
     pub permissions: Vec<AbstractPermission>,
@@ -40,6 +51,7 @@ impl Default for AbstractManifest {
             description: "".to_string(),
             package_type: DEFAULT_PACKAGE_TYPE,
             architecture: DEFAULT_ARCH,
+            license: DEFAULT_LICENSE,
 
             modules: vec![],
             permissions: vec![],
