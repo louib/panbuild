@@ -654,7 +654,7 @@ enum SourceType {
     sevenzip,
 }
 
-pub fn parse(ctx: &crate::execution_context::ExecutionContext) -> i32 {
+pub fn parse(ctx: &mut crate::execution_context::ExecutionContext) -> i32 {
     let yml_load_result = YamlLoader::load_from_str(&ctx.content);
 
     if yml_load_result.is_err() {

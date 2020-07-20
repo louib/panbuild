@@ -193,7 +193,7 @@ fn read_package_paragraph(paragraph: String, package: &DebianPackage) {
 
 }
 
-fn parse_paragraphs(content: &str, mut paragraphs: Vec<String>) {
+fn parse_paragraphs(content: &str, paragraphs: &mut Vec<String>) {
     let content_str = content.to_string();
     let lines = content_str.split("\n");
     let mut paragraph: String = String::from("");
@@ -230,9 +230,11 @@ fn parse_paragraphs(content: &str, mut paragraphs: Vec<String>) {
 
 }
 
-pub fn parse(ctx: &crate::execution_context::ExecutionContext) -> i32 {
+pub fn parse(ctx: &mut crate::execution_context::ExecutionContext) -> i32 {
     let mut paragraphs: Vec<String> = vec![];
-    // parse_paragraphs(&ctx.content, paragraphs);
+    parse_paragraphs(&ctx.content, &mut paragraphs);
+
+    ctx.manifest = crate::manifests::abstract_manifest::AbstractManifest::default();
 
     let mut debian_manifest = DebianManifest::default();
     // TODO validate that there is more than 1 paragraph?

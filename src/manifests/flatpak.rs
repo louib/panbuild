@@ -154,7 +154,7 @@ struct Extension {
 struct BuildExtension {
 }
 
-pub fn parse(ctx: &crate::execution_context::ExecutionContext) -> i32 {
+pub fn parse(ctx: &mut crate::execution_context::ExecutionContext) -> i32 {
     return 0;
 }
 

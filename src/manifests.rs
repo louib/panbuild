@@ -63,7 +63,7 @@ pub fn get_build_system(
     return crate::manifests::abstract_manifest::DEFAULT_BUILD_SYSTEM;
 }
 
-pub fn parse(ctx: &crate::execution_context::ExecutionContext) -> i32 {
+pub fn parse(ctx: &mut crate::execution_context::ExecutionContext) -> i32 {
     if ctx.source_type == "debian" {
         return crate::manifests::debian::parse(ctx);
     }
