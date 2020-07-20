@@ -61,6 +61,8 @@ fn main() {
                                     .value_name("PACKAGE_APP_OR_LIB")
                                     .required(true)
                                     .help("The name of the package or app to install.")))
+                          .subcommand(SubCommand::with_name("search")
+                               .about("Search the databases."))
                           .subcommand(SubCommand::with_name("spec")
                                .about("Show the spec for a manifest type."));
 
