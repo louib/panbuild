@@ -1,11 +1,28 @@
-pub struct AbstractManifest {
-    package_name: String,
-    package_id: String,
-    package_version: String,
+pub enum PackageType {
+    dev,
+    release,
+}
 
-    modules: Vec<AbstractModule>,
-    permissions: Vec<AbstractPermission>,
-    executables: Vec<AbstractExecutable>,
+pub const DEFAULT_PACKAGE_TYPE: PackageType = PackageType::dev;
+
+pub enum Architecture {
+    amd64,
+    armhf,
+    any,
+}
+
+pub struct AbstractManifest {
+    pub package_name: String,
+    pub package_id: String,
+    pub package_version: String,
+    pub short_description: String,
+    pub description: String,
+    pub package_type: PackageType,
+    pub architecture: Architecture,
+
+    pub modules: Vec<AbstractModule>,
+    pub permissions: Vec<AbstractPermission>,
+    pub executables: Vec<AbstractExecutable>,
 }
 
 impl Default for AbstractManifest {
@@ -14,6 +31,11 @@ impl Default for AbstractManifest {
             package_name: String::from(""),
             package_id: "".to_string(),
             package_version: "".to_string(),
+
+            short_description: "".to_string(),
+            description: "".to_string(),
+            package_type: DEFAULT_PACKAGE_TYPE,
+            architecture: Architecture::armhf,
 
             modules: vec![],
             permissions: vec![],
@@ -48,6 +70,8 @@ pub struct AbstractExecutable {
     path: String,
     is_desktop: bool,
     is_daemon: bool,
+    // Whether or not this is the primary executable of the bundle.
+    is_primary: bool,
     icon_path: String,
 }
 

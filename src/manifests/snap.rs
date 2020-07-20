@@ -666,13 +666,24 @@ pub fn parse(ctx: &crate::execution_context::ExecutionContext) -> i32 {
     // or remove support for that feature.
     let manifest_content = &yml_load_result.unwrap()[0];
 
-    let name = manifest_content["name"].as_str().unwrap();
-    let version = manifest_content["version"].as_str().unwrap();
-    let summary = manifest_content["summary"].as_str().unwrap();
-    let description = manifest_content["description"].as_str().unwrap();
+    let mut abstract_manifest = crate::manifests::abstract_manifest::AbstractManifest::default();
+    abstract_manifest.package_name = manifest_content["name"].as_str().unwrap().to_string();
+    // Defaulting to the name here...
+    abstract_manifest.package_id = manifest_content["name"].as_str().unwrap().to_string();
+    abstract_manifest.package_version = manifest_content["version"].as_str().unwrap().to_string();
+    abstract_manifest.description = manifest_content["description"].as_str().unwrap().to_string();
+    abstract_manifest.short_description = manifest_content["summary"].as_str().unwrap().to_string();
+
+    let architectures = manifest_content["architectures"].as_vec().unwrap();
+    if architectures.len() != 0 {
+        abstract_manifest.architecture = crate::manifests::abstract_manifest::Architecture::armhf;
+    }
+    // abstract_manifest.architecture
+
     let confinement = manifest_content["confinement"].as_str().unwrap();
     let grade = manifest_content["grade"].as_str().unwrap();
-    let architectures = manifest_content["architectures"].as_vec().unwrap();
+
+
     let slots = manifest_content["slots"].as_hash().unwrap();
     let plugs = manifest_content["slots"].as_hash().unwrap();
     let apps = manifest_content["slots"].as_hash().unwrap();
