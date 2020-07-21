@@ -13,144 +13,180 @@ const DEFAULT_RUNTIME: &str = "org.freedesktop.Platform";
 const DEFAULT_SDK: &str = "org.freedesktop.Sdk";
 
 // See `man flatpak-manifest` for the flatpak manifest specs.
-// TODO The hyphens in the attribute names were replaced to underscores.
-// Not sure how to manage that yet.
-struct FlatpakManifest {
-    name: String,
 
-    // A string defining the application id.
-    app_id: String,
+// **** Top-level Fields
+// Name of the application.
+// string
+const app_name: &str = "app_name";
 
-    // The branch to use when exporting the application.
-    // If this is unset the defaults come from the default-branch option.
-    //
-    // This key overrides both the default-branch key, and the --default-branch commandline option.
-    // Unless you need a very specific branchname (like for a runtime or an extension) it is recommended
-    // to use the default-branch key instead, because you can then override the default using
-    // --default-branch when building for instance a test build.
-    branch: String,
+// A string defining the application id.
+// string
+const app_id: &str = "app_id";
 
-    // The default branch to use when exporting the application. Defaults to master.
-    // This key can be overridden by the --default-branch commandline option.
-    default_branch: String,
+// The branch to use when exporting the application.
+// If this is unset the defaults come from the default-branch option.
+//
+// This key overrides both the default-branch key, and the --default-branch commandline option.
+// Unless you need a very specific branchname (like for a runtime or an extension) it is recommended
+// to use the default-branch key instead, because you can then override the default using
+// --default-branch when building for instance a test build.
+// string
+const branch: &str = "branch";
 
-    // The collection ID of the repository, defaults to being unset. Setting a globally unique collection
-    // ID allows the apps in the repository to be shared over
-    // peer to peer systems without needing further configuration. If building in an existing repository,
-    // the collection ID must match the existing configured collection ID for that repository.
-    collection_id: String,
+// The default branch to use when exporting the application. Defaults to master.
+// This key can be overridden by the --default-branch commandline option.
+// string
+const default_branch: &str = "default_branch";
 
-    // The name of the runtime that the application uses.
-    runtime: String,
+// The collection ID of the repository, defaults to being unset. Setting a globally unique collection
+// ID allows the apps in the repository to be shared over
+// peer to peer systems without needing further configuration. If building in an existing repository,
+// the collection ID must match the existing configured collection ID for that repository.
+// string
+const collection_id: &str = "collection_id";
 
-    // The version of the runtime that the application uses, defaults to master.
-    runtime_version: String,
+// The name of the runtime that the application uses.
+// string
+const runtime: &str = "runtime";
 
-    // The name of the development runtime that the application builds with.
-    sdk: String,
+// The version of the runtime that the application uses, defaults to master.
+// string
+const runtime_version: &str = "runtime_version";
 
-    // Initialize the (otherwise empty) writable /var in the build with a copy of this runtime.
-    var: String,
+// The name of the development runtime that the application builds with.
+// string
+const sdk: &str = "sdk";
 
-    // Use this file as the base metadata file when finishing.
-    metadata: String,
+// Initialize the (otherwise empty) writable /var in the build with a copy of this runtime.
+// string
+const var: &str = "var";
 
-    // Build a new runtime instead of an application.
-    build_runtime: bool,
+// Use this file as the base metadata file when finishing.
+// string
+const metadata: &str = "metadata";
 
-    // Build an extension.
-    build_extension: bool,
+// Build a new runtime instead of an application.
+// bool
+const build_runtime: &str = "build_runtime";
 
-    // Start with the files from the specified application.
-    // This can be used to create applications that extend another application.
-    base: String,
+// Build an extension.
+// bool
+const build_extension: &str = "build_extension";
 
-    // Use this specific version of the application specified in base.
-    // If unspecified, this uses the value specified in branch
-    base_version: String,
+// Start with the files from the specified application.
+// This can be used to create applications that extend another application.
+// string
+const base: &str = "base";
 
-    // Install these extra extensions from the base application when
-    // initializing the application directory.
-    base_extensions: Vec<String>,
+// Use this specific version of the application specified in base.
+// If unspecified, this uses the value specified in branch
+// string
+const base_version: &str = "base_version";
 
-    // Inherit these extra extensions points from the base application or sdk when finishing the build.
-    inherit_extensions: Vec<String>,
+// Install these extra extensions from the base application when
+// initializing the application directory.
+// list of strings
+const base_extensions: &str = "base_extensions";
 
-    // Inherit these extra extensions points from the base application or sdk when finishing the build,
-    // but do not inherit them into the platform.
-    inherit_sdk_extensions: Vec<String>,
+// Inherit these extra extensions points from the base application or sdk when finishing the build.
+// list of strings
+const inherit_extensions: &str = "inherit_extensions";
 
-    // Inherit these extra extensions points from the base application or sdk when finishing the build,
-    // but do not inherit them into the platform.
-    build_options: Vec<String>,
+// Inherit these extra extensions points from the base application or sdk when finishing the build,
+// but do not inherit them into the platform.
+// list of strings
+const inherit_sdk_extensions: &str = "inherit_sdk_extensions";
 
-    // Add these tags to the metadata file.
-    tags: Vec<String>,
+// Inherit these extra extensions points from the base application or sdk when finishing the build,
+// but do not inherit them into the platform.
+// list of strings
+// const build_options: &str = "build_options";
 
-    // An array of strings specifying the modules to be built in order.
-    // String members in the array are interpreted as the name of a separate
-    // json or yaml file that contains a module. See below for details.
-    modules: Vec<String>,
+// Add these tags to the metadata file.
+// list of strings
+const tags: &str = "tags";
 
-    // This is a dictionary of extension objects.
-    // The key is the name of the extension.
-    // See below for details.
-    add_extensions: Vec<String>,
+// An array of strings specifying the modules to be built in order.
+// String members in the array are interpreted as the name of a separate
+// json or yaml file that contains a module. See below for details.
+// list of strings
+const modules: &str = "modules";
 
-    // This is a dictionary of extension objects similar to add-extensions.
-    // The main difference is that the extensions are added early and are
-    // available for use during the build.
-    add_build_extensions: Vec<String>,
+// This is a dictionary of extension objects.
+// The key is the name of the extension.
+// See below for details.
+// list of strings
+const add_extensions: &str = "add_extensions";
 
-    // An array of file patterns that should be removed at the end.
-    // Patterns starting with / are taken to be full pathnames (without the /app prefix),
-    // otherwise they just match the basename.
-    cleanup: Vec<String>,
+// This is a dictionary of extension objects similar to add-extensions.
+// The main difference is that the extensions are added early and are
+// available for use during the build.
+// list of strings
+const add_build_extensions: &str = "add_build_extensions";
 
-    // An array of commandlines that are run during the cleanup phase.
-    cleanup_commands: Vec<String>,
+// An array of file patterns that should be removed at the end.
+// Patterns starting with / are taken to be full pathnames (without the /app prefix),
+// otherwise they just match the basename.
+// list of strings
+const cleanup: &str = "cleanup";
 
-    // Extra files to clean up in the platform.
-    cleanup_platform: Vec<String>,
+// An array of commandlines that are run during the cleanup phase.
+// list of strings
+const cleanup_commands: &str = "cleanup_commands";
 
-    // An array of commandlines that are run during the cleanup phase of the platform.
-    cleanup_platform_commands: Vec<String>,
+// Extra files to clean up in the platform.
+// list of strings
+const cleanup_platform: &str = "cleanup_platform";
 
-    // An array of commandlines that are run after importing the base platform,
-    // but before applying the new files from the sdk. This is a good place to e.g. delete
-    // things from the base that may conflict with the files added in the sdk.
-    prepare_platform_commands: Vec<String>,
+// An array of commandlines that are run during the cleanup phase of the platform.
+// list of strings
+const cleanup_platform_commands: &str = "cleanup_platform_commands";
 
-    // An array of arguments passed to the flatpak build-finish command.
-    finish_args: Vec<String>,
+// An array of commandlines that are run after importing the base platform,
+// but before applying the new files from the sdk. This is a good place to e.g. delete
+// things from the base that may conflict with the files added in the sdk.
+// list of strings
+const prepare_platform_commands: &str = "prepare_platform_commands";
 
-    // Any desktop file with this name will be renamed to a name based on id during the cleanup phase.
-    rename_desktop_file: String,
+// An array of arguments passed to the flatpak build-finish command.
+// list of strings
+const finish_args: &str = "finish_args";
 
-    // Any appdata file with this name will be renamed to a name based on id during the cleanup phase.
-    rename_appdata_file: String,
+// Any desktop file with this name will be renamed to a name based on id during the cleanup phase.
+// string
+const rename_desktop_file: &str = "rename_desktop_file";
 
-    // Any icon with this name will be renamed to a name based on id during the cleanup phase.
-    // Note that this is the icon name, not the full filenames, so it should
-    // not include a filename extension.
-    rename_icon: String,
+// Any appdata file with this name will be renamed to a name based on id during the cleanup phase.
+// string
+const rename_appdata_file: &str = "rename_appdata_file";
 
-    // Replace the appdata project_license field with this string.
-    // This is useful as the upstream license is typically only about the application itself,
-    // whereas the bundled app can contain other licenses too.
-    appdata_license: String,
+// Any icon with this name will be renamed to a name based on id during the cleanup phase.
+// Note that this is the icon name, not the full filenames, so it should
+// not include a filename extension.
+// string
+const rename_icon: &str = "rename_icon";
 
-    // If rename-icon is set, keep a copy of the old icon file.
-    copy_icon: bool,
+// Replace the appdata project_license field with this string.
+// This is useful as the upstream license is typically only about the application itself,
+// whereas the bundled app can contain other licenses too.
+// string
+const appdata_license: &str = "appdata_license";
 
-    // This string will be prefixed to the Name key in the main application desktop file.
-    desktop_file_name_prefix: String,
+// If rename-icon is set, keep a copy of the old icon file.
+// bool
+const copy_icon: &str = "copy-icon";
 
-    // This string will be suffixed to the Name key in the main application desktop file.
-    desktop_file_name_suffix: String,
-}
+// This string will be prefixed to the Name key in the main application desktop file.
+// string
+const desktop_file_name_prefix: &str = "desktop_file_name_prefix";
 
-// Module fields.
+// This string will be suffixed to the Name key in the main application desktop file.
+// string
+const desktop_file_name_suffix: &str = "desktop_file_name_suffix";
+
+
+
+// **** Module Fields.
 // Each module specifies a source that has to be separately built and installed.
 // It contains the build options and a list of sources to download and extract before
 // building.
@@ -241,7 +277,7 @@ const post_install: &str = "";
 // An array of file patterns that should be removed at the end. Patterns starting with / are taken to be full pathnames (without the /app prefix), otherwise
 // they just match the basename. Note that any patterns will only match files installed by this module.
 // (array of strings)
-const cleanup: &str = "";
+// const cleanup: &str = "";
 
 // The way the builder works is that files in the install directory are hard-links to the cached files, so you're not allowed to modify them in-place. If you
 // list a file in this then the hardlink will be broken and you can modify it. This is a workaround, ideally installing files should replace files, not modify
@@ -259,7 +295,7 @@ const skip_arches: &str = "";
 
 // Extra files to clean up in the platform.
 // (array of strings)
-const cleanup_platform: &str = "";
+// const cleanup_platform: &str = "";
 
 // If true this will run the tests after installing.
 // (boolean)
@@ -273,10 +309,13 @@ const test_rule: &str = "";
 // (array of strings)
 const test_commands: &str = "";
 
-// An array of objects specifying nested modules to be built before this one. String members in the array are interpreted as names of a separate json or yaml
-// file that contains a module.
+// An array of objects specifying nested modules to be built before this one.
+// String members in the array are interpreted as names of a separate json or yaml file that contains a module.
 // (array of objects or strings)
-const modules: &str = "";
+// TODO extract this
+// const modules: &str = "";
+
+
 
 
 // **** Sources
@@ -287,6 +326,8 @@ const modules: &str = "";
 // of a separate json or yaml file that is read and inserted at this
 // point. The file can contain a single source, or an array of sources.
 const SOURCE_TYPE: &str = "type";
+
+
 
 
 // **** Extensions
@@ -311,10 +352,11 @@ const bundle: &str = "bundle";
 const remove_after_build: &str = "remove-after-build";
 
 
+
+
 // **** Build Options
 // Build options specify the build environment of a module, and can be specified globally as well as per-module.
 // Options can also be specified on a per-architecture basis using the arch property.
-
 
 // This is set in the environment variable CFLAGS during the build. Multiple specifications of this (in e.g. per-arch area) are concatenated, separated by
 // spaces.
@@ -399,12 +441,10 @@ const append_pkg_config_path: &str = "";
 // (string)
 const prepend_pkg_config_path: &str = "";
 
-
 // This is a dictionary defining environment variables to be set during the build. Elements in this override the properties that set the environment, like
 // cflags and ldflags. Keys with a null value unset the corresponding variable.
 // (object)
 const env: &str = "";
-
 
 // This is an array containing extra options to pass to flatpak build.
 // (array of strings)
@@ -414,33 +454,30 @@ const build_args: &str = "";
 // (array of strings)
 const test_args: &str = "";
 
-
 // This is an array containing extra options to pass to configure.
 // (array of strings)
 const config_opts: &str = "";
-
 
 // An array of extra arguments that will be passed to make
 // (array of strings)
 const make_args: &str = "";
 
-
 // An array of extra arguments that will be passed to make install
 // (array of strings)
 const make_install_args: &str = "";
-
 
 // If this is true (the default is false) then all ELF files will be stripped after install.
 // (boolean)
 const strip: &str = "";
 
-
-// By default (if strip is not true) flatpak-builder extracts all debug info in ELF files to a separate files and puts this in an extension. If you want to
-// disable this, set no-debuginfo to true.
+// By default (if strip is not true) flatpak-builder extracts all debug info in ELF files to a
+// separate files and puts this in an extension. If you want to disable this, set no-debuginfo
+// to true.
 // (boolean)
 const no_debuginfo: &str = "";
 
-// By default when extracting debuginfo we compress the debug sections. If you want to disable this, set no-debuginfo-compression to true.
+// By default when extracting debuginfo we compress the debug sections.
+// If you want to disable this, set no-debuginfo-compression to true.
 // (boolean)
 const no_debuginfo_compression: &str = "";
 
@@ -450,10 +487,6 @@ const ARCH: &str = "arch";
 
 
 pub fn parse(ctx: &mut crate::execution_context::ExecutionContext) -> i32 {
-    return 0;
-}
-
-pub fn dump(ctx: &mut crate::execution_context::ExecutionContext) -> i32 {
     // let yml_load_result = YamlLoader::load_from_str(&ctx.content);
 
     // if yml_load_result.is_err() {
@@ -464,6 +497,10 @@ pub fn dump(ctx: &mut crate::execution_context::ExecutionContext) -> i32 {
     //
     //
 
+    return 0;
+}
+
+pub fn dump(ctx: &mut crate::execution_context::ExecutionContext) -> i32 {
     let mut lhm: LinkedHashMap<Yaml, Yaml> = LinkedHashMap::new();
     lhm.insert(Yaml::from_str("name"), Yaml::from_str(&ctx.manifest.package_name));
     lhm.insert(Yaml::from_str("app-id"), Yaml::from_str(&ctx.manifest.package_id));
