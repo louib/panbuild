@@ -1,5 +1,7 @@
 use std::collections::HashMap;
 
+use crate::manifests::manifest::{Priority, AbstractModule, AbstractManifest};
+
 // Package constants.
 const DEFAULT_ARCH: &str = "any";
 const DEFAULT_MULTI_ARCH: &str = "same";
@@ -67,42 +69,6 @@ const CONTROL_FILE_SEPARATOR: &str = ":";
 //];
 const DEFAULT_SECTION: &str = "libs";
 
-
-pub enum Priority {
-    // Packages which are necessary for the proper functioning of the system (usually, this means that dpkg functionality depends on these packages).
-    // Removing a required package may cause your system to become totally broken and you may not even be able to use dpkg to put things back,
-    // so only do so if you know what you are doing.
-    //
-    // Systems with only the required packages installed have at least enough functionality for the sysadmin to boot the system and install more software.
-    required,
-
-    // Important programs, including those which one would expect to find on any Unix-like system.
-    // If the expectation is that an experienced Unix person who found it missing would say “What on earth is going on, where is foo?”,
-    // it must be an important package. 6 Other packages without which the system will not run well or be usable must also have priority important.
-    // This does not include Emacs, the X Window System, TeX or any other large applications.
-    // The important packages are just a bare minimum of commonly-expected and necessary tools.
-    important,
-
-    // These packages provide a reasonably small but not too limited character-mode system.
-    // This is what will be installed by default if the user doesn’t select anything else.
-    // It doesn’t include many large applications.
-    //
-    // No two packages that both have a priority of standard or higher may conflict with each other.
-    standard,
-
-    // This is the default priority for the majority of the archive.
-    // Unless a package should be installed by default on standard Debian systems,
-    // it should have a priority of optional. Packages with a priority of optional may conflict with each other.
-    optional,
-
-    // This priority is deprecated. Use the optional priority instead.
-    // This priority should be treated as equivalent to optional.
-    //
-    // The extra priority was previously used for packages that conflicted with other packages and packages
-    // that were only likely to be useful to people with specialized requirements. However, this distinction
-    // was somewhat arbitrary, not consistently followed, and not useful enough to warrant the maintenance effort.
-    extra,
-}
 const DEFAULT_PRIORITY: Priority = Priority::optional;
 
 // See https://www.debian.org/doc/debian-policy/ch-controlfields.html
@@ -138,8 +104,10 @@ struct DebianManifest {
     // URL of the git repo.
     vcs_git: String,
 
-    packages: Vec<DebianPackage>,
 }
+
+// list of packages.
+const packages: &str = "packages";
 
 struct DebianPackage {
     name: String,
@@ -196,7 +164,7 @@ pub fn parse(ctx: &mut crate::execution_context::ExecutionContext) -> i32 {
     let mut paragraphs: Vec<String> = vec![];
     parse_paragraphs(&ctx.content, &mut paragraphs);
 
-    ctx.manifest = crate::manifests::manifest::AbstractManifest::default();
+    ctx.manifest = AbstractManifest::default();
 
     // TODO validate that there is more than 1 paragraph?
     for paragraph_index in 1..paragraphs.len() {
@@ -212,7 +180,7 @@ pub fn parse(ctx: &mut crate::execution_context::ExecutionContext) -> i32 {
             values.insert(parts[0].to_string(), parts[1].to_string());
         }
 
-        let mut package = crate::manifests::manifest::AbstractModule::default();
+        let mut package = AbstractModule::default();
 
         package.name = "name".to_string();
         // architecture =
