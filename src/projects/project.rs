@@ -42,7 +42,7 @@ pub struct Project {
     pub dependencies: Vec<Version>,
 }
 
-pub fn fetch_project(project: Project){
+pub fn fetch_project(project: Project) {
     if project.url.starts_with("https") && project.url.ends_with(".git") {
         let clone_output = Command::new("mkdir")
             .arg("-p")
@@ -63,6 +63,14 @@ pub fn fetch_project(project: Project){
             panic!("The clone did not work :(");
         }
     }
+}
+
+pub fn dump_project(project: Project) -> String {
+    return "".to_string();
+}
+
+pub fn parse_project(yaml_project: String) -> Project {
+    return Project::default();
 }
 
 // one possible implementation of walking a directory only visiting files
