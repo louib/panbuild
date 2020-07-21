@@ -141,24 +141,6 @@ struct DebianManifest {
     packages: Vec<DebianPackage>,
 }
 
-impl Default for DebianManifest {
-    fn default() -> Self {
-        return DebianManifest {
-            source: "".to_string(),
-            section: DEFAULT_SECTION.to_string(),
-            priority: DEFAULT_PRIORITY,
-            maintainer: "".to_string(),
-            uploaders: vec![],
-            build_depends: vec![],
-            standards_versions: "".to_string(),
-            homepage: "".to_string(),
-            vcs_browser: "".to_string(),
-            vcs_git: "".to_string(),
-            packages: vec![],
-        };
-    }
-}
-
 struct DebianPackage {
     name: String,
 
@@ -171,18 +153,6 @@ struct DebianPackage {
 
     // A multi-line string
     description: String,
-}
-
-impl Default for DebianPackage {
-    fn default() -> Self {
-        return DebianPackage {
-            name: "".to_string(),
-            architecture: DEFAULT_ARCH.to_string(),
-            multi_arch: DEFAULT_MULTI_ARCH.to_string(),
-            description: "".to_string(),
-            depends: vec![],
-        };
-    }
 }
 
 fn parse_paragraphs(content: &str, paragraphs: &mut Vec<String>) {
@@ -228,7 +198,6 @@ pub fn parse(ctx: &mut crate::execution_context::ExecutionContext) -> i32 {
 
     ctx.manifest = crate::manifests::manifest::AbstractManifest::default();
 
-    let mut debian_manifest = DebianManifest::default();
     // TODO validate that there is more than 1 paragraph?
     for paragraph_index in 1..paragraphs.len() {
         let paragraph = &paragraphs[paragraph_index];
