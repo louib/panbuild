@@ -744,6 +744,10 @@ pub fn dump(manifest: &crate::manifests::manifest::AbstractManifest) -> String {
     return String::from("");
 }
 
-pub fn is_type(ctx: &mut crate::execution_context::ExecutionContext) -> bool {
+pub fn file_path_matches(path: &str) -> bool {
+    return false;
+}
+
+pub fn file_content_matches(content: &str) -> bool {
     return false;
 }

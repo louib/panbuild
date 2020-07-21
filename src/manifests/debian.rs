@@ -197,10 +197,16 @@ pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
 }
 
 pub fn dump(manifest: &crate::manifests::manifest::AbstractManifest) -> String {
-    return String::from("");
+    let mut response = String::from("");
+    response.push_str(&format!("Source: {}", manifest.package_name));
+    return response;
 }
 
-pub fn is_type(ctx: &mut crate::execution_context::ExecutionContext) -> bool {
+pub fn file_path_matches(path: &str) -> bool {
+    return false;
+}
+
+pub fn file_content_matches(content: &str) -> bool {
     return false;
 }
 
@@ -252,16 +258,21 @@ mod debian_tests {
 
     #[test]
     pub fn test_parse() {
-        let mut manifest = AbstractManifest::default();
-        //assert!(
-        //    result.contains("Carol"),
-        //    "Greeting did not contain name, value was `{}`",
-        //    result
-        //);
+        let mut manifest = parse(&debian_control_example);
+        assert!(
+            manifest.package_name == "package_name",
+            "The app name was not package_name!",
+        );
     }
 
     #[test]
     pub fn test_dump() {
+        let mut manifest = AbstractManifest::default();
+        let debian_control_dump = dump(&manifest);
+        assert!(
+            !debian_control_dump.is_empty(),
+            "The dump from debian::parse was empty!",
+        );
 
     }
 }
