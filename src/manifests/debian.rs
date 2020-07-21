@@ -160,26 +160,80 @@ fn parse_paragraphs(content: &str, paragraphs: &mut Vec<String>) {
 
 }
 
+fn is_commented_line(line: &str) -> bool {
+    let mut first_char_met: bool = false;
+    return line.starts_with(|c: char| {
+        if c == ' ' {
+            return true;
+        }
+        if c == '\t' {
+            return true;
+        }
+        if ! first_char_met && c == '#' {
+            first_char_met = true;
+            return first_char_met;
+        }
+        if first_char_met {
+            return true;
+        }
+        return false;
+    });
+}
+
 pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
     let mut paragraphs: Vec<String> = vec![];
     parse_paragraphs(&content, &mut paragraphs);
 
     let mut response = crate::manifests::manifest::AbstractManifest::default();
 
+    if paragraphs.len() < 2 {
+        panic!("There is only {} paragraphs in the debian control file?", paragraphs.len())
+    }
+
+    let first_paragraph = &paragraphs[0];
+    for line in first_paragraph.split('\n') {
+        if line.starts_with(" ") {
+            // Obviously a mistake
+            continue;
+        }
+        if is_commented_line(line) {
+            continue;
+        }
+        let parts: Vec<&str> = line.split(':').collect();
+        if parts.len() != 2 {
+            // FIXME we should return a Result<> instead of exiting here or
+            // returning a default value.
+            eprintln!("Invalid debian control file line {}", line);
+            return response;
+        }
+        let field_name = parts[0];
+        let field_value = parts[1];
+
+        println!("field_name: {}", field_name.to_string());
+
+        if field_name == SOURCE {
+            response.package_name = field_value.to_string();
+        }
+    }
+
     // TODO validate that there is more than 1 paragraph?
     for paragraph_index in 1..paragraphs.len() {
         let paragraph = &paragraphs[paragraph_index];
-        let mut values: HashMap<String, String> = HashMap::new();
         for line in paragraph.split('\n') {
+            if line.starts_with(" ") {
+                // Obviously a mistake
+                continue;
+            }
             let parts: Vec<&str> = line.split(':').collect();
-            if parts.len() != 1 {
+            if parts.len() != 2 {
                 // FIXME we should return a Result<> instead of exiting here or
                 // returning a default value.
                 eprintln!("Invalid debian control file line {}", line);
                 return response;
             }
+            let field_name = parts[0];
+            let field_value = parts[1];
 
-            values.insert(parts[0].to_string(), parts[1].to_string());
         }
 
         let mut package = AbstractModule::default();
