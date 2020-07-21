@@ -251,14 +251,14 @@ pub fn parse(ctx: &mut crate::execution_context::ExecutionContext) -> i32 {
             values.insert(parts[0].to_string(), parts[1].to_string());
         }
 
-        let mut debian_package = DebianPackage::default();
+        let mut package = crate::manifests::manifest::AbstractModule::default();
 
-        debian_package.name = "name".to_string();
+        package.name = "name".to_string();
         // architecture =
         // multi_arch =
         // depends =
         // description =
-        debian_manifest.packages.push(debian_package);
+        ctx.manifest.modules.push(package);
     }
 
     eprintln!("finished parsing debian control file.");
