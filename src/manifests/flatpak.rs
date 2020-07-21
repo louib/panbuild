@@ -95,12 +95,12 @@ struct FlatpakManifest {
     // This is a dictionary of extension objects.
     // The key is the name of the extension.
     // See below for details.
-    add_extensions: Vec<Extension>,
+    add_extensions: Vec<String>,
 
     // This is a dictionary of extension objects similar to add-extensions.
     // The main difference is that the extensions are added early and are
     // available for use during the build.
-    add_build_extensions: Vec<BuildExtension>,
+    add_build_extensions: Vec<String>,
 
     // An array of file patterns that should be removed at the end.
     // Patterns starting with / are taken to be full pathnames (without the /app prefix),
@@ -174,15 +174,16 @@ const sources: &str = "sources";
 
 // An array of options that will be passed to configure
 // (array of strings)
-const config_opts: &str = "";
+// const config_opts: &str = "";
 
 // An array of arguments that will be passed to make
 // (array of strings)
-const make_args: &str = "";
+// const make_args: &str = "";
 
 // An array of arguments that will be passed to make install
 // (array of strings)
-const make_install_args: &str = "";
+// const make_install_args: &str = "";
+// FIXME why is this also defined in the build options?
 
 // If true, remove the configure script before starting build
 // (boolean)
@@ -277,12 +278,176 @@ const test_commands: &str = "";
 // (array of objects or strings)
 const modules: &str = "";
 
-struct Sources {
-}
-struct Extension {
-}
-struct BuildExtension {
-}
+
+// **** Sources
+// The sources are a list pointer to the source code that  needs to be extracted into the build directory before the build starts.
+// They can be of several types, distinguished by the type property.
+//
+// Additionally, the sources list can contain a plain string, which is interpreted as the name
+// of a separate json or yaml file that is read and inserted at this
+// point. The file can contain a single source, or an array of sources.
+const SOURCE_TYPE: &str = "type";
+
+
+// **** Extensions
+// Extension define extension points in the app/runtime that can be implemented by extensions,
+// supplying extra files which are available during runtime..
+//
+// The directory where the extension is mounted. If the extension point is for an application,
+// this path is relative to /app, otherwise it is relative to /usr.
+// (string)
+const EXTENSION_DIRECTORY: &str = "directory";
+
+// If this is true, then the data created in the extension directory is omitted from the result, and instead packaged in a separate extension.
+// (boolean)
+const bundle: &str = "bundle";
+
+// If this is true, the extension is removed during when finishing. This is only interesting for extensions in the add-build-extensions property.
+
+// Additionally the standard flatpak extension properties are supported, and put directly into the metadata file: autodelete, no-autodownload, subdirectories,
+// add-ld-path, download-if, enable-if, merge-dirs, subdirectory-suffix, locale-subset, version, versions. See the flatpak metadata documentation for more
+// information on these.
+// (boolean)
+const remove_after_build: &str = "remove-after-build";
+
+
+// **** Build Options
+// Build options specify the build environment of a module, and can be specified globally as well as per-module.
+// Options can also be specified on a per-architecture basis using the arch property.
+
+
+// This is set in the environment variable CFLAGS during the build. Multiple specifications of this (in e.g. per-arch area) are concatenated, separated by
+// spaces.
+// (string)
+const cflags: &str = "";
+
+
+// If this is true, clear cflags from previous build options before adding it from these options.
+// (boolean)
+const cflags_override: &str = "";
+
+
+// This is set in the environment variable CPPFLAGS during the build. Multiple specifications of this (in e.g. per-arch area) are concatenated, separated by
+// spaces.
+// (string)
+const cppflags: &str = "";
+
+
+// If this is true, clear cppflags from previous build options before adding it from these options.
+// (boolean)
+const cppflags_override: &str = "";
+
+
+// This is set in the environment variable CXXFLAGS during the build. Multiple specifications of this (in e.g. per-arch area) are concatenated, separated by
+// spaces.
+// (string)
+const cxxflags: &str = "";
+
+
+// If this is true, clear cxxflags from previous build options before adding it from these options.
+// (boolean)
+const cxxflags_override: &str = "";
+
+
+// This is set in the environment variable LDFLAGS during the build. Multiple specifications of this (in e.g. per-arch area) are concatenated, separated by
+// spaces.
+// (string)
+const ldflags: &str = "";
+
+
+// If this is true, clear ldflags from previous build options before adding it from these options.
+// (boolean)
+const ldflags_override: &str = "";
+
+
+// The build prefix for the modules (defaults to /app for applications and /usr for runtimes).
+// (string)
+const prefix: &str = "";
+
+
+// The build libdir for the modules (defaults to /app/lib for applications and /usr/lib for runtimes).
+// (string)
+const libdir: &str = "";
+
+
+// This will get appended to PATH in the build environment (with an leading colon if needed).
+// (string)
+const append_path: &str = "";
+
+
+// This will get prepended to PATH in the build environment (with an trailing colon if needed).
+// (string)
+const prepend_path: &str = "";
+
+
+// This will get appended to LD_LIBRARY_PATH in the build environment (with an leading colon if needed).
+// (string)
+const append_ld_library_path: &str = "";
+
+
+// This will get prepended to LD_LIBRARY_PATH in the build environment (with an trailing colon if needed).
+// (string)
+const prepend_ld_library_path: &str = "";
+
+
+// This will get appended to PKG_CONFIG_PATH in the build environment (with an leading colon if needed).
+// (string)
+const append_pkg_config_path: &str = "";
+
+
+// This will get prepended to PKG_CONFIG_PATH in the build environment (with an trailing colon if needed).
+// (string)
+const prepend_pkg_config_path: &str = "";
+
+
+// This is a dictionary defining environment variables to be set during the build. Elements in this override the properties that set the environment, like
+// cflags and ldflags. Keys with a null value unset the corresponding variable.
+// (object)
+const env: &str = "";
+
+
+// This is an array containing extra options to pass to flatpak build.
+// (array of strings)
+const build_args: &str = "";
+
+// Similar to build-args but affects the tests, not the normal build.
+// (array of strings)
+const test_args: &str = "";
+
+
+// This is an array containing extra options to pass to configure.
+// (array of strings)
+const config_opts: &str = "";
+
+
+// An array of extra arguments that will be passed to make
+// (array of strings)
+const make_args: &str = "";
+
+
+// An array of extra arguments that will be passed to make install
+// (array of strings)
+const make_install_args: &str = "";
+
+
+// If this is true (the default is false) then all ELF files will be stripped after install.
+// (boolean)
+const strip: &str = "";
+
+
+// By default (if strip is not true) flatpak-builder extracts all debug info in ELF files to a separate files and puts this in an extension. If you want to
+// disable this, set no-debuginfo to true.
+// (boolean)
+const no_debuginfo: &str = "";
+
+// By default when extracting debuginfo we compress the debug sections. If you want to disable this, set no-debuginfo-compression to true.
+// (boolean)
+const no_debuginfo_compression: &str = "";
+
+// This is a dictionary defining for each arch a separate build options object that override the main one.
+// (object)
+const ARCH: &str = "arch";
+
 
 pub fn parse(ctx: &mut crate::execution_context::ExecutionContext) -> i32 {
     return 0;
