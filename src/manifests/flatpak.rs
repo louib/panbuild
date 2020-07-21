@@ -197,123 +197,124 @@ const DESKTOP_FILE_NAME_SUFFIX: &str = "desktop-file-name-suffix";
 // The name of the module, used in e.g. build logs. The name is also
 // used for constructing filenames and commandline arguments, therefore using spaces or '/' in
 // this string is a bad idea.
-const module_name: &str = "name";
+const MODULE_NAME: &str = "name";
 
 // If true, skip this module
 // (boolean)
-const module_disabled: &str = "disabled";
+const MODULE_DISABLED: &str = "disabled";
 
 // An array of objects defining sources that will be downloaded and extracted in order. String members in the array are interpreted as the name of a separate
 // json or yaml file that contains sources. See below for details.
 // (array of objects or strings)
-const sources: &str = "sources";
+const SOURCES: &str = "sources";
 
 // An array of options that will be passed to configure
 // (array of strings)
-// const config_opts: &str = "";
+// const CONFIG_OPTS: &str = "";
 
 // An array of arguments that will be passed to make
 // (array of strings)
-// const make_args: &str = "";
+// const MAKE_ARGS: &str = "";
 
 // An array of arguments that will be passed to make install
 // (array of strings)
-// const make_install_args: &str = "";
+// const MAKE_INSTALL_ARGS: &str = "";
 // FIXME why is this also defined in the build options?
 
 // If true, remove the configure script before starting build
 // (boolean)
-const rm_configure: &str = "";
+const RM_CONFIGURE: &str = "";
 
 // Ignore the existence of an autogen script
 // (boolean)
-const no_autogen: &str = "";
+const NO_AUTOGEN: &str = "";
 
 // Don't call make with arguments to build in parallel
 // (boolean)
-const no_parallel_make: &str = "";
+const NO_PARALLEL_MAKE: &str = "";
 
 // Name of the rule passed to make for the install phase, default is install
 // (string)
-const install_rule: &str = "";
+const INSTALL_RULE: &str = "";
 
 // Don't run the make install (or equivalent) stage
 // (boolean)
-const no_make_install: &str = "";
+const NO_MAKE_INSTALL: &str = "";
 
 // Don't fix up the *.py[oc] header timestamps for ostree use.
 // (boolean)
-const no_python_timestamp_fix: &str = "";
+const NO_PYTHON_TIMESTAMP_FIX: &str = "";
 
 // Use cmake instead of configure (deprecated: use buildsystem instead)
 // (boolean)
-const cmake: &str = "";
+const CMAKE: &str = "";
 
 // Build system to use: autotools, cmake, cmake-ninja, meson, simple, qmake
 // (string)
-const buildsystem: &str = "";
+const BUILDSYSTEM: &str = "";
 
 // Use a build directory that is separate from the source directory
 // (boolean)
-const builddir: &str = "";
+const BUILDDIR: &str = "";
 
 // Build inside this subdirectory of the extracted sources
 // (string)
-const subdir: &str = "";
+const SUBDIR: &str = "";
 
 // A build options object that can override global options
 // (object)
-const build_options: &str = "";
+const BUILD_OPTIONS: &str = "";
 
-// An array of commands to run during build (between make and make install if those are used). This is primarily useful when using the "simple" buildsystem.
+// An array of commands to run during build (between make and make install if those are used).
+// This is primarily useful when using the "simple" buildsystem.
 // Each command is run in /bin/sh -c, so it can use standard POSIX shell syntax such as piping output.
 // (array of strings)
-const build_commands: &str = "";
+const BUILD_COMMANDS: &str = "";
 
 // An array of shell commands that are run after the install phase. Can for example clean up the install dir, or install extra files.
 // (array of strings)
-const post_install: &str = "";
+const POST_INSTALL: &str = "";
 
 // An array of file patterns that should be removed at the end. Patterns starting with / are taken to be full pathnames (without the /app prefix), otherwise
 // they just match the basename. Note that any patterns will only match files installed by this module.
 // (array of strings)
-// const cleanup: &str = "";
+// const CLEANUP: &str = "";
 
 // The way the builder works is that files in the install directory are hard-links to the cached files, so you're not allowed to modify them in-place. If you
 // list a file in this then the hardlink will be broken and you can modify it. This is a workaround, ideally installing files should replace files, not modify
 // existing ones.
 // (array of strings)
-const ensure_writable: &str = "";
+const ENSURE_WRITABLE: &str = "";
 
 // If non-empty, only build the module on the arches listed.
 // (array of strings)
-const only_arches: &str = "";
+const ONLY_ARCHES: &str = "";
 
 // Don't build on any of the arches listed.
 // (array of strings)
-const skip_arches: &str = "";
+const SKIP_ARCHES: &str = "";
 
 // Extra files to clean up in the platform.
 // (array of strings)
-// const cleanup_platform: &str = "";
+// const CLEANUP_PLATFORM: &str = "";
 
 // If true this will run the tests after installing.
 // (boolean)
-const run_tests: &str = "";
+const RUN_TESTS: &str = "";
 
 // The target to build when running the tests. Defaults to "check" for make and "test" for ninja. Set to empty to disable.
 // (string)
-const test_rule: &str = "";
+const TEST_RULE: &str = "";
 
 // Array of commands to run during the tests.
 // (array of strings)
-const test_commands: &str = "";
+const TEST_COMMANDS: &str = "";
 
 // An array of objects specifying nested modules to be built before this one.
 // String members in the array are interpreted as names of a separate json or yaml file that contains a module.
 // (array of objects or strings)
 // TODO extract this
-// const modules: &str = "";
+// const MODULES: &str = "";
 
 
 
@@ -341,7 +342,7 @@ const EXTENSION_DIRECTORY: &str = "directory";
 
 // If this is true, then the data created in the extension directory is omitted from the result, and instead packaged in a separate extension.
 // (boolean)
-const bundle: &str = "bundle";
+const BUNDLE: &str = "bundle";
 
 // If this is true, the extension is removed during when finishing. This is only interesting for extensions in the add-build-extensions property.
 
@@ -349,7 +350,7 @@ const bundle: &str = "bundle";
 // add-ld-path, download-if, enable-if, merge-dirs, subdirectory-suffix, locale-subset, version, versions. See the flatpak metadata documentation for more
 // information on these.
 // (boolean)
-const remove_after_build: &str = "remove-after-build";
+const REMOVE_AFTER_BUILD: &str = "remove-after-build";
 
 
 
@@ -361,125 +362,127 @@ const remove_after_build: &str = "remove-after-build";
 // This is set in the environment variable CFLAGS during the build. Multiple specifications of this (in e.g. per-arch area) are concatenated, separated by
 // spaces.
 // (string)
-const cflags: &str = "";
+const CFLAGS: &str = "cflags";
 
 
 // If this is true, clear cflags from previous build options before adding it from these options.
 // (boolean)
-const cflags_override: &str = "";
+const CFLAGS_OVERRIDE: &str = "cflags-override";
 
 
 // This is set in the environment variable CPPFLAGS during the build. Multiple specifications of this (in e.g. per-arch area) are concatenated, separated by
 // spaces.
 // (string)
-const cppflags: &str = "";
+const CPPFLAGS: &str = "cppflags";
 
 
 // If this is true, clear cppflags from previous build options before adding it from these options.
 // (boolean)
-const cppflags_override: &str = "";
+const CPPFLAGS_OVERRIDE: &str = "cppflags-override";
 
 
 // This is set in the environment variable CXXFLAGS during the build. Multiple specifications of this (in e.g. per-arch area) are concatenated, separated by
 // spaces.
 // (string)
-const cxxflags: &str = "";
+const CXXFLAGS: &str = "cxxflags";
 
 
 // If this is true, clear cxxflags from previous build options before adding it from these options.
 // (boolean)
-const cxxflags_override: &str = "";
+const CXXFLAGS_OVERRIDE: &str = "cxxflags-override";
 
 
-// This is set in the environment variable LDFLAGS during the build. Multiple specifications of this (in e.g. per-arch area) are concatenated, separated by
-// spaces.
+// This is set in the environment variable LDFLAGS during the build.
+// Multiple specifications of this (in e.g. per-arch area) are concatenated,
+// separated by spaces.
 // (string)
-const ldflags: &str = "";
+const LDFLAGS: &str = "ldflags";
 
 
 // If this is true, clear ldflags from previous build options before adding it from these options.
 // (boolean)
-const ldflags_override: &str = "";
+const LDFLAGS_OVERRIDE: &str = "ldflags-override";
 
 
 // The build prefix for the modules (defaults to /app for applications and /usr for runtimes).
 // (string)
-const prefix: &str = "";
+const PREFIX: &str = "prefix";
 
 
 // The build libdir for the modules (defaults to /app/lib for applications and /usr/lib for runtimes).
 // (string)
-const libdir: &str = "";
+const LIBDIR: &str = "libdir";
 
 
 // This will get appended to PATH in the build environment (with an leading colon if needed).
 // (string)
-const append_path: &str = "";
+const APPEND_PATH: &str = "append-path";
 
 
 // This will get prepended to PATH in the build environment (with an trailing colon if needed).
 // (string)
-const prepend_path: &str = "";
+const PREPEND_PATH: &str = "prepend-path";
 
 
 // This will get appended to LD_LIBRARY_PATH in the build environment (with an leading colon if needed).
 // (string)
-const append_ld_library_path: &str = "";
+const APPEND_LD_LIBRARY_PATH: &str = "append-ld-library-path";
 
 
 // This will get prepended to LD_LIBRARY_PATH in the build environment (with an trailing colon if needed).
 // (string)
-const prepend_ld_library_path: &str = "";
+const PREPEND_LD_LIBRARY_PATH: &str = "prepend-ld-library-path";
 
 
 // This will get appended to PKG_CONFIG_PATH in the build environment (with an leading colon if needed).
 // (string)
-const append_pkg_config_path: &str = "";
+const APPEND_PKG_CONFIG_PATH: &str = "append-pkg-config-path";
 
 
 // This will get prepended to PKG_CONFIG_PATH in the build environment (with an trailing colon if needed).
 // (string)
-const prepend_pkg_config_path: &str = "";
+const PREPEND_PKG_CONFIG_PATH: &str = "prepend-pkg-config-path";
 
-// This is a dictionary defining environment variables to be set during the build. Elements in this override the properties that set the environment, like
+// This is a dictionary defining environment variables to be set during the build.
+// Elements in this override the properties that set the environment, like
 // cflags and ldflags. Keys with a null value unset the corresponding variable.
 // (object)
-const env: &str = "";
+const BUILD_ENV: &str = "env";
 
 // This is an array containing extra options to pass to flatpak build.
 // (array of strings)
-const build_args: &str = "";
+const BUILD_ARGS: &str = "build-args";
 
 // Similar to build-args but affects the tests, not the normal build.
 // (array of strings)
-const test_args: &str = "";
+const TEST_ARGS: &str = "test-args";
 
 // This is an array containing extra options to pass to configure.
 // (array of strings)
-const config_opts: &str = "";
+const CONFIG_OPTS: &str = "config-opts";
 
 // An array of extra arguments that will be passed to make
 // (array of strings)
-const make_args: &str = "";
+const MAKE_ARGS: &str = "make-args";
 
 // An array of extra arguments that will be passed to make install
 // (array of strings)
-const make_install_args: &str = "";
+const MAKE_INSTALL_ARGS: &str = "make-install-args";
 
 // If this is true (the default is false) then all ELF files will be stripped after install.
 // (boolean)
-const strip: &str = "";
+const STRIP: &str = "strip";
 
 // By default (if strip is not true) flatpak-builder extracts all debug info in ELF files to a
 // separate files and puts this in an extension. If you want to disable this, set no-debuginfo
 // to true.
 // (boolean)
-const no_debuginfo: &str = "";
+const NO_DEBUGINFO: &str = "no-debuginfo";
 
 // By default when extracting debuginfo we compress the debug sections.
 // If you want to disable this, set no-debuginfo-compression to true.
 // (boolean)
-const no_debuginfo_compression: &str = "";
+const NO_DEBUGINFO_COMPRESSION: &str = "no-debuginfo-compression";
 
 // This is a dictionary defining for each arch a separate build options object that override the main one.
 // (object)
