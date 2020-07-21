@@ -160,11 +160,11 @@ fn parse_paragraphs(content: &str, paragraphs: &mut Vec<String>) {
 
 }
 
-pub fn parse(ctx: &mut crate::execution_context::ExecutionContext) -> i32 {
+pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
     let mut paragraphs: Vec<String> = vec![];
-    parse_paragraphs(&ctx.content, &mut paragraphs);
+    parse_paragraphs(&content, &mut paragraphs);
 
-    ctx.manifest = AbstractManifest::default();
+    let mut response = crate::manifests::manifest::AbstractManifest::default();
 
     // TODO validate that there is more than 1 paragraph?
     for paragraph_index in 1..paragraphs.len() {
@@ -173,8 +173,10 @@ pub fn parse(ctx: &mut crate::execution_context::ExecutionContext) -> i32 {
         for line in paragraph.split('\n') {
             let parts: Vec<&str> = line.split(':').collect();
             if parts.len() != 1 {
+                // FIXME we should return a Result<> instead of exiting here or
+                // returning a default value.
                 eprintln!("Invalid debian control file line {}", line);
-                return 1;
+                return response;
             }
 
             values.insert(parts[0].to_string(), parts[1].to_string());
@@ -187,11 +189,11 @@ pub fn parse(ctx: &mut crate::execution_context::ExecutionContext) -> i32 {
         // multi_arch =
         // depends =
         // description =
-        ctx.manifest.modules.push(package);
+        response.modules.push(package);
     }
 
     eprintln!("finished parsing debian control file.");
-    return 0;
+    return response;
 }
 
 pub fn dump(ctx: &mut crate::execution_context::ExecutionContext) -> i32 {

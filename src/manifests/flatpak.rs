@@ -498,18 +498,18 @@ const NO_DEBUGINFO_COMPRESSION: &str = "no-debuginfo-compression";
 const ARCH: &str = "arch";
 
 
-pub fn parse(ctx: &mut crate::execution_context::ExecutionContext) -> i32 {
-    // let yml_load_result = YamlLoader::load_from_str(&ctx.content);
+pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
+    let mut response = crate::manifests::manifest::AbstractManifest::default();
 
-    // if yml_load_result.is_err() {
-        // return;
-    // }
+    let yml_load_result = YamlLoader::load_from_str(&content);
+    if yml_load_result.is_err() {
+        eprintln!("Could not parse yaml file");
+        return response;
+    }
 
-    // let manifest_content = yml_load_result.unwrap();
-    //
-    //
+    let manifest_content = &yml_load_result.unwrap()[0];
 
-    return 0;
+    return response;
 }
 
 pub fn dump(ctx: &mut crate::execution_context::ExecutionContext) -> i32 {

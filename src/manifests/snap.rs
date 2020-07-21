@@ -654,12 +654,13 @@ enum SourceType {
     sevenzip,
 }
 
-pub fn parse(ctx: &mut crate::execution_context::ExecutionContext) -> i32 {
-    let yml_load_result = YamlLoader::load_from_str(&ctx.content);
+pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
+    let mut response = crate::manifests::manifest::AbstractManifest::default();
 
+    let yml_load_result = YamlLoader::load_from_str(&content);
     if yml_load_result.is_err() {
         eprintln!("Could not parse yaml file");
-        return 1;
+        return response;
     }
 
     // TODO we should validate that there was only one YAML top-level document,
@@ -667,25 +668,24 @@ pub fn parse(ctx: &mut crate::execution_context::ExecutionContext) -> i32 {
     // let manifest_content = &yml_load_result.unwrap()[0];
     let manifest_content = &yml_load_result.unwrap()[0];
 
-    let mut manifest = crate::manifests::manifest::AbstractManifest::default();
-    manifest.package_name = manifest_content["name"].as_str().unwrap_or("").to_string();
+    response.package_name = manifest_content["name"].as_str().unwrap_or("").to_string();
     // Defaulting to the name here...
-    manifest.package_id = manifest_content["name"].as_str().unwrap_or("").to_string();
-    manifest.package_version = manifest_content["version"].as_str().unwrap_or("").to_string();
-    manifest.description = manifest_content["description"].as_str().unwrap_or("").to_string();
-    manifest.short_description = manifest_content["summary"].as_str().unwrap_or("").to_string();
+    response.package_id = manifest_content["name"].as_str().unwrap_or("").to_string();
+    response.package_version = manifest_content["version"].as_str().unwrap_or("").to_string();
+    response.description = manifest_content["description"].as_str().unwrap_or("").to_string();
+    response.short_description = manifest_content["summary"].as_str().unwrap_or("").to_string();
 
     let architectures = manifest_content["architectures"].as_vec().unwrap();
     if architectures.len() != 0 {
         let arch = architectures[0].as_str().unwrap().to_string();
         if arch == "amd64" {
-            manifest.architecture = crate::manifests::manifest::Architecture::amd64;
+            response.architecture = crate::manifests::manifest::Architecture::amd64;
         }
         if arch == "armhf" {
-            manifest.architecture = crate::manifests::manifest::Architecture::armhf;
+            response.architecture = crate::manifests::manifest::Architecture::armhf;
         }
         if arch == "any" {
-            manifest.architecture = crate::manifests::manifest::Architecture::any;
+            response.architecture = crate::manifests::manifest::Architecture::any;
         }
     }
 
@@ -693,7 +693,7 @@ pub fn parse(ctx: &mut crate::execution_context::ExecutionContext) -> i32 {
     let grade = manifest_content["grade"].as_str().unwrap();
 
     if grade != "devel" || confinement != "devmode" {
-        manifest.package_type = crate::manifests::manifest::PackageType::release;
+        response.package_type = crate::manifests::manifest::PackageType::release;
     }
 
     let apps = manifest_content["apps"].as_hash().unwrap();
@@ -737,7 +737,7 @@ pub fn parse(ctx: &mut crate::execution_context::ExecutionContext) -> i32 {
         // module.dependencies = snap_module["tag"].as_str().unwrap_or("").to_string();
     }
 
-    return 0;
+    return response;
 }
 
 pub fn dump(ctx: &mut crate::execution_context::ExecutionContext) -> i32 {

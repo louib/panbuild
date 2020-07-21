@@ -65,15 +65,15 @@ pub fn get_build_system(
 
 pub fn parse(ctx: &mut crate::execution_context::ExecutionContext) -> i32 {
     if ctx.source_type == "debian" {
-        return crate::manifests::debian::parse(ctx);
+        ctx.manifest = crate::manifests::debian::parse(&ctx.content);
     }
 
     if ctx.source_type == "snap" {
-        return crate::manifests::snap::parse(ctx);
+        ctx.manifest = crate::manifests::snap::parse(&ctx.content);
     }
 
     if ctx.source_type == "flatpak" {
-        return crate::manifests::flatpak::parse(ctx);
+        ctx.manifest = crate::manifests::flatpak::parse(&ctx.content);
     }
 
     return 1;
