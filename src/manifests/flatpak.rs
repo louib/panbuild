@@ -17,11 +17,11 @@ const DEFAULT_SDK: &str = "org.freedesktop.Sdk";
 // **** Top-level Fields
 // Name of the application.
 // string
-const app_name: &str = "app_name";
+const APP_NAME: &str = "app-name";
 
 // A string defining the application id.
 // string
-const app_id: &str = "app_id";
+const APP_ID: &str = "app-id";
 
 // The branch to use when exporting the application.
 // If this is unset the defaults come from the default-branch option.
@@ -31,158 +31,158 @@ const app_id: &str = "app_id";
 // to use the default-branch key instead, because you can then override the default using
 // --default-branch when building for instance a test build.
 // string
-const branch: &str = "branch";
+const BRANCH: &str = "branch";
 
 // The default branch to use when exporting the application. Defaults to master.
 // This key can be overridden by the --default-branch commandline option.
 // string
-const default_branch: &str = "default_branch";
+const DEFAULT_BRANCH: &str = "default-branch";
 
 // The collection ID of the repository, defaults to being unset. Setting a globally unique collection
 // ID allows the apps in the repository to be shared over
 // peer to peer systems without needing further configuration. If building in an existing repository,
 // the collection ID must match the existing configured collection ID for that repository.
 // string
-const collection_id: &str = "collection_id";
+const COLLECTION_ID: &str = "collection-id";
 
 // The name of the runtime that the application uses.
 // string
-const runtime: &str = "runtime";
+const RUNTIME: &str = "runtime";
 
 // The version of the runtime that the application uses, defaults to master.
 // string
-const runtime_version: &str = "runtime_version";
+const RUNTIME_VERSION: &str = "runtime-version";
 
 // The name of the development runtime that the application builds with.
 // string
-const sdk: &str = "sdk";
+const SDK: &str = "sdk";
 
 // Initialize the (otherwise empty) writable /var in the build with a copy of this runtime.
 // string
-const var: &str = "var";
+const VAR: &str = "var";
 
 // Use this file as the base metadata file when finishing.
 // string
-const metadata: &str = "metadata";
+const METADATA: &str = "metadata";
 
 // Build a new runtime instead of an application.
 // bool
-const build_runtime: &str = "build_runtime";
+const BUILD_RUNTIME: &str = "build-runtime";
 
 // Build an extension.
 // bool
-const build_extension: &str = "build_extension";
+const BUILD_EXTENSION: &str = "build-extension";
 
 // Start with the files from the specified application.
 // This can be used to create applications that extend another application.
 // string
-const base: &str = "base";
+const BASE: &str = "base";
 
 // Use this specific version of the application specified in base.
 // If unspecified, this uses the value specified in branch
 // string
-const base_version: &str = "base_version";
+const BASE_VERSION: &str = "base-version";
 
 // Install these extra extensions from the base application when
 // initializing the application directory.
 // list of strings
-const base_extensions: &str = "base_extensions";
+const BASE_EXTENSIONS: &str = "base-extensions";
 
 // Inherit these extra extensions points from the base application or sdk when finishing the build.
 // list of strings
-const inherit_extensions: &str = "inherit_extensions";
+const INHERIT_EXTENSIONS: &str = "inherit-extensions";
 
 // Inherit these extra extensions points from the base application or sdk when finishing the build,
 // but do not inherit them into the platform.
 // list of strings
-const inherit_sdk_extensions: &str = "inherit_sdk_extensions";
+const INHERIT_SDK_EXTENSIONS: &str = "inherit-sdk-extensions";
 
 // Inherit these extra extensions points from the base application or sdk when finishing the build,
 // but do not inherit them into the platform.
 // list of strings
-// const build_options: &str = "build_options";
+// const BUILD_OPTIONS: &str = "build-options";
 
 // Add these tags to the metadata file.
 // list of strings
-const tags: &str = "tags";
+const TAGS: &str = "tags";
 
 // An array of strings specifying the modules to be built in order.
 // String members in the array are interpreted as the name of a separate
 // json or yaml file that contains a module. See below for details.
 // list of strings
-const modules: &str = "modules";
+const MODULES: &str = "modules";
 
 // This is a dictionary of extension objects.
 // The key is the name of the extension.
 // See below for details.
 // list of strings
-const add_extensions: &str = "add_extensions";
+const ADD_EXTENSIONS: &str = "add-extensions";
 
 // This is a dictionary of extension objects similar to add-extensions.
 // The main difference is that the extensions are added early and are
 // available for use during the build.
 // list of strings
-const add_build_extensions: &str = "add_build_extensions";
+const ADD_BUILD_EXTENSIONS: &str = "add-build-extensions";
 
 // An array of file patterns that should be removed at the end.
 // Patterns starting with / are taken to be full pathnames (without the /app prefix),
 // otherwise they just match the basename.
 // list of strings
-const cleanup: &str = "cleanup";
+const CLEANUP: &str = "cleanup";
 
 // An array of commandlines that are run during the cleanup phase.
 // list of strings
-const cleanup_commands: &str = "cleanup_commands";
+const CLEANUP_COMMANDS: &str = "cleanup-commands";
 
 // Extra files to clean up in the platform.
 // list of strings
-const cleanup_platform: &str = "cleanup_platform";
+const CLEANUP_PLATFORM: &str = "cleanup-platform";
 
 // An array of commandlines that are run during the cleanup phase of the platform.
 // list of strings
-const cleanup_platform_commands: &str = "cleanup_platform_commands";
+const CLEANUP_PLATFORM_COMMANDS: &str = "cleanup-platform-commands";
 
 // An array of commandlines that are run after importing the base platform,
 // but before applying the new files from the sdk. This is a good place to e.g. delete
 // things from the base that may conflict with the files added in the sdk.
 // list of strings
-const prepare_platform_commands: &str = "prepare_platform_commands";
+const PREPARE_PLATFORM_COMMANDS: &str = "prepare-platform-commands";
 
 // An array of arguments passed to the flatpak build-finish command.
 // list of strings
-const finish_args: &str = "finish_args";
+const FINISH_ARGS: &str = "finish-args";
 
 // Any desktop file with this name will be renamed to a name based on id during the cleanup phase.
 // string
-const rename_desktop_file: &str = "rename_desktop_file";
+const RENAME_DESKTOP_FILE: &str = "rename-desktop-file";
 
 // Any appdata file with this name will be renamed to a name based on id during the cleanup phase.
 // string
-const rename_appdata_file: &str = "rename_appdata_file";
+const RENAME_APPDATA_FILE: &str = "rename-appdata-file";
 
 // Any icon with this name will be renamed to a name based on id during the cleanup phase.
 // Note that this is the icon name, not the full filenames, so it should
 // not include a filename extension.
 // string
-const rename_icon: &str = "rename_icon";
+const RENAME_ICON: &str = "rename-icon";
 
-// Replace the appdata project_license field with this string.
+// Replace the appdata project-license field with this string.
 // This is useful as the upstream license is typically only about the application itself,
 // whereas the bundled app can contain other licenses too.
 // string
-const appdata_license: &str = "appdata_license";
+const APPDATA_LICENSE: &str = "appdata-license";
 
 // If rename-icon is set, keep a copy of the old icon file.
 // bool
-const copy_icon: &str = "copy-icon";
+const COPY_ICON: &str = "copy-icon";
 
 // This string will be prefixed to the Name key in the main application desktop file.
 // string
-const desktop_file_name_prefix: &str = "desktop_file_name_prefix";
+const DESKTOP_FILE_NAME_PREFIX: &str = "desktop-file-name-prefix";
 
 // This string will be suffixed to the Name key in the main application desktop file.
 // string
-const desktop_file_name_suffix: &str = "desktop_file_name_suffix";
+const DESKTOP_FILE_NAME_SUFFIX: &str = "desktop-file-name-suffix";
 
 
 
@@ -510,9 +510,8 @@ pub fn dump(ctx: &mut crate::execution_context::ExecutionContext) -> i32 {
     let mut modules_to_dump: Vec<Yaml> = vec![];
     for package in &ctx.manifest.modules {
         let mut module_hash_map: LinkedHashMap<Yaml, Yaml> = LinkedHashMap::new();
-        module_hash_map.insert(Yaml::from_str("name"), Yaml::from_str(&package.name));
-        module_hash_map.insert(Yaml::from_str("version"), Yaml::from_str(&package.version));
-        module_hash_map.insert(Yaml::from_str("url"), Yaml::from_str(&package.url));
+        module_hash_map.insert(Yaml::from_str(APP_NAME), Yaml::from_str(&package.name));
+        module_hash_map.insert(Yaml::from_str(RUNTIME_VERSION), Yaml::from_str(&package.version));
         let module_document = Yaml::Hash(module_hash_map);
 
         modules_to_dump.push(module_document);
