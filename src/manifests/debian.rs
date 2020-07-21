@@ -185,14 +185,6 @@ impl Default for DebianPackage {
     }
 }
 
-fn read_manifest_paragraph(paragraph: String, manifest: &DebianManifest) {
-
-}
-
-fn read_package_paragraph(paragraph: String, package: &DebianPackage) {
-
-}
-
 fn parse_paragraphs(content: &str, paragraphs: &mut Vec<String>) {
     let content_str = content.to_string();
     let lines = content_str.split("\n");
