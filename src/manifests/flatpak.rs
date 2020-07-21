@@ -223,98 +223,98 @@ const SOURCES: &str = "sources";
 
 // If true, remove the configure script before starting build
 // (boolean)
-const RM_CONFIGURE: &str = "";
+const RM_CONFIGURE: &str = "rm-configure";
 
 // Ignore the existence of an autogen script
 // (boolean)
-const NO_AUTOGEN: &str = "";
+const NO_AUTOGEN: &str = "no-autogen";
 
 // Don't call make with arguments to build in parallel
 // (boolean)
-const NO_PARALLEL_MAKE: &str = "";
+const NO_PARALLEL_MAKE: &str = "no-parallel-make";
 
 // Name of the rule passed to make for the install phase, default is install
 // (string)
-const INSTALL_RULE: &str = "";
+const INSTALL_RULE: &str = "install-rule";
 
 // Don't run the make install (or equivalent) stage
 // (boolean)
-const NO_MAKE_INSTALL: &str = "";
+const NO_MAKE_INSTALL: &str = "no-make-install";
 
 // Don't fix up the *.py[oc] header timestamps for ostree use.
 // (boolean)
-const NO_PYTHON_TIMESTAMP_FIX: &str = "";
+const NO_PYTHON_TIMESTAMP_FIX: &str = "no-python-timestamp-fix";
 
 // Use cmake instead of configure (deprecated: use buildsystem instead)
 // (boolean)
-const CMAKE: &str = "";
+const CMAKE: &str = "cmake";
 
 // Build system to use: autotools, cmake, cmake-ninja, meson, simple, qmake
 // (string)
-const BUILDSYSTEM: &str = "";
+const BUILDSYSTEM: &str = "buildsystem";
 
 // Use a build directory that is separate from the source directory
 // (boolean)
-const BUILDDIR: &str = "";
+const BUILDDIR: &str = "builddir";
 
 // Build inside this subdirectory of the extracted sources
 // (string)
-const SUBDIR: &str = "";
+const SUBDIR: &str = "subdir";
 
 // A build options object that can override global options
 // (object)
-const BUILD_OPTIONS: &str = "";
+const BUILD_OPTIONS: &str = "build-options";
 
 // An array of commands to run during build (between make and make install if those are used).
 // This is primarily useful when using the "simple" buildsystem.
 // Each command is run in /bin/sh -c, so it can use standard POSIX shell syntax such as piping output.
 // (array of strings)
-const BUILD_COMMANDS: &str = "";
+const BUILD_COMMANDS: &str = "build-commands";
 
 // An array of shell commands that are run after the install phase. Can for example clean up the install dir, or install extra files.
 // (array of strings)
-const POST_INSTALL: &str = "";
+const POST_INSTALL: &str = "post-install";
 
 // An array of file patterns that should be removed at the end. Patterns starting with / are taken to be full pathnames (without the /app prefix), otherwise
 // they just match the basename. Note that any patterns will only match files installed by this module.
 // (array of strings)
-// const CLEANUP: &str = "";
+// const CLEANUP: &str = "cleanup";
 
 // The way the builder works is that files in the install directory are hard-links to the cached files, so you're not allowed to modify them in-place. If you
 // list a file in this then the hardlink will be broken and you can modify it. This is a workaround, ideally installing files should replace files, not modify
 // existing ones.
 // (array of strings)
-const ENSURE_WRITABLE: &str = "";
+const ENSURE_WRITABLE: &str = "ensure-writable";
 
 // If non-empty, only build the module on the arches listed.
 // (array of strings)
-const ONLY_ARCHES: &str = "";
+const ONLY_ARCHES: &str = "only-arches";
 
 // Don't build on any of the arches listed.
 // (array of strings)
-const SKIP_ARCHES: &str = "";
+const SKIP_ARCHES: &str = "skip-arches";
 
 // Extra files to clean up in the platform.
 // (array of strings)
-// const CLEANUP_PLATFORM: &str = "";
+// const CLEANUP_PLATFORM: &str = "cleanup-platform";
 
 // If true this will run the tests after installing.
 // (boolean)
-const RUN_TESTS: &str = "";
+const RUN_TESTS: &str = "run-tests";
 
 // The target to build when running the tests. Defaults to "check" for make and "test" for ninja. Set to empty to disable.
 // (string)
-const TEST_RULE: &str = "";
+const TEST_RULE: &str = "test-rule";
 
 // Array of commands to run during the tests.
 // (array of strings)
-const TEST_COMMANDS: &str = "";
+const TEST_COMMANDS: &str = "test-commands";
 
 // An array of objects specifying nested modules to be built before this one.
 // String members in the array are interpreted as names of a separate json or yaml file that contains a module.
 // (array of objects or strings)
 // TODO extract this
-// const MODULES: &str = "";
+// const MODULES: &str = "modules";
 
 
 
