@@ -326,9 +326,18 @@ const TEST_COMMANDS: &str = "test-commands";
 // Additionally, the sources list can contain a plain string, which is interpreted as the name
 // of a separate json or yaml file that is read and inserted at this
 // point. The file can contain a single source, or an array of sources.
+// Allowed source types are:
+//   * archive,
+//   * git,
+//   * bzr,
+//   * svn,
+//   * dir,
+//   * file,
+//   * script,
+//   * shell,
+//   * patch,
+//   * extra-data,
 const SOURCE_TYPE: &str = "type";
-
-
 
 
 // **** Extensions
