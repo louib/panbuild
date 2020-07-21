@@ -196,8 +196,8 @@ pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
     return response;
 }
 
-pub fn dump(ctx: &mut crate::execution_context::ExecutionContext) -> i32 {
-    return 0;
+pub fn dump(manifest: &crate::manifests::manifest::AbstractManifest) -> String {
+    return String::from("");
 }
 
 pub fn is_type(ctx: &mut crate::execution_context::ExecutionContext) -> bool {

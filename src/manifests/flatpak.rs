@@ -512,15 +512,15 @@ pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
     return response;
 }
 
-pub fn dump(ctx: &mut crate::execution_context::ExecutionContext) -> i32 {
+pub fn dump(manifest: &crate::manifests::manifest::AbstractManifest) -> String {
     let mut lhm: LinkedHashMap<Yaml, Yaml> = LinkedHashMap::new();
-    lhm.insert(Yaml::from_str("name"), Yaml::from_str(&ctx.manifest.package_name));
-    lhm.insert(Yaml::from_str("app-id"), Yaml::from_str(&ctx.manifest.package_id));
-    lhm.insert(Yaml::from_str("branch"), Yaml::from_str(&ctx.manifest.package_version));
+    lhm.insert(Yaml::from_str("name"), Yaml::from_str(&manifest.package_name));
+    lhm.insert(Yaml::from_str("app-id"), Yaml::from_str(&manifest.package_id));
+    lhm.insert(Yaml::from_str("branch"), Yaml::from_str(&manifest.package_version));
     let output_document = Yaml::Hash(lhm);
 
     let mut modules_to_dump: Vec<Yaml> = vec![];
-    for package in &ctx.manifest.modules {
+    for package in &manifest.modules {
         let mut module_hash_map: LinkedHashMap<Yaml, Yaml> = LinkedHashMap::new();
         module_hash_map.insert(Yaml::from_str(APP_NAME), Yaml::from_str(&package.name));
         module_hash_map.insert(Yaml::from_str(RUNTIME_VERSION), Yaml::from_str(&package.version));
@@ -534,11 +534,10 @@ pub fn dump(ctx: &mut crate::execution_context::ExecutionContext) -> i32 {
     {
         let mut emitter = YamlEmitter::new(&mut out_str);
         emitter.dump(&output_document).unwrap(); // dump the YAML object to a String
-        println!("{}", out_str);
     }
 
 
-    return 0;
+    return out_str;
 }
 
 pub fn is_type(ctx: &mut crate::execution_context::ExecutionContext) -> bool {
