@@ -178,9 +178,16 @@ pub fn dump(ctx: &mut crate::execution_context::ExecutionContext) -> i32 {
     lhm.insert(Yaml::from_str("branch"), Yaml::from_str(&ctx.manifest.package_version));
     let output_document = Yaml::Hash(lhm);
 
-    //let top_level_document: Yaml = Yaml::Array(vec![
-        //Yaml::Integer(1), Yaml::Integer(2),
-    //]);
+    let mut modules: Vec<Yaml> = vec![];
+    for package in &ctx.manifest.modules {
+        let mut module_hash_map: LinkedHashMap<Yaml, Yaml> = LinkedHashMap::new();
+        module_hash_map.insert(Yaml::from_str("name"), Yaml::from_str(&package.name));
+        module_hash_map.insert(Yaml::from_str("version"), Yaml::from_str(&package.version));
+        module_hash_map.insert(Yaml::from_str("url"), Yaml::from_str(&package.url));
+        let module_document = Yaml::Hash(module_hash_map);
+
+        modules.push(module_document);
+    }
 
     // Dump the YAML object
     let mut out_str = String::new();
