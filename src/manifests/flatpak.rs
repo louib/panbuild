@@ -87,10 +87,10 @@ struct FlatpakManifest {
     // Add these tags to the metadata file.
     tags: Vec<String>,
 
-    // An array of objects specifying the modules to be built in order.
+    // An array of strings specifying the modules to be built in order.
     // String members in the array are interpreted as the name of a separate
     // json or yaml file that contains a module. See below for details.
-    modules: Vec<Module>,
+    modules: Vec<String>,
 
     // This is a dictionary of extension objects.
     // The key is the name of the extension.
@@ -150,7 +150,134 @@ struct FlatpakManifest {
     desktop_file_name_suffix: String,
 }
 
-struct Module {
+// Module fields.
+// Each module specifies a source that has to be separately built and installed.
+// It contains the build options and a list of sources to download and extract before
+// building.
+//
+// Modules can be nested, in order to turn related modules on and off with a single key.
+//
+// These are the properties that are accepted:
+// The name of the module, used in e.g. build logs. The name is also
+// used for constructing filenames and commandline arguments, therefore using spaces or '/' in
+// this string is a bad idea.
+const module_name: &str = "name";
+
+// If true, skip this module
+// (boolean)
+const module_disabled: &str = "disabled";
+
+// An array of objects defining sources that will be downloaded and extracted in order. String members in the array are interpreted as the name of a separate
+// json or yaml file that contains sources. See below for details.
+// (array of objects or strings)
+const sources: &str = "sources";
+
+// An array of options that will be passed to configure
+// (array of strings)
+const config_opts: &str = "";
+
+// An array of arguments that will be passed to make
+// (array of strings)
+const make_args: &str = "";
+
+// An array of arguments that will be passed to make install
+// (array of strings)
+const make_install_args: &str = "";
+
+// If true, remove the configure script before starting build
+// (boolean)
+const rm_configure: &str = "";
+
+// Ignore the existence of an autogen script
+// (boolean)
+const no_autogen: &str = "";
+
+// Don't call make with arguments to build in parallel
+// (boolean)
+const no_parallel_make: &str = "";
+
+// Name of the rule passed to make for the install phase, default is install
+// (string)
+const install_rule: &str = "";
+
+// Don't run the make install (or equivalent) stage
+// (boolean)
+const no_make_install: &str = "";
+
+// Don't fix up the *.py[oc] header timestamps for ostree use.
+// (boolean)
+const no_python_timestamp_fix: &str = "";
+
+// Use cmake instead of configure (deprecated: use buildsystem instead)
+// (boolean)
+const cmake: &str = "";
+
+// Build system to use: autotools, cmake, cmake-ninja, meson, simple, qmake
+// (string)
+const buildsystem: &str = "";
+
+// Use a build directory that is separate from the source directory
+// (boolean)
+const builddir: &str = "";
+
+// Build inside this subdirectory of the extracted sources
+// (string)
+const subdir: &str = "";
+
+// A build options object that can override global options
+// (object)
+const build_options: &str = "";
+
+// An array of commands to run during build (between make and make install if those are used). This is primarily useful when using the "simple" buildsystem.
+// Each command is run in /bin/sh -c, so it can use standard POSIX shell syntax such as piping output.
+// (array of strings)
+const build_commands: &str = "";
+
+// An array of shell commands that are run after the install phase. Can for example clean up the install dir, or install extra files.
+// (array of strings)
+const post_install: &str = "";
+
+// An array of file patterns that should be removed at the end. Patterns starting with / are taken to be full pathnames (without the /app prefix), otherwise
+// they just match the basename. Note that any patterns will only match files installed by this module.
+// (array of strings)
+const cleanup: &str = "";
+
+// The way the builder works is that files in the install directory are hard-links to the cached files, so you're not allowed to modify them in-place. If you
+// list a file in this then the hardlink will be broken and you can modify it. This is a workaround, ideally installing files should replace files, not modify
+// existing ones.
+// (array of strings)
+const ensure_writable: &str = "";
+
+// If non-empty, only build the module on the arches listed.
+// (array of strings)
+const only_arches: &str = "";
+
+// Don't build on any of the arches listed.
+// (array of strings)
+const skip_arches: &str = "";
+
+// Extra files to clean up in the platform.
+// (array of strings)
+const cleanup_platform: &str = "";
+
+// If true this will run the tests after installing.
+// (boolean)
+const run_tests: &str = "";
+
+// The target to build when running the tests. Defaults to "check" for make and "test" for ninja. Set to empty to disable.
+// (string)
+const test_rule: &str = "";
+
+// Array of commands to run during the tests.
+// (array of strings)
+const test_commands: &str = "";
+
+// An array of objects specifying nested modules to be built before this one. String members in the array are interpreted as names of a separate json or yaml
+// file that contains a module.
+// (array of objects or strings)
+const modules: &str = "";
+
+struct Sources {
 }
 struct Extension {
 }
@@ -178,7 +305,7 @@ pub fn dump(ctx: &mut crate::execution_context::ExecutionContext) -> i32 {
     lhm.insert(Yaml::from_str("branch"), Yaml::from_str(&ctx.manifest.package_version));
     let output_document = Yaml::Hash(lhm);
 
-    let mut modules: Vec<Yaml> = vec![];
+    let mut modules_to_dump: Vec<Yaml> = vec![];
     for package in &ctx.manifest.modules {
         let mut module_hash_map: LinkedHashMap<Yaml, Yaml> = LinkedHashMap::new();
         module_hash_map.insert(Yaml::from_str("name"), Yaml::from_str(&package.name));
@@ -186,7 +313,7 @@ pub fn dump(ctx: &mut crate::execution_context::ExecutionContext) -> i32 {
         module_hash_map.insert(Yaml::from_str("url"), Yaml::from_str(&package.url));
         let module_document = Yaml::Hash(module_hash_map);
 
-        modules.push(module_document);
+        modules_to_dump.push(module_document);
     }
 
     // Dump the YAML object
