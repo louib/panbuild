@@ -70,58 +70,58 @@ const CONTROL_FILE_SEPARATOR: &str = ":";
 const DEFAULT_SECTION: &str = "libs";
 
 const DEFAULT_PRIORITY: Priority = Priority::optional;
+// TODO we should define a list of accepted priorities. In this case,
+// for the moment, it's all of them, but it might not be the case if we
+// add more cases to the shared enum.
+
 
 // See https://www.debian.org/doc/debian-policy/ch-controlfields.html
-struct DebianManifest {
-    // The name of the source described in this manifest.
-    // (mandatory)
-    source: String,
+// **** Top-level fields
+//
+// The name of the source described in this manifest.
+// (mandatory)
+// string
+const SOURCE: &str = "Source";
+// The packages in the archive areas main, contrib and non-free are grouped further into sections to simplify handling.
+// string
+const SECTION: &str = "Section";
+// The priority
+const PRIORITY: &str = "Priority";
+// Format is name <email@address.com>
+// (mandatory)
+// string
+const MAINTAINER: &str = "Maintainer";
+// List of the names and email addresses of co-maintainers of the package, if any.
+// Format is name <email@address.com>
+// list of strings
+const UPLOADERS: &str = "Uploaders";
+// list of strings
+const BUILD_DEPENDS: &str = "Build-Depends";
+// A semver reference to a "canonical" version.
+// (mandatory)
+// string
+const STANDARDS_VERSIONS: &str = "Standards-Versions";
+// string
+const HOMEPAGE: &str = "Homepage";
+// URL of a website to browser the source code.
+// string
+const VCS_BROWSER: &str = "Vcs-Browser";
+// URL of the git repo.
+// string
+const VCS_GIT: &str = "Vcs-Git";
+// list of packages (see package fields below).
+const PACKAGES: &str = "packages";
 
-    // The packages in the archive areas main, contrib and non-free are grouped further into sections to simplify handling.
-    section: String,
 
-    priority: Priority,
+// **** Package fields
+const PACKAGE_NAME: &str = "Package-Name";
+// Can be "any"
+const ARCHITECTURE: &str = "Architecture";
+const MULTI_ARCH: &str = "Multi-Arch";
+const DEPENDS: &str = "Depends";
+// A multi-line string
+const DESCRIPTION: &str = "Description";
 
-    // Format is name <email@address.com>
-    // (mandatory)
-    maintainer: String,
-
-    // List of the names and email addresses of co-maintainers of the package, if any.
-    // Format is name <email@address.com>
-    uploaders: Vec<String>,
-
-    build_depends: Vec<String>,
-
-    // A semver reference to a "canonical" version.
-    // (mandatory)
-    standards_versions: String,
-
-    homepage: String,
-
-    // URL of a website to browser the source code.
-    vcs_browser: String,
-
-    // URL of the git repo.
-    vcs_git: String,
-
-}
-
-// list of packages.
-const packages: &str = "packages";
-
-struct DebianPackage {
-    name: String,
-
-    // Can be "any"
-    architecture: String,
-
-    multi_arch: String,
-
-    depends: Vec<String>,
-
-    // A multi-line string
-    description: String,
-}
 
 fn parse_paragraphs(content: &str, paragraphs: &mut Vec<String>) {
     let content_str = content.to_string();
