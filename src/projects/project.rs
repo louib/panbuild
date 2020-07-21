@@ -1,4 +1,9 @@
 use std::process::Command;
+use std::io;
+use std::fs::{self, DirEntry};
+use std::path::Path;
+
+pub const PROJECTS_DIR: &str = "~/.panbuild/projects/";
 
 pub enum URLType {
     git,
@@ -39,15 +44,40 @@ pub struct Project {
 
 pub fn fetch_project(project: Project){
     if project.url.starts_with("https") && project.url.ends_with(".git") {
-        let temp_path: &str = "/temp/dir";
+        let clone_output = Command::new("mkdir")
+            .arg("-p")
+            .arg(PROJECTS_DIR)
+            .output()
+            .expect(&format!("failed to create projects directory at {}!", PROJECTS_DIR).to_string());
+        if ! clone_output.status.success() {
+            panic!("The clone did not work :(");
+        }
+
         let clone_output = Command::new("git")
             .arg("clone")
-            .arg(project.url)
-            .arg(temp_path)
+            .arg(&project.url)
+            .arg(PROJECTS_DIR)
             .output()
-            .expect("failed to clone git repo.");
+            .expect(&format!("failed to clone git repository at {}!", &project.url).to_string());
         if ! clone_output.status.success() {
             panic!("The clone did not work :(");
         }
     }
+}
+
+// one possible implementation of walking a directory only visiting files
+// Taken from https://doc.rust-lang.org/std/fs/fn.read_dir.html
+fn visit_dirs(dir: &Path, cb: &dyn Fn(&DirEntry)) -> io::Result<()> {
+    if dir.is_dir() {
+        for entry in fs::read_dir(dir)? {
+            let entry = entry?;
+            let path = entry.path();
+            if path.is_dir() {
+                visit_dirs(&path, cb)?;
+            } else {
+                cb(&entry);
+            }
+        }
+    }
+    Ok(())
 }
