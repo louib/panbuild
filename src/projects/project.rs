@@ -1,3 +1,5 @@
+use std::process::Command;
+
 pub enum URLType {
     git,
     hg,
@@ -33,4 +35,19 @@ pub struct Project {
     pub keywords: Vec<String>,
     pub versions: Vec<Version>,
     pub dependencies: Vec<Version>,
+}
+
+pub fn fetch_project(project: Project){
+    if project.url.starts_with("https") && project.url.ends_with(".git") {
+        let temp_path: &str = "/temp/dir";
+        let clone_output = Command::new("git")
+            .arg("clone")
+            .arg(project.url)
+            .arg(temp_path)
+            .output()
+            .expect("failed to clone git repo.");
+        if ! clone_output.status.success() {
+            panic!("The clone did not work :(");
+        }
+    }
 }
