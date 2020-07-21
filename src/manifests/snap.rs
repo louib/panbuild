@@ -698,13 +698,11 @@ pub fn parse(ctx: &mut crate::execution_context::ExecutionContext) -> i32 {
 
     let apps = manifest_content["apps"].as_hash().unwrap();
     for executable_name in apps.keys() {
-        println!("executable: {}", executable_name.as_str().unwrap());
         let mut executable = crate::manifests::manifest::AbstractExecutable::default();
     }
 
     let parts = manifest_content["parts"].as_hash().unwrap();
     for module_name in parts.keys() {
-        println!("module: {}", module_name.as_str().unwrap());
         let mut module = crate::manifests::manifest::AbstractModule::default();
         let snap_module = parts.get(module_name).unwrap();
 
