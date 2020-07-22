@@ -541,7 +541,47 @@ pub fn dump(manifest: &crate::manifests::manifest::AbstractManifest) -> String {
 }
 
 pub fn file_path_matches(path: &str) -> bool {
-    return false;
+    let parts: Vec<&str> = path.split("/").collect();
+    if parts.len() == 0 {
+        return false
+    }
+    let last_part = parts[parts.len() - 1];
+    if ! last_part.to_lowercase().ends_with("yaml") && ! last_part.to_lowercase().ends_with("json") {
+        return false;
+    }
+    let mut dot_count = 0;
+    for c in last_part.chars() {
+        if c == '.' {
+            dot_count = dot_count + 1;
+            continue;
+        }
+        if c.is_alphabetic() || c.is_numeric() {
+            continue;
+        }
+        return false;
+    }
+    // The reverse DNS notation is used for the
+    // flatpak app IDs and the associated manifest
+    // files. This means at least 3 dots in the
+    // resulting name.
+    if dot_count < 3 {
+        return false;
+    }
+    return true;
+}
+
+#[test]
+pub fn test_file_path_matches() {
+    assert!(file_path_matches("com.example.appName.yaml"));
+    assert!(file_path_matches("/path/to/com.example.appName.yaml"));
+    assert!(file_path_matches("/path/to/com.example.department.product.yaml"));
+    assert!(!file_path_matches("/path/to/file.yaml"));
+    assert!(!file_path_matches("/path/to/file.json"));
+    assert!(!file_path_matches("/path/to/___432423fdsf.json"));
+    assert!(!file_path_matches("/path/to/example.com.json"));
+    assert!(!file_path_matches("/path/to/example.com.json."));
+    assert!(!file_path_matches(""));
+    assert!(!file_path_matches("/////////////"));
 }
 
 pub fn file_content_matches(content: &str) -> bool {
