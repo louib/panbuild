@@ -15,13 +15,13 @@ pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
 }
 
 pub fn file_path_matches(path: &str) -> bool {
-    if path.ends_with("PKGBUILD") {
+    if path.to_uppercase().ends_with("PKGBUILD") {
         return true;
     }
     // TODO not sure about this, but I think the source infos
     // are easier to parse than the pkg build, which is a script.
     // See https://wiki.archlinux.org/index.php/.SRCINFO
-    if path.ends_with(".SRCINFO") {
+    if path.to_uppercase().ends_with(".SRCINFO") {
         return true;
     }
     return false;
