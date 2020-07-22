@@ -25,7 +25,5 @@ jobs:
       run: flatpak install -y --user flathub org.gnome.Platform/x86_64/3.36 org.gnome.Sdk/x86_64/3.36
     - name: installing the rust extension
       run: flatpak install -y --user flathub org.freedesktop.Sdk.Extension.rust-stable//19.08
-    - name: converting manifest to JSON
-      run: python3 scripts/yml2json net.louib.panbuild.yml > net.louib.panbuild.json
     - name: building the flatpak
       run: flatpak-builder --user --force-clean build net.louib.panbuild.json
