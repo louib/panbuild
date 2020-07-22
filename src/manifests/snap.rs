@@ -745,7 +745,23 @@ pub fn dump(manifest: &crate::manifests::manifest::AbstractManifest) -> String {
 }
 
 pub fn file_path_matches(path: &str) -> bool {
+    if path.to_lowercase().ends_with("snapcraft.yaml") {
+        return true;
+    }
+    if path.to_lowercase().ends_with("snapcraft.yml") {
+        return true;
+    }
     return false;
+}
+#[test]
+pub fn test_file_path_matches() {
+    assert!(file_path_matches("snapcraft.yaml"));
+    assert!(file_path_matches("/path/to/snapcraft.yml"));
+    assert!(file_path_matches("/path/to/Snapcraft.YAML"));
+    assert!(!file_path_matches("/path/to/file.yaml"));
+    assert!(!file_path_matches("/path/to/file.json"));
+    assert!(!file_path_matches(""));
+    assert!(!file_path_matches("/////////////"));
 }
 
 pub fn file_content_matches(content: &str) -> bool {
