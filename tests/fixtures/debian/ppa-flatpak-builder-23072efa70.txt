@@ -1,0 +1,100 @@
+Source: flatpak-builder
+Section: devel
+Priority: optional
+Maintainer: Utopia Maintenance Team <pkg-utopia-maintainers@lists.alioth.debian.org>
+Uploaders:
+ Matthias Klumpp <mak@debian.org>,
+ Simon McVittie <smcv@debian.org>,
+Build-Depends:
+ attr <!nocheck>,
+ automake (>= 1.14.1),
+ ca-certificates <!nocheck>,
+ dbus,
+ debhelper (>= 10~),
+ desktop-file-utils <!nocheck>,
+ dh-exec (>= 0.23~),
+ docbook-xml <!nodoc>,
+ docbook-xsl <!nodoc>,
+ flatpak (>= 0.99.1),
+ fuse <!nocheck>,
+ git <!nocheck>,
+ gtk-update-icon-cache <!nocheck>,
+ hicolor-icon-theme <!nocheck>,
+ libarchive-dev (>= 2.8.0),
+ libattr1-dev,
+ libcap-dev,
+ libcurl4-gnutls-dev,
+ libdw-dev,
+ libelf-dev,
+ libflatpak-dev (>= 0.99.1),
+ libglib2.0-dev (>= 2.44),
+ libjson-glib-dev,
+ libostree-dev (>= 2017.14),
+ libsoup2.4-dev,
+ libxml2-dev (>= 2.4),
+ libyaml-dev,
+ ostree <!nocheck>,
+ procps,
+ python3,
+ shared-mime-info <!nocheck>,
+ xmlto <!nodoc>,
+ xsltproc <!nodoc>,
+Standards-Version: 4.4.0
+Homepage: http://flatpak.org/
+Vcs-Git: https://salsa.debian.org/debian/flatpak-builder.git
+Vcs-Browser: https://salsa.debian.org/debian/flatpak-builder
+Rules-Requires-Root: no
+
+Package: flatpak-builder
+Architecture: linux-any
+Depends:
+ gir1.2-flatpak-1.0 (>= 0.99.1),
+ flatpak (>= 0.99.1),
+ ostree (>= 2017.14),
+ ${misc:Depends},
+ ${shlibs:Depends},
+Recommends:
+ binutils,
+ elfutils,
+ git,
+ patch,
+ unzip,
+Suggests:
+ bzr | brz,
+ subversion,
+Replaces:
+ flatpak (<< 0.9.8-1~),
+Description: Flatpak application building helper
+ Flatpak installs, manages and runs sandboxed desktop application bundles.
+ See the flatpak package for a more comprehensive description.
+ .
+ flatpak-builder is a tool that makes it easy to build applications and their
+ dependencies by automating the configure && make && make install steps.
+
+Package: flatpak-builder-tests
+Architecture: linux-any
+Section: misc
+Breaks:
+ flatpak-tests (<< 0.9.12),
+Replaces:
+ flatpak-tests (<< 0.9.12),
+Depends:
+ attr,
+ ca-certificates,
+ desktop-file-utils,
+ flatpak-builder (= ${binary:Version}),
+ hicolor-icon-theme,
+ git,
+ gtk-update-icon-cache,
+ make,
+ ostree (>= 2017.14),
+ shared-mime-info,
+ ${misc:Depends},
+ ${shlibs:Depends},
+Suggests:
+ python2,
+Description: Application deployment framework for desktop apps (tests)
+ Flatpak installs, manages and runs sandboxed desktop application bundles.
+ See the flatpak package for a more comprehensive description.
+ .
+ This package contains automated tests.
