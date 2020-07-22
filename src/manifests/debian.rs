@@ -268,6 +268,9 @@ pub fn dump(manifest: &crate::manifests::manifest::AbstractManifest) -> String {
 }
 
 pub fn file_path_matches(path: &str) -> bool {
+    if path.ends_with("control") {
+        return true;
+    }
     return false;
 }
 
@@ -339,5 +342,15 @@ mod debian_tests {
             "The dump from debian::parse was empty!",
         );
 
+    }
+
+    #[test]
+    pub fn test_file_path_matches() {
+        assert!(file_path_matches("control"));
+        assert!(file_path_matches("/path/to/control"));
+        assert!(!file_path_matches("/path/to/file.yaml"));
+        assert!(!file_path_matches("/path/to/file.json"));
+        assert!(!file_path_matches(""));
+        assert!(!file_path_matches("/////////////"));
     }
 }
