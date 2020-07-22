@@ -9,6 +9,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
+    - name: adding PPA for latest flatpak version.
+      run: add-apt-repository ppa:alexlarsson/flatpak
     - name: updating available system dependencies
       run: sudo apt-get update
     - name: installing flatpak and flatpak-builder
