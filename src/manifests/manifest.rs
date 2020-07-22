@@ -1,8 +1,16 @@
 pub enum PackageType {
+    app,
+    lib,
+    driver,
+    daemon,
+}
+pub const DEFAULT_PACKAGE_TYPE: PackageType = PackageType::app;
+
+pub enum ReleaseType {
     dev,
     release,
 }
-pub const DEFAULT_PACKAGE_TYPE: PackageType = PackageType::dev;
+pub const DEFAULT_RELEASE_TYPE: ReleaseType = ReleaseType::dev;
 
 pub enum Architecture {
     amd64,
@@ -32,6 +40,7 @@ pub struct AbstractManifest {
     pub short_description: String,
     pub description: String,
     pub package_type: PackageType,
+    pub release_type: ReleaseType,
     pub architecture: Architecture,
     pub license: License,
 
@@ -50,6 +59,7 @@ impl Default for AbstractManifest {
             short_description: "".to_string(),
             description: "".to_string(),
             package_type: DEFAULT_PACKAGE_TYPE,
+            release_type: DEFAULT_RELEASE_TYPE,
             architecture: DEFAULT_ARCH,
             license: DEFAULT_LICENSE,
 

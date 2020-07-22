@@ -129,25 +129,11 @@ fn parse_paragraphs(content: &str, paragraphs: &mut Vec<String>) {
     let mut paragraph: String = String::from("");
 
     for line in lines {
-        let mut only_spaces = true;
-        let mut indent_size = 0;
-        line.starts_with(|c: char| {
-            if c == ' ' {
-                indent_size = indent_size + 1;
-                return true;
-            }
-            if c == '\t' {
-                indent_size = indent_size + 1;
-                return true;
-            }
-            return false;
-        });
-        let is_empty_line: bool = indent_size == line.len();
-        if ! is_empty_line {
+        if ! is_empty_line(line) {
             paragraph.push_str(line);
             paragraph.push_str("\n");
         }
-        if is_empty_line && ! paragraph.is_empty() {
+        if is_empty_line(line) && ! paragraph.is_empty() {
             paragraphs.push(paragraph);
             paragraph = String::from("");
         }
@@ -158,6 +144,22 @@ fn parse_paragraphs(content: &str, paragraphs: &mut Vec<String>) {
         eprintln!("***** paragraph is: {}\n", paragraph);
     }
 
+}
+
+fn is_empty_line(line: &str) -> bool {
+    let mut indent_size = 0;
+    line.starts_with(|c: char| {
+        if c == ' ' {
+            indent_size = indent_size + 1;
+            return true;
+        }
+        if c == '\t' {
+            indent_size = indent_size + 1;
+            return true;
+        }
+        return false;
+    });
+    return indent_size == line.len();
 }
 
 fn is_commented_line(line: &str) -> bool {
@@ -196,18 +198,21 @@ pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
             // Obviously a mistake
             continue;
         }
+        if is_empty_line(line) {
+            continue;
+        }
         if is_commented_line(line) {
             continue;
         }
         let parts: Vec<&str> = line.split(':').collect();
-        if parts.len() != 2 {
+        if parts.len() < 2 {
             // FIXME we should return a Result<> instead of exiting here or
             // returning a default value.
             eprintln!("Invalid debian control file line {}", line);
             return response;
         }
-        let field_name = parts[0];
-        let field_value = parts[1];
+        let field_name = parts[0].trim();
+        let field_value = parts[1].trim();
 
         println!("field_name: {}", field_name.to_string());
 
@@ -224,15 +229,21 @@ pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
                 // Obviously a mistake
                 continue;
             }
+            if is_empty_line(line) {
+                continue;
+            }
+            if is_commented_line(line) {
+                continue;
+            }
             let parts: Vec<&str> = line.split(':').collect();
-            if parts.len() != 2 {
+            if parts.len() < 2 {
                 // FIXME we should return a Result<> instead of exiting here or
                 // returning a default value.
                 eprintln!("Invalid debian control file line {}", line);
                 return response;
             }
-            let field_name = parts[0];
-            let field_value = parts[1];
+            let field_name = parts[0].trim();
+            let field_value = parts[1].trim();
 
         }
 

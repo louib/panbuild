@@ -693,7 +693,7 @@ pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
     let grade = manifest_content["grade"].as_str().unwrap();
 
     if grade != "devel" || confinement != "devmode" {
-        response.package_type = crate::manifests::manifest::PackageType::release;
+        response.release_type = crate::manifests::manifest::ReleaseType::release;
     }
 
     let apps = manifest_content["apps"].as_hash().unwrap();
