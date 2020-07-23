@@ -321,7 +321,7 @@ Description: Here's a description of the sub-package
 "###;
 
 #[cfg(test)]
-mod debian_tests {
+mod tests {
     use super::*;
 
     #[test]

@@ -570,20 +570,25 @@ pub fn file_path_matches(path: &str) -> bool {
     return true;
 }
 
-#[test]
-pub fn test_file_path_matches() {
-    assert!(file_path_matches("com.example.appName.yaml"));
-    assert!(file_path_matches("/path/to/com.example.appName.yaml"));
-    assert!(file_path_matches("/path/to/com.example.department.product.yaml"));
-    assert!(!file_path_matches("/path/to/file.yaml"));
-    assert!(!file_path_matches("/path/to/file.json"));
-    assert!(!file_path_matches("/path/to/___432423fdsf.json"));
-    assert!(!file_path_matches("/path/to/example.com.json"));
-    assert!(!file_path_matches("/path/to/example.com.json."));
-    assert!(!file_path_matches(""));
-    assert!(!file_path_matches("/////////////"));
-}
-
 pub fn file_content_matches(content: &str) -> bool {
     return false;
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    pub fn test_file_path_matches() {
+        assert!(file_path_matches("com.example.appName.yaml"));
+        assert!(file_path_matches("/path/to/com.example.appName.yaml"));
+        assert!(file_path_matches("/path/to/com.example.department.product.yaml"));
+        assert!(!file_path_matches("/path/to/file.yaml"));
+        assert!(!file_path_matches("/path/to/file.json"));
+        assert!(!file_path_matches("/path/to/___432423fdsf.json"));
+        assert!(!file_path_matches("/path/to/example.com.json"));
+        assert!(!file_path_matches("/path/to/example.com.json."));
+        assert!(!file_path_matches(""));
+        assert!(!file_path_matches("/////////////"));
+    }
 }
