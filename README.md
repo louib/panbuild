@@ -6,6 +6,10 @@
 
 The universal build manifest converter.
 
+> **This repo is a work-in-progress and is not ready for general use.
+  The command-line options, command names and file formats might change
+  at any time before the project reaches version 1.0.0.**
+
 The supported packaging systems are:
 * flatpak;
 * snap;
@@ -18,16 +22,15 @@ various build systems.
 
 ## Install
 
+### Using flatpak
 ```
 # Make sure you have flathub installed.
 # This is not working yet.
 flatpak install net.louib.panbuild
 ```
 
-## Building the flatpak
-```
-flatpak-builder --force-clean build net.louib.panbuild.yml
-```
+### Using cargo
+TODO
 
 ## Other related tools
 * https://github.com/flatpak/flatpak-builder-tools
