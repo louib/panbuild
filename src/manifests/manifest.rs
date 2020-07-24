@@ -3,6 +3,9 @@ pub enum PackageType {
     lib,
     driver,
     daemon,
+    kernel,
+    plugin,
+    runtime,
 }
 pub const DEFAULT_PACKAGE_TYPE: PackageType = PackageType::app;
 
@@ -135,6 +138,22 @@ pub enum BuildSystem {
     // haskell??
     // LaTeX??
     // mono??
+}
+
+enum SourceType {
+    bzr,
+    deb,
+    git,
+    hg,
+    local,
+    mercurial,
+    rpm,
+    subversion,
+    svn,
+    tar,
+    zip,
+    // 7z
+    sevenzip,
 }
 
 pub const DEFAULT_BUILD_SYSTEM: BuildSystem = BuildSystem::make;

@@ -207,22 +207,8 @@ enum Grade {
     devel,
 }
 
-#[allow(dead_code)]
-enum Type {
-    app,
-    core,
-    gadget,
-    kernel,
-    base,
-}
 
-#[allow(dead_code)]
-struct Architecture {
-    name: String,
-}
-
-
-
+// **** App fields
 // The app keys and values in snapcraft.yaml detail the applications and services that a snap wants to expose,
 // including how they’re executed and which resources they can access.
 // See Snapcraft top-level metadata and Snapcraft parts metadata for details on
@@ -237,123 +223,104 @@ struct Architecture {
 // The name exposed to run a program inside the snap.
 // If <app-name> is the same as name, the program will be invoked as app-name. However, if they differ,
 // the program will be exposed as <snap-name>.<app-name>.
-#[allow(dead_code)]
-struct App {
-    // Can be one of the following:
-    //   none (Disables the creation of an env variable wrapper.)
-    //   full (default)
-    // Snapcraft normally creates a wrapper holding common environment variables.
-    // Disabling this could be useful for minimal base snaps without a shell,
-    // and for statically linked binaries with no use for an environment.
-    adapter: String,
+//
+//
+// Can be one of the following:
+//   none (Disables the creation of an env variable wrapper.)
+//   full (default)
+// Snapcraft normally creates a wrapper holding common environment variables.
+// Disabling this could be useful for minimal base snaps without a shell,
+// and for statically linked binaries with no use for an environment.
+const ADAPTER: &str = "adapter";
+// Defines the name of the .desktop file used to start an application with the desktop session.
+// The desktop file is placed in $SNAP_USER_DATA/.config/autostart,
+// and the application is started using the app’s command wrapper (<name>.<app>)
+// plus any argument present in the Exec= line within the .desktop file.
+//
+//   Example: autostart: my-chat.desktop
+// See Autostart desktop files for an example of both the desktop file and the Exec file entry.
+const AUTOSTART: &str = "autostart";
+// The command to run inside the snap when <app-name> is invoked.
+// The command can be in either a snap runtime’s command path,
+// $SNAP/usr/sbin:$SNAP/usr/bin:$SNAP/sbin:$SNAP/bin, or an executable path relative to $SNAP.
+//
+// If daemon is set, this will be the command to run the service.
+// Only a snap with classic confinement can use a relative path because PATH isn’t modified by a wrapper in classic confinement.
+// See Classic confinement for more details.
+//   Examples: app-launch for an excecutable placed under $SNAP/bin. With classic confinement, bin/app-launch for an executable placed under $SNAP/bin.
+const COMMAND: &str = "command";
+// A list of command to be executed, in order, before the command referenced by apps.<app-name>.command.
+//   See Proposal: support command-chain in apps and hooks for further details.
+// To ensure that the Snapd distribution user running supports this feature, add the command-chain value to the assumes property.
+const COMMAND_CHAIN: &str = "command-chain";
+// An identifier to a desktop-id within an external appstream file.
+// See Using external metadata for more details.
+const COMMON_ID: &str = "common-id";
+// Declares that <app-name> is a system daemon.
+const DAEMON: &str = "daemon";
+// Location of the .desktop file.
+// A path relative to the prime directory pointing to a desktop file,
+// commonly used to add an application to the launch menu. Snapcraft will take care of the rest.
+//   Examples: usr/share/applications/my-app.desktop and share/applications/my-app.desktop
+const DESKTOP: &str = "desktop";
+// Type: dict
+// A set of key-value pairs specifying the contents of environment variables.
+// Key is the environment variable name; Value is the contents of the environment variable.
+//   Example: LANG: C.UTF-8
+const ENVIRONMENT: &str = "environment";
+// Extensions to apply to this application.
+//   Example: [gnome-3-28]
+const EXTENSIONS: &str = "extensions";
+// The socket abstract name or socket path.
+// Sockets should go to a map of <socket-name>\ to objects which specify the listen-stream and (optionally) the socket-mode.
+//
+// TCP socket syntax: <port>, [::]:<port>, [::1]:<port> and 127.0.0.1:<port>
+// UNIX socket syntax: $SNAP_DATA/<path>, $SNAP_COMMON/<path> and @snap.<snap name>.<suffix>
+//
+// Example:
+//     unix:
+//       listen-stream: $SNAP_COMMON/lxd/unix.socket
+//       socket-mode: 0660
+const LISTEN_STREAM: &str = "listen-stream";
+// <app-name> attributes to pass through to snap.yaml without snapcraft validation.
+// See Using in-development features for further details.
+// const PASSTHROUGH: &str = "passthrough";
+// Plugs for interfaces to connect to.
+// <app-name> will make these plug connections when running in strict confinement.
+// For interfaces that need attributes, see top-level plugs.
+//   Example: [home, removable-media, raw-usb]
+// const PLUGS: &str = "plugs";
+// Runs a command from inside the snap after a service stops.
+// Requires daemon to be set as the snap type.
+const POST_STOP_COMMAND: &str = "post-stop-command";
+// Condition to restart the daemon under.
+// Requires daemon to be set as the snap type.
+const RESTART_CONDITION: &str = "restart-condition";
+// Slots for interfaces to connect to.
+// <app-name> will make these slot connections when running in strict confinement only.
+// For interfaces that need attributes, see top-level slots.
+//   Example: [home, removable-media, raw-usb]
+// const SLOTS: &str = "slots";
+// Type: dict
+// Maps a daemon’s sockets to services and activates them.
+// Requires an activated daemon socket.
+// Requires apps.<app-name>.plugs to declare the network-bind plug.
+const SOCKET: &str = "socket";
+// The mode of a socket in octal.
+const SOCKET_MODE: &str = "socket-mode";
+// The path to a command inside the snap to run to stop the service.
+// Requires daemon to be set as the snap type.
+const STOP_COMMAND: &str = "stop-command";
+// The length of time to wait before terminating a service.
+// Time duration units can be 10ns, 10us, 10ms, 10s, 10m.
+// Termination is via SIGTERM (and SIGKILL if that doesn’t work).
+// Requires daemon to be set as the snap type.
+const STOP_TIMEOUT: &str = "stop-timeout";
+// Schedules when, or how often, to run a service or command.
+// See Timer string format for further details on the required syntax.
+// Requires daemon to be set as the snap type.
+const TIMER: &str = "timer";
 
-    // Defines the name of the .desktop file used to start an application with the desktop session.
-    // The desktop file is placed in $SNAP_USER_DATA/.config/autostart,
-    // and the application is started using the app’s command wrapper (<name>.<app>)
-    // plus any argument present in the Exec= line within the .desktop file.
-    //
-    //   Example: autostart: my-chat.desktop
-    // See Autostart desktop files for an example of both the desktop file and the Exec file entry.
-    autostart: String,
-
-    // The command to run inside the snap when <app-name> is invoked.
-    // The command can be in either a snap runtime’s command path,
-    // $SNAP/usr/sbin:$SNAP/usr/bin:$SNAP/sbin:$SNAP/bin, or an executable path relative to $SNAP.
-    //
-    // If daemon is set, this will be the command to run the service.
-    // Only a snap with classic confinement can use a relative path because PATH isn’t modified by a wrapper in classic confinement.
-    // See Classic confinement for more details.
-    //   Examples: app-launch for an excecutable placed under $SNAP/bin. With classic confinement, bin/app-launch for an executable placed under $SNAP/bin.
-    command: String,
-
-    // A list of command to be executed, in order, before the command referenced by apps.<app-name>.command.
-    //   See Proposal: support command-chain in apps and hooks for further details.
-    // To ensure that the Snapd distribution user running supports this feature, add the command-chain value to the assumes property.
-    command_chain: Vec<String>,
-
-    // An identifier to a desktop-id within an external appstream file.
-    // See Using external metadata for more details.
-    common_id: String,
-
-    // Declares that <app-name> is a system daemon.
-    daemon: Daemon,
-
-    // Location of the .desktop file.
-    // A path relative to the prime directory pointing to a desktop file,
-    // commonly used to add an application to the launch menu. Snapcraft will take care of the rest.
-    //   Examples: usr/share/applications/my-app.desktop and share/applications/my-app.desktop
-    desktop: String,
-
-    // Type: dict
-    // A set of key-value pairs specifying the contents of environment variables.
-    // Key is the environment variable name; Value is the contents of the environment variable.
-    //   Example: LANG: C.UTF-8
-    environment: HashMap<String, String>,
-
-    // Extensions to apply to this application.
-    //   Example: [gnome-3-28]
-    extensions: Vec<String>,
-
-    // The socket abstract name or socket path.
-    // Sockets should go to a map of <socket-name>\ to objects which specify the listen-stream and (optionally) the socket-mode.
-    //
-    // TCP socket syntax: <port>, [::]:<port>, [::1]:<port> and 127.0.0.1:<port>
-    // UNIX socket syntax: $SNAP_DATA/<path>, $SNAP_COMMON/<path> and @snap.<snap name>.<suffix>
-    //
-    // Example:
-    //     unix:
-    //       listen-stream: $SNAP_COMMON/lxd/unix.socket
-    //       socket-mode: 0660
-    listen_stream: String,
-
-    // <app-name> attributes to pass through to snap.yaml without snapcraft validation.
-    // See Using in-development features for further details.
-    passthrough: Vec<String>,
-
-    // Plugs for interfaces to connect to.
-    // <app-name> will make these plug connections when running in strict confinement.
-    // For interfaces that need attributes, see top-level plugs.
-    //   Example: [home, removable-media, raw-usb]
-    plugs: Vec<String>,
-
-    // Runs a command from inside the snap after a service stops.
-    // Requires daemon to be set as the snap type.
-    post_stop_command: String,
-
-    // Condition to restart the daemon under.
-    // Requires daemon to be set as the snap type.
-    restart_condition: RestartCondition,
-
-    // Slots for interfaces to connect to.
-    // <app-name> will make these slot connections when running in strict confinement only.
-    // For interfaces that need attributes, see top-level slots.
-    //   Example: [home, removable-media, raw-usb]
-    slots: Vec<String>,
-
-    // Type: dict
-    // Maps a daemon’s sockets to services and activates them.
-    // Requires an activated daemon socket.
-    // Requires apps.<app-name>.plugs to declare the network-bind plug.
-    socket: HashMap<String, String>,
-
-    // The mode of a socket in octal.
-    socket_mode: i64,
-
-    // The path to a command inside the snap to run to stop the service.
-    // Requires daemon to be set as the snap type.
-    stop_command: String,
-
-    // The length of time to wait before terminating a service.
-    // Time duration units can be 10ns, 10us, 10ms, 10s, 10m.
-    // Termination is via SIGTERM (and SIGKILL if that doesn’t work).
-    // Requires daemon to be set as the snap type.
-    stop_timeout: String,
-
-    // Schedules when, or how often, to run a service or command.
-    // See Timer string format for further details on the required syntax.
-    // Requires daemon to be set as the snap type.
-    timer: String,
-}
 
 // Refer to systemd.service manual for details.
 #[allow(dead_code)]
@@ -620,23 +587,6 @@ const STAGE_PACKAGES: &str = "stage-packages";
 // list of strings
 const STAGE_SNAPS: &str = "stage-snaps";
 
-
-#[allow(dead_code)]
-enum SourceType {
-    bzr,
-    deb,
-    git,
-    hg,
-    local,
-    mercurial,
-    rpm,
-    subversion,
-    svn,
-    tar,
-    zip,
-    // 7z
-    sevenzip,
-}
 
 pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
     let mut response = crate::manifests::manifest::AbstractManifest::default();
