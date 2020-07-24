@@ -39,6 +39,7 @@ pub struct AbstractManifest {
     pub package_version: String,
     pub short_description: String,
     pub description: String,
+    pub keywords: Vec<String>,
     pub package_type: PackageType,
     pub release_type: ReleaseType,
     pub architecture: Architecture,
@@ -58,6 +59,7 @@ impl Default for AbstractManifest {
 
             short_description: "".to_string(),
             description: "".to_string(),
+            keywords: vec![],
             package_type: DEFAULT_PACKAGE_TYPE,
             release_type: DEFAULT_RELEASE_TYPE,
             architecture: DEFAULT_ARCH,

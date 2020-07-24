@@ -38,10 +38,11 @@ const BRANCH: &str = "branch";
 // string
 const DEFAULT_BRANCH: &str = "default-branch";
 
-// The collection ID of the repository, defaults to being unset. Setting a globally unique collection
-// ID allows the apps in the repository to be shared over
-// peer to peer systems without needing further configuration. If building in an existing repository,
-// the collection ID must match the existing configured collection ID for that repository.
+// The collection ID of the repository, defaults to being unset.
+// Setting a globally unique collection ID allows the apps in the
+// repository to be shared over peer to peer systems without needing further configuration.
+// If building in an existing repository, the collection ID must match the existing
+// configured collection ID for that repository.
 // string
 const COLLECTION_ID: &str = "collection-id";
 
@@ -88,12 +89,13 @@ const BASE_VERSION: &str = "base-version";
 // list of strings
 const BASE_EXTENSIONS: &str = "base-extensions";
 
-// Inherit these extra extensions points from the base application or sdk when finishing the build.
+// Inherit these extra extensions points from the base application or
+// sdk when finishing the build.
 // list of strings
 const INHERIT_EXTENSIONS: &str = "inherit-extensions";
 
-// Inherit these extra extensions points from the base application or sdk when finishing the build,
-// but do not inherit them into the platform.
+// Inherit these extra extensions points from the base application or sdk
+// when finishing the build, but do not inherit them into the platform.
 // list of strings
 const INHERIT_SDK_EXTENSIONS: &str = "inherit-sdk-extensions";
 
@@ -152,23 +154,26 @@ const PREPARE_PLATFORM_COMMANDS: &str = "prepare-platform-commands";
 // list of strings
 const FINISH_ARGS: &str = "finish-args";
 
-// Any desktop file with this name will be renamed to a name based on id during the cleanup phase.
+// Any desktop file with this name will be renamed to a name
+// based on id during the cleanup phase.
 // string
 const RENAME_DESKTOP_FILE: &str = "rename-desktop-file";
 
-// Any appdata file with this name will be renamed to a name based on id during the cleanup phase.
+// Any appdata file with this name will be renamed to a name based
+// on id during the cleanup phase.
 // string
 const RENAME_APPDATA_FILE: &str = "rename-appdata-file";
 
-// Any icon with this name will be renamed to a name based on id during the cleanup phase.
-// Note that this is the icon name, not the full filenames, so it should
-// not include a filename extension.
+// Any icon with this name will be renamed to a name based on id during
+// the cleanup phase. Note that this is the icon name, not the full filenames,
+// so it should not include a filename extension.
 // string
 const RENAME_ICON: &str = "rename-icon";
 
 // Replace the appdata project-license field with this string.
-// This is useful as the upstream license is typically only about the application itself,
-// whereas the bundled app can contain other licenses too.
+// This is useful as the upstream license is typically only about
+// the application itself, whereas the bundled app can contain other
+// licenses too.
 // string
 const APPDATA_LICENSE: &str = "appdata-license";
 
@@ -514,9 +519,24 @@ pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
 
 pub fn dump(manifest: &crate::manifests::manifest::AbstractManifest) -> String {
     let mut lhm: LinkedHashMap<Yaml, Yaml> = LinkedHashMap::new();
-    lhm.insert(Yaml::from_str("name"), Yaml::from_str(&manifest.package_name));
-    lhm.insert(Yaml::from_str("app-id"), Yaml::from_str(&manifest.package_id));
-    lhm.insert(Yaml::from_str("branch"), Yaml::from_str(&manifest.package_version));
+    lhm.insert(Yaml::from_str(APP_NAME), Yaml::from_str(&manifest.package_name));
+    lhm.insert(Yaml::from_str(APP_ID), Yaml::from_str(&manifest.package_id));
+    lhm.insert(Yaml::from_str(DEFAULT_BRANCH), Yaml::from_str(&manifest.package_version));
+
+    lhm.insert(Yaml::from_str(RUNTIME), Yaml::from_str(""));
+    lhm.insert(Yaml::from_str(RUNTIME_VERSION), Yaml::from_str("master"));
+    lhm.insert(Yaml::from_str(SDK), Yaml::from_str(""));
+
+    // Most of the time we're not going to use flatpak to build extensions.
+    lhm.insert(Yaml::from_str(BUILD_EXTENSION), Yaml::Boolean(false));
+
+    let mut tags = [].to_vec();
+    for keyword in &manifest.keywords {
+        tags.push(Yaml::from_str(&keyword));
+    }
+
+    // TODO add language specific extensions, like rust, with the BASE_EXTENSIONS field.
+
     let output_document = Yaml::Hash(lhm);
 
     let mut modules_to_dump: Vec<Yaml> = vec![];
