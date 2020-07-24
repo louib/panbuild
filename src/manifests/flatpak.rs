@@ -9,6 +9,7 @@ use yaml_rust::{YamlLoader, YamlEmitter, Yaml};
 
 // Other choices are org.gnome.Platform and org.kde.Platform
 const DEFAULT_RUNTIME: &str = "org.freedesktop.Platform";
+const DEFAULT_RUNTIME_VERSION: &str = "master";
 // Other choices are org.gnome.Sdk and org.kde.Sdk
 const DEFAULT_SDK: &str = "org.freedesktop.Sdk";
 
@@ -523,11 +524,11 @@ pub fn dump(manifest: &crate::manifests::manifest::AbstractManifest) -> String {
     lhm.insert(Yaml::from_str(APP_ID), Yaml::from_str(&manifest.package_id));
     lhm.insert(Yaml::from_str(DEFAULT_BRANCH), Yaml::from_str(&manifest.package_version));
 
-    lhm.insert(Yaml::from_str(RUNTIME), Yaml::from_str(""));
-    lhm.insert(Yaml::from_str(RUNTIME_VERSION), Yaml::from_str("master"));
-    lhm.insert(Yaml::from_str(SDK), Yaml::from_str(""));
+    lhm.insert(Yaml::from_str(RUNTIME), Yaml::from_str(DEFAULT_RUNTIME));
+    lhm.insert(Yaml::from_str(RUNTIME_VERSION), Yaml::from_str(DEFAULT_RUNTIME_VERSION));
+    lhm.insert(Yaml::from_str(SDK), Yaml::from_str(DEFAULT_SDK));
 
-    // Most of the time we're not going to use flatpak to build extensions.
+    // I don't think we're going to use flatpak to build extensions.
     lhm.insert(Yaml::from_str(BUILD_EXTENSION), Yaml::Boolean(false));
 
     let mut tags = [].to_vec();
