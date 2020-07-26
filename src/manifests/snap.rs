@@ -694,11 +694,13 @@ pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
     }
 
     let slots = manifest_content["slots"].as_hash().unwrap();
-    for in_permission in slots.keys() {
+    for slot_key in slots.keys() {
+        let slot = slots.get(slot_key);
     }
 
     let plugs = manifest_content["plugs"].as_hash().unwrap();
-    for out_permission in plugs.keys() {
+    for plug_key in plugs.keys() {
+        let plug = plugs.get(plug_key);
     }
 
     return response;
