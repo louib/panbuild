@@ -325,7 +325,10 @@ if __name__ == '__main__':
 
     # https://repo.or.cz/
     #
+    # https://codeberg.org/
+    #
     # gitern.com
+    #
     # sr.ht?
     # aka https://sir.hat.com"
 
