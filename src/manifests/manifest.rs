@@ -197,6 +197,18 @@ pub struct AbstractExecutable {
 pub struct AbstractPermission {
     pub name: String,
     pub description: String,
+    pub api_type: APIType,
+}
+
+pub enum APIType {
+    dbus,
+    fs,
+    socket,
+    unknown,
+}
+
+impl Default for APIType {
+    fn default() -> Self { APIType::unknown }
 }
 
 // Currently the documentation comes from the Debian control file documentation.

@@ -588,6 +588,8 @@ const STAGE_PACKAGES: &str = "stage-packages";
 const STAGE_SNAPS: &str = "stage-snaps";
 
 
+// See the following URL for the list of all the Yaml objects.
+// https://docs.rs/yaml-rust/0.4.4/yaml_rust/all.html
 pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
     let mut response = crate::manifests::manifest::AbstractManifest::default();
 
@@ -689,6 +691,14 @@ pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
 
         module.config_options = snap_module["configflags"].as_str().unwrap_or("").to_string();
         // module.dependencies = snap_module["tag"].as_str().unwrap_or("").to_string();
+    }
+
+    let slots = manifest_content["slots"].as_hash().unwrap();
+    for in_permission in slots.keys() {
+    }
+
+    let plugs = manifest_content["plugs"].as_hash().unwrap();
+    for out_permission in plugs.keys() {
     }
 
     return response;
