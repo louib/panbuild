@@ -1,6 +1,6 @@
 extern crate yaml_rust;
 
-use yaml_rust::{YamlLoader, YamlEmitter};
+use yaml_rust::{Yaml, YamlLoader, YamlEmitter};
 
 use std::collections::HashMap;
 
@@ -695,7 +695,17 @@ pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
 
     let slots = manifest_content["slots"].as_hash().unwrap();
     for slot_key in slots.keys() {
-        let slot = slots.get(slot_key);
+        let slot = slots[slot_key].as_hash().unwrap();
+        let mut permission = crate::manifests::manifest::AbstractPermission::default();
+
+        permission.name = slot_key.as_str().unwrap_or("").to_string();
+
+        let interface_name = slot[&Yaml::from_str("interface")].as_str().unwrap_or("").to_string();
+        if interface_name == "dbus" {
+            permission.api_type = crate::manifests::manifest::APIType::dbus;
+        } else {
+            permission.api_type = crate::manifests::manifest::APIType::unknown;
+        }
     }
 
     let plugs = manifest_content["plugs"].as_hash().unwrap();
