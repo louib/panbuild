@@ -518,6 +518,10 @@ pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
     return response;
 }
 
+pub fn dump_permissions(module: &crate::manifests::manifest::AbstractPermission) -> Yaml {
+    return Yaml::from_str("");
+}
+
 pub fn dump_module(module: &crate::manifests::manifest::AbstractModule) -> Yaml {
     let mut module_hash_map: LinkedHashMap<Yaml, Yaml> = LinkedHashMap::new();
     module_hash_map.insert(Yaml::from_str(APP_NAME), Yaml::from_str(&module.name));
@@ -546,14 +550,21 @@ pub fn dump(manifest: &crate::manifests::manifest::AbstractManifest) -> String {
         tags.push(Yaml::from_str(&keyword));
     }
 
+    let mut modules: Vec<Yaml> = vec![];
+    for module in &manifest.modules {
+        modules.push(dump_module(module));
+    }
+    lhm.insert(Yaml::from_str(MODULES), Yaml::Array(modules.to_vec()));
+
+    let mut permissions: Vec<Yaml> = vec![];
+    for permission in &manifest.permissions {
+        permissions.push(dump_permissions(permission));
+    }
+    lhm.insert(Yaml::from_str("permissions"), Yaml::Array(permissions.to_vec()));
+
     // TODO add language specific extensions, like rust, with the BASE_EXTENSIONS field.
 
     let output_document = Yaml::Hash(lhm);
-
-    let mut modules_to_dump: Vec<Yaml> = vec![];
-    for module in &manifest.modules {
-        modules_to_dump.push(dump_module(module));
-    }
 
     // Dump the YAML object
     let mut out_str = String::new();

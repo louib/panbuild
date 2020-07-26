@@ -138,9 +138,16 @@ pub enum BuildSystem {
     // haskell??
     // LaTeX??
     // mono??
+    unknown,
 }
 
-enum SourceType {
+pub const DEFAULT_BUILD_SYSTEM: BuildSystem = BuildSystem::unknown;
+
+impl Default for BuildSystem {
+    fn default() -> Self { DEFAULT_BUILD_SYSTEM }
+}
+
+pub enum SourceType {
     bzr,
     deb,
     git,
@@ -154,12 +161,13 @@ enum SourceType {
     zip,
     // 7z
     sevenzip,
+    unknown,
 }
 
-pub const DEFAULT_BUILD_SYSTEM: BuildSystem = BuildSystem::make;
+pub const DEFAULT_SOURCE_TYPE: SourceType = SourceType::unknown;
 
-impl Default for BuildSystem {
-    fn default() -> Self { DEFAULT_BUILD_SYSTEM }
+impl Default for SourceType {
+    fn default() -> Self { DEFAULT_SOURCE_TYPE }
 }
 
 #[derive(Default)]
@@ -167,7 +175,7 @@ pub struct AbstractModule {
     pub name: String,
     pub version: String,
     pub url: String,
-    pub url_type: String,
+    pub url_type: SourceType,
     pub build_system: BuildSystem,
     pub install_instructions: String,
     pub install_path: String,

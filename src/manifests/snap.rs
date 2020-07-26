@@ -217,6 +217,7 @@ enum Grade {
 // apps
 // Type: dict
 // A map of app-names representing entry points to run for the snap.
+const APPS: &str = "apps";
 //
 // apps.<app-name>
 // Type: dict
@@ -375,6 +376,7 @@ enum BuildAttributes {
 // <part-name> represents the specific name of a building block which can be
 // then referenced by the command line tool (i.e. snapcraft).
 //
+const PARTS: &str = "parts";
 // The following are keys that can be used within parts. (for example, parts.<part-name>.plugin):
 //
 // Ensures that all the <part-names> listed in after are staged before this part begins its lifecycle.
@@ -652,45 +654,49 @@ pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
         response.release_type = crate::manifests::manifest::ReleaseType::release;
     }
 
-    let apps = manifest_content["apps"].as_hash().unwrap();
+    let apps = manifest_content[APPS].as_hash().unwrap();
     for executable_name in apps.keys() {
         let mut executable = crate::manifests::manifest::AbstractExecutable::default();
     }
 
-    let parts = manifest_content["parts"].as_hash().unwrap();
+    let parts = manifest_content[PARTS].as_hash().unwrap();
     for module_name in parts.keys() {
         let mut module = crate::manifests::manifest::AbstractModule::default();
         let snap_module = parts.get(module_name).unwrap();
 
         let mut prime_paths = vec![];
-        prime_paths = snap_module["prime"].as_vec().unwrap_or(&prime_paths).to_vec();
+        prime_paths = snap_module[PRIME].as_vec().unwrap_or(&prime_paths).to_vec();
         if prime_paths.len() != 0 {
             module.install_path = prime_paths[0].as_str().unwrap_or("").to_string();
         }
 
-        module.url = snap_module["source"].as_str().unwrap_or("").to_string();
-        module.url_type = snap_module["source"].as_str().unwrap_or("").to_string();
-        module.tag = snap_module["tag"].as_str().unwrap_or("").to_string();
+        module.url = snap_module[SOURCE].as_str().unwrap_or("").to_string();
 
-        // This one should be required if source??
-        let build_system = snap_module["plugin"].as_str().unwrap_or("").to_string();
+        let source_type = snap_module[SOURCE_TYPE].as_str().unwrap_or("").to_string();
+        if source_type == "git" {
+            module.url_type = crate::manifests::manifest::SourceType::git;
+        } else {
+            module.url_type = crate::manifests::manifest::SourceType::unknown;
+        }
+
+        module.tag = snap_module[SOURCE_TAG].as_str().unwrap_or("").to_string();
+
+        let build_system = snap_module[PLUGIN].as_str().unwrap_or("").to_string();
         if build_system == "cmake" {
             module.build_system = crate::manifests::manifest::BuildSystem::cmake;
-        }
-        // This means apt-get packages in the case of snaps.
-        if build_system == "nil" {
+        } else if build_system == "nil" {
+            // This means apt-get packages in the case of snaps.
             module.build_system = crate::manifests::manifest::BuildSystem::native;
-        }
-        if build_system == "autotools" {
+        } else if build_system == "autotools" {
             module.build_system = crate::manifests::manifest::BuildSystem::autotools;
-        }
-        // This is used for file info packages.
-        if build_system == "dump" {
+        } else if build_system == "dump" {
+            // This is used for file info packages.
             module.build_system = crate::manifests::manifest::BuildSystem::manual;
+        } else {
+            module.build_system = crate::manifests::manifest::BuildSystem::unknown;
         }
 
         module.config_options = snap_module["configflags"].as_str().unwrap_or("").to_string();
-        // module.dependencies = snap_module["tag"].as_str().unwrap_or("").to_string();
     }
 
     let slots = manifest_content["slots"].as_hash().unwrap();
