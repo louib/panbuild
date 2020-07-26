@@ -518,6 +518,16 @@ pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
     return response;
 }
 
+pub fn dump_module(module: &crate::manifests::manifest::AbstractModule) -> Yaml {
+    let mut module_hash_map: LinkedHashMap<Yaml, Yaml> = LinkedHashMap::new();
+    module_hash_map.insert(Yaml::from_str(APP_NAME), Yaml::from_str(&module.name));
+    module_hash_map.insert(Yaml::from_str(RUNTIME_VERSION), Yaml::from_str(&module.version));
+    let module_document = Yaml::Hash(module_hash_map);
+
+    return module_document;
+    // return Yaml::from_str("");
+}
+
 pub fn dump(manifest: &crate::manifests::manifest::AbstractManifest) -> String {
     let mut lhm: LinkedHashMap<Yaml, Yaml> = LinkedHashMap::new();
     lhm.insert(Yaml::from_str(APP_NAME), Yaml::from_str(&manifest.package_name));
@@ -541,13 +551,8 @@ pub fn dump(manifest: &crate::manifests::manifest::AbstractManifest) -> String {
     let output_document = Yaml::Hash(lhm);
 
     let mut modules_to_dump: Vec<Yaml> = vec![];
-    for package in &manifest.modules {
-        let mut module_hash_map: LinkedHashMap<Yaml, Yaml> = LinkedHashMap::new();
-        module_hash_map.insert(Yaml::from_str(APP_NAME), Yaml::from_str(&package.name));
-        module_hash_map.insert(Yaml::from_str(RUNTIME_VERSION), Yaml::from_str(&package.version));
-        let module_document = Yaml::Hash(module_hash_map);
-
-        modules_to_dump.push(module_document);
+    for module in &manifest.modules {
+        modules_to_dump.push(dump_module(module));
     }
 
     // Dump the YAML object

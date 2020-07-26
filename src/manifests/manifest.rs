@@ -204,6 +204,9 @@ pub enum APIType {
     dbus,
     fs,
     socket,
+    camera,
+    mic,
+    gps,
     unknown,
 }
 
