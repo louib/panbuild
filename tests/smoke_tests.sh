@@ -23,7 +23,13 @@ no_command_output=$(panbuild 2>&1)
 if [[ ! "$no_command_output" == *"Please provide a command to execute"* ]]; then
     die "Missing error message when no command provided!";
 fi
-echo "✔️  Validated panbuild -h output";
+if [[ ! "$no_command_output" == *"USAGE"* ]]; then
+    die "Missing USAGE text when no command provided!";
+fi
+if [[ ! "$no_command_output" == *"SUBCOMMAND"* ]]; then
+    die "Missing SUBCOMMAND text when no command provided!";
+fi
+echo "✔️  Validated panbuild output when no command provided.";
 
 
 echo "👍 Smoke tests for panbuild binary ran successfully";

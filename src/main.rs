@@ -98,8 +98,7 @@ fn main() {
         },
         None => {
             eprintln!("Please provide a command to execute.");
-            // FIXME we should be able to call this here...
-            // panbuild_app.print_long_help();
+            eprintln!("{}", matches.usage());
             exit(1);
         },
     }
