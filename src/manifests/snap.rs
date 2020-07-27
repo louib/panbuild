@@ -626,12 +626,12 @@ pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
         }
     }
 
-    response.package_name = manifest_content["name"].as_str().unwrap_or("").to_string();
+    response.package_name = manifest_content[NAME].as_str().unwrap_or("").to_string();
     // Defaulting to the name here...
-    response.package_id = manifest_content["name"].as_str().unwrap_or("").to_string();
-    response.package_version = manifest_content["version"].as_str().unwrap_or("").to_string();
-    response.description = manifest_content["description"].as_str().unwrap_or("").to_string();
-    response.short_description = manifest_content["summary"].as_str().unwrap_or("").to_string();
+    response.package_id = manifest_content[NAME].as_str().unwrap_or("").to_string();
+    response.package_version = manifest_content[VERSION].as_str().unwrap_or("").to_string();
+    response.description = manifest_content[DESCRIPTION].as_str().unwrap_or("").to_string();
+    response.short_description = manifest_content[SUMMARY].as_str().unwrap_or("").to_string();
 
     let architectures = manifest_content["architectures"].as_vec().unwrap();
     if architectures.len() != 0 {
