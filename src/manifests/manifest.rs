@@ -55,7 +55,7 @@ pub struct AbstractManifest {
 
 impl Default for AbstractManifest {
     fn default() -> Self {
-        return AbstractManifest {
+        AbstractManifest {
             package_name: String::from(""),
             package_id: "".to_string(),
             package_version: "".to_string(),
@@ -71,7 +71,7 @@ impl Default for AbstractManifest {
             modules: vec![],
             permissions: vec![],
             executables: vec![],
-        };
+        }
     }
 }
 
