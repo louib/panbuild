@@ -1,3 +1,4 @@
+#[derive(Debug)]
 pub enum PackageType {
     app,
     lib,
@@ -9,12 +10,14 @@ pub enum PackageType {
 }
 pub const DEFAULT_PACKAGE_TYPE: PackageType = PackageType::app;
 
+#[derive(Debug)]
 pub enum ReleaseType {
     dev,
     release,
 }
 pub const DEFAULT_RELEASE_TYPE: ReleaseType = ReleaseType::dev;
 
+#[derive(Debug)]
 pub enum Architecture {
     amd64,
     i386,
@@ -24,6 +27,7 @@ pub enum Architecture {
 }
 pub const DEFAULT_ARCH: Architecture = Architecture::any;
 
+#[derive(Debug)]
 pub enum License {
     gpl2,
     gpl3,
@@ -36,6 +40,7 @@ pub enum License {
 pub const DEFAULT_LICENSE: License = License::gpl2;
 
 
+#[derive(Debug)]
 pub struct AbstractManifest {
     pub package_name: String,
     pub package_id: String,
@@ -112,6 +117,7 @@ const jessie: OSVersion = OSVersion {
 // when the generated manifest will be used? We could
 // consider optionally downloading those dependencies
 // to ensure the version of the build system...
+#[derive(Debug)]
 pub enum BuildSystem {
     make,
     cmake,
@@ -147,6 +153,7 @@ impl Default for BuildSystem {
     fn default() -> Self { DEFAULT_BUILD_SYSTEM }
 }
 
+#[derive(Debug)]
 pub enum SourceType {
     bzr,
     deb,
@@ -171,6 +178,7 @@ impl Default for SourceType {
 }
 
 #[derive(Default)]
+#[derive(Debug)]
 pub struct AbstractModule {
     pub name: String,
     pub version: String,
@@ -191,6 +199,7 @@ pub struct AbstractModule {
 }
 
 #[derive(Default)]
+#[derive(Debug)]
 pub struct AbstractExecutable {
     pub name: String,
     pub path: String,
@@ -202,12 +211,14 @@ pub struct AbstractExecutable {
 }
 
 #[derive(Default)]
+#[derive(Debug)]
 pub struct AbstractPermission {
     pub name: String,
     pub description: String,
     pub api_type: APIType,
 }
 
+#[derive(Debug)]
 pub enum APIType {
     dbus,
     fs,
