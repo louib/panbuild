@@ -17,5 +17,7 @@ jobs:
       run: cargo build
     - name: running the unit tests
       run: cargo test
+    - name: installing the app
+      run: PANBUILD_INSTALL_DIR=/usr/share/bin/ ./scripts/install.sh
     - name: running the binary smoke tests
       run: bash tests/smoke_tests.sh
