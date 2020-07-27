@@ -1,4 +1,8 @@
+use serde::{Serialize, Deserialize};
+
 #[derive(Debug)]
+#[derive(Serialize)]
+#[derive(Deserialize)]
 pub enum PackageType {
     app,
     lib,
@@ -11,6 +15,8 @@ pub enum PackageType {
 pub const DEFAULT_PACKAGE_TYPE: PackageType = PackageType::app;
 
 #[derive(Debug)]
+#[derive(Serialize)]
+#[derive(Deserialize)]
 pub enum ReleaseType {
     dev,
     release,
@@ -18,6 +24,8 @@ pub enum ReleaseType {
 pub const DEFAULT_RELEASE_TYPE: ReleaseType = ReleaseType::dev;
 
 #[derive(Debug)]
+#[derive(Serialize)]
+#[derive(Deserialize)]
 pub enum Architecture {
     amd64,
     i386,
@@ -28,6 +36,8 @@ pub enum Architecture {
 pub const DEFAULT_ARCH: Architecture = Architecture::any;
 
 #[derive(Debug)]
+#[derive(Serialize)]
+#[derive(Deserialize)]
 pub enum License {
     gpl2,
     gpl3,
@@ -41,6 +51,8 @@ pub const DEFAULT_LICENSE: License = License::gpl2;
 
 
 #[derive(Debug)]
+#[derive(Serialize)]
+#[derive(Deserialize)]
 pub struct AbstractManifest {
     pub package_name: String,
     pub package_id: String,
@@ -81,7 +93,7 @@ impl Default for AbstractManifest {
 }
 impl AbstractManifest {
     fn dump(&self) -> String {
-        return String::from("");
+        return serde_json::to_string(&self).unwrap_or(String::from(""));
     }
     fn parse(content: &str) -> AbstractManifest {
         return AbstractManifest::default();
@@ -126,6 +138,8 @@ const jessie: OSVersion = OSVersion {
 // consider optionally downloading those dependencies
 // to ensure the version of the build system...
 #[derive(Debug)]
+#[derive(Serialize)]
+#[derive(Deserialize)]
 pub enum BuildSystem {
     make,
     cmake,
@@ -162,6 +176,8 @@ impl Default for BuildSystem {
 }
 
 #[derive(Debug)]
+#[derive(Serialize)]
+#[derive(Deserialize)]
 pub enum SourceType {
     bzr,
     deb,
@@ -187,6 +203,8 @@ impl Default for SourceType {
 
 #[derive(Default)]
 #[derive(Debug)]
+#[derive(Serialize)]
+#[derive(Deserialize)]
 pub struct AbstractModule {
     pub name: String,
     pub version: String,
@@ -208,6 +226,8 @@ pub struct AbstractModule {
 
 #[derive(Default)]
 #[derive(Debug)]
+#[derive(Serialize)]
+#[derive(Deserialize)]
 pub struct AbstractExecutable {
     pub name: String,
     pub path: String,
@@ -220,6 +240,8 @@ pub struct AbstractExecutable {
 
 #[derive(Default)]
 #[derive(Debug)]
+#[derive(Serialize)]
+#[derive(Deserialize)]
 pub struct AbstractPermission {
     pub name: String,
     pub description: String,
@@ -227,6 +249,8 @@ pub struct AbstractPermission {
 }
 
 #[derive(Debug)]
+#[derive(Serialize)]
+#[derive(Deserialize)]
 pub enum APIType {
     dbus,
     fs,
