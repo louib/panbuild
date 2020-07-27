@@ -70,16 +70,20 @@ pub fn get_build_system(
 pub fn parse(ctx: &mut crate::execution_context::ExecutionContext) -> i32 {
     if ctx.source_type == "debian" {
         ctx.manifest = crate::manifests::debian::parse(&ctx.content);
+        return 0;
     }
 
     if ctx.source_type == "snap" {
         ctx.manifest = crate::manifests::snap::parse(&ctx.content);
+        return 0;
     }
 
     if ctx.source_type == "flatpak" {
         ctx.manifest = crate::manifests::flatpak::parse(&ctx.content);
+        return 0;
     }
 
+    eprintln!("Invalid source type {}.", ctx.source_type);
     return 1;
 }
 
@@ -102,5 +106,6 @@ pub fn dump(ctx: &mut crate::execution_context::ExecutionContext) -> i32 {
         return 0;
     }
 
-    panic!("Invalid destination type {}.", ctx.destination_type);
+    eprintln!("Invalid destination type {}.", ctx.destination_type);
+    return 1;
 }
