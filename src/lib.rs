@@ -67,7 +67,7 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
             return exit_code;
         }
 
-        eprintln!("Parsing finished. Resulting manifest is\n{:#?}", &ctx.manifest);
+        eprintln!("Parsing finished. Resulting manifest is {:#?}", &ctx.manifest);
 
         exit_code = manifests::dump(&mut ctx);
         if exit_code != 0 {
