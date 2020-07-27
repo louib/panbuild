@@ -114,7 +114,7 @@ const PACKAGES: &str = "packages";
 
 
 // **** Package fields
-const PACKAGE_NAME: &str = "Package-Name";
+const PACKAGE_NAME: &str = "Package";
 // Can be "any"
 const ARCHITECTURE: &str = "Architecture";
 const MULTI_ARCH: &str = "Multi-Arch";
@@ -223,7 +223,9 @@ pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
 
     // TODO validate that there is more than 1 paragraph?
     for paragraph_index in 1..paragraphs.len() {
+        let mut package = AbstractModule::default();
         let paragraph = &paragraphs[paragraph_index];
+
         for line in paragraph.split('\n') {
             if line.starts_with(" ") {
                 // Obviously a mistake
@@ -242,18 +244,23 @@ pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
                 eprintln!("Invalid debian control file line {}", line);
                 return response;
             }
+
             let field_name = parts[0].trim();
             let field_value = parts[1].trim();
 
+            if field_name == PACKAGE_NAME {
+                package.name = field_value.to_string();
+            } else if field_name == ARCHITECTURE {
+
+            } else if field_name == DESCRIPTION {
+
+            } else if field_name == DEPENDS {
+
+            } else {
+                eprintln!("Unknown debian top-level field {}", field_name);
+            }
         }
 
-        let mut package = AbstractModule::default();
-
-        package.name = "name".to_string();
-        // architecture =
-        // multi_arch =
-        // depends =
-        // description =
         response.modules.push(package);
     }
 
