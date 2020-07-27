@@ -79,6 +79,14 @@ impl Default for AbstractManifest {
         }
     }
 }
+impl AbstractManifest {
+    fn dump(&self) -> String {
+        return String::from("");
+    }
+    fn parse(content: &str) -> AbstractManifest {
+        return AbstractManifest::default();
+    }
+}
 
 pub enum NetTool {
     // https://github.com/curl/curl
