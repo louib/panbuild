@@ -8,6 +8,15 @@ mod utils;
 use std::fs;
 use std::path;
 
+pub struct PanbuilbArguments {
+    // TODO use enum for command name?
+    command_name: String,
+    arguments: Vec<String>,
+    // TODO use enums for those?
+    input_format: String,
+    output_format: String,
+}
+
 pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
     eprintln!("running command {}.", command_name);
 
@@ -76,4 +85,8 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
 
     eprintln!("Finishing...");
     return 0;
+}
+
+pub fn convert(input_file: String, input_format: String, output_format: String) {
+
 }
