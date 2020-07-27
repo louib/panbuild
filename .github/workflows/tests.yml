@@ -15,5 +15,7 @@ jobs:
       run: cargo --version
     - name: building the project
       run: cargo build
-    - name: testing the project
+    - name: running the unit tests
       run: cargo test
+    - name: running the binary smoke tests
+      run: bash tests/smoke_tests.sh

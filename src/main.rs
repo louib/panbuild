@@ -11,7 +11,7 @@ use clap::{Arg, App, ArgMatches, SubCommand};
 use std::process::{exit};
 
 fn main() {
-    let pandoc_app: App = App::new("panbuild")
+    let panbuild_app: App = App::new("panbuild")
                           .version("0.0.1")
                           .author("louib <code@louib.net>")
                           .about("The universal build manifest converter.")
@@ -67,14 +67,14 @@ fn main() {
 
     // Here we could use get_matches_safe and override the error messages.
     // See https://docs.rs/clap/2.33.1/clap/struct.App.html#method.get_matches_safe
-    let matches: ArgMatches = pandoc_app.get_matches();
+    let matches: ArgMatches = panbuild_app.get_matches();
 
     if matches.is_present("version") {
         println!("0.0.1");
         exit(0);
     }
 
-    let command_name = matches.subcommand_name().unwrap();
+    let command_name = matches.subcommand_name().unwrap_or("");
     let mut flags: HashMap<String, bool> = HashMap::new();
     // let mut options: HashMap<String, bool> = HashMap::new();
     let mut arguments: HashMap<String, String> = HashMap::new();
@@ -97,13 +97,9 @@ fn main() {
             }
         },
         None => {
-            // TODO this should print to stderr.
             eprintln!("Please provide a command to execute.");
-            exit(1);
-        },
-        _ => {
-            // TODO this should print to stderr.
-            eprintln!("Unknown command {0}.", command_name);
+            // FIXME we should be able to call this here...
+            // panbuild_app.print_long_help();
             exit(1);
         },
     }
