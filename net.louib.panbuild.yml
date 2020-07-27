@@ -28,10 +28,7 @@ modules:
     name: panbuild
     buildsystem: simple
     build-commands:
-      - cargo build --bins --release
-      - cargo install --path .
-      - mkdir -p /app/bin
-      - install ./target/release/panbuild /app/bin/
+      - PANBUILD_INSTALL_DIR=/app/bin/ ./scripts/install.sh
     sources:
       - type: git
         url: https://github.com/louib/panbuild.git
