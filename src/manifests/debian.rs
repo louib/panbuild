@@ -225,35 +225,42 @@ pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
     for paragraph_index in 1..paragraphs.len() {
         let mut package = AbstractModule::default();
         let paragraph = &paragraphs[paragraph_index];
+        let mut last_field_name: &str = "";
 
         for line in paragraph.split('\n') {
-            if line.starts_with(" ") {
-                // Obviously a mistake
+            if is_commented_line(line) {
                 continue;
             }
             if is_empty_line(line) {
                 continue;
             }
-            if is_commented_line(line) {
-                continue;
-            }
-            let parts: Vec<&str> = line.split(':').collect();
-            if parts.len() < 2 {
-                // FIXME we should return a Result<> instead of exiting here or
-                // returning a default value.
-                eprintln!("Invalid debian control file line {}", line);
-                return response;
+
+            let mut field_name;
+            let mut field_value;
+            if line.starts_with(" ") {
+                field_name = last_field_name;
+                field_value = line;
+            } else {
+                let parts: Vec<&str> = line.split(':').collect();
+                if parts.len() < 2 {
+                    // FIXME we should return a Result<> instead of exiting here or
+                    // returning a default value.
+                    eprintln!("Invalid debian control file line {}", line);
+                    return response;
+                }
+
+                field_name = parts[0].trim();
+                field_value = parts[1].trim();
             }
 
-            let field_name = parts[0].trim();
-            let field_value = parts[1].trim();
 
             if field_name == PACKAGE_NAME {
                 package.name = field_value.to_string();
             } else if field_name == ARCHITECTURE {
 
             } else if field_name == DESCRIPTION {
-
+                // Here we append because the field can be multi-line.
+                // package.description = package.description + field_value.to_string();
             } else if field_name == DEPENDS {
 
             } else {
