@@ -619,7 +619,10 @@ pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
         // FIXME not sure why, but we need to un-static the field before
         // using it to index the Yaml document.
         let field_name: &str = static_field_name;
-        if manifest_content[field_name].as_str().unwrap_or("").is_empty() {
+
+        let is_a_string: bool = manifest_content[field_name].as_str().is_some();
+        let is_a_number: bool = manifest_content[field_name].as_i64().is_some();
+        if ! is_a_string && ! is_a_number {
             // FIXME this should not exit the process. We should return a Result from parse
             // instead.
             panic!("Required top-level field {} is missing from snapcraft manifest.", field_name);

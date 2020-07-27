@@ -85,17 +85,20 @@ pub fn parse(ctx: &mut crate::execution_context::ExecutionContext) -> i32 {
 
 pub fn dump(ctx: &mut crate::execution_context::ExecutionContext) -> i32 {
     if ctx.destination_type == "debian" {
-        crate::manifests::debian::dump(&ctx.manifest);
+        let dump: String = crate::manifests::debian::dump(&ctx.manifest);
+        println!("{}", dump);
         return 0;
     }
 
     if ctx.destination_type == "snap" {
-        crate::manifests::snap::dump(&ctx.manifest);
+        let dump: String = crate::manifests::snap::dump(&ctx.manifest);
+        println!("{}", dump);
         return 0;
     }
 
     if ctx.destination_type == "flatpak" {
-        crate::manifests::flatpak::dump(&ctx.manifest);
+        let dump: String = crate::manifests::flatpak::dump(&ctx.manifest);
+        println!("{}", dump);
         return 0;
     }
 
