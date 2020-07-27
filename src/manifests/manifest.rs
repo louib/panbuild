@@ -222,6 +222,7 @@ pub struct AbstractModule {
     pub config_options: String,
     // Array of files and directories to cleanup after installing.
     pub cleanup_files: Vec<String>,
+    pub depends_on: Vec<AbstractModule>,
 }
 
 #[derive(Default)]
