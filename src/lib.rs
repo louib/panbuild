@@ -63,11 +63,13 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
 
         exit_code = manifests::parse(&mut ctx);
         if exit_code != 0 {
+            eprintln!("Error while parsing");
             return exit_code;
         }
 
         exit_code = manifests::dump(&mut ctx);
         if exit_code != 0 {
+            eprintln!("Error while dumping");
             return exit_code;
         }
 
