@@ -25,6 +25,7 @@ expected_version=$(cat VERSION)
 if [[ ! "$version_output" == *"$expected_version"* ]]; then
     die "Invalid app version from the version output!";
 fi
+# TODO check version in Cargo.toml!
 echo "✔️  Validated panbuild -V output";
 
 no_command_output=$(panbuild 2>&1)
