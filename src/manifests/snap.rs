@@ -1,5 +1,6 @@
 extern crate yaml_rust;
 
+use linked_hash_map::{LinkedHashMap};
 use yaml_rust::{Yaml, YamlLoader, YamlEmitter};
 
 use std::collections::HashMap;
@@ -658,14 +659,17 @@ pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
         response.release_type = crate::manifests::manifest::ReleaseType::release;
     }
 
-    let apps = manifest_content[APPS].as_hash().unwrap();
+    let default_apps: LinkedHashMap<Yaml, Yaml> = LinkedHashMap::new();
+    let apps = manifest_content[APPS].as_hash().unwrap_or(&default_apps);
     for executable_name in apps.keys() {
         let mut executable = crate::manifests::manifest::AbstractExecutable::default();
     }
 
-    let parts = manifest_content[PARTS].as_hash().unwrap();
+    let default_parts: LinkedHashMap<Yaml, Yaml> = LinkedHashMap::new();
+    let parts = manifest_content[PARTS].as_hash().unwrap_or(&default_parts);
     for module_name in parts.keys() {
         let mut module = crate::manifests::manifest::AbstractModule::default();
+        module.name = module_name.as_str().unwrap_or("").to_string();
         let snap_module = parts.get(module_name).unwrap();
 
         let mut prime_paths = vec![];
@@ -701,9 +705,20 @@ pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
         }
 
         module.config_options = snap_module["configflags"].as_str().unwrap_or("").to_string();
+
+        let mut prime_paths = vec![];
+        let build_packages = snap_module[BUILD_PACKAGES].as_vec().unwrap_or(&prime_paths).to_vec();
+        for package_name in build_packages {
+            let mut sub_module = crate::manifests::manifest::AbstractModule::default();
+            sub_module.name = package_name.as_str().unwrap_or("").to_string();
+            module.depends_on.push(sub_module);
+        }
+
+        response.modules.push(module);
     }
 
-    let slots = manifest_content["slots"].as_hash().unwrap();
+    let default_slots: LinkedHashMap<Yaml, Yaml> = LinkedHashMap::new();
+    let slots = manifest_content["slots"].as_hash().unwrap_or(&default_slots);
     for slot_key in slots.keys() {
         let slot = slots[slot_key].as_hash().unwrap();
         let mut permission = crate::manifests::manifest::AbstractPermission::default();
@@ -718,7 +733,8 @@ pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
         }
     }
 
-    let plugs = manifest_content["plugs"].as_hash().unwrap();
+    let default_plugs: LinkedHashMap<Yaml, Yaml> = LinkedHashMap::new();
+    let plugs = manifest_content["plugs"].as_hash().unwrap_or(&default_plugs);
     for plug_key in plugs.keys() {
         let plug = plugs.get(plug_key);
     }
