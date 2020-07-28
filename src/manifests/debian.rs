@@ -115,12 +115,20 @@ const PACKAGES: &str = "packages";
 
 // **** Package fields
 const PACKAGE_NAME: &str = "Package";
+// A multi-line string
+const DESCRIPTION: &str = "Description";
 // Can be "any"
 const ARCHITECTURE: &str = "Architecture";
 const MULTI_ARCH: &str = "Multi-Arch";
+// These seven fields are used to declare a dependency relationship by one package on another.
+// See https://www.debian.org/doc/debian-policy/ch-relationships.html#binary-dependencies-depends-recommends-suggests-enhances-pre-depends
 const DEPENDS: &str = "Depends";
-// A multi-line string
-const DESCRIPTION: &str = "Description";
+const RECOMMENDS: &str = "Recommends";
+const SUGGESTS: &str = "Suggests";
+const ENHANCES: &str = "Enhances";
+const PRE_DEPENDS: &str = "Pre-Depends";
+const CONFLICTS: &str = "Conflicts";
+const BREAKS: &str = "Breaks";
 
 
 fn parse_paragraphs(content: &str, paragraphs: &mut Vec<String>) {
