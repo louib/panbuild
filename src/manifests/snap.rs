@@ -636,7 +636,8 @@ pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
     response.description = manifest_content[DESCRIPTION].as_str().unwrap_or("").to_string();
     response.short_description = manifest_content[SUMMARY].as_str().unwrap_or("").to_string();
 
-    let architectures = manifest_content["architectures"].as_vec().unwrap();
+    let default_archs = vec![];
+    let architectures = manifest_content["architectures"].as_vec().unwrap_or(&default_archs);
     if architectures.len() != 0 {
         let arch = architectures[0].as_str().unwrap().to_string();
         if arch == "amd64" {
@@ -650,8 +651,8 @@ pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
         }
     }
 
-    let confinement = manifest_content["confinement"].as_str().unwrap();
-    let grade = manifest_content["grade"].as_str().unwrap();
+    let confinement = manifest_content["confinement"].as_str().unwrap_or("");
+    let grade = manifest_content["grade"].as_str().unwrap_or("");
 
     if grade != "devel" || confinement != "devmode" {
         response.release_type = crate::manifests::manifest::ReleaseType::release;

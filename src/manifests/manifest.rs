@@ -254,7 +254,7 @@ pub struct AbstractPermission {
 #[derive(Deserialize)]
 pub enum APIType {
     dbus,
-    fs,
+    files,
     socket,
     camera,
     mic,
