@@ -7,6 +7,7 @@ mod utils;
 
 use std::fs;
 use std::path;
+use std::env;
 
 pub struct PanbuilbArguments {
     // TODO use enum for command name?
@@ -37,6 +38,8 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
 
         let mut ctx = crate::execution_context::ExecutionContext::default();
         ctx.content = fs_read_result.unwrap();
+
+        ctx.data_dir = env::var("PANBUILD_DATA_DIR").unwrap_or(String::from("")).to_string();
 
         if args.contains_key("input_format") {
             let source_type = args.get("input_format").unwrap();
