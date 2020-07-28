@@ -314,12 +314,20 @@ pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
                 continue;
             }
 
-            let module_spec_parts: Vec<&str> = module_spec.split(" ").collect();
+            let mut module_spec_parts: Vec<&str> = module_spec.split(" ").collect();
 
-            //if module_spec_parts.len() < 2 {
-                //panic!("Invalid module spec {}.", module_spec);
-            //}
             new_module.name = module_spec_parts[0].to_string();
+            module_spec_parts.remove(0);
+
+            let mut version_spec = String::from("");
+            for part in module_spec_parts {
+                if ! version_spec.is_empty() {
+                    version_spec.push_str(" ");
+                }
+                version_spec.push_str(part);
+            }
+            new_module.version = version_spec;
+
             package.depends_on.push(new_module);
         }
         response.modules.push(package);
