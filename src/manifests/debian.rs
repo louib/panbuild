@@ -138,12 +138,6 @@ fn parse_paragraphs(content: &str, paragraphs: &mut Vec<String>) {
             paragraph = String::from("");
         }
     }
-
-    eprintln!("***** there was {} paragraphs.", paragraphs.len());
-    for paragraph in paragraphs {
-        eprintln!("***** paragraph is: {}\n", paragraph);
-    }
-
 }
 
 fn is_empty_line(line: &str) -> bool {
@@ -180,7 +174,7 @@ fn is_indented_line(line: &str) -> bool {
 
 fn is_commented_line(line: &str) -> bool {
     let mut first_char_met: bool = false;
-    return line.starts_with(|c: char| {
+    line.starts_with(|c: char| {
         if c == ' ' {
             return true;
         }
@@ -196,6 +190,7 @@ fn is_commented_line(line: &str) -> bool {
         }
         return false;
     });
+    return first_char_met;
 }
 
 pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
@@ -237,7 +232,6 @@ pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
         }
     }
 
-    // TODO validate that there is more than 1 paragraph?
     for paragraph_index in 1..paragraphs.len() {
         let mut package = AbstractModule::default();
         let paragraph = &paragraphs[paragraph_index];
@@ -248,7 +242,6 @@ pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
         let mut description: String = String::from("");
 
         for line in paragraph.split('\n') {
-            println!("**** paragraph line is {}", line);
             if is_commented_line(line) {
                 continue;
             }
@@ -259,9 +252,7 @@ pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
             let mut field_name: String;
             let mut field_value: String;
 
-            let line_before: String = line.to_string().clone();
             if is_indented_line(line) {
-                eprintln!("line starts with a space!!! {}", line);
                 field_name = last_field_name.clone();
                 field_value = line.to_string();
             } else {
@@ -285,7 +276,6 @@ pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
                     field_value.push_str(part);
                 }
                 last_field_name = field_name.clone();
-                println!("last_field_name is now {}", last_field_name);
             }
 
 
@@ -309,7 +299,7 @@ pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
             }
             println!("adding a new package???");
             let mut new_module = crate::manifests::manifest::AbstractModule::default();
-            new_module.name = package_name.to_string();
+            new_module.name = package_name.trim().to_string();
             package.depends_on.push(new_module);
         }
         response.modules.push(package);
