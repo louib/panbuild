@@ -233,8 +233,6 @@ pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
         let field_name = parts[0].trim();
         let field_value = parts[1].trim();
 
-        println!("field_name: {}", field_name.to_string());
-
         if field_name == SOURCE {
             response.package_name = field_value.to_string();
         }
@@ -305,7 +303,6 @@ pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
             if package_name.is_empty() {
                 continue;
             }
-            println!("adding a new package???");
             let mut new_module = crate::manifests::manifest::AbstractModule::default();
 
             let module_spec = package_name.trim().to_string();

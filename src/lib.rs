@@ -98,6 +98,7 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
         }
 
         let mut ctx = crate::execution_context::ExecutionContext::default();
+        ctx.content = fs_read_result.unwrap();
 
         if args.contains_key("input_format") {
             let source_type = args.get("input_format").unwrap();

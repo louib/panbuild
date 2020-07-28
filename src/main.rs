@@ -75,6 +75,15 @@ fn main() {
                                     .multiple(false)
                                     .required(true)
                                     .help("Path of the input build manifest."))
+                               .arg(Arg::with_name("input_format")
+                                    .short("i")
+                                    .long("input-format")
+                                    .takes_value(true)
+                                    .value_name("FORMAT")
+                                    // TODO make it required false after implementing
+                                    // manifest type detection.
+                                    .required(true)
+                                    .help("Format of the manifest provided for the conversion."))
                                .arg(Arg::with_name("separator")
                                     .short("s")
                                     .long("sep")
