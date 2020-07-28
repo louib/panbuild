@@ -551,7 +551,7 @@ pub fn dump(manifest: &crate::manifests::manifest::AbstractManifest) -> String {
     }
 
     let mut modules: Vec<Yaml> = vec![];
-    for module in &manifest.modules {
+    for module in &manifest.depends_on {
         modules.push(dump_module(module));
     }
     lhm.insert(Yaml::from_str(MODULES), Yaml::Array(modules.to_vec()));

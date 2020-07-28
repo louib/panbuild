@@ -714,7 +714,7 @@ pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
             module.depends_on.push(sub_module);
         }
 
-        response.modules.push(module);
+        response.depends_on.push(module);
     }
 
     let default_slots: LinkedHashMap<Yaml, Yaml> = LinkedHashMap::new();

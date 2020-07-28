@@ -330,7 +330,7 @@ pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
 
             package.depends_on.push(new_module);
         }
-        response.modules.push(package);
+        response.depends_on.push(package);
     }
 
     eprintln!("finished parsing debian control file.");

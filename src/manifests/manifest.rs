@@ -65,7 +65,11 @@ pub struct AbstractManifest {
     pub architecture: Architecture,
     pub license: License,
 
-    pub modules: Vec<AbstractModule>,
+    // The main module that this manifest is installing.
+    pub main_module: AbstractModule,
+    // The modules that the module being built requires.
+    pub depends_on: Vec<AbstractModule>,
+
     pub permissions: Vec<AbstractPermission>,
     pub executables: Vec<AbstractExecutable>,
 }
@@ -85,7 +89,8 @@ impl Default for AbstractManifest {
             architecture: DEFAULT_ARCH,
             license: DEFAULT_LICENSE,
 
-            modules: vec![],
+            main_module: AbstractModule::default(),
+            depends_on: vec![],
             permissions: vec![],
             executables: vec![],
         }
