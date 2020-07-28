@@ -162,6 +162,22 @@ fn is_empty_line(line: &str) -> bool {
     return indent_size == line.len();
 }
 
+fn is_indented_line(line: &str) -> bool {
+    let mut indent_size = 0;
+    line.starts_with(|c: char| {
+        if c == ' ' {
+            indent_size = indent_size + 1;
+            return true;
+        }
+        if c == '\t' {
+            indent_size = indent_size + 1;
+            return true;
+        }
+        return false;
+    });
+    return indent_size != 0;
+}
+
 fn is_commented_line(line: &str) -> bool {
     let mut first_char_met: bool = false;
     return line.starts_with(|c: char| {
@@ -225,9 +241,14 @@ pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
     for paragraph_index in 1..paragraphs.len() {
         let mut package = AbstractModule::default();
         let paragraph = &paragraphs[paragraph_index];
-        let mut last_field_name: &str = "";
+        let mut last_field_name: String = String::from("");
+
+        // Those fields can be multi-line.
+        let mut build_depends: String = String::from("");
+        let mut description: String = String::from("");
 
         for line in paragraph.split('\n') {
+            println!("**** paragraph line is {}", line);
             if is_commented_line(line) {
                 continue;
             }
@@ -235,11 +256,14 @@ pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
                 continue;
             }
 
-            let mut field_name;
-            let mut field_value;
-            if line.starts_with(" ") {
-                field_name = last_field_name;
-                field_value = line;
+            let mut field_name: String;
+            let mut field_value: String;
+
+            let line_before: String = line.to_string().clone();
+            if is_indented_line(line) {
+                eprintln!("line starts with a space!!! {}", line);
+                field_name = last_field_name.clone();
+                field_value = line.to_string();
             } else {
                 let parts: Vec<&str> = line.split(':').collect();
                 if parts.len() < 2 {
@@ -249,8 +273,19 @@ pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
                     return response;
                 }
 
-                field_name = parts[0].trim();
-                field_value = parts[1].trim();
+                field_name = parts[0].trim().to_string();
+                field_value = String::from("");
+                for part in parts {
+                    if part == field_name {
+                        continue;
+                    }
+                    if ! field_value.is_empty() {
+                        field_value.push_str(":");
+                    }
+                    field_value.push_str(part);
+                }
+                last_field_name = field_name.clone();
+                println!("last_field_name is now {}", last_field_name);
             }
 
 
@@ -260,14 +295,23 @@ pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
 
             } else if field_name == DESCRIPTION {
                 // Here we append because the field can be multi-line.
-                // package.description = package.description + field_value.to_string();
+                description.push_str(&field_value);
             } else if field_name == DEPENDS {
-
+                build_depends.push_str(&field_value);
             } else {
-                eprintln!("Unknown debian top-level field {}", field_name);
+                eprintln!("Unknown debian package field {}", field_name);
             }
         }
 
+        for package_name in build_depends.split(",") {
+            if package_name.is_empty() {
+                continue;
+            }
+            println!("adding a new package???");
+            let mut new_module = crate::manifests::manifest::AbstractModule::default();
+            new_module.name = package_name.to_string();
+            package.depends_on.push(new_module);
+        }
         response.modules.push(package);
     }
 
