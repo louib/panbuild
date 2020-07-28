@@ -31,5 +31,14 @@ if [[ ! "$no_command_output" == *"SUBCOMMAND"* ]]; then
 fi
 echo "✔️  Validated panbuild output when no command provided.";
 
+get_package_missing_args=$(panbuild get-package-list 2>&1)
+if [[ ! "$get_package_missing_args" == *"arguments were not provided"* ]]; then
+    die "Unexpected error message when calling get-package-list without arguments!";
+fi
+
+invalid_command_name_output=$(panbuild not-a-command 2>&1)
+if [[ ! "$invalid_command_name_output" == *"isn't valid in this context"* ]]; then
+    die "Unexpected error message when providing an invalid command name!";
+fi
 
 echo "👍 Smoke tests for panbuild binary ran successfully";

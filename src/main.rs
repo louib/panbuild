@@ -69,7 +69,7 @@ fn main() {
                           .subcommand(SubCommand::with_name("get-package-list")
                                .about("
                                    Get a comma-separated list of packages parsed from the manifest file.
-                                   The default can be changed with the -s option.
+                                   The default separator can be changed with the -s option.
                                 ")
                                .arg(Arg::with_name("input_file")
                                     .multiple(false)
