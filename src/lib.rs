@@ -134,7 +134,6 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
         // FIXME we should fetch those recursively.
         for module in ctx.manifest.depends_on {
             if ! output.is_empty() {
-                // FIXME replace by value from args.
                 output.push_str(&separator)
             }
             output.push_str(&module.name);
