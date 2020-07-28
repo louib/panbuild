@@ -66,6 +66,22 @@ fn main() {
                                     // manifest type detection.
                                     .required(true)
                                     .help("Format of the manifest provided for the conversion.")))
+                          .subcommand(SubCommand::with_name("get-package-list")
+                               .about("
+                                   Get a comma-separated list of packages parsed from the manifest file.
+                                   The default can be changed with the -s option.
+                                ")
+                               .arg(Arg::with_name("input_file")
+                                    .multiple(false)
+                                    .required(true)
+                                    .help("Path of the input build manifest."))
+                               .arg(Arg::with_name("separator")
+                                    .short("s")
+                                    .long("sep")
+                                    .takes_value(true)
+                                    .value_name("'SEP'")
+                                    .required(false)
+                                    .help("Separator used when printing the package list.")))
                           .subcommand(SubCommand::with_name("dump")
                                .about("dump a native panbuild manifest file to another format.")
                                .arg(Arg::with_name("input_file")

@@ -82,6 +82,46 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
         return 0;
     }
 
+    if command_name == "get-package-list" {
+        if ! args.contains_key("input_file") {
+            eprintln!("an input file is required when converting!");
+            // TODO handle reading from stdin.
+            return 1;
+        }
+
+        let input_file_path = args.get("input_file").unwrap();
+
+        let fs_read_result = fs::read_to_string(path::Path::new(input_file_path));
+        if fs_read_result.is_err() {
+            eprintln!("could not read file {}.", input_file_path);
+            return 1;
+        }
+
+        let mut ctx = crate::execution_context::ExecutionContext::default();
+
+        if args.contains_key("input_format") {
+            let source_type = args.get("input_format").unwrap();
+            if ! crate::manifests::has_type(source_type.to_string()) {
+                eprintln!("{} is an invalid manifest type.", source_type);
+                return 1;
+            }
+            ctx.source_type = source_type.to_string();
+        }
+
+        let mut exit_code: i32 = manifests::get_type(&mut ctx);
+        if exit_code != 0 {
+            return exit_code;
+        }
+
+        exit_code = manifests::parse(&mut ctx);
+        if exit_code != 0 {
+            eprintln!("Error while parsing");
+            return exit_code;
+        }
+
+        eprintln!("Parsing finished. Resulting manifest is {:#?}", &ctx.manifest);
+    }
+
     if command_name == "ls" {
         let projects: Vec<crate::projects::project::Project> = crate::projects::db::get_all();
         for project in projects {
