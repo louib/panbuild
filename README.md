@@ -32,6 +32,9 @@ flatpak install net.louib.panbuild
 ### Using cargo
 TODO
 
+### Install the binary
+TODO
+
 ## Other related tools
 * https://github.com/flatpak/flatpak-builder-tools
 
