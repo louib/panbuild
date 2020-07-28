@@ -19,6 +19,14 @@ if [[ ! "$help_output" == *"SUBCOMMANDS"* ]]; then
 fi
 echo "✔️  Validated panbuild -h output";
 
+version_output=$(panbuild -V 2>&1)
+# FIXME make it relative to current script.
+expected_version=$(cat VERSION)
+if [[ ! "$version_output" == *"$expected_version"* ]]; then
+    die "Invalid app version from the version output!";
+fi
+echo "✔️  Validated panbuild -V output";
+
 no_command_output=$(panbuild 2>&1)
 if [[ ! "$no_command_output" == *"Please provide a command to execute"* ]]; then
     die "Missing error message when no command provided!";

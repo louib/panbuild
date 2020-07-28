@@ -10,9 +10,11 @@ extern crate clap;
 use clap::{Arg, App, ArgMatches, SubCommand};
 use std::process::{exit};
 
+const APP_VERSION: &str = "0.0.1";
+
 fn main() {
     let panbuild_app: App = App::new("panbuild")
-                          .version("0.0.1")
+                          .version(APP_VERSION)
                           .author("louib <code@louib.net>")
                           .about("The universal build manifest converter.")
                           .arg(Arg::with_name("version")
@@ -123,7 +125,7 @@ fn main() {
     let matches: ArgMatches = panbuild_app.get_matches();
 
     if matches.is_present("version") {
-        println!("0.0.1");
+        println!("{}", APP_VERSION);
         exit(0);
     }
 
