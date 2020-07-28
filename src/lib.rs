@@ -9,6 +9,8 @@ use std::fs;
 use std::path;
 use std::env;
 
+pub const DEFAULT_PACKAGE_LIST_SEP: &str = ",";
+
 pub struct PanbuilbArguments {
     // TODO use enum for command name?
     command_name: String,
@@ -121,6 +123,23 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
         }
 
         eprintln!("Parsing finished. Resulting manifest is {:#?}", &ctx.manifest);
+
+
+        let mut separator = DEFAULT_PACKAGE_LIST_SEP;
+        if args.contains_key("separator") {
+            separator = args.get("separator").unwrap();
+        }
+
+        let mut output: String = String::from("");
+        // FIXME we should fetch those recursively.
+        for module in ctx.manifest.depends_on {
+            if ! output.is_empty() {
+                // FIXME replace by value from args.
+                output.push_str(&separator)
+            }
+            output.push_str(&module.name);
+        }
+        println!("{}", output);
     }
 
     if command_name == "ls" {
