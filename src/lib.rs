@@ -133,6 +133,7 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
         let mut output: String = String::from("");
         // FIXME we should fetch those recursively.
         for module in ctx.manifest.depends_on {
+            // FIXME should we check for duplicates here??
             if ! output.is_empty() {
                 output.push_str(&separator)
             }
