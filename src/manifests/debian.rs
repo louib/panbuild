@@ -288,7 +288,7 @@ pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
 
 
             if field_name == PACKAGE_NAME {
-                package.name = field_value.to_string();
+                package.name = field_value.trim().to_string();
             } else if field_name == ARCHITECTURE {
 
             } else if field_name == DESCRIPTION {
@@ -307,7 +307,19 @@ pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
             }
             println!("adding a new package???");
             let mut new_module = crate::manifests::manifest::AbstractModule::default();
-            new_module.name = package_name.trim().to_string();
+
+            let module_spec = package_name.trim().to_string();
+            // Still not sure what this is about.
+            if module_spec.starts_with("${") {
+                continue;
+            }
+
+            let module_spec_parts: Vec<&str> = module_spec.split(" ").collect();
+
+            //if module_spec_parts.len() < 2 {
+                //panic!("Invalid module spec {}.", module_spec);
+            //}
+            new_module.name = module_spec_parts[0].to_string();
             package.depends_on.push(new_module);
         }
         response.modules.push(package);
