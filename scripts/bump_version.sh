@@ -21,7 +21,7 @@ echo "on $branch_name"
 "./$SCRIPT_DIR/check_version.sh"
 
 # Also sanity check.
-git_version=$(git describe --tags)
+git_version=$(git describe --tags --abbrev=0)
 if [[ "$git_version" != "$app_version" ]]; then
     die "The git version $git_version is not the same as in the VERSION file!";
 fi
