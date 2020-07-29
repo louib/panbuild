@@ -22,15 +22,24 @@ various build systems.
 
 ## Install
 
+### Using cargo
+```
+git clone git@github.com:louib/panbuild.git
+cd panbuild/
+cargo install --path .
+```
+
+You might need to adjust your `PATH` variable to find the binary:
+```
+export PATH="$PATH:~/.cargo/bin/"
+```
+
 ### Using flatpak
 ```
 # Make sure you have flathub installed.
 # This is not working yet.
 flatpak install net.louib.panbuild
 ```
-
-### Using cargo
-TODO
 
 ### Install the binary
 TODO
