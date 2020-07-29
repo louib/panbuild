@@ -23,7 +23,7 @@ echo "on $branch_name"
 # Also sanity check.
 git_version=$(git describe --tags --abbrev=0)
 if [[ "$git_version" != "$app_version" ]]; then
-    die "The git version $git_version is not the same as in the VERSION file!";
+    die "The git version $git_version is not the same as in the VERSION file ($app_version)!";
 fi
 
 function increment_version_number () {
