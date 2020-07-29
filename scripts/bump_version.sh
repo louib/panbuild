@@ -40,13 +40,13 @@ version_file_path="$SCRIPT_DIR/../VERSION"
 if [[ ! -f "$version_file_path" ]]; then
     die "Could not find version file $version_file_path";
 fi
-app_version=$(cat "$version_file_path")
+current_version=$(cat "$version_file_path")
 
 # TODO should accept an arg (target version), or default to patch bumping.
-echo "Bumping from version $app_version."
+echo "Bumping from version $current_version."
 # See https://github.com/fsaintjacques/semver-tool/blob/master/src/semver
 
-new_version=$(increment_version_number "$app_version");
+new_version=$(increment_version_number "$current_version");
 echo "New version is $new_version";
 
 main_file_path="$SCRIPT_DIR/../src/main.rs"
