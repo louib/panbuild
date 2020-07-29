@@ -73,7 +73,6 @@ pub struct AbstractManifest {
     pub permissions: Vec<AbstractPermission>,
     pub executables: Vec<AbstractExecutable>,
 }
-
 impl Default for AbstractManifest {
     fn default() -> Self {
         AbstractManifest {
@@ -94,6 +93,16 @@ impl Default for AbstractManifest {
             permissions: vec![],
             executables: vec![],
         }
+    }
+}
+// We implement the Iterator Trait to offer a convenient
+// way to travers the package tree recursively.
+impl Iterator for AbstractManifest {
+    type Item = AbstractModule;
+
+    fn next(&mut self) -> Option<AbstractModule> {
+        return None;
+        //Some(self.curr);
     }
 }
 impl AbstractManifest {
