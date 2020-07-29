@@ -49,6 +49,9 @@ pub struct Project {
     pub versions: Vec<Version>,
     pub dependencies: Vec<Version>,
 
+    // Whether the project is part of the internal projects db.
+    pub is_core: bool,
+
     // Layer of the project. This means how central the project is to the
     // open source ecosystem in general. 0 being the most central layer
     // (firmwares, bootloaders, kernels, compilers, core utilities).
@@ -57,26 +60,42 @@ pub struct Project {
     // but rather a spread factor and a max layer should be configured.
     pub layer: i32,
 }
-
-pub fn fetch_project(project: Project) {
-    if project.url.starts_with("https") && project.url.ends_with(".git") {
-        let clone_output = Command::new("mkdir")
-            .arg("-p")
-            .arg(PROJECTS_DIR)
-            .output()
-            .expect(&format!("failed to create projects directory at {}!", PROJECTS_DIR).to_string());
-        if ! clone_output.status.success() {
-            panic!("The clone did not work :(");
+impl Project {
+    // Serializes the project to a native Rust struct creation.
+    // This is used to include projects to the internal db.
+    fn to_rust(self: &Self) -> String {
+        return String::from(r#####"
+        crate::projects::project::Project {
+            id: "{}".to_string(),
+            name: "{}".to_string(),
+            summary: "{}".to_string(),
+            description: "{}".to_string(),
+            homepage: "{}".to_string(),
+            layer: 0,
+            is_core: true,
         }
+        "#####);
+    }
+    fn fetch(self: &Self) {
+        if self.url.starts_with("https") && self.url.ends_with(".git") {
+            let clone_output = Command::new("mkdir")
+                .arg("-p")
+                .arg(PROJECTS_DIR)
+                .output()
+                .expect(&format!("failed to create projects directory at {}!", PROJECTS_DIR).to_string());
+            if ! clone_output.status.success() {
+                panic!("The clone did not work :(");
+            }
 
-        let clone_output = Command::new("git")
-            .arg("clone")
-            .arg(&project.url)
-            .arg(PROJECTS_DIR)
-            .output()
-            .expect(&format!("failed to clone git repository at {}!", &project.url).to_string());
-        if ! clone_output.status.success() {
-            panic!("The clone did not work :(");
+            let clone_output = Command::new("git")
+                .arg("clone")
+                .arg(&self.url)
+                .arg(PROJECTS_DIR)
+                .output()
+                .expect(&format!("failed to clone git repository at {}!", &self.url).to_string());
+            if ! clone_output.status.success() {
+                panic!("The clone did not work :(");
+            }
         }
     }
 }

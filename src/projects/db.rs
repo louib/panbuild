@@ -28,5 +28,6 @@ pub fn get_core_projects() -> Vec<crate::projects::project::Project> { vec![
         keywords: vec![],
         dependencies: vec![],
         layer: 0,
+        is_core: true,
     },
 ]}
