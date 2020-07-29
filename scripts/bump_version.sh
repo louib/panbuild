@@ -49,6 +49,12 @@ echo "Bumping from version $app_version."
 new_version=$(increment_version_number "$app_version");
 echo "New version is $new_version";
 
+main_file_path="$SCRIPT_DIR/../src/main.rs"
+if [[ ! -f "$main_file_path" ]]; then
+    die "Could not find main file $main_file_path";
+fi
+sed "s/const APP_VERSION: &str = \"$current_version\";/const APP_VERSION: &str = \"$new_version\";/g" "$main_file_path" > "$main_file_path"
+
 # git commit -a -n -m "🏷️ $new_version 🏷️"
 
 # git tag "$new_version"
