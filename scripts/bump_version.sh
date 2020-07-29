@@ -20,6 +20,12 @@ echo "on $branch_name"
 # Sanity check.
 "./$SCRIPT_DIR/check_version.sh"
 
+# Also sanity check.
+git_version=$(git describe --tags)
+if [[ "$git_version" != "$app_version" ]]; then
+    die "The git version $git_version is not the same as in the VERSION file!";
+fi
+
 function increment_version_number () {
     local regex="([0-9]+)\\.([0-9]+)\\.([0-9]+)"
     local current_version=$1

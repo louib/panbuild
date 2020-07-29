@@ -32,11 +32,6 @@ if [[ -z "$is_in_cargo" ]]; then
     die "Application version $app_version not found in Cargo file $cargo_file_path";
 fi
 
-git_version=$(git describe --tags)
-if [[ "$git_version" != "$app_version" ]]; then
-    die "The git version $git_version is not the same as in the VERSION file!";
-fi
-
 # TODO check the version in the man pages!!
 
 echo "✔️  Version is $app_version everywhere!";
