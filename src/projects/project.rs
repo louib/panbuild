@@ -23,7 +23,7 @@ impl Default for URLType {
 #[derive(Serialize)]
 #[derive(Deserialize)]
 #[derive(Default)]
-pub struct Version {
+pub struct ProjectVersion {
     pub project: Project,
     // Name of the version. Normally follows sem ver.
     pub name: String,
@@ -46,8 +46,8 @@ pub struct Project {
     pub url: String,
     pub maintainers: Vec<String>,
     pub keywords: Vec<String>,
-    pub versions: Vec<Version>,
-    pub dependencies: Vec<Version>,
+    pub versions: Vec<ProjectVersion>,
+    pub dependencies: Vec<ProjectVersion>,
 
     // Whether the project is part of the internal projects db.
     pub is_core: bool,
