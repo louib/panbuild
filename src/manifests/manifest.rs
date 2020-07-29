@@ -45,7 +45,7 @@ pub enum License {
     bsd2,
     bsd3,
     proprietary,
-    other,
+    unknown,
 }
 pub const DEFAULT_LICENSE: License = License::gpl2;
 

@@ -48,6 +48,14 @@ pub struct Project {
     pub keywords: Vec<String>,
     pub versions: Vec<Version>,
     pub dependencies: Vec<Version>,
+
+    // Layer of the project. This means how central the project is to the
+    // open source ecosystem in general. 0 being the most central layer
+    // (firmwares, bootloaders, kernels, compilers, core utilities).
+    //
+    // Beyond maybe 0 and 1, the exact layer should not be calculated manually,
+    // but rather a spread factor and a max layer should be configured.
+    pub layer: i32,
 }
 
 pub fn fetch_project(project: Project) {
