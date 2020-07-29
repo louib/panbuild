@@ -1,2 +1,2 @@
-git@github.com:louib/panbuild.git
-git@gitlab.com:louib/panbuild.git
+github git@github.com:louib/panbuild.git
+gitlab git@gitlab.com:louib/panbuild.git
