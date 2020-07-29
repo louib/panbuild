@@ -19,5 +19,8 @@ if [[ ! -f "$main_file_path" ]]; then
     die "Could not find main file $main_file_path";
 fi
 is_in_main=$(grep -E "const APP_VERSION: &str = \"$app_version\"" "$main_file_path")
+if [[ -z "$is_in_main" ]]; then
+    die "Application version $app_version not found in main file $main_file_path";
+fi
 
 echo "✔️  Version is $app_version everywhere!";
