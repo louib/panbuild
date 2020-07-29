@@ -5,6 +5,11 @@ die() { echo "🔥 Error: $*" 1>&2; exit 1; }
 
 SCRIPT_DIR=$(dirname "$0")
 
+if [[ -n $(git status -s) ]]; then
+  git status -s
+  die "Your git environment needs to be clean before bumping the version!"
+fi
+
 # Sanity check.
 "./$SCRIPT_DIR/check_version.sh"
 
@@ -35,8 +40,13 @@ app_version=$(cat "$version_file_path")
 echo "Bumping from version $app_version."
 # See https://github.com/fsaintjacques/semver-tool/blob/master/src/semver
 
-new_version_number=$(increment_version_number "$app_version");
-echo "New version is $new_version_number";
+new_version=$(increment_version_number "$app_version");
+echo "New version is $new_version";
+
+# git commit -a -n -m "🏷️ $new_version 🏷️"
+
+# git tag "$new_version"
+# git push --tags origin
 
 # Sanity check.
 "./$SCRIPT_DIR/check_version.sh"
