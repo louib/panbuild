@@ -1,3 +1,5 @@
+use serde::{Serialize, Deserialize};
+
 use std::process::Command;
 use std::io;
 use std::fs::{self, DirEntry};
@@ -5,6 +7,8 @@ use std::path::Path;
 
 pub const PROJECTS_DIR: &str = "~/.panbuild/projects/";
 
+#[derive(Serialize)]
+#[derive(Deserialize)]
 pub enum URLType {
     git,
     hg,
@@ -16,6 +20,8 @@ impl Default for URLType {
     fn default() -> Self { URLType::git }
 }
 
+#[derive(Serialize)]
+#[derive(Deserialize)]
 #[derive(Default)]
 pub struct Version {
     pub project: Project,
@@ -27,6 +33,8 @@ pub struct Version {
     pub branch: String,
 }
 
+#[derive(Serialize)]
+#[derive(Deserialize)]
 #[derive(Default)]
 pub struct Project {
     pub id: String,
@@ -63,14 +71,6 @@ pub fn fetch_project(project: Project) {
             panic!("The clone did not work :(");
         }
     }
-}
-
-pub fn dump_project(project: Project) -> String {
-    return "".to_string();
-}
-
-pub fn parse_project(yaml_project: String) -> Project {
-    return Project::default();
 }
 
 // one possible implementation of walking a directory only visiting files

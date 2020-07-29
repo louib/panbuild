@@ -3,29 +3,12 @@ pub mod db;
 
 // Dump the project in the format required by the database.rs file.
 pub fn dump_project(project: crate::projects::project::Project) -> String {
-    let mut response: String = String::from("");
-    response.push_str("    crate::projects::project::Project {\n");
-    response.push_str("        id: \"{id}\".to_string(),");
-    response.push_str("        name: \"{name}\".to_string(),");
-    response.push_str("        summary: \"{name}\".to_string(),");
-    response.push_str("        description: \"{name}\".to_string(),");
-    response.push_str("        homepage: \"{homepage}\".to_string(),");
-    response.push_str("        urls: \"{homepage}\".to_string(),");
-    response.push_str("        maintainers: vec![],");
-    response.push_str("        keywords: vec![],");
-    response.push_str("        dependencies: vec![],");
-    if project.versions.len() != 0 {
-        response.push_str("        versions: vec![\n");
-        for url in project.versions {
-            // response.push_str(&format!("            \"{}\",\n", url));
-        }
-        response.push_str("],\n");
-    } else {
-        response.push_str("        versions: vec![],");
-    }
-    response.push_str("        name: \"{name}\".to_string(),");
+    return serde_json::to_string(&project).unwrap();
+}
 
-    return response;
+pub fn parse_project(serialized_project: String) -> crate::projects::project::Project {
+    let project: crate::projects::project::Project = serde_json::from_str(&serialized_project).unwrap();
+    return project;
 }
 
 pub fn get_projects() -> Vec<project::Project> {
