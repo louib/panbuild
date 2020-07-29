@@ -12,6 +12,9 @@ fi
 
 branch_name="$(git symbolic-ref HEAD 2>/dev/null)"
 branch_name=${branch_name##refs/heads/}
+if [[ ! -z "$branch_name" && "$branch_name" != "master" ]]; then
+    die "You should be on the master branch!";
+fi
 echo "on $branch_name"
 
 # Sanity check.
