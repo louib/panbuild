@@ -17,15 +17,6 @@ if [[ ! -z "$branch_name" && "$branch_name" != "master" ]]; then
 fi
 echo "on $branch_name"
 
-# Sanity check.
-"./$SCRIPT_DIR/check_version.sh"
-
-# Also sanity check.
-git_version=$(git describe --tags --abbrev=0)
-if [[ "$git_version" != "$app_version" ]]; then
-    die "The git version $git_version is not the same as in the VERSION file ($app_version)!";
-fi
-
 function increment_version_number () {
     local regex="([0-9]+)\\.([0-9]+)\\.([0-9]+)"
     local current_version=$1
@@ -47,6 +38,16 @@ if [[ ! -f "$version_file_path" ]]; then
     die "Could not find version file $version_file_path";
 fi
 current_version=$(cat "$version_file_path")
+
+# Sanity check.
+"./$SCRIPT_DIR/check_version.sh"
+
+# Also sanity check.
+git_version=$(git describe --tags --abbrev=0)
+if [[ "$git_version" != "$current_version" ]]; then
+    die "The git version $git_version is not the same as in the VERSION file!";
+fi
+
 
 # TODO should accept an arg (target version), or default to patch bumping.
 echo "Bumping from version $current_version."
