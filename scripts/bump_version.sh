@@ -57,11 +57,17 @@ if [[ ! -f "$main_file_path" ]]; then
 fi
 sed -i "s/\"$current_version\"/\"$new_version\"/g" "$main_file_path"
 
+cargo_file_path="$SCRIPT_DIR/../Cargo.toml"
+if [[ ! -f "$cargo_file_path" ]]; then
+    die "Could not find Cargo file $cargo_file_path";
+fi
+sed -i "s/version = \"$current_version\"/version = \"$new_version\"/g" "$cargo_file_path"
+
+# Sanity check.
+"./$SCRIPT_DIR/check_version.sh"
+
 # git commit -a -n -m "🏷️ $new_version 🏷️"
 
 # git tag "$new_version"
 # git push --tags origin
 # git push origin master
-
-# Sanity check.
-"./$SCRIPT_DIR/check_version.sh"
