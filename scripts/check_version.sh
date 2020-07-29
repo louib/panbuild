@@ -23,4 +23,13 @@ if [[ -z "$is_in_main" ]]; then
     die "Application version $app_version not found in main file $main_file_path";
 fi
 
+cargo_file_path="$SCRIPT_DIR/../Cargo.toml"
+if [[ ! -f "$cargo_file_path" ]]; then
+    die "Could not find Cargo file $cargo_file_path";
+fi
+is_in_cargo=$(grep -E "version = \"$app_version\"" "$cargo_file_path")
+if [[ -z "$is_in_cargo" ]]; then
+    die "Application version $app_version not found in Cargo file $cargo_file_path";
+fi
+
 echo "✔️  Version is $app_version everywhere!";
