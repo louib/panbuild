@@ -32,4 +32,6 @@ if [[ -z "$is_in_cargo" ]]; then
     die "Application version $app_version not found in Cargo file $cargo_file_path";
 fi
 
+# TODO check the version in the man pages!!
+
 echo "✔️  Version is $app_version everywhere!";

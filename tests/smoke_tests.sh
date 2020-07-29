@@ -4,6 +4,8 @@ set -uo pipefail
 
 die() { echo "🔥 Error: $*" 1>&2; exit 1; }
 
+SCRIPT_DIR=$(dirname "$0")
+
 if ! command -v panbuild > /dev/null; then
     die "Could not find the panbuild binary";
 fi
@@ -20,8 +22,11 @@ fi
 echo "✔️  Validated panbuild -h output";
 
 version_output=$(panbuild -V 2>&1)
-# FIXME make it relative to current script.
-expected_version=$(cat VERSION)
+version_file_path="$SCRIPT_DIR/../VERSION"
+if [[ ! -f "$version_file_path" ]]; then
+    die "Could not find version file $version_file_path";
+fi
+expected_version=$(cat "$version_file_path")
 if [[ ! "$version_output" == *"$expected_version"* ]]; then
     die "Invalid app version from the version output!";
 fi
