@@ -1,0 +1,2 @@
+git@github.com:louib/panbuild.git
+git@gitlab.com:louib/panbuild.git
