@@ -11,6 +11,11 @@ pub enum PackageType {
     kernel,
     plugin,
     runtime,
+    emulator,
+    compiler,
+    bootloader,
+    firmware,
+    media,
 }
 pub const DEFAULT_PACKAGE_TYPE: PackageType = PackageType::app;
 

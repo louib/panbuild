@@ -14,16 +14,19 @@ pub fn get_all() -> Vec<crate::projects::project::Project> {
 
 pub fn get_core_projects() -> Vec<crate::projects::project::Project> { vec![
     crate::projects::project::Project {
-        id: "id".to_string(),
-        name: "name".to_string(),
-        summary: "name".to_string(),
-        description: "name".to_string(),
-        homepage: "".to_string(),
+        id: "flatpak-builder".to_string(),
+        name: "flatpak-builder".to_string(),
+        summary: "Tool to build flatpaks from source".to_string(),
+        description: "
+            Flatpak-builder is a tool for building flatpaks from sources.
+            See http://flatpak.org/ for more information.
+        ".to_string(),
+        homepage: "http://flatpak.org/".to_string(),
         url: "".to_string(),
         versions: vec![],
         maintainers: vec![],
         keywords: vec![],
         dependencies: vec![],
         layer: 0,
-    }
+    },
 ]}
