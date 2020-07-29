@@ -49,6 +49,8 @@ echo "Bumping from version $current_version."
 new_version=$(increment_version_number "$current_version");
 echo "New version is $new_version";
 
+sed -i "s/$current_version/$new_version/g" "$version_file_path"
+
 main_file_path="$SCRIPT_DIR/../src/main.rs"
 if [[ ! -f "$main_file_path" ]]; then
     die "Could not find main file $main_file_path";
