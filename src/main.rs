@@ -10,7 +10,7 @@ extern crate clap;
 use clap::{Arg, App, ArgMatches, SubCommand};
 use std::process::{exit};
 
-const APP_VERSION: &str = "0.0.2";
+const APP_VERSION: &str = "0.0.3";
 
 fn main() {
     let panbuild_app: App = App::new("panbuild")
