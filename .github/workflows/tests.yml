@@ -21,3 +21,5 @@ jobs:
       run: PANBUILD_INSTALL_DIR=/usr/share/bin/ ./scripts/install.sh
     - name: running the binary smoke tests
       run: bash tests/smoke_tests.sh
+    - name: checking the strings for the app version
+      run: bash scripts/check_version.sh
