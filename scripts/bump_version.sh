@@ -10,11 +10,14 @@ if [[ -n $(git status -s) ]]; then
   die "Your git environment needs to be clean before bumping the version!"
 fi
 
+branch_name="$(git symbolic-ref HEAD 2>/dev/null)"
+branch_name=${branch_name##refs/heads/}
+echo "on $branch_name"
+
 # Sanity check.
 "./$SCRIPT_DIR/check_version.sh"
 
 function increment_version_number () {
-
     local regex="([0-9]+)\\.([0-9]+)\\.([0-9]+)"
     local current_version=$1
     while [[ $current_version =~ $regex ]]; do
@@ -47,6 +50,7 @@ echo "New version is $new_version";
 
 # git tag "$new_version"
 # git push --tags origin
+# git push origin master
 
 # Sanity check.
 "./$SCRIPT_DIR/check_version.sh"
