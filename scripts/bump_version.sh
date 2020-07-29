@@ -63,11 +63,13 @@ if [[ ! -f "$cargo_file_path" ]]; then
 fi
 sed -i "s/version = \"$current_version\"/version = \"$new_version\"/g" "$cargo_file_path"
 
+# TODO add check for version in the man pages!!
+
 # Sanity check.
 "./$SCRIPT_DIR/check_version.sh"
 
-# git commit -a -n -m "🏷️ $new_version 🏷️"
+git commit -a -n -m "🏷️ $new_version 🏷️"
 
-# git tag "$new_version"
-# git push --tags origin
-# git push origin master
+git tag "$new_version"
+git push --tags origin
+git push origin master
