@@ -23,7 +23,9 @@ keywords = [
 
 exclude = [
     ".github/*",
+    "scripts/*",
     "tests/*",
+    "remotes.txt",
 ]
 
 [dependencies]
