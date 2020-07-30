@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # Bump the version of the app.
 
+set -e
+
 die() { echo "🔥 Error: $*" 1>&2; exit 1; }
 
 SCRIPT_DIR=$(dirname "$0")
