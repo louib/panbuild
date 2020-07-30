@@ -21,6 +21,7 @@ fi
 "./$SCRIPT_DIR/check_version.sh"
 
 cargo build --release
+cargo publish --dry-run
 
 flatpak remote-add --user --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 flatpak install --user -y flathub org.gnome.Platform/x86_64/3.36 org.gnome.Sdk/x86_64/3.36
