@@ -58,6 +58,7 @@ pub const DEFAULT_LICENSE: License = License::gpl2;
 #[derive(Debug)]
 #[derive(Serialize)]
 #[derive(Deserialize)]
+/// Generic representation of a build manifest.
 pub struct AbstractManifest {
     pub package_name: String,
     pub package_id: String,
