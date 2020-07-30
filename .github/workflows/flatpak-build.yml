@@ -26,4 +26,4 @@ jobs:
     - name: installing the rust extension
       run: flatpak install -y --user flathub org.freedesktop.Sdk.Extension.rust-stable//19.08
     - name: building the flatpak
-      run: flatpak-builder --user --force-clean build net.louib.panbuild.yml
+      run: flatpak-builder --user --force-clean build build-aux/net.louib.panbuild.yml

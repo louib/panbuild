@@ -7,5 +7,5 @@ rustup component add rustfmt
 
 ## Building the flatpak
 ```
-flatpak-builder --force-clean build net.louib.panbuild.yml
+flatpak-builder --force-clean build build-aux/net.louib.panbuild.yml
 ```
