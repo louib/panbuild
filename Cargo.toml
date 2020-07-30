@@ -10,15 +10,9 @@ readme = "README.md"
 keywords = [
   "flatpak",
   "snap",
-  "package-manager",
-  "package",
   "packages",
   "manifest",
-  "snapcraft",
   "converter",
-  "build",
-  "debian",
-  "debian-packaging"
 ]
 
 exclude = [
