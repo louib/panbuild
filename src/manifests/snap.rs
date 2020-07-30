@@ -152,6 +152,7 @@ const TYPE: &str = "type";
 //
 // (mandatory)
 const VERSION: &str = "version";
+const DEFAULT_VERSION: &str = "git";
 // Plugs and slots for an entire snap
 // Plugs and slots for an interface are usually configured per-app or per-daemon within snapcraft.yaml.
 // See https://snapcraft.io/docs/snapcraft-app-and-service-metadata for more details.
@@ -180,12 +181,15 @@ const PLUGS: &str = "plugs";
 // Value of the attribute.
 const SLOTS: &str = "slots";
 
-const REQUIRED_TOP_LEVEL_FIELDS:[&'static str; 5] = [
+const REQUIRED_TOP_LEVEL_FIELDS:[&'static str; 4] = [
     DESCRIPTION,
     GRADE,
     NAME,
     SUMMARY,
-    VERSION,
+    // According to the spec, the version is indeed required, but some projects don't
+    // populate it so it can be generated dynamically when creating a new version.
+    // See the `snapcraftctl set-version` command for examples.
+    // VERSION,
 ];
 
 
@@ -633,7 +637,7 @@ pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
     response.package_name = manifest_content[NAME].as_str().unwrap_or("").to_string();
     // Defaulting to the name here...
     response.package_id = manifest_content[NAME].as_str().unwrap_or("").to_string();
-    response.package_version = manifest_content[VERSION].as_str().unwrap_or("").to_string();
+    response.package_version = manifest_content[VERSION].as_str().unwrap_or(DEFAULT_VERSION).to_string();
     response.description = manifest_content[DESCRIPTION].as_str().unwrap_or("").to_string();
     response.short_description = manifest_content[SUMMARY].as_str().unwrap_or("").to_string();
 
@@ -776,8 +780,25 @@ mod tests {
     }
 
     #[test]
+    #[should_panic(expected = "Required top-level field grade is missing from snapcraft manifest.")]
     pub fn test_parse_missing_required_fields() {
-        assert!(file_path_matches("snapcraft.yaml"));
+        parse(r###"
+            name: app-name,
+            description: description
+            summary: this is my app,
+            version: 0.0.1
+        "###);
+    }
+
+    #[test]
+    pub fn test_parse_missing_version() {
+        let manifest: crate::manifests::manifest::AbstractManifest = parse(r###"
+            name: app-name,
+            description: description
+            grade: devel
+            summary: this is my app
+        "###);
+	assert_eq!(manifest.package_version, crate::manifests::snap::DEFAULT_VERSION);
     }
 
     #[test]
