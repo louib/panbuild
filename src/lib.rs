@@ -8,13 +8,16 @@ mod projects;
 mod execution_context;
 mod utils;
 
+pub use manifests::manifest::AbstractManifest;
+pub use manifests::manifest::AbstractModule;
+
 use std::fs;
 use std::path;
 use std::env;
 
-pub const DEFAULT_PACKAGE_LIST_SEP: &str = ",";
+const DEFAULT_PACKAGE_LIST_SEP: &str = ",";
 
-pub struct PanbuilbArguments {
+struct PanbuilbArguments {
     // TODO use enum for command name?
     command_name: String,
     arguments: Vec<String>,
@@ -155,8 +158,4 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
 
     eprintln!("Finishing...");
     return 0;
-}
-
-pub fn convert(input_file: String, input_format: String, output_format: String) {
-
 }

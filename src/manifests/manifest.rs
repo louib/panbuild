@@ -225,6 +225,7 @@ impl Default for SourceType {
 #[derive(Debug)]
 #[derive(Serialize)]
 #[derive(Deserialize)]
+/// Generic representation of a software module.
 pub struct AbstractModule {
     pub name: String,
     pub version: String,
