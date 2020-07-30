@@ -3,6 +3,9 @@ name = "panbuild"
 version = "0.0.7"
 authors = ["louib <code@louib.net>"]
 edition = "2018"
+description = "The universal build manifest converter."
+license = "BSD-3-Clause"
+repository = "https://github.com/louib/panbuild/"
 
 [dependencies]
 yaml-rust = "0.4"

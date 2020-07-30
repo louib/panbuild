@@ -43,6 +43,9 @@ pub const DEFAULT_ARCH: Architecture = Architecture::any;
 #[derive(Debug)]
 #[derive(Serialize)]
 #[derive(Deserialize)]
+/// Software license used for a package.
+/// See https://spdx.org/licenses/ For the complete list of commonly found
+/// free and open source licenses.
 pub enum License {
     gpl2,
     gpl3,
