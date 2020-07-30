@@ -73,7 +73,7 @@ fi
 sed -i "s/version = \"$current_version\"/version = \"$new_version\"/g" "$cargo_file_path"
 
 # This will bump the version in the Cargo.lock file.
-cargo install
+cargo update -p panbuild
 
 # TODO add check for version in the man pages!!
 
