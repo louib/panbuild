@@ -149,19 +149,16 @@ fn parse_paragraphs(content: &str, paragraphs: &mut Vec<String>) {
 }
 
 fn is_empty_line(line: &str) -> bool {
-    let mut indent_size = 0;
-    line.starts_with(|c: char| {
+    for c in line.chars() {
         if c == ' ' {
-            indent_size = indent_size + 1;
-            return true;
+            continue;
         }
         if c == '\t' {
-            indent_size = indent_size + 1;
-            return true;
+            continue;
         }
         return false;
-    });
-    return indent_size == line.len();
+    }
+    return true;
 }
 
 fn is_indented_line(line: &str) -> bool {
@@ -351,7 +348,7 @@ pub fn file_content_matches(content: &str) -> bool {
     return false;
 }
 
-const debian_control_example: &str = r###"
+const DEBIAN_CONTROL_EXAMPLE: &str = r###"
 Source: package_name
 Section: x11
 Priority: optional
@@ -398,8 +395,24 @@ mod tests {
     use super::*;
 
     #[test]
+    pub fn test_is_empty_line() {
+        assert_eq!(true, is_empty_line(""));
+        assert_eq!(true, is_empty_line("\t\t"));
+        assert_eq!(true, is_empty_line("                   "));
+        assert_eq!(false, is_empty_line("                   word"));
+    }
+
+    #[test]
+    pub fn test_is_commented_line() {
+        assert_eq!(false, is_commented_line(""));
+        assert_eq!(true, is_commented_line("# comment"));
+        // assert_eq!(true, is_commented_line("         # comment"));
+        assert_eq!(false, is_commented_line("Field: Value # with a comment after."));
+    }
+
+    #[test]
     pub fn test_parse() {
-        let mut manifest = parse(&debian_control_example);
+        let mut manifest = parse(&DEBIAN_CONTROL_EXAMPLE);
         assert!(
             manifest.package_name == "package_name",
             "The app name was not package_name!",
