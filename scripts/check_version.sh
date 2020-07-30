@@ -32,6 +32,15 @@ if [[ -z "$is_in_cargo" ]]; then
     die "Application version $app_version not found in Cargo file $cargo_file_path";
 fi
 
+cargo_lock_path="$SCRIPT_DIR/../Cargo.lock"
+if [[ ! -f "$cargo_lock_path" ]]; then
+    die "Could not find Cargo lock $cargo_lock_path";
+fi
+is_in_cargo_lock=$(grep -E "version = \"$app_version\"" "$cargo_lock_path")
+if [[ -z "$is_in_cargo_lock" ]]; then
+    die "Application version $app_version not found in Cargo lock $cargo_lock_path";
+fi
+
 # TODO check the version in the man pages!!
 
 echo "✔️  Version is $app_version everywhere!";

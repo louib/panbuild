@@ -70,6 +70,9 @@ if [[ ! -f "$cargo_file_path" ]]; then
 fi
 sed -i "s/version = \"$current_version\"/version = \"$new_version\"/g" "$cargo_file_path"
 
+# This will bump the version in the Cargo.lock file.
+cargo install
+
 # TODO add check for version in the man pages!!
 
 # Sanity check.

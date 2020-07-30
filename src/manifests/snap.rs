@@ -798,7 +798,7 @@ mod tests {
             grade: devel
             summary: this is my app
         "###);
-	assert_eq!(manifest.package_version, crate::manifests::snap::DEFAULT_VERSION);
+        assert_eq!(manifest.package_version, crate::manifests::snap::DEFAULT_VERSION);
     }
 
     #[test]
