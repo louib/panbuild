@@ -6,6 +6,20 @@ edition = "2018"
 description = "The universal build manifest converter."
 license = "BSD-3-Clause"
 repository = "https://github.com/louib/panbuild/"
+readme = "README.md"
+keywords = [
+  "flatpak",
+  "snap",
+  "package-manager",
+  "package",
+  "packages",
+  "manifest",
+  "snapcraft",
+  "converter",
+  "build",
+  "debian",
+  "debian-packaging"
+]
 
 [dependencies]
 yaml-rust = "0.4"
