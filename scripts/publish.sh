@@ -21,16 +21,15 @@ fi
 "./$SCRIPT_DIR/check_version.sh"
 
 cargo build --release
-cargo publish --dry-run
+cargo publish
+echo "📦 Published the package on crates.io."
 
-flatpak remote-add --user --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-flatpak install --user -y flathub org.gnome.Platform/x86_64/3.36 org.gnome.Sdk/x86_64/3.36
-flatpak-builder --force-clean --user build net.louib.panbuild.json
-flatpak-builder --user --run build net.louib.panbuild.json panbuild -V
-echo "📦 Published the new flatpak package."
+# TODO publish on flathub.
+# flatpak remote-add --user --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+# flatpak install --user -y flathub org.gnome.Platform/x86_64/3.36 org.gnome.Sdk/x86_64/3.36
+# flatpak-builder --force-clean --user build net.louib.panbuild.json
+# flatpak-builder --user --run build net.louib.panbuild.json panbuild -V
+# echo "📦 Published the package on flathub.com."
 
 # Sanity check.
 "./$SCRIPT_DIR/check_version.sh"
-
-# TODO publish on flathub.
-# TODO publish on cargo.
