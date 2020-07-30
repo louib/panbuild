@@ -162,19 +162,16 @@ fn is_empty_line(line: &str) -> bool {
 }
 
 fn is_indented_line(line: &str) -> bool {
-    let mut indent_size = 0;
-    line.starts_with(|c: char| {
+    for c in line.chars() {
         if c == ' ' {
-            indent_size = indent_size + 1;
             return true;
         }
         if c == '\t' {
-            indent_size = indent_size + 1;
             return true;
         }
         return false;
-    });
-    return indent_size != 0;
+    }
+    return false;
 }
 
 fn is_commented_line(line: &str) -> bool {
@@ -403,6 +400,14 @@ mod tests {
         assert_eq!(true, is_commented_line("# comment"));
         assert_eq!(true, is_commented_line("         # comment"));
         assert_eq!(false, is_commented_line("Field: Value # with a comment after."));
+    }
+
+    #[test]
+    pub fn test_is_indented_line() {
+        assert_eq!(false, is_indented_line(""));
+        assert_eq!(true, is_indented_line("  line"));
+        assert_eq!(true, is_indented_line("  comment    "));
+        assert_eq!(false, is_indented_line("Field: Value # with a comment after."));
     }
 
     #[test]
