@@ -3,6 +3,7 @@
 ![Flatpak-build CI job status](https://github.com/louib/panbuild/workflows/flatpak-build/badge.svg)
 ![Flatpak-install CI job status](https://github.com/louib/panbuild/workflows/flatpak-install/badge.svg)
 [![License file](https://img.shields.io/github/license/louib/panbuild)](https://github.com/louib/panbuild/blob/master/LICENSE)
+[![Crates.io version](https://img.shields.io/crates/v/panbuild?style=flat-square)](https://crates.io/crates/panbuild)
 <!-- uncomment when there is a release available -->
 <!-- [![GitHub release](https://img.shields.io/github/release/louib/panbuild)](https://github.com/louib/panbuild/releases/) -->
 
