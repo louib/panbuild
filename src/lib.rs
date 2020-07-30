@@ -1,3 +1,6 @@
+//! # Panbuild
+//!
+//! `panbuild` is the universal build manifest converter.
 use std::collections::HashMap;
 
 mod manifests;
