@@ -178,24 +178,19 @@ fn is_indented_line(line: &str) -> bool {
 }
 
 fn is_commented_line(line: &str) -> bool {
-    let mut first_char_met: bool = false;
-    line.starts_with(|c: char| {
+    for c in line.chars() {
         if c == ' ' {
-            return true;
+            continue;
         }
         if c == '\t' {
-            return true;
+            continue;
         }
-        if ! first_char_met && c == '#' {
-            first_char_met = true;
-            return first_char_met;
-        }
-        if first_char_met {
+        if c == '#' {
             return true;
         }
         return false;
-    });
-    return first_char_met;
+    }
+    return false;
 }
 
 pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
@@ -406,7 +401,7 @@ mod tests {
     pub fn test_is_commented_line() {
         assert_eq!(false, is_commented_line(""));
         assert_eq!(true, is_commented_line("# comment"));
-        // assert_eq!(true, is_commented_line("         # comment"));
+        assert_eq!(true, is_commented_line("         # comment"));
         assert_eq!(false, is_commented_line("Field: Value # with a comment after."));
     }
 
