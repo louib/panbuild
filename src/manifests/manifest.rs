@@ -210,23 +210,22 @@ impl Default for BuildSystem {
 #[derive(Serialize)]
 #[derive(Deserialize)]
 pub enum SourceType {
-    bzr,
-    deb,
-    git,
-    hg,
-    local,
-    mercurial,
-    rpm,
-    subversion,
-    svn,
-    tar,
-    zip,
+    Bzr,
+    Deb,
+    Git,
+    Local,
+    Mercurial,
+    Rpm,
+    Subversion,
+    Svn,
+    Tar,
+    Zip,
     // 7z
-    sevenzip,
-    unknown,
+    Sevenzip,
+    Unknown,
 }
 
-pub const DEFAULT_SOURCE_TYPE: SourceType = SourceType::unknown;
+pub const DEFAULT_SOURCE_TYPE: SourceType = SourceType::Unknown;
 
 impl Default for SourceType {
     fn default() -> Self { DEFAULT_SOURCE_TYPE }

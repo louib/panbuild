@@ -686,9 +686,9 @@ pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
 
         let source_type = snap_module[SOURCE_TYPE].as_str().unwrap_or("").to_string();
         if source_type == "git" {
-            module.url_type = crate::manifests::manifest::SourceType::git;
+            module.url_type = crate::manifests::manifest::SourceType::Git;
         } else {
-            module.url_type = crate::manifests::manifest::SourceType::unknown;
+            module.url_type = crate::manifests::manifest::SourceType::Unknown;
         }
 
         module.tag = snap_module[SOURCE_TAG].as_str().unwrap_or("").to_string();
