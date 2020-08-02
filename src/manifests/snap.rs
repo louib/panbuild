@@ -330,43 +330,40 @@ const TIMER: &str = "timer";
 
 // Refer to systemd.service manual for details.
 #[allow(dead_code)]
-enum RestartCondition {
-    on_failure,
-    on_success,
-    on_abnormal,
-    on_abort,
-    always,
-    never
+pub const ALLOWED_RESTARTS_CONDITIONS: [&str; 6] = [
+    "on_failure",
+    "on_success",
+    "on_abnormal",
+    "on_abort",
+    "always",
+    "never",
+];
 
-}
-
-#[allow(dead_code)]
-enum Daemon {
+pub const ALLOWED_DAEMON_TYPES: [&str; 4] = [
     // the command is the main process.
-    simple,
+    "simple",
     // the configured command will exit after completion
-    oneshot,
+    "oneshot",
     // the configured command calls fork() as part of its start-up.
     // The parent process is then expected to exit when start-up is complete
-    forking,
+    "forking",
     // the command configured will send a signal to systemd to indicate that it’s running.
-    notify,
-}
+    "notify",
+];
 
 // For more information, refer to the output of snapcraft help plugins .
-#[allow(dead_code)]
-enum BuildAttributes {
+pub const ALLOWED_BUILD_ATTRIBUTES: [&str; 4] = [
     // Plugins that support the concept of build types build in Release mode by default.
     // Setting the ‘debug’ attribute requests that they instead build in debug mode.
-    debug,
+    "debug",
     // Do not remove the “executable stack” bit from ELF files.
-    keep_execstack,
+    "keep_execstack",
     // Do not patch ELF files.
-    no_patchelf,
+    "no_patchelf",
     // Do not run the install target provided by the plugin’s build system.
     // (Only supported by the kbuild plugin)
-    no_install,
-}
+    "no_install",
+];
 
 
 

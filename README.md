@@ -43,9 +43,5 @@ TODO
 ### Install from sources
 See [HACKING.md](./HACKING.md).
 
-## Other related tools
-* https://github.com/flatpak/flatpak-builder-tools
-
 ## License
-
 BSD-3
