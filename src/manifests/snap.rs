@@ -695,17 +695,17 @@ pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
 
         let build_system = snap_module[PLUGIN].as_str().unwrap_or("").to_string();
         if build_system == "cmake" {
-            module.build_system = crate::manifests::manifest::BuildSystem::cmake;
+            module.build_system = crate::manifests::manifest::BuildSystem::Cmake;
         } else if build_system == "nil" {
             // This means apt-get packages in the case of snaps.
-            module.build_system = crate::manifests::manifest::BuildSystem::native;
+            module.build_system = crate::manifests::manifest::BuildSystem::Apt;
         } else if build_system == "autotools" {
-            module.build_system = crate::manifests::manifest::BuildSystem::autotools;
+            module.build_system = crate::manifests::manifest::BuildSystem::Autotools;
         } else if build_system == "dump" {
             // This is used for file info packages.
-            module.build_system = crate::manifests::manifest::BuildSystem::manual;
+            module.build_system = crate::manifests::manifest::BuildSystem::Manual;
         } else {
-            module.build_system = crate::manifests::manifest::BuildSystem::unknown;
+            module.build_system = crate::manifests::manifest::BuildSystem::Unknown;
         }
 
         module.config_options = snap_module["configflags"].as_str().unwrap_or("").to_string();

@@ -43,26 +43,26 @@ pub fn get_build_system(
     ctx: &mut crate::execution_context::ExecutionContext
 ) -> crate::manifests::manifest::BuildSystem {
     if ctx.source_filename.ends_with("meson_options.txt") {
-        return crate::manifests::manifest::BuildSystem::meson;
+        return crate::manifests::manifest::BuildSystem::Meson;
     }
     if ctx.source_filename.ends_with("control") {
-        // return crate::manifests::manifest::BuildSystem::debian;
+        return crate::manifests::manifest::BuildSystem::Apt;
     }
     if ctx.source_filename.ends_with("package.json") {
-        return crate::manifests::manifest::BuildSystem::npm;
+        return crate::manifests::manifest::BuildSystem::Npm;
     }
     if ctx.source_filename.ends_with("Gemfile") {
         // return crate::manifests::manifest::BuildSystem::ruby;
     }
     if ctx.source_filename.ends_with("requirements.txt") {
-        // We could also default to pip3...
-        return crate::manifests::manifest::BuildSystem::pip3;
+        // We could also default to pip2...
+        return crate::manifests::manifest::BuildSystem::Pip3;
     }
     if ctx.source_filename.ends_with(".spec") {
-        // return crate::manifests::manifest::BuildSystem::fedora;
+        // return crate::manifests::manifest::BuildSystem::Fedora;
     }
     if ctx.source_filename.ends_with("Makefile") {
-        return crate::manifests::manifest::BuildSystem::make;
+        return crate::manifests::manifest::BuildSystem::Make;
     }
     return crate::manifests::manifest::DEFAULT_BUILD_SYSTEM;
 }

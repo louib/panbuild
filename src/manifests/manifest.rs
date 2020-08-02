@@ -172,35 +172,35 @@ const jessie: OSVersion = OSVersion {
 #[derive(Serialize)]
 #[derive(Deserialize)]
 pub enum BuildSystem {
-    make,
-    cmake,
-    autotools,
-    meson,
-    cargo,
-    maven,
-    xcode,
-    npm,
+    Make,
+    Cmake,
+    Autotools,
+    Meson,
+    Cargo,
+    Maven,
+    Xcode,
+    Npm,
     // if ever http://git.savannah.gnu.org/cgit/bash.git
     // git@github.com:bminor/bash.git
-    bash,
-    pip,
-    pip3,
+    Bash,
+    Pip2,
+    Pip3,
     // if ever git@github.com:PowerShell/PowerShell.git
     // powershell,
-    manual,
+    Manual,
     // if ever git@github.com:apple/swift.git.
-    swift,
-    native,
+    Swift,
+    Apt,
     // perl ??
     // ruby ??
     // simple?
     // haskell??
     // LaTeX??
     // mono??
-    unknown,
+    Unknown,
 }
 
-pub const DEFAULT_BUILD_SYSTEM: BuildSystem = BuildSystem::unknown;
+pub const DEFAULT_BUILD_SYSTEM: BuildSystem = BuildSystem::Unknown;
 
 impl Default for BuildSystem {
     fn default() -> Self { DEFAULT_BUILD_SYSTEM }
