@@ -284,17 +284,19 @@ pub struct AbstractPermission {
 #[derive(Serialize)]
 #[derive(Deserialize)]
 pub enum APIType {
-    dbus,
-    files,
-    socket,
-    camera,
-    mic,
-    gps,
-    unknown,
+    Dbus,
+    Files,
+    Socket,
+    Camera,
+    Mic,
+    Gps,
+    Unknown,
 }
 
+pub const DEFAULT_API_TYPE: APIType = APIType::Unknown;
+
 impl Default for APIType {
-    fn default() -> Self { APIType::unknown }
+    fn default() -> Self { DEFAULT_API_TYPE }
 }
 
 // Currently the documentation comes from the Debian control file documentation.

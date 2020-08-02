@@ -731,9 +731,9 @@ pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
 
         let interface_name = slot[&Yaml::from_str("interface")].as_str().unwrap_or("").to_string();
         if interface_name == "dbus" {
-            permission.api_type = crate::manifests::manifest::APIType::dbus;
+            permission.api_type = crate::manifests::manifest::APIType::Dbus;
         } else {
-            permission.api_type = crate::manifests::manifest::APIType::unknown;
+            permission.api_type = crate::manifests::manifest::APIType::Unknown;
         }
     }
 
