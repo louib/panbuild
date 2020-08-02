@@ -219,6 +219,7 @@ pub enum SourceType {
     Subversion,
     Svn,
     Tar,
+    Tarball,
     Zip,
     // 7z
     Sevenzip,

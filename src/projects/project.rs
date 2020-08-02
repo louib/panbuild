@@ -9,26 +9,13 @@ pub const PROJECTS_DIR: &str = "~/.panbuild/projects/";
 
 #[derive(Serialize)]
 #[derive(Deserialize)]
-pub enum URLType {
-    git,
-    hg,
-    tarball,
-    archive,
-}
-
-impl Default for URLType {
-    fn default() -> Self { URLType::git }
-}
-
-#[derive(Serialize)]
-#[derive(Deserialize)]
 #[derive(Default)]
 pub struct ProjectVersion {
     pub project: Project,
     // Name of the version. Normally follows sem ver.
     pub name: String,
     pub url: String,
-    pub url_type: URLType,
+    pub url_type: crate::manifests::manifest::SourceType,
     pub tag: String,
     pub branch: String,
 }
