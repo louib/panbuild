@@ -4,41 +4,41 @@ use serde::{Serialize, Deserialize};
 #[derive(Serialize)]
 #[derive(Deserialize)]
 pub enum PackageType {
-    app,
-    lib,
-    driver,
-    daemon,
-    kernel,
-    plugin,
-    runtime,
-    emulator,
-    compiler,
-    bootloader,
-    firmware,
-    media,
+    App,
+    Lib,
+    Driver,
+    Daemon,
+    Kernel,
+    Plugin,
+    Runtime,
+    Emulator,
+    Compiler,
+    Bootloader,
+    Firmware,
+    Media,
 }
-pub const DEFAULT_PACKAGE_TYPE: PackageType = PackageType::app;
+pub const DEFAULT_PACKAGE_TYPE: PackageType = PackageType::App;
 
 #[derive(Debug)]
 #[derive(Serialize)]
 #[derive(Deserialize)]
 pub enum ReleaseType {
-    dev,
-    release,
+    Dev,
+    Release,
 }
-pub const DEFAULT_RELEASE_TYPE: ReleaseType = ReleaseType::dev;
+pub const DEFAULT_RELEASE_TYPE: ReleaseType = ReleaseType::Dev;
 
 #[derive(Debug)]
 #[derive(Serialize)]
 #[derive(Deserialize)]
 pub enum Architecture {
-    amd64,
-    i386,
-    armhf,
-    spark,
-    any,
+    Amd64,
+    I386,
+    Armhf,
+    Spark,
+    Any,
 }
-pub const DEFAULT_ARCH: Architecture = Architecture::any;
+pub const DEFAULT_ARCH: Architecture = Architecture::Any;
 
 #[derive(Debug)]
 #[derive(Serialize)]

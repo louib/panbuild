@@ -98,6 +98,11 @@ impl Project {
             }
         }
     }
+
+    fn get_github_projects() -> Vec<Project> {
+        let mut github_projects = vec![];
+        return github_projects;
+    }
 }
 
 // one possible implementation of walking a directory only visiting files

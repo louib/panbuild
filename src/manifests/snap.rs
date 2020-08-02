@@ -199,17 +199,17 @@ const REQUIRED_TOP_LEVEL_FIELDS:[&'static str; 4] = [
 // For more information, refer to https://snapcraft.io/docs/snap-confinement.
 #[allow(dead_code)]
 enum Confinement {
-    strict,
-    devmode,
-    classic,
+    Strict,
+    Devmode,
+    Classic,
 }
 
 // devel (i.e. a development version of the snap, so not to be published to the stable or candidate channels).
 // stable (i.e. a stable release or release candidate, which can be released to all channels).
 #[allow(dead_code)]
 enum Grade {
-    stable,
-    devel,
+    Stable,
+    Devel,
 }
 
 
@@ -646,13 +646,13 @@ pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
     if architectures.len() != 0 {
         let arch = architectures[0].as_str().unwrap().to_string();
         if arch == "amd64" {
-            response.architecture = crate::manifests::manifest::Architecture::amd64;
+            response.architecture = crate::manifests::manifest::Architecture::Amd64;
         }
         if arch == "armhf" {
-            response.architecture = crate::manifests::manifest::Architecture::armhf;
+            response.architecture = crate::manifests::manifest::Architecture::Armhf;
         }
         if arch == "any" {
-            response.architecture = crate::manifests::manifest::Architecture::any;
+            response.architecture = crate::manifests::manifest::Architecture::Any;
         }
     }
 
@@ -660,7 +660,7 @@ pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
     let grade = manifest_content["grade"].as_str().unwrap_or("");
 
     if grade != "devel" || confinement != "devmode" {
-        response.release_type = crate::manifests::manifest::ReleaseType::release;
+        response.release_type = crate::manifests::manifest::ReleaseType::Release;
     }
 
     let default_apps: LinkedHashMap<Yaml, Yaml> = LinkedHashMap::new();
