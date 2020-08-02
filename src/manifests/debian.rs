@@ -69,11 +69,6 @@ const CONTROL_FILE_SEPARATOR: &str = ":";
 //];
 const DEFAULT_SECTION: &str = "libs";
 
-const DEFAULT_PRIORITY: Priority = Priority::optional;
-// TODO we should define a list of accepted priorities. In this case,
-// for the moment, it's all of them, but it might not be the case if we
-// add more cases to the shared enum.
-
 
 // See https://www.debian.org/doc/debian-policy/ch-controlfields.html
 // **** Top-level fields

@@ -301,37 +301,46 @@ impl Default for APIType {
 
 // Currently the documentation comes from the Debian control file documentation.
 pub enum Priority {
-    // Packages which are necessary for the proper functioning of the system (usually, this means that dpkg functionality depends on these packages).
-    // Removing a required package may cause your system to become totally broken and you may not even be able to use dpkg to put things back,
+    // Packages which are necessary for the proper functioning of the system (usually,
+    // this means that dpkg functionality depends on these packages).
+    // Removing a required package may cause your system to become totally broken and you
+    // may not even be able to use dpkg to put things back,
     // so only do so if you know what you are doing.
     //
-    // Systems with only the required packages installed have at least enough functionality for the sysadmin to boot the system and install more software.
-    required,
+    // Systems with only the required packages installed have at least enough functionality for
+    // the sysadmin to boot the system and install more software.
+    Required,
 
     // Important programs, including those which one would expect to find on any Unix-like system.
-    // If the expectation is that an experienced Unix person who found it missing would say “What on earth is going on, where is foo?”,
-    // it must be an important package. 6 Other packages without which the system will not run well or be usable must also have priority important.
+    // If the expectation is that an experienced Unix person who found it missing would
+    // say “What on earth is going on, where is foo?”,
+    // it must be an important package. 6 Other packages without which the system will not run
+    // well or be usable must also have priority important.
     // This does not include Emacs, the X Window System, TeX or any other large applications.
     // The important packages are just a bare minimum of commonly-expected and necessary tools.
-    important,
+    Important,
 
     // These packages provide a reasonably small but not too limited character-mode system.
     // This is what will be installed by default if the user doesn’t select anything else.
     // It doesn’t include many large applications.
     //
     // No two packages that both have a priority of standard or higher may conflict with each other.
-    standard,
+    Standard,
 
     // This is the default priority for the majority of the archive.
     // Unless a package should be installed by default on standard Debian systems,
-    // it should have a priority of optional. Packages with a priority of optional may conflict with each other.
-    optional,
+    // it should have a priority of optional. Packages with a priority of optional
+    // may conflict with each other.
+    Optional,
 
     // This priority is deprecated. Use the optional priority instead.
     // This priority should be treated as equivalent to optional.
     //
     // The extra priority was previously used for packages that conflicted with other packages and packages
     // that were only likely to be useful to people with specialized requirements. However, this distinction
-    // was somewhat arbitrary, not consistently followed, and not useful enough to warrant the maintenance effort.
-    extra,
+    // was somewhat arbitrary, not consistently followed, and not useful enough to warrant
+    // the maintenance effort.
+    Extra,
 }
+
+const DEFAULT_PRIORITY: Priority = Priority::Optional;
