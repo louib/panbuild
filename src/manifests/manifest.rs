@@ -47,15 +47,15 @@ pub const DEFAULT_ARCH: Architecture = Architecture::Any;
 /// See https://spdx.org/licenses/ For the complete list of commonly found
 /// free and open source licenses.
 pub enum License {
-    gpl2,
-    gpl3,
-    mit,
-    bsd2,
-    bsd3,
-    proprietary,
-    unknown,
+    Gpl2,
+    Gpl3,
+    Mit,
+    Bsd2,
+    Bsd3,
+    Proprietary,
+    Unknown,
 }
-pub const DEFAULT_LICENSE: License = License::gpl2;
+pub const DEFAULT_LICENSE: License = License::Gpl2;
 
 
 #[derive(Debug)]
@@ -125,18 +125,18 @@ impl AbstractManifest {
 
 pub enum NetTool {
     // https://github.com/curl/curl
-    curl,
+    Curl,
     // http://git.savannah.gnu.org/cgit/wget.git
-    wget,
+    Wget,
 }
 
 pub enum OS {
-    bsd,
-    mac,
-    ios,
-    linux,
-    android,
-    symbian,
+    Bsd,
+    Mac,
+    Ios,
+    Linux,
+    Android,
+    Symbian,
     // Add RT Oses??
     // Add misc Oses like calculators and PAs???
 }
@@ -158,7 +158,7 @@ pub struct OSVersion {
 }
 
 const jessie: OSVersion = OSVersion {
-    os: OS::linux,
+    os: OS::Linux,
     is_distribution: true,
     // name: String::from("jessie"),
     // codename: String::from("stretch"),
