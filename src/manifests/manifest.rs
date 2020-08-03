@@ -127,13 +127,6 @@ impl AbstractManifest {
     }
 }
 
-pub enum NetTool {
-    // https://github.com/curl/curl
-    Curl,
-    // http://git.savannah.gnu.org/cgit/wget.git
-    Wget,
-}
-
 pub enum OS {
     Bsd,
     Mac,
