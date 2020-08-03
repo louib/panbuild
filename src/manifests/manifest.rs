@@ -157,7 +157,7 @@ pub struct OSVersion {
     // pub codename: String,
 }
 
-const jessie: OSVersion = OSVersion {
+const JESSIE: OSVersion = OSVersion {
     os: OS::Linux,
     is_distribution: true,
     // name: String::from("jessie"),
