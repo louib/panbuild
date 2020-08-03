@@ -196,7 +196,7 @@ pub enum BuildSystem {
     Swift,
     Apt,
     // perl ??
-    // ruby ??
+    Gem,
     // simple?
     // haskell??
     // LaTeX??
@@ -204,11 +204,34 @@ pub enum BuildSystem {
     Unknown,
 }
 impl BuildSystem {
-    pub fn get_build_systems(path: String) -> Vec<BuildSystem> {
-        let mut build_systems: Vec<BuildSystem> = vec![];
-        return build_systems;
-
+    pub fn get_build_system(
+        path: &str,
+    ) -> BuildSystem {
+        if path.ends_with("meson_options.txt") {
+            return BuildSystem::Meson;
+        }
+        if path.ends_with("control") {
+            return BuildSystem::Apt;
+        }
+        if path.ends_with("package.json") {
+            return BuildSystem::Npm;
+        }
+        if path.ends_with("Gemfile") {
+            return BuildSystem::Gem;
+        }
+        if path.ends_with("requirements.txt") {
+            // We could also default to pip2...
+            return BuildSystem::Pip3;
+        }
+        if path.ends_with(".spec") {
+            // return crate::manifests::manifest::BuildSystem::Fedora;
+        }
+        if path.ends_with("Makefile") {
+            return BuildSystem::Make;
+        }
+        return crate::manifests::manifest::DEFAULT_BUILD_SYSTEM;
     }
+
     pub fn get_manifest(self: &BuildSystem) -> AbstractManifest {
         return AbstractManifest::default();
 

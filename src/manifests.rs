@@ -38,35 +38,6 @@ pub fn get_type(ctx: &mut crate::execution_context::ExecutionContext) -> i32 {
     return 0;
 }
 
-// Get the top-level build system for the project.
-pub fn get_build_system(
-    ctx: &mut crate::execution_context::ExecutionContext
-) -> crate::manifests::manifest::BuildSystem {
-    if ctx.source_filename.ends_with("meson_options.txt") {
-        return crate::manifests::manifest::BuildSystem::Meson;
-    }
-    if ctx.source_filename.ends_with("control") {
-        return crate::manifests::manifest::BuildSystem::Apt;
-    }
-    if ctx.source_filename.ends_with("package.json") {
-        return crate::manifests::manifest::BuildSystem::Npm;
-    }
-    if ctx.source_filename.ends_with("Gemfile") {
-        // return crate::manifests::manifest::BuildSystem::ruby;
-    }
-    if ctx.source_filename.ends_with("requirements.txt") {
-        // We could also default to pip2...
-        return crate::manifests::manifest::BuildSystem::Pip3;
-    }
-    if ctx.source_filename.ends_with(".spec") {
-        // return crate::manifests::manifest::BuildSystem::Fedora;
-    }
-    if ctx.source_filename.ends_with("Makefile") {
-        return crate::manifests::manifest::BuildSystem::Make;
-    }
-    return crate::manifests::manifest::DEFAULT_BUILD_SYSTEM;
-}
-
 pub fn parse(ctx: &mut crate::execution_context::ExecutionContext) -> i32 {
     if ctx.source_type == "debian" {
         ctx.manifest = crate::manifests::debian::parse(&ctx.content);
