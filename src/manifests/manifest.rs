@@ -1,3 +1,7 @@
+use std::io;
+use std::fs::{self, DirEntry};
+use std::path::Path;
+
 use serde::{Serialize, Deserialize};
 
 #[derive(Debug)]
@@ -199,6 +203,17 @@ pub enum BuildSystem {
     // mono??
     Unknown,
 }
+impl BuildSystem {
+    pub fn get_build_systems(path: String) -> Vec<BuildSystem> {
+        let mut build_systems: Vec<BuildSystem> = vec![];
+        return build_systems;
+
+    }
+    pub fn get_manifest(self: &BuildSystem) -> AbstractManifest {
+        return AbstractManifest::default();
+
+    }
+}
 
 pub const DEFAULT_BUILD_SYSTEM: BuildSystem = BuildSystem::Unknown;
 
@@ -345,3 +360,27 @@ pub enum Priority {
 }
 
 const DEFAULT_PRIORITY: Priority = Priority::Optional;
+
+fn get_manifests_for_path(path: std::fs::DirEntry) -> Vec<AbstractManifest> {
+    let mut manifests_in_project: Vec<AbstractManifest> = vec![];
+    let file_type = path.file_type().unwrap();
+    let entry_path: String = path.path().to_str().unwrap_or("").to_string();
+    if file_type.is_dir() {
+        return manifests_in_project;
+    } else if file_type.is_file() {
+        return manifests_in_project;
+    } else if file_type.is_symlink() {
+        return manifests_in_project;
+        // Maybe we should handle those. Detect if they point to a file in the project,
+        // and if not, give it a try!
+    } else {
+        assert!(false, "Unknown file type");
+    }
+    return manifests_in_project;
+}
+
+pub fn get_manifests(project_path: String) -> Vec<AbstractManifest> {
+    let mut manifests_in_project = vec![];
+    let mut manifests = fs::read_dir(project_path).unwrap().map(|res| res.map(get_manifests_for_path)).collect::<Result<Vec<_>, io::Error>>().unwrap();
+    return manifests_in_project;
+}
