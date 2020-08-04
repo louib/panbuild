@@ -126,6 +126,26 @@ pub fn get_core_projects() -> Vec<crate::projects::project::Project> { vec![
         is_core: true,
     },
     crate::projects::project::Project {
+        id: "glibc".to_string(),
+        name: "glibc".to_string(),
+        summary: "The GNU C Library (glibc)".to_string(),
+        description: "
+            The GNU C Library project provides the core libraries for the GNU system and GNU/Linux systems,
+            as well as many other systems that use Linux as the kernel. These libraries provide critical APIs including ISO C11,
+            POSIX.1-2008, BSD, OS-specific APIs and more. These APIs include such foundational facilities as open, read, write,
+            malloc, printf, getaddrinfo, dlopen, pthread_create, crypt, login, exit and more.
+        ".to_string(),
+        homepage: "https://www.gnu.org/software/libc/".to_string(),
+        url: "git://sourceware.org/git/glibc.git".to_string(),
+        maintainers: vec![
+            "maintainers <libc-maintainers@gnu.org>".to_string(),
+        ],
+        keywords: vec![],
+        dependencies: vec![],
+        layer: 1,
+        is_core: true,
+    },
+    crate::projects::project::Project {
         id: "wget".to_string(),
         name: "wget".to_string(),
         summary: "GNU Wget is a free utility for non-interactive download of files from the Web.".to_string(),
