@@ -135,7 +135,7 @@ fn main() {
     let mut arguments: HashMap<String, String> = HashMap::new();
 
     match matches.subcommand_name() {
-        Some(command_name)   => {
+        Some(command_name) => {
             if let Some(subcommand_matches) = matches.subcommand_matches(command_name) {
                 arguments.entry("input_format".to_string()).or_insert(
                     subcommand_matches.value_of("input_format").unwrap_or("default").to_string()
