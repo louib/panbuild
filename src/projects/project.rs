@@ -19,6 +19,7 @@ pub struct ProjectVersion {
     pub tag: String,
     pub branch: String,
     pub sha256sum: String,
+    pub dependencies: Vec<ProjectVersion>,
 }
 
 #[derive(Serialize)]
@@ -34,8 +35,6 @@ pub struct Project {
     pub url: String,
     pub maintainers: Vec<String>,
     pub keywords: Vec<String>,
-    pub dependencies: Vec<ProjectVersion>,
-
     // Whether the project is part of the internal projects db.
     pub is_core: bool,
 
