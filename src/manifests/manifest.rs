@@ -7,25 +7,6 @@ use serde::{Serialize, Deserialize};
 #[derive(Debug)]
 #[derive(Serialize)]
 #[derive(Deserialize)]
-pub enum PackageType {
-    App,
-    Lib,
-    Driver,
-    Daemon,
-    Kernel,
-    Plugin,
-    Runtime,
-    Emulator,
-    Compiler,
-    Bootloader,
-    Firmware,
-    Media,
-}
-pub const DEFAULT_PACKAGE_TYPE: PackageType = PackageType::App;
-
-#[derive(Debug)]
-#[derive(Serialize)]
-#[derive(Deserialize)]
 pub enum ReleaseType {
     Dev,
     Release,
@@ -73,7 +54,6 @@ pub struct AbstractManifest {
     pub short_description: String,
     pub description: String,
     pub keywords: Vec<String>,
-    pub package_type: PackageType,
     pub release_type: ReleaseType,
     pub architecture: Architecture,
     pub license: License,
@@ -96,7 +76,6 @@ impl Default for AbstractManifest {
             short_description: "".to_string(),
             description: "".to_string(),
             keywords: vec![],
-            package_type: DEFAULT_PACKAGE_TYPE,
             release_type: DEFAULT_RELEASE_TYPE,
             architecture: DEFAULT_ARCH,
             license: DEFAULT_LICENSE,
@@ -255,12 +234,37 @@ impl Default for SourceType {
     fn default() -> Self { DEFAULT_SOURCE_TYPE }
 }
 
+#[derive(Debug)]
+#[derive(Serialize)]
+#[derive(Deserialize)]
+pub enum ModuleType {
+    CLIApp,
+    GUIApp,
+    Lib,
+    Driver,
+    Daemon,
+    Kernel,
+    Plugin,
+    Runtime,
+    Emulator,
+    Compiler,
+    Bootloader,
+    Firmware,
+    Media,
+    Unknown,
+}
+pub const DEFAULT_MODULE_TYPE: ModuleType = ModuleType::Lib;
+impl Default for ModuleType {
+    fn default() -> Self { DEFAULT_MODULE_TYPE }
+}
+
 #[derive(Default)]
 #[derive(Debug)]
 #[derive(Serialize)]
 #[derive(Deserialize)]
 /// Generic representation of a software module.
 pub struct AbstractModule {
+    pub module_type: ModuleType,
     pub name: String,
     pub version: String,
     pub url: String,
