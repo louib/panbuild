@@ -263,6 +263,8 @@ impl Default for ModuleType {
 #[derive(Serialize)]
 #[derive(Deserialize)]
 /// Generic representation of a software module.
+/// TODO use the list of all debian packages at
+/// https://packages.debian.org/stable/allpackages
 pub struct AbstractModule {
     pub module_type: ModuleType,
     pub name: String,
