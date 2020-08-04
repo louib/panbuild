@@ -11,13 +11,14 @@ pub const PROJECTS_DIR: &str = "~/.panbuild/projects/";
 #[derive(Deserialize)]
 #[derive(Default)]
 pub struct ProjectVersion {
-    pub project: Project,
+    pub project_id: String,
     // Name of the version. Normally follows sem ver.
     pub name: String,
     pub url: String,
     pub url_type: crate::manifests::manifest::SourceType,
     pub tag: String,
     pub branch: String,
+    pub sha256sum: String,
 }
 
 #[derive(Serialize)]
@@ -33,7 +34,6 @@ pub struct Project {
     pub url: String,
     pub maintainers: Vec<String>,
     pub keywords: Vec<String>,
-    pub versions: Vec<ProjectVersion>,
     pub dependencies: Vec<ProjectVersion>,
 
     // Whether the project is part of the internal projects db.
