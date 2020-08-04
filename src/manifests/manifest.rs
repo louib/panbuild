@@ -138,14 +138,6 @@ pub enum OS {
     // Add misc Oses like calculators and PAs???
 }
 
-// See https://github.com/rust-lang/rfcs/blob/master/text/1105-api-evolution.md
-// and https://doc.rust-lang.org/cargo/reference/manifest.html#the-version-field
-pub struct SemanticVersion {
-    pub major: i32,
-    pub minor: i32,
-    pub patch: i32,
-}
-
 // Also called distribution.
 pub struct OSVersion {
     pub os: OS,

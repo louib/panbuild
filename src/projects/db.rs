@@ -168,7 +168,10 @@ pub fn get_core_projects() -> Vec<crate::projects::project::Project> { vec![
         homepage: "https://git-scm.com/".to_string(),
         url: "https://github.com/git/git.git".to_string(),
         maintainers: vec![],
-        keywords: vec!["c", "shell"],
+        keywords: vec![
+            "c".to_string(),
+            "shell".to_string(),
+        ],
         layer: 1,
         is_core: true,
     },
