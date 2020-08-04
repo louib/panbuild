@@ -146,6 +146,43 @@ pub fn get_core_projects() -> Vec<crate::projects::project::Project> { vec![
         is_core: true,
     },
     crate::projects::project::Project {
+        id: "bash".to_string(),
+        name: "bash".to_string(),
+        summary: "The GNU Bourne-Again SHell".to_string(),
+        description: "
+            Bash is the GNU Project's Bourne
+            Again SHell, a complete implementation of the POSIX shell spec,
+            but also with interactive command line editing, job control on
+            architectures that support it, csh-like features such as history
+            substitution and brace expansion, and a slew of other features.
+        ".to_string(),
+        homepage: "https://www.gnu.org/software/bash/".to_string(),
+        url: "https://git.savannah.gnu.org/git/bash.git".to_string(),
+        maintainers: vec![
+            "Chet Ramey".to_string(),
+        ],
+        keywords: vec![],
+        dependencies: vec![],
+        layer: 1,
+        is_core: true,
+    },
+    crate::projects::project::Project {
+        id: "git".to_string(),
+        name: "git".to_string(),
+        summary: "Git - fast, scalable, distributed revision control system".to_string(),
+        description: "
+                Git is a fast, scalable, distributed revision control system with an unusually rich
+                command set that provides both high-level operations and full access to internals.
+        ".to_string(),
+        homepage: "https://git-scm.com/".to_string(),
+        url: "https://github.com/git/git.git".to_string(),
+        maintainers: vec![],
+        keywords: vec!["c", "shell"],
+        dependencies: vec![],
+        layer: 1,
+        is_core: true,
+    },
+    crate::projects::project::Project {
         id: "wget".to_string(),
         name: "wget".to_string(),
         summary: "GNU Wget is a free utility for non-interactive download of files from the Web.".to_string(),
