@@ -132,6 +132,22 @@ const JESSIE: OSVersion = OSVersion {
     // codename: String::from("stretch"),
 };
 
+#[derive(Debug)]
+#[derive(Serialize)]
+#[derive(Deserialize)]
+pub enum PackagingSystem {
+    Flatpak,
+    Snap,
+    Debian,
+    Arch,
+    Homebrew,
+    Unknown,
+}
+pub const DEFAULT_PACKAGING_SYSTEM: PackagingSystem = PackagingSystem::Unknown;
+impl Default for PackagingSystem {
+    fn default() -> Self { DEFAULT_PACKAGING_SYSTEM }
+}
+
 // TODO Should we allow those systems to be available
 // when the generated manifest will be used? We could
 // consider optionally downloading those dependencies
@@ -272,6 +288,7 @@ pub struct AbstractModule {
     pub url: String,
     pub url_type: SourceType,
     pub build_system: BuildSystem,
+    pub packaging_system: PackagingSystem,
     pub install_instructions: String,
     pub install_path: String,
     // The tag associated with the module, if any.
