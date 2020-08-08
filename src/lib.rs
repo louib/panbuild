@@ -31,20 +31,23 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
     let mut ctx = crate::execution_context::ExecutionContext::default();
 
     if command_name == "convert" {
-        if ! args.contains_key("input_file") {
-            eprintln!("an input file is required when converting!");
-            // TODO handle reading from stdin.
-            return 1;
-        }
+        let input_file_path = match args.get("input_file") {
+            Some(input_file_path) => input_file_path,
+            None => {
+                eprintln!("an input file is required when converting!");
+                // TODO handle reading from stdin.
+                return 1;
+            },
+        };
 
-        let input_file_path = args.get("input_file").unwrap();
+        ctx.content = match fs::read_to_string(path::Path::new(input_file_path)) {
+            Ok(content) => content,
+            Err(e) => {
+                eprintln!("could not read file {}.", input_file_path);
+                return 1;
+            }
 
-        let fs_read_result = fs::read_to_string(path::Path::new(input_file_path));
-        if fs_read_result.is_err() {
-            eprintln!("could not read file {}.", input_file_path);
-            return 1;
-        }
-        ctx.content = fs_read_result.unwrap();
+        };
 
         ctx.data_dir = env::var("PANBUILD_DATA_DIR").unwrap_or(String::from("")).to_string();
 
@@ -90,20 +93,23 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
     }
 
     if command_name == "get-package-list" {
-        if ! args.contains_key("input_file") {
-            eprintln!("an input file is required when converting!");
-            // TODO handle reading from stdin.
-            return 1;
-        }
+        let input_file_path = match args.get("input_file") {
+            Some(input_file_path) => input_file_path,
+            None => {
+                eprintln!("an input file is required when converting!");
+                // TODO handle reading from stdin.
+                return 1;
+            },
+        };
 
-        let input_file_path = args.get("input_file").unwrap();
+        ctx.content = match fs::read_to_string(path::Path::new(input_file_path)) {
+            Ok(content) => content,
+            Err(e) => {
+                eprintln!("could not read file {}.", input_file_path);
+                return 1;
+            }
 
-        let fs_read_result = fs::read_to_string(path::Path::new(input_file_path));
-        if fs_read_result.is_err() {
-            eprintln!("could not read file {}.", input_file_path);
-            return 1;
-        }
-        ctx.content = fs_read_result.unwrap();
+        };
 
         if args.contains_key("input_format") {
             let source_type = args.get("input_format").unwrap();
