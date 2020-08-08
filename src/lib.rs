@@ -28,6 +28,7 @@ struct PanbuilbArguments {
 
 pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
     eprintln!("running command {}.", command_name);
+    let mut ctx = crate::execution_context::ExecutionContext::default();
 
     if command_name == "convert" {
         if ! args.contains_key("input_file") {
@@ -43,8 +44,6 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
             eprintln!("could not read file {}.", input_file_path);
             return 1;
         }
-
-        let mut ctx = crate::execution_context::ExecutionContext::default();
         ctx.content = fs_read_result.unwrap();
 
         ctx.data_dir = env::var("PANBUILD_DATA_DIR").unwrap_or(String::from("")).to_string();
@@ -104,8 +103,6 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
             eprintln!("could not read file {}.", input_file_path);
             return 1;
         }
-
-        let mut ctx = crate::execution_context::ExecutionContext::default();
         ctx.content = fs_read_result.unwrap();
 
         if args.contains_key("input_format") {
