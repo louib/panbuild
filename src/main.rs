@@ -134,30 +134,37 @@ fn main() {
     // let mut options: HashMap<String, bool> = HashMap::new();
     let mut arguments: HashMap<String, String> = HashMap::new();
 
-    match matches.subcommand_name() {
-        Some(command_name) => {
-            if let Some(subcommand_matches) = matches.subcommand_matches(command_name) {
-                arguments.entry("input_format".to_string()).or_insert(
-                    subcommand_matches.value_of("input_format").unwrap_or("default").to_string()
-                );
-                arguments.entry("input_file".to_string()).or_insert(
-                    subcommand_matches.value_of("input_file").unwrap_or("default").to_string()
-                );
-                arguments.entry("destination_format".to_string()).or_insert(
-                    subcommand_matches.value_of("destination_format").unwrap_or("default").to_string()
-                );
-                arguments.entry("separator".to_string()).or_insert(
-                    subcommand_matches.value_of("separator").unwrap_or(",").to_string()
-                );
-
-                let exit_code = panbuild::run(command_name, arguments);
-                exit(exit_code);
-            }
-        },
+    let command_name = match matches.subcommand_name() {
+        Some(command_name) => command_name,
         None => {
             eprintln!("Please provide a command to execute.");
             eprintln!("{}", matches.usage());
             exit(1);
         },
-    }
+    };
+
+    let subcommand_matches = match matches.subcommand_matches(command_name) {
+        Some(subcommand_matches) => subcommand_matches,
+        None => {
+            eprintln!("Invalid arguments for command {}", command_name);
+            eprintln!("{}", matches.usage());
+            exit(1);
+        },
+    };
+
+    arguments.entry("input_format".to_string()).or_insert(
+        subcommand_matches.value_of("input_format").unwrap_or("default").to_string()
+    );
+    arguments.entry("input_file".to_string()).or_insert(
+        subcommand_matches.value_of("input_file").unwrap_or("default").to_string()
+    );
+    arguments.entry("destination_format".to_string()).or_insert(
+        subcommand_matches.value_of("destination_format").unwrap_or("default").to_string()
+    );
+    arguments.entry("separator".to_string()).or_insert(
+        subcommand_matches.value_of("separator").unwrap_or(",").to_string()
+    );
+
+    let exit_code = panbuild::run(command_name, arguments);
+    exit(exit_code);
 }
