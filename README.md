@@ -11,7 +11,7 @@ The universal build manifest converter.
 
 > **This repo is a work-in-progress and is not ready for general use.
   The command-line options, command names and file formats might change
-  at any time before the project reaches version 1.0.0.**
+  at any time until the project reaches version 1.0.0.**
 
 The supported packaging systems are:
 * flatpak;
