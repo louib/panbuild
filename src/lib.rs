@@ -159,6 +159,15 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
         return 0;
     }
 
+    if command_name == "detect" {
+        let project_path_string = args.get("project_path").unwrap();
+        let project_path = path::Path::new(project_path_string);
+        if ! project_path.is_dir() {
+            eprintln!("{} is not a directory!", project_path_string);
+        }
+        // TODO see visit_dirs function to complete detect command.
+    }
+
     eprintln!("Finishing...");
     return 0;
 }

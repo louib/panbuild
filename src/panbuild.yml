@@ -114,8 +114,8 @@ subcommands:
     - detect:
         about: Detect the build systems used in a project.
         args:
-            - PROJECT_PATH:
+            - project_path:
                 help: The path of the project.
-                value_name: PROJECT_PATH
+                value_name: project_path
                 required: true
-                index: 0
+                index: 1

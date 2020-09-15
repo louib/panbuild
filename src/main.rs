@@ -61,6 +61,9 @@ fn main() {
     arguments.entry("separator".to_string()).or_insert(
         subcommand_matches.value_of("separator").unwrap_or(",").to_string()
     );
+    arguments.entry("project_path".to_string()).or_insert(
+        subcommand_matches.value_of("project_path").unwrap_or(",").to_string()
+    );
 
     let exit_code = panbuild::run(command_name, arguments);
     exit(exit_code);
