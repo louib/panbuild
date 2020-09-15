@@ -5,6 +5,7 @@ use std::collections::HashMap;
 // The built-in attributes that have meaning on a module are cfg, deprecated, doc,
 // the lint check attributes, path, and no_implicit_prelude.
 // Modules also accept macro attributes.
+#[macro_use]
 extern crate clap;
 
 use clap::{Arg, App, ArgMatches, SubCommand};
@@ -13,112 +14,8 @@ use std::process::{exit};
 const APP_VERSION: &str = "0.0.8";
 
 fn main() {
-    let panbuild_app: App = App::new("panbuild")
-                          .version(APP_VERSION)
-                          .author("louib <code@louib.net>")
-                          .about("The universal build manifest converter.")
-                          .arg(Arg::with_name("version")
-                               .short("V")
-                               .long("version")
-                               .required(false)
-                               .help("Show the version and exit."))
-                          .subcommand(SubCommand::with_name("bootstrap")
-                               .about("Bootstrap a project (create a manifest from nothing!).")
-                               .arg(Arg::with_name("manifest_format")
-                                    .short("f")
-                                    .long("manifest-format")
-                                    .takes_value(true)
-                                    .value_name("FORMAT")
-                                    .required(true)
-                                    .help("The type of build system manifest to generate.")))
-                          .subcommand(SubCommand::with_name("convert")
-                               .about("convert a manifest file.")
-                               .arg(Arg::with_name("input_file")
-                                    .multiple(false)
-                                    .required(true)
-                                    .help("Path of the input build manifest."))
-                               .arg(Arg::with_name("input_format")
-                                    .short("i")
-                                    .long("input-format")
-                                    .takes_value(true)
-                                    .value_name("FORMAT")
-                                    // TODO make it required false after implementing
-                                    // manifest type detection.
-                                    .required(true)
-                                    .help("Format of the manifest provided for the conversion."))
-                               .arg(Arg::with_name("output_format")
-                                    .short("o")
-                                    .long("output-format")
-                                    .takes_value(true)
-                                    .value_name("FORMAT")
-                                    .required(true)
-                                    .help("Format of the manifest to generate.")))
-                          .subcommand(SubCommand::with_name("parse")
-                               .about("parse the manifest file to panbuild's native format.")
-                               .arg(Arg::with_name("input_file")
-                                    .multiple(false)
-                                    .required(true)
-                                    .help("Path of the input build manifest."))
-                               .arg(Arg::with_name("input_format")
-                                    .short("i")
-                                    .long("input-format")
-                                    .takes_value(true)
-                                    .value_name("FORMAT")
-                                    // TODO make it required false after implementing
-                                    // manifest type detection.
-                                    .required(true)
-                                    .help("Format of the manifest provided for the conversion.")))
-                          .subcommand(SubCommand::with_name("get-package-list")
-                               .about("
-                                   Get a comma-separated list of packages parsed from the manifest file.
-                                   The default separator can be changed with the -s option.
-                                ")
-                               .arg(Arg::with_name("input_file")
-                                    .multiple(false)
-                                    .required(true)
-                                    .help("Path of the input build manifest."))
-                               .arg(Arg::with_name("input_format")
-                                    .short("i")
-                                    .long("input-format")
-                                    .takes_value(true)
-                                    .value_name("FORMAT")
-                                    // TODO make it required false after implementing
-                                    // manifest type detection.
-                                    .required(true)
-                                    .help("Format of the manifest provided for the conversion."))
-                               .arg(Arg::with_name("separator")
-                                    .short("s")
-                                    .long("sep")
-                                    .takes_value(true)
-                                    .value_name("'SEP'")
-                                    .required(false)
-                                    .help("Separator used when printing the package list.")))
-                          .subcommand(SubCommand::with_name("dump")
-                               .about("dump a native panbuild manifest file to another format.")
-                               .arg(Arg::with_name("input_file")
-                                    .multiple(false)
-                                    .required(true)
-                                    .help("Path of the input panbuild build manifest."))
-                               .arg(Arg::with_name("output_format")
-                                    .short("o")
-                                    .long("output-format")
-                                    .takes_value(true)
-                                    .value_name("FORMAT")
-                                    .required(true)
-                                    .help("Format of the manifest to generate.")))
-                          .subcommand(SubCommand::with_name("install")
-                               .about("install a package.")
-                               .arg(Arg::with_name("package_name")
-                                    .short("i")
-                                    .long("install")
-                                    .takes_value(true)
-                                    .value_name("PACKAGE_APP_OR_LIB")
-                                    .required(true)
-                                    .help("The name of the package or app to install.")))
-                          .subcommand(SubCommand::with_name("search")
-                               .about("Search the databases."))
-                          .subcommand(SubCommand::with_name("spec")
-                               .about("Show the spec for a manifest type."));
+    let yaml = load_yaml!("panbuild.yml");
+    let panbuild_app: App = App::from_yaml(yaml).version(APP_VERSION);
 
     // Here we could use get_matches_safe and override the error messages.
     // See https://docs.rs/clap/2.33.1/clap/struct.App.html#method.get_matches_safe
