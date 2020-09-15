@@ -25,90 +25,97 @@ subcommands:
                 required: true
                 help: The type of build system manifest to generate.
     - convert:
-      about: convert a manifest file.
-      args:
-        - input_file:
-          multiple: false
-          required: true
-          help: Path of the input build manifest.
-        - input_format:
-          short: i
-          long: input-format
-          takes_value: true
-          value_name: FORMAT
-          # TODO make it not required after implementing manifest type detection.
-          required: true
-          help: Format of the manifest provided for the conversion.
-        - output_format:
-          short: o
-          long: output-format
-          takes_value: true
-          value_name: FORMAT
-          required: true
-          help: Format of the manifest to generate.
+        about: convert a manifest file.
+        args:
+            - input_file:
+                multiple: false
+                required: true
+                help: Path of the input build manifest.
+            - input_format:
+                short: i
+                long: input-format
+                takes_value: true
+                value_name: FORMAT
+                # TODO make it not required after implementing manifest type detection.
+                required: true
+                help: Format of the manifest provided for the conversion.
+            - output_format:
+                short: o
+                long: output-format
+                takes_value: true
+                value_name: FORMAT
+                required: true
+                help: Format of the manifest to generate.
     - parse:
-      about: parse the manifest file to panbuild's native format.
-      args:
-        - input_file:
-          multiple: false
-          required: true
-          help: Path of the input build manifest.
-        - input_format:
-          short: i
-          long: input-format
-          takes_value: true
-          value_name: FORMAT
-          # TODO make it required false after implementing manifest type detection.
-          required: true
-          help: Format of the manifest provided for the conversion.
+        about: parse the manifest file to panbuild's native format.
+        args:
+            - input_file:
+                multiple: false
+                required: true
+                help: Path of the input build manifest.
+            - input_format:
+                short: i
+                long: input-format
+                takes_value: true
+                value_name: FORMAT
+                # TODO make it required false after implementing manifest type detection.
+                required: true
+                help: Format of the manifest provided for the conversion.
     - get-package-list:
-      about: Get a comma-separated list of packages parsed from the manifest file.
-        The default separator can be changed with the -s option.
-      args:
-        - input_file:
-          multiple: false
-          required: true
-          help: Path of the input build manifest.
-        - input_format:
-          short: i
-          long: input-format
-          takes_value: true
-          value_name: FORMAT
-          # TODO make it required false after implementing manifest type detection.
-          required: true
-          help: Format of the manifest provided for the conversion.
-        - separator:
-          short: s
-          long: sep
-          takes_value: true
-          value_name: SEP
-          required: false
-          help: Separator used when printing the package list.
+        about: Get a comma-separated list of packages parsed from the manifest file. The default separator can be changed with the -s option.
+        args:
+            - input_file:
+                multiple: false
+                required: true
+                help: Path of the input build manifest.
+            - input_format:
+                short: i
+                long: input-format
+                takes_value: true
+                value_name: FORMAT
+                # TODO make it required false after implementing manifest type detection.
+                required: true
+                help: Format of the manifest provided for the conversion.
+            - separator:
+                short: s
+                long: sep
+                takes_value: true
+                value_name: SEP
+                required: false
+                help: Separator used when printing the package list.
     - dump:
-      about: Dump a native panbuild manifest file to another format.
-      args:
-        - input_file:
-          multiple: false
-          required: true
-          help: Path of the input panbuild build manifest.
-        - output_format:
-          short: o
-          long: output-format
-          takes_value: true
-          value_name: FORMAT
-          required: true
-          help: Format of the manifest to generate.
+        about: Dump a native panbuild manifest file to another format.
+        args:
+            - input_file:
+                multiple: false
+                required: true
+                help: Path of the input panbuild build manifest.
+            - output_format:
+                short: o
+                long: output-format
+                takes_value: true
+                value_name: FORMAT
+                required: true
+                help: Format of the manifest to generate.
     - install:
-      about: install a package.
-      args:
-        - package_name:
-          short: i
-          long: install
-          takes_value: true
-          value_name: PACKAGE_APP_OR_LIB
-          required: true
-          help: The name of the package or app to install.
+        about: install a package.
+        args:
+            - package_name:
+                short: i
+                long: install
+                takes_value: true
+                value_name: PACKAGE_APP_OR_LIB
+                required: true
+                help: The name of the package or app to install.
     - search:
-      about: Search the databases.
+        about: Search the databases.
     - spec:
-      about: Show the spec for a manifest type.
+        about: Show the spec for a manifest type.
+    - detect:
+        about: Detect the build systems used in a project.
+        args:
+            - PROJECT_PATH:
+                help: The path of the project.
+                value_name: PROJECT_PATH
+                required: true
+                index: 0
