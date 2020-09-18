@@ -1,6 +1,8 @@
 // See https://wiki.archlinux.org/index.php/PKGBUILD
 // And
 // https://jlk.fjfi.cvut.cz/arch/manpages/man/BUILDINFO.5
+// And
+// https://wiki.archlinux.org/index.php/Arch_package_guidelines
 // for details on the pkgbuild format.
 
 pub fn dump(manifest: &crate::manifests::manifest::AbstractManifest) -> String {

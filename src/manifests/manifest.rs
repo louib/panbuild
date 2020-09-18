@@ -288,6 +288,8 @@ impl Default for ModuleType {
 /// Generic representation of a software module.
 /// TODO use the list of all debian packages at
 /// https://packages.debian.org/stable/allpackages
+/// TODO use the list of all arch packages at
+/// https://www.archlinux.org/packages/
 pub struct AbstractModule {
     pub module_type: ModuleType,
     pub name: String,
