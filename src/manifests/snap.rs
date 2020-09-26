@@ -1,9 +1,11 @@
 extern crate yaml_rust;
 
+use std::collections::HashMap;
+
+use serde::{Serialize, Deserialize};
+
 use linked_hash_map::{LinkedHashMap};
 use yaml_rust::{Yaml, YamlLoader, YamlEmitter};
-
-use std::collections::HashMap;
 
 
 // TODO is it relevant ? https://snapcraft.io/docs/environment-variables
@@ -376,6 +378,10 @@ pub const ALLOWED_BUILD_ATTRIBUTES: [&str; 4] = [
 // details on how apps and parts are configured within snapcraft.yaml.
 // <part-name> represents the specific name of a building block which can be
 // then referenced by the command line tool (i.e. snapcraft).
+#[derive(Deserialize, Serialize)]
+#[derive(Default)]
+#[serde(rename_all = "kebab-case")]
+#[serde(default)]
 struct SnapcraftPart {
     // Ensures that all the <part-names> listed in after are staged before this part begins its lifecycle.
     pub after: Vec<String>,
