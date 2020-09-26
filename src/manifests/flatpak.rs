@@ -23,8 +23,10 @@ const DEFAULT_SDK: &str = "org.freedesktop.Sdk";
 struct FlatpakManifest {
     // Name of the application.
     pub app_name: String,
+
     // A string defining the application id.
     pub app_id: String,
+
     // The branch to use when exporting the application.
     // If this is unset the defaults come from the default-branch option.
     //
@@ -33,162 +35,134 @@ struct FlatpakManifest {
     // to use the default-branch key instead, because you can then override the default using
     // --default-branch when building for instance a test build.
     pub branch: String,
+
     // The default branch to use when exporting the application. Defaults to master.
     // This key can be overridden by the --default-branch commandline option.
     pub default_branch: String,
 
+    // The collection ID of the repository, defaults to being unset.
+    // Setting a globally unique collection ID allows the apps in the
+    // repository to be shared over peer to peer systems without needing further configuration.
+    // If building in an existing repository, the collection ID must match the existing
+    // configured collection ID for that repository.
+    pub collection_id: Option<String>,
+
+    // The name of the runtime that the application uses.
+    pub runtime: String,
+
+    // The version of the runtime that the application uses, defaults to master.
+    pub runtime_version: String,
+
+    // The name of the development runtime that the application builds with.
+    pub sdk: String,
+
+    // Initialize the (otherwise empty) writable /var in the build with a copy of this runtime.
+    pub var: Option<String>,
+
+    // Use this file as the base metadata file when finishing.
+    pub metadata: String,
+
+    // Build a new runtime instead of an application.
+    pub build_runtime: bool,
+
+    // Build an extension.
+    pub build_extension: bool,
+
+    // Start with the files from the specified application.
+    // This can be used to create applications that extend another application.
+    pub base: String,
+
+    // Use this specific version of the application specified in base.
+    // If unspecified, this uses the value specified in branch
+    pub base_version: String,
+
+    // Install these extra extensions from the base application when
+    // initializing the application directory.
+    pub base_extensions: Vec<String>,
+
+    // Inherit these extra extensions points from the base application or
+    // sdk when finishing the build.
+    pub inherit_extensions: Vec<String>,
+
+    // Inherit these extra extensions points from the base application or sdk
+    // when finishing the build, but do not inherit them into the platform.
+    pub inherit_sdk_extensions: Vec<String>,
+
+    // Inherit these extra extensions points from the base application or sdk when finishing the build,
+    // but do not inherit them into the platform.
+    pub build_options: Vec<String>,
+
+    // Add these tags to the metadata file.
+    pub tags: Vec<String>,
+
+    // An array of strings specifying the modules to be built in order.
+    // String members in the array are interpreted as the name of a separate
+    // json or yaml file that contains a module. See below for details.
+    pub modules: Vec<String>,
+
+    // This is a dictionary of extension objects.
+    // The key is the name of the extension.
+    // See below for details.
+    pub add_extensions: Vec<String>,
+
+    // This is a dictionary of extension objects similar to add-extensions.
+    // The main difference is that the extensions are added early and are
+    // available for use during the build.
+    pub add_build_extensions: Vec<String>,
+
+    // An array of file patterns that should be removed at the end.
+    // Patterns starting with / are taken to be full pathnames (without the /app prefix),
+    // otherwise they just match the basename.
+    pub cleanup: Vec<String>,
+
+    // An array of commandlines that are run during the cleanup phase.
+    pub cleanup_commands: Vec<String>,
+
+    // Extra files to clean up in the platform.
+    pub cleanup_platform: Vec<String>,
+
+    // An array of commandlines that are run during the cleanup phase of the platform.
+    pub cleanup_platform_commands: Vec<String>,
+
+    // An array of commandlines that are run after importing the base platform,
+    // but before applying the new files from the sdk. This is a good place to e.g. delete
+    // things from the base that may conflict with the files added in the sdk.
+    pub prepare_platform_commands: Vec<String>,
+
+    // An array of arguments passed to the flatpak build-finish command.
+    pub finish_args: Vec<String>,
+
+    // Any desktop file with this name will be renamed to a name
+    // based on id during the cleanup phase.
+    pub rename_desktop_file: String,
+
+    // Any appdata file with this name will be renamed to a name based
+    // on id during the cleanup phase.
+    pub rename_appdata_file: String,
+
+    // Any icon with this name will be renamed to a name based on id during
+    // the cleanup phase. Note that this is the icon name, not the full filenames,
+    // so it should not include a filename extension.
+    pub rename_icon: String,
+
+    // Replace the appdata project-license field with this string.
+    // This is useful as the upstream license is typically only about
+    // the application itself, whereas the bundled app can contain other
+    // licenses too.
+    pub appdata_license: String,
+
+    // If rename-icon is set, keep a copy of the old icon file.
+    pub copy_icon: bool,
+
+    // This string will be prefixed to the Name key in the main application desktop file.
+    pub desktop_file_name_prefix: String,
+
+    // This string will be suffixed to the Name key in the main application desktop file.
+    pub desktop_file_name_suffix: String,
 }
 
-// The collection ID of the repository, defaults to being unset.
-// Setting a globally unique collection ID allows the apps in the
-// repository to be shared over peer to peer systems without needing further configuration.
-// If building in an existing repository, the collection ID must match the existing
-// configured collection ID for that repository.
-// string
-const COLLECTION_ID: &str = "collection-id";
 
-// The name of the runtime that the application uses.
-// string
-const RUNTIME: &str = "runtime";
 
-// The version of the runtime that the application uses, defaults to master.
-// string
-const RUNTIME_VERSION: &str = "runtime-version";
-
-// The name of the development runtime that the application builds with.
-// string
-const SDK: &str = "sdk";
-
-// Initialize the (otherwise empty) writable /var in the build with a copy of this runtime.
-// string
-const VAR: &str = "var";
-
-// Use this file as the base metadata file when finishing.
-// string
-const METADATA: &str = "metadata";
-
-// Build a new runtime instead of an application.
-// bool
-const BUILD_RUNTIME: &str = "build-runtime";
-
-// Build an extension.
-// bool
-const BUILD_EXTENSION: &str = "build-extension";
-
-// Start with the files from the specified application.
-// This can be used to create applications that extend another application.
-// string
-const BASE: &str = "base";
-
-// Use this specific version of the application specified in base.
-// If unspecified, this uses the value specified in branch
-// string
-const BASE_VERSION: &str = "base-version";
-
-// Install these extra extensions from the base application when
-// initializing the application directory.
-// list of strings
-const BASE_EXTENSIONS: &str = "base-extensions";
-
-// Inherit these extra extensions points from the base application or
-// sdk when finishing the build.
-// list of strings
-const INHERIT_EXTENSIONS: &str = "inherit-extensions";
-
-// Inherit these extra extensions points from the base application or sdk
-// when finishing the build, but do not inherit them into the platform.
-// list of strings
-const INHERIT_SDK_EXTENSIONS: &str = "inherit-sdk-extensions";
-
-// Inherit these extra extensions points from the base application or sdk when finishing the build,
-// but do not inherit them into the platform.
-// list of strings
-// const BUILD_OPTIONS: &str = "build-options";
-
-// Add these tags to the metadata file.
-// list of strings
-const TAGS: &str = "tags";
-
-// An array of strings specifying the modules to be built in order.
-// String members in the array are interpreted as the name of a separate
-// json or yaml file that contains a module. See below for details.
-// list of strings
-const MODULES: &str = "modules";
-
-// This is a dictionary of extension objects.
-// The key is the name of the extension.
-// See below for details.
-// list of strings
-const ADD_EXTENSIONS: &str = "add-extensions";
-
-// This is a dictionary of extension objects similar to add-extensions.
-// The main difference is that the extensions are added early and are
-// available for use during the build.
-// list of strings
-const ADD_BUILD_EXTENSIONS: &str = "add-build-extensions";
-
-// An array of file patterns that should be removed at the end.
-// Patterns starting with / are taken to be full pathnames (without the /app prefix),
-// otherwise they just match the basename.
-// list of strings
-const CLEANUP: &str = "cleanup";
-
-// An array of commandlines that are run during the cleanup phase.
-// list of strings
-const CLEANUP_COMMANDS: &str = "cleanup-commands";
-
-// Extra files to clean up in the platform.
-// list of strings
-const CLEANUP_PLATFORM: &str = "cleanup-platform";
-
-// An array of commandlines that are run during the cleanup phase of the platform.
-// list of strings
-const CLEANUP_PLATFORM_COMMANDS: &str = "cleanup-platform-commands";
-
-// An array of commandlines that are run after importing the base platform,
-// but before applying the new files from the sdk. This is a good place to e.g. delete
-// things from the base that may conflict with the files added in the sdk.
-// list of strings
-const PREPARE_PLATFORM_COMMANDS: &str = "prepare-platform-commands";
-
-// An array of arguments passed to the flatpak build-finish command.
-// list of strings
-const FINISH_ARGS: &str = "finish-args";
-
-// Any desktop file with this name will be renamed to a name
-// based on id during the cleanup phase.
-// string
-const RENAME_DESKTOP_FILE: &str = "rename-desktop-file";
-
-// Any appdata file with this name will be renamed to a name based
-// on id during the cleanup phase.
-// string
-const RENAME_APPDATA_FILE: &str = "rename-appdata-file";
-
-// Any icon with this name will be renamed to a name based on id during
-// the cleanup phase. Note that this is the icon name, not the full filenames,
-// so it should not include a filename extension.
-// string
-const RENAME_ICON: &str = "rename-icon";
-
-// Replace the appdata project-license field with this string.
-// This is useful as the upstream license is typically only about
-// the application itself, whereas the bundled app can contain other
-// licenses too.
-// string
-const APPDATA_LICENSE: &str = "appdata-license";
-
-// If rename-icon is set, keep a copy of the old icon file.
-// bool
-const COPY_ICON: &str = "copy-icon";
-
-// This string will be prefixed to the Name key in the main application desktop file.
-// string
-const DESKTOP_FILE_NAME_PREFIX: &str = "desktop-file-name-prefix";
-
-// This string will be suffixed to the Name key in the main application desktop file.
-// string
-const DESKTOP_FILE_NAME_SUFFIX: &str = "desktop-file-name-suffix";
 
 
 
