@@ -81,7 +81,7 @@ struct FlatpakManifest {
 
     // Inherit these extra extensions points from the base application or sdk when finishing the build,
     // but do not inherit them into the platform.
-    pub build_options: Vec<String>,
+    pub build_options: FlatpakBuildOptions,
 
     // Add these tags to the metadata file.
     pub tags: Vec<String>,
@@ -89,7 +89,7 @@ struct FlatpakManifest {
     // An array of strings specifying the modules to be built in order.
     // String members in the array are interpreted as the name of a separate
     // json or yaml file that contains a module. See below for details.
-    pub modules: Vec<String>,
+    pub modules: Vec<FlatpakModule>,
 
     // This is a dictionary of extension objects.
     // The key is the name of the extension.
@@ -152,143 +152,125 @@ struct FlatpakManifest {
     pub desktop_file_name_suffix: String,
 }
 
-
-
-
-
-
-// **** Module Fields.
 // Each module specifies a source that has to be separately built and installed.
 // It contains the build options and a list of sources to download and extract before
 // building.
 //
 // Modules can be nested, in order to turn related modules on and off with a single key.
-//
-// These are the properties that are accepted:
-// The name of the module, used in e.g. build logs. The name is also
-// used for constructing filenames and commandline arguments, therefore using spaces or '/' in
-// this string is a bad idea.
-const MODULE_NAME: &str = "name";
+#[derive(Deserialize, Serialize)]
+#[derive(Default)]
+#[serde(rename_all = "kebab-case")]
+struct FlatpakModule {
+    // The name of the module, used in e.g. build logs. The name is also
+    // used for constructing filenames and commandline arguments,
+    // therefore using spaces or '/' in this string is a bad idea.
+    pub name: String,
 
-// If true, skip this module
-// (boolean)
-const MODULE_DISABLED: &str = "disabled";
+    // If true, skip this module
+    pub disabled: bool,
 
-// An array of objects defining sources that will be downloaded and extracted in order. String members in the array are interpreted as the name of a separate
-// json or yaml file that contains sources. See below for details.
-// (array of objects or strings)
-const SOURCES: &str = "sources";
+    // An array of objects defining sources that will be downloaded and extracted in order.
+    // String members in the array are interpreted as the name of a separate
+    // json or yaml file that contains sources. See below for details.
+    // FIXME this can also be a string, which represents a local path to a module file.
+    pub sources: Vec<FlatpakSource>,
 
-// An array of options that will be passed to configure
-// (array of strings)
-// const CONFIG_OPTS: &str = "";
+    // An array of options that will be passed to configure
+    pub config_opts: Vec<String>,
 
-// An array of arguments that will be passed to make
-// (array of strings)
-// const MAKE_ARGS: &str = "";
+    // An array of arguments that will be passed to make
+    pub make_args: Vec<String>,
 
-// An array of arguments that will be passed to make install
-// (array of strings)
-// const MAKE_INSTALL_ARGS: &str = "";
-// FIXME why is this also defined in the build options?
+    // An array of arguments that will be passed to make install
+    pub make_install_args: Vec<String>,
 
-// If true, remove the configure script before starting build
-// (boolean)
-const RM_CONFIGURE: &str = "rm-configure";
+    // If true, remove the configure script before starting build
+    pub rm_configure: bool,
 
-// Ignore the existence of an autogen script
-// (boolean)
-const NO_AUTOGEN: &str = "no-autogen";
+    // Ignore the existence of an autogen script
+    pub no_autogen: bool,
 
-// Don't call make with arguments to build in parallel
-// (boolean)
-const NO_PARALLEL_MAKE: &str = "no-parallel-make";
+    // Don't call make with arguments to build in parallel
+    pub no_parallel_make: bool,
 
-// Name of the rule passed to make for the install phase, default is install
-// (string)
-const INSTALL_RULE: &str = "install-rule";
+    // Name of the rule passed to make for the install phase, default is install
+    pub install_rule: String,
 
-// Don't run the make install (or equivalent) stage
-// (boolean)
-const NO_MAKE_INSTALL: &str = "no-make-install";
+    // Don't run the make install (or equivalent) stage
+    pub no_make_install: bool,
 
-// Don't fix up the *.py[oc] header timestamps for ostree use.
-// (boolean)
-const NO_PYTHON_TIMESTAMP_FIX: &str = "no-python-timestamp-fix";
+    // Don't fix up the *.py[oc] header timestamps for ostree use.
+    pub no_python_timestamp_fix: bool,
 
-// Use cmake instead of configure (deprecated: use buildsystem instead)
-// (boolean)
-const CMAKE: &str = "cmake";
+    // Use cmake instead of configure (deprecated: use buildsystem instead)
+    pub cmake: bool,
 
-// Build system to use: autotools, cmake, cmake-ninja, meson, simple, qmake
-// (string)
-const BUILDSYSTEM: &str = "buildsystem";
+    // Build system to use: autotools, cmake, cmake-ninja, meson, simple, qmake
+    pub buildsystem: String,
 
-// Use a build directory that is separate from the source directory
-// (boolean)
-const BUILDDIR: &str = "builddir";
+    // Use a build directory that is separate from the source directory
+    pub builddir: bool,
 
-// Build inside this subdirectory of the extracted sources
-// (string)
-const SUBDIR: &str = "subdir";
+    // Build inside this subdirectory of the extracted sources
+    pub subdir: String,
 
-// A build options object that can override global options
-// (object)
-const BUILD_OPTIONS: &str = "build-options";
+    // A build options object that can override global options
+    pub build_options: FlatpakBuildOptions,
 
-// An array of commands to run during build (between make and make install if those are used).
-// This is primarily useful when using the "simple" buildsystem.
-// Each command is run in /bin/sh -c, so it can use standard POSIX shell syntax such as piping output.
-// (array of strings)
-const BUILD_COMMANDS: &str = "build-commands";
+    // An array of commands to run during build (between make and make install if those are used).
+    // This is primarily useful when using the "simple" buildsystem.
+    // Each command is run in /bin/sh -c, so it can use standard POSIX shell syntax such as piping output.
+    pub build_commands: Vec<String>,
 
-// An array of shell commands that are run after the install phase. Can for example clean up the install dir, or install extra files.
-// (array of strings)
-const POST_INSTALL: &str = "post-install";
+    // An array of shell commands that are run after the install phase.
+    // Can for example clean up the install dir, or install extra files.
+    pub post_install: Vec<String>,
 
-// An array of file patterns that should be removed at the end. Patterns starting with / are taken to be full pathnames (without the /app prefix), otherwise
-// they just match the basename. Note that any patterns will only match files installed by this module.
-// (array of strings)
-// const CLEANUP: &str = "cleanup";
+    // An array of file patterns that should be removed at the end.
+    // Patterns starting with / are taken to be full pathnames (without the /app prefix), otherwise
+    // they just match the basename. Note that any patterns will only match
+    // files installed by this module.
+    pub cleanup: Vec<String>,
 
-// The way the builder works is that files in the install directory are hard-links to the cached files, so you're not allowed to modify them in-place. If you
-// list a file in this then the hardlink will be broken and you can modify it. This is a workaround, ideally installing files should replace files, not modify
-// existing ones.
-// (array of strings)
-const ENSURE_WRITABLE: &str = "ensure-writable";
+    // The way the builder works is that files in the install directory are hard-links to the cached files,
+    // so you're not allowed to modify them in-place. If you list a file in this then the hardlink
+    // will be broken and you can modify it. This is a workaround, ideally installing files should
+    // replace files, not modify existing ones.
+    pub ensure_writable: Vec<String>,
 
-// If non-empty, only build the module on the arches listed.
-// (array of strings)
-const ONLY_ARCHES: &str = "only-arches";
+    // If non-empty, only build the module on the arches listed.
+    pub only_arches: Vec<String>,
 
-// Don't build on any of the arches listed.
-// (array of strings)
-const SKIP_ARCHES: &str = "skip-arches";
+    // Don't build on any of the arches listed.
+    pub skip_arches: Vec<String>,
 
-// Extra files to clean up in the platform.
-// (array of strings)
-// const CLEANUP_PLATFORM: &str = "cleanup-platform";
+    // Extra files to clean up in the platform.
+    pub cleanup_platform: Vec<String>,
 
-// If true this will run the tests after installing.
-// (boolean)
-const RUN_TESTS: &str = "run-tests";
+    // If true this will run the tests after installing.
+    // (boolean)
+    pub run_tests: bool,
 
-// The target to build when running the tests. Defaults to "check" for make and "test" for ninja. Set to empty to disable.
-// (string)
-const TEST_RULE: &str = "test-rule";
+    // The target to build when running the tests. Defaults to "check" for make and "test" for ninja.
+    // Set to empty to disable.
+    pub test_rule: String,
 
-// Array of commands to run during the tests.
-// (array of strings)
-const TEST_COMMANDS: &str = "test-commands";
+    // Array of commands to run during the tests.
+    pub test_commands: Vec<String>,
 
-// An array of objects specifying nested modules to be built before this one.
-// String members in the array are interpreted as names of a separate json or yaml file that contains a module.
-// (array of objects or strings)
-// TODO extract this
-// const MODULES: &str = "modules";
+    // An array of objects specifying nested modules to be built before this one.
+    // String members in the array are interpreted as names of a separate json or
+    // yaml file that contains a module.
+    pub modules: Vec<FlatpakModule>,
+}
 
 
+#[derive(Deserialize, Serialize)]
+#[derive(Default)]
+#[serde(rename_all = "kebab-case")]
+struct FlatpakSource {
 
+}
 
 // **** Sources
 // The sources are a list pointer to the source code that  needs to be extracted into the build directory before the build starts.
@@ -468,6 +450,15 @@ const NO_DEBUGINFO_COMPRESSION: &str = "no-debuginfo-compression";
 // (object)
 const ARCH: &str = "arch";
 
+
+#[derive(Deserialize, Serialize)]
+#[derive(Default)]
+#[serde(rename_all = "kebab-case")]
+struct FlatpakBuildOptions {
+    pub append_path: String,
+    pub build_args: Vec<String>,
+    // pub env is a map of environment variables.
+}
 
 pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
     let mut response = crate::manifests::manifest::AbstractManifest::default();
