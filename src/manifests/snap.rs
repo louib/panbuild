@@ -367,7 +367,6 @@ pub const ALLOWED_BUILD_ATTRIBUTES: [&str; 4] = [
 
 
 
-// **** Parts fields
 // The main building blocks of a snap are parts.
 // They are used to declare pieces of code that will be pulled into your snap package.
 // The parts keys and values in snapcraft.yaml detail how parts are configured and built
@@ -377,219 +376,210 @@ pub const ALLOWED_BUILD_ATTRIBUTES: [&str; 4] = [
 // details on how apps and parts are configured within snapcraft.yaml.
 // <part-name> represents the specific name of a building block which can be
 // then referenced by the command line tool (i.e. snapcraft).
-//
-const PARTS: &str = "parts";
-// The following are keys that can be used within parts. (for example, parts.<part-name>.plugin):
-//
-// Ensures that all the <part-names> listed in after are staged before this part begins its lifecycle.
-// list of strings
-const AFTER: &str = "after";
-// A list of named attributes to modify the behaviour of plugins.
-// list of strings
-const BUILD_ATTRIBUTES: &str = "build-attributes";
-// A list of environment variable assignments that is applied during the build step,
-// it is exported in order which allows for later values to override (or modify) earlier values.
-//
-// parts:
-//  _part_name_:
-//    build-environment:
-//    - LANG: C.UTF-8
-//    - LC_ALL: C.UTF-8
-// list of strings
-const BUILD_ENVIRONMENT: &str = "build-environment";
-// A list of packages required to build a snap.
-//
-// Packages are installed using the host’s package manager, such as apt or dnf,
-// and are required for <part-name> to build correctly.
-// This entry supports additional syntax, for more information refer to Advanced grammar.
-//
-// Example: [ libssl-dev, libssh-dev, libncursesw5-dev]
-// list of strings
-const BUILD_PACKAGES: &str = "build-packages";
-// A list of snap names to install that are necessary to build <part-name>.
-//
-// If a specific channel is required, the syntax is of the form <snap-name>/<channel>.
-// This entry supports additional syntax, for more information refer to Advanced grammar
-//
-// Example: build-snaps: [go/1.13/stable]
-// list of strings
-const BUILD_SNAPS: &str = "build-snaps";
-// A key to represent a group of files, or a single file.
-//
-// See Snapcraft filesets for further details.
-// list of strings
-const FILESETS: &str = "filesets";
-// Runs a script after the plugin’s build step.
-//
-// The shell script defined here is run after the build step of the
-// plugin defined in parts.<part-name>.plugin starts.
-// The working directory is the base build directory for the given part.
-// The defined script is run with /bin/sh and set -e.
-// A set of Environment Variables will be available to the script.
-//
-// The release of Snapcraft 3.0 made this key obsolete. Use override-build instead.
-// string
-const INSTALL: &str = "install";
-// A map of files to rename.
-//
-// In the key/value pair, the key represents the path of a file inside the part
-// and the value represents how the file is going to be staged.
-//
-// Example: bin/snapcraftctl: bin/scriptlet-bin/snapcraftctl
-// Dictionary of strings to strings.
-const ORGANIZE: &str = "organize";
-// Replaces a plugin’s default build process with a script.
-//
-// The shell script defined here replaces the build step of the plugin,
-// defined in parts.<part-name>.plugin.
-//
-// The working directory is the base build directory for the given part.
-// The defined script is run with /bin/sh and set -e.
-// A set of Environment Variables will be available to the script.
-//
-// To run Snapcraft’s original build implementation from within override-build, run snapcraftctl build.
-// This can be run before or after any custom script, or omitted entirely.
-// string
-const OVERRIDE_BUILD: &str = "override-build";
-// Replaces a plugin’s default prime process with a script.
-//
-// The shell script defined here replaces the prime step of the plugin,
-// defined in parts.<part-name>.plugin.
-// The working directory is the base prime directory for the given part.
-// The defined script is run with /bin/sh and set -e.
-// A set of Environment Variables will be available to the script.
-//
-// To run Snapcraft’s original prime step implementation from within override-prime,
-// run snapcraftctl prime.
-// This can be run before or after any custom script, or omitted entirely.
-// string
-const OVERRIDE_PRIME: &str = "override-prime";
-// Replaces a plugin’s default pull process with a script.
-//
-// The shell script defined here replaces the pull step of the plugin,
-// defined in parts.<part-name>.plugin.
-// The working directory is the base pull directory for the given part.
-// The defined script is run with /bin/sh and set -e.
-// A set of Environment Variables will be available to the script.
-//
-// To run Snapcraft’s original pull stage implementation from within override-pull, run snapcraftctl pull.
-// This can be run before or after any custom script, or omitted entirely.
-// string
-const OVERRIDE_PULL: &str = "override-pull";
-// Replaces a plugin’s default stage process with a script.
-//
-// The shell script defined here replaces the stage step of the plugin,
-// defined in parts.<part-name>.plugin.
-// The working directory is the base stage directory for the given part.
-// The defined script is run with /bin/sh and set -e.
-// A set of Environment Variables will be available to the script.
-//
-// To run Snapcraft’s original stage implementation from within override-stage, run snapcraftctl stage.
-// This can be run before or after any custom script, or omitted entirely.
-// string
-const OVERRIDE_STAGE: &str = "override-stage";
-// Defines the content to adopt when using external metadata.
-//
-// It is a relative path to a supported metadata file from the part source,
-// build or install directory (SNAPCRAFT_PART_SRC, SNAPCRAFT_PART_BUILD, SNAPCRAFT_PART_INSTALL).
-//
-// See Using external metadata for more details.
-// string
-const PARSE_INFO: &str = "parse-info";
-// The plugin to drive the build process.
-//
-// Every part drives its build through a plugin, this entry declares the
-// plugin that will drive the build process for <part-name>.
-// Refer to snapcraft plugins for more information on the available plugins and the
-// specific attributes they add to the parts.<part-name>. namespace.
-// See https://snapcraft.io/docs/supported-plugins for the available plugins.
-// string
-const PLUGIN: &str = "plugin";
-// Runs a script before the plugin’s build step.
-//
-// The script is run before the build step defined for parts.<part-name>.plugin starts.
-// The working directory is the base build directory for the given part.
-// The defined script is run with /bin/sh and set -e.
-// A set of Environment Variables will be available to the script.
-//
-// The release of Snapcraft 3.0 made this key obsolete. Use override-build instead.
-// string
-const PREPARE: &str = "prepare";
-// A list of files from <part-name> to prime.
-//
-// Rules applying to the list here are the same as those of filesets.
-// Referencing of fileset keys is done with a $ prefixing the fileset key,
-// which will expand with the value of such key.
-// list of strings
-const PRIME: &str = "prime";
-// A URL or path to a source tree to build.
-//
-// This can be a local path or remote, and can refer to a directory tree,
-// a compressed archive or a revision control repository.
-// This entry supports additional syntax, for more information refer to Advanced grammar
-// string
-const SOURCE: &str = "source";
-// Work on a specific branch for source repositories under version control.
-// string
-const SOURCE_BRANCH: &str = "source-branch";
-// Used when source represents a file.
-//
-// Takes the syntax <algorithm>/<digest>, where <algorithm> can be any of:
-//   md5,
-//   sha1,
-//   sha224,
-//   sha256,
-//   sha384,
-//   sha512,
-//   sha3_256,
-//   sha3_384,
-//   sha3_512.
-// When set, the source is cached for multiple uses in different snapcraft projects.
-// string
-const SOURCE_CHECKSUM: &str = "source-checksum";
-// Work on a specific commit for source repositories under version control.
-// string
-const SOURCE_COMMIT: &str = "source-commit";
-// Depth of history for sources using version control.
-//
-// Source repositories under version control are cloned or checked out with full history.
-// Specifying a depth will truncate the history to the specified number of commits.
-// integer
-const SOURCE_DEPTH: &str = "source-depth";
-// A path within the source to set as the working directory when building.
-// string
-const SOURCE_SUBDIR: &str = "source-subdir";
-// Work on a specific tag for source repositories under version control.
-// string
-const SOURCE_TAG: &str = "source-tag";
-// Used when the type of source entry cannot be detected.
-// string
-const SOURCE_TYPE: &str = "source-type";
-// A list of files from <part-name> to stage.
-//
-// Rules applying to the list here are the same as those of filesets.
-// Referencing of fileset keys is done with a $ prefixing the fileset key,
-// which will expand with the value of such key.
-// list of strings
-const STAGE: &str = "stage";
-// A list of packages required at runtime by a snap.
-//
-// Packages are required by <part-name> to run. They are fetched using the host’s package manager,
-// such as apt or dnf, and are unpacked into the snap being built.
-// This entry supports additional syntax, for more information refer to Advanced grammar.
-//
-// Example: [python-zope.interface, python-bcrypt]
-// list of strings
-const STAGE_PACKAGES: &str = "stage-packages";
-// A list of snaps required at runtime by a snap.
-//
-// Snaps are required by <part-name> to run. They are fetched using snap download,
-// and are unpacked into the snap being built. This entry supports additional syntax,
-// for more information refer to Advanced grammar.
-//
-// Example: [hello, black/latest/edge]
-// list of strings
-const STAGE_SNAPS: &str = "stage-snaps";
+struct SnapcraftPart {
+    // Ensures that all the <part-names> listed in after are staged before this part begins its lifecycle.
+    pub after: Vec<String>,
+
+    // A list of named attributes to modify the behaviour of plugins.
+    pub build_attributes: Vec<String>,
+
+    // A list of environment variable assignments that is applied during the build step,
+    // it is exported in order which allows for later values to override (or modify) earlier values.
+    pub build_environment: HashMap<String, String>,
+
+    // A list of packages required to build a snap.
+    //
+    // Packages are installed using the host’s package manager, such as apt or dnf,
+    // and are required for <part-name> to build correctly.
+    // This entry supports additional syntax, for more information refer to Advanced grammar.
+    //
+    // Example: [ libssl-dev, libssh-dev, libncursesw5-dev]
+    pub build_packages: Vec<String>,
+
+    // A list of snap names to install that are necessary to build <part-name>.
+    //
+    // If a specific channel is required, the syntax is of the form <snap-name>/<channel>.
+    // This entry supports additional syntax, for more information refer to Advanced grammar
+    //
+    // Example: build-snaps: [go/1.13/stable]
+    pub build_snaps: Vec<String>,
+
+    // A key to represent a group of files, or a single file.
+    //
+    // See Snapcraft filesets for further details.
+    pub filesets: Vec<String>,
+
+    // Runs a script after the plugin’s build step.
+    //
+    // The shell script defined here is run after the build step of the
+    // plugin defined in parts.<part-name>.plugin starts.
+    // The working directory is the base build directory for the given part.
+    // The defined script is run with /bin/sh and set -e.
+    // A set of Environment Variables will be available to the script.
+    //
+    // The release of Snapcraft 3.0 made this key obsolete. Use override-build instead.
+    pub install: String,
+
+    // A map of files to rename.
+    //
+    // In the key/value pair, the key represents the path of a file inside the part
+    // and the value represents how the file is going to be staged.
+    //
+    // Example: bin/snapcraftctl: bin/scriptlet-bin/snapcraftctl
+    pub organize: HashMap<String, String>,
+
+    // Replaces a plugin’s default build process with a script.
+    //
+    // The shell script defined here replaces the build step of the plugin,
+    // defined in parts.<part-name>.plugin.
+    //
+    // The working directory is the base build directory for the given part.
+    // The defined script is run with /bin/sh and set -e.
+    // A set of Environment Variables will be available to the script.
+    //
+    // To run Snapcraft’s original build implementation from within override-build, run snapcraftctl build.
+    // This can be run before or after any custom script, or omitted entirely.
+    pub override_build: String,
+
+    // Replaces a plugin’s default prime process with a script.
+    //
+    // The shell script defined here replaces the prime step of the plugin,
+    // defined in parts.<part-name>.plugin.
+    // The working directory is the base prime directory for the given part.
+    // The defined script is run with /bin/sh and set -e.
+    // A set of Environment Variables will be available to the script.
+    //
+    // To run Snapcraft’s original prime step implementation from within override-prime,
+    // run snapcraftctl prime.
+    // This can be run before or after any custom script, or omitted entirely.
+    pub override_prime: String,
+
+    // Replaces a plugin’s default pull process with a script.
+    //
+    // The shell script defined here replaces the pull step of the plugin,
+    // defined in parts.<part-name>.plugin.
+    // The working directory is the base pull directory for the given part.
+    // The defined script is run with /bin/sh and set -e.
+    // A set of Environment Variables will be available to the script.
+    //
+    // To run Snapcraft’s original pull stage implementation from within override-pull, run snapcraftctl pull.
+    // This can be run before or after any custom script, or omitted entirely.
+    pub override_pull: String,
+
+    // Replaces a plugin’s default stage process with a script.
+    //
+    // The shell script defined here replaces the stage step of the plugin,
+    // defined in parts.<part-name>.plugin.
+    // The working directory is the base stage directory for the given part.
+    // The defined script is run with /bin/sh and set -e.
+    // A set of Environment Variables will be available to the script.
+    //
+    // To run Snapcraft’s original stage implementation from within override-stage, run snapcraftctl stage.
+    // This can be run before or after any custom script, or omitted entirely.
+    pub override_stage: String,
+
+    // Defines the content to adopt when using external metadata.
+    //
+    // It is a relative path to a supported metadata file from the part source,
+    // build or install directory (SNAPCRAFT_PART_SRC, SNAPCRAFT_PART_BUILD, SNAPCRAFT_PART_INSTALL).
+    //
+    // See Using external metadata for more details.
+    pub parse_info: String,
+
+    // The plugin to drive the build process.
+    //
+    // Every part drives its build through a plugin, this entry declares the
+    // plugin that will drive the build process for <part-name>.
+    // Refer to snapcraft plugins for more information on the available plugins and the
+    // specific attributes they add to the parts.<part-name>. namespace.
+    // See https://snapcraft.io/docs/supported-plugins for the available plugins.
+    pub plugin: String,
+
+    // Runs a script before the plugin’s build step.
+    //
+    // The script is run before the build step defined for parts.<part-name>.plugin starts.
+    // The working directory is the base build directory for the given part.
+    // The defined script is run with /bin/sh and set -e.
+    // A set of Environment Variables will be available to the script.
+    //
+    // The release of Snapcraft 3.0 made this key obsolete. Use override-build instead.
+    pub prepare: String,
+
+    // A list of files from <part-name> to prime.
+    //
+    // Rules applying to the list here are the same as those of filesets.
+    // Referencing of fileset keys is done with a $ prefixing the fileset key,
+    // which will expand with the value of such key.
+    pub prime: Vec<String>,
+
+    // A URL or path to a source tree to build.
+    //
+    // This can be a local path or remote, and can refer to a directory tree,
+    // a compressed archive or a revision control repository.
+    // This entry supports additional syntax, for more information refer to Advanced grammar
+    pub source: String,
+
+    // Work on a specific branch for source repositories under version control.
+    pub source_branch: String,
+
+    // Used when source represents a file.
+    //
+    // Takes the syntax <algorithm>/<digest>, where <algorithm> can be any of:
+    //   md5,
+    //   sha1,
+    //   sha224,
+    //   sha256,
+    //   sha384,
+    //   sha512,
+    //   sha3_256,
+    //   sha3_384,
+    //   sha3_512.
+    // When set, the source is cached for multiple uses in different snapcraft projects.
+    pub source_checksum: String,
+
+    // Work on a specific commit for source repositories under version control.
+    pub source_commit: String,
+
+    // Depth of history for sources using version control.
+    //
+    // Source repositories under version control are cloned or checked out with full history.
+    // Specifying a depth will truncate the history to the specified number of commits.
+    pub source_depth: i32,
+
+    // A path within the source to set as the working directory when building.
+    pub source_subdir: String,
+
+    // Work on a specific tag for source repositories under version control.
+    pub source_tag: String,
+
+    // Used when the type of source entry cannot be detected.
+    pub source_type: String,
+
+    // A list of files from <part-name> to stage.
+    //
+    // Rules applying to the list here are the same as those of filesets.
+    // Referencing of fileset keys is done with a $ prefixing the fileset key,
+    // which will expand with the value of such key.
+    pub stage: Vec<String>,
+
+    // A list of packages required at runtime by a snap.
+    //
+    // Packages are required by <part-name> to run. They are fetched using the host’s package manager,
+    // such as apt or dnf, and are unpacked into the snap being built.
+    // This entry supports additional syntax, for more information refer to Advanced grammar.
+    //
+    // Example: [python-zope.interface, python-bcrypt]
+    pub stage_packages: Vec<String>,
+
+    // A list of snaps required at runtime by a snap.
+    //
+    // Snaps are required by <part-name> to run. They are fetched using snap download,
+    // and are unpacked into the snap being built. This entry supports additional syntax,
+    // for more information refer to Advanced grammar.
+    //
+    // Example: [hello, black/latest/edge]
+    pub stage_snaps: Vec<String>,
+}
 
 
 // See the following URL for the list of all the Yaml objects.
