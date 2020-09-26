@@ -1,13 +1,5 @@
 use serde::{Serialize, Deserialize};
 
-use std::collections::BTreeMap;
-
-extern crate yaml_rust;
-extern crate linked_hash_map;
-
-use linked_hash_map::{LinkedHashMap};
-use yaml_rust::{YamlLoader, YamlEmitter, Yaml};
-
 
 // Other choices are org.gnome.Platform and org.kde.Platform
 const DEFAULT_RUNTIME: &str = "org.freedesktop.Platform";
@@ -16,10 +8,9 @@ const DEFAULT_RUNTIME_VERSION: &str = "master";
 const DEFAULT_SDK: &str = "org.freedesktop.Sdk";
 
 // See `man flatpak-manifest` for the flatpak manifest specs.
-#[derive(Serialize)]
-#[derive(Deserialize)]
+#[derive(Deserialize, Serialize)]
 #[derive(Default)]
-// TODO use kebab case for those fields.
+#[serde(rename_all = "kebab-case")]
 struct FlatpakManifest {
     // Name of the application.
     pub app_name: String,
@@ -482,35 +473,22 @@ pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
     let mut response = crate::manifests::manifest::AbstractManifest::default();
 
     // TODO actually handle the error.
-    let flatpak_manifest: FlatpakManifest = serde_json::from_str(&content).unwrap();
+    let flatpak_manifest: FlatpakManifest = serde_yaml::from_str(&content).unwrap();
 
     return response;
 }
 
 pub fn dump(manifest: &crate::manifests::manifest::AbstractManifest) -> String {
-    let mut lhm: LinkedHashMap<Yaml, Yaml> = LinkedHashMap::new();
+    let mut flatpak_manifest: FlatpakManifest = FlatpakManifest::default();
 
-    let mut tags = [].to_vec();
     for keyword in &manifest.keywords {
-        tags.push(Yaml::from_str(&keyword));
+        flatpak_manifest.tags.push(keyword.clone());
     }
-
-    let mut permissions: Vec<Yaml> = vec![];
-    lhm.insert(Yaml::from_str("permissions"), Yaml::Array(permissions.to_vec()));
 
     // TODO add language specific extensions, like rust, with the BASE_EXTENSIONS field.
 
-    let output_document = Yaml::Hash(lhm);
-
-    // Dump the YAML object
-    let mut out_str = String::new();
-    {
-        let mut emitter = YamlEmitter::new(&mut out_str);
-        emitter.dump(&output_document).unwrap(); // dump the YAML object to a String
-    }
-
-
-    return out_str;
+    // TODO actually handle the error.
+    return serde_yaml::to_string(&flatpak_manifest).unwrap();
 }
 
 pub fn file_path_matches(path: &str) -> bool {
