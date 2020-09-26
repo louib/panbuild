@@ -1,11 +1,6 @@
-extern crate yaml_rust;
-
 use std::collections::HashMap;
 
 use serde::{Serialize, Deserialize};
-
-use linked_hash_map::{LinkedHashMap};
-use yaml_rust::{Yaml, YamlLoader, YamlEmitter};
 
 
 // See https://snapcraft.io/docs/snapcraft-yaml-reference for the full YAML reference.
@@ -582,147 +577,19 @@ struct SnapcraftPart {
 pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
     let mut response = crate::manifests::manifest::AbstractManifest::default();
 
-    let yml_load_result = YamlLoader::load_from_str(&content);
-    if yml_load_result.is_err() {
-        // FIXME this should not exit the process. We should return a Result from parse
-        // instead.
-        panic!("Could not parse yaml file");
+    // TODO actually handle the error.
+    let snapcraft_manifest: SnapcraftManifest = match serde_yaml::from_str(&content) {
+        Ok(m) => m,
+        Err(m) => panic!("Failed to parse the Snapcraft manifest: {}.", m),
+    };
+
+    if snapcraft_manifest.name.is_empty() {
+        panic!("Required top-level field name is missing from snapcraft manifest.");
     }
+    response.package_name = snapcraft_manifest.name.clone();
 
-    let yaml_document = yml_load_result.unwrap();
-    // TODO we should validate that there was only one YAML top-level document,
-    // or remove support for that feature.
-    // let manifest_content = &yml_load_result.unwrap()[0];
-    let document_count = yaml_document.len();
-    if document_count != 1 {
-        // FIXME this should not exit the process. We should return a Result from parse
-        // instead.
-        panic!("There should be exactly 1 YAML document in a Snap manifest. Found {}", document_count);
-    }
-
-    let manifest_content = &yaml_document[0];
-
-    for static_field_name in REQUIRED_TOP_LEVEL_FIELDS.iter() {
-        // FIXME not sure why, but we need to un-static the field before
-        // using it to index the Yaml document.
-        let field_name: &str = static_field_name;
-
-        let is_a_string: bool = manifest_content[field_name].as_str().is_some();
-        let is_a_number: bool = manifest_content[field_name].as_i64().is_some();
-        if ! is_a_string && ! is_a_number {
-            // FIXME this should not exit the process. We should return a Result from parse
-            // instead.
-            panic!("Required top-level field {} is missing from snapcraft manifest.", field_name);
-        }
-    }
-
-    response.package_name = manifest_content["name"].as_str().unwrap_or("").to_string();
-    // Defaulting to the name here...
-    response.package_id = manifest_content["name"].as_str().unwrap_or("").to_string();
-    response.package_version = manifest_content["version"].as_str().unwrap_or("").to_string();
-    response.description = manifest_content["description"].as_str().unwrap_or("").to_string();
-    response.short_description = manifest_content["summary"].as_str().unwrap_or("").to_string();
-
-    let default_archs = vec![];
-    let architectures = manifest_content["architectures"].as_vec().unwrap_or(&default_archs);
-    if architectures.len() != 0 {
-        let arch = architectures[0].as_str().unwrap().to_string();
-        if arch == "amd64" {
-            response.architecture = crate::manifests::manifest::Architecture::Amd64;
-        }
-        if arch == "armhf" {
-            response.architecture = crate::manifests::manifest::Architecture::Armhf;
-        }
-        if arch == "any" {
-            response.architecture = crate::manifests::manifest::Architecture::Any;
-        }
-    }
-
-    let confinement = manifest_content["confinement"].as_str().unwrap_or("");
-    let grade = manifest_content["grade"].as_str().unwrap_or("");
-
-    if grade != "devel" || confinement != "devmode" {
-        response.release_type = crate::manifests::manifest::ReleaseType::Release;
-    }
-
-    let default_apps: LinkedHashMap<Yaml, Yaml> = LinkedHashMap::new();
-    let apps = manifest_content["apps"].as_hash().unwrap_or(&default_apps);
-    for executable_name in apps.keys() {
-        let mut executable = crate::manifests::manifest::AbstractExecutable::default();
-    }
-
-    let default_parts: LinkedHashMap<Yaml, Yaml> = LinkedHashMap::new();
-    let parts = manifest_content["parts"].as_hash().unwrap_or(&default_parts);
-    for module_name in parts.keys() {
-        let mut module = crate::manifests::manifest::AbstractModule::default();
-        module.name = module_name.as_str().unwrap_or("").to_string();
-        let snap_module = parts.get(module_name).unwrap();
-
-        let mut prime_paths = vec![];
-        prime_paths = snap_module["prime"].as_vec().unwrap_or(&prime_paths).to_vec();
-        if prime_paths.len() != 0 {
-            module.install_path = prime_paths[0].as_str().unwrap_or("").to_string();
-        }
-
-        module.url = snap_module["source"].as_str().unwrap_or("").to_string();
-
-        let source_type = snap_module["source-type"].as_str().unwrap_or("").to_string();
-        if source_type == "git" {
-            module.url_type = crate::manifests::manifest::SourceType::Git;
-        } else {
-            module.url_type = crate::manifests::manifest::SourceType::Unknown;
-        }
-
-        module.tag = snap_module["source-tag"].as_str().unwrap_or("").to_string();
-
-        let build_system = snap_module["plugin"].as_str().unwrap_or("").to_string();
-        if build_system == "cmake" {
-            module.build_system = crate::manifests::manifest::BuildSystem::Cmake;
-        } else if build_system == "nil" {
-            // This means apt-get packages in the case of snaps.
-            module.build_system = crate::manifests::manifest::BuildSystem::Apt;
-        } else if build_system == "autotools" {
-            module.build_system = crate::manifests::manifest::BuildSystem::Autotools;
-        } else if build_system == "dump" {
-            // This is used for file info packages.
-            module.build_system = crate::manifests::manifest::BuildSystem::Manual;
-        } else {
-            module.build_system = crate::manifests::manifest::BuildSystem::Unknown;
-        }
-
-        module.config_options = snap_module["configflags"].as_str().unwrap_or("").to_string();
-
-        let mut prime_paths = vec![];
-        let build_packages = snap_module["build-packages"].as_vec().unwrap_or(&prime_paths).to_vec();
-        for package_name in build_packages {
-            let mut sub_module = crate::manifests::manifest::AbstractModule::default();
-            sub_module.name = package_name.as_str().unwrap_or("").to_string();
-            module.depends_on.push(sub_module);
-        }
-
-        response.depends_on.push(module);
-    }
-
-    let default_slots: LinkedHashMap<Yaml, Yaml> = LinkedHashMap::new();
-    let slots = manifest_content["slots"].as_hash().unwrap_or(&default_slots);
-    for slot_key in slots.keys() {
-        let slot = slots[slot_key].as_hash().unwrap();
-        let mut permission = crate::manifests::manifest::AbstractPermission::default();
-
-        permission.name = slot_key.as_str().unwrap_or("").to_string();
-
-        let interface_name = slot[&Yaml::from_str("interface")].as_str().unwrap_or("").to_string();
-        if interface_name == "dbus" {
-            permission.api_type = crate::manifests::manifest::APIType::Dbus;
-        } else {
-            permission.api_type = crate::manifests::manifest::APIType::Unknown;
-        }
-    }
-
-    let default_plugs: LinkedHashMap<Yaml, Yaml> = LinkedHashMap::new();
-    let plugs = manifest_content["plugs"].as_hash().unwrap_or(&default_plugs);
-    for plug_key in plugs.keys() {
-        let plug = plugs.get(plug_key);
+    if snapcraft_manifest.grade.is_empty() {
+        panic!("Required top-level field grade is missing from snapcraft manifest.");
     }
 
     return response;
@@ -763,7 +630,6 @@ mod tests {
 
     #[test]
     #[should_panic(expected = "Required top-level field grade is missing from snapcraft manifest.")]
-    #[ignore]
     pub fn test_parse_missing_required_fields() {
         parse(r###"
             name: app-name,
@@ -785,14 +651,13 @@ mod tests {
     }
 
     #[test]
-    #[should_panic(expected = "There should be exactly 1 YAML document in a Snap manifest.")]
+    #[should_panic(expected = "Failed to parse the Snapcraft manifest: EOF while parsing a value.")]
     pub fn test_parse_empty_string() {
         parse("");
     }
 
     #[test]
     #[should_panic]
-    #[ignore]
     pub fn test_parse_invalid_yaml() {
         parse("----------------------------");
     }
