@@ -288,33 +288,34 @@ struct FlatpakSource {
     //   * patch,
     //   * extra-data,
     pub r#type: String,
+    pub url: String,
+    pub tag: String,
 
 }
 
-// **** Extensions
 // Extension define extension points in the app/runtime that can be implemented by extensions,
 // supplying extra files which are available during runtime..
-//
-// The directory where the extension is mounted. If the extension point is for an application,
-// this path is relative to /app, otherwise it is relative to /usr.
-// (string)
-const EXTENSION_DIRECTORY: &str = "directory";
+#[derive(Deserialize, Serialize)]
+#[derive(Default)]
+#[serde(rename_all = "kebab-case")]
+struct FlatpakExtension {
+    // The directory where the extension is mounted. If the extension point is for an application,
+    // this path is relative to /app, otherwise it is relative to /usr.
+    pub extension_directory: String,
 
-// If this is true, then the data created in the extension directory is omitted from the result, and instead packaged in a separate extension.
-// (boolean)
-const BUNDLE: &str = "bundle";
+    // If this is true, then the data created in the extension directory is omitted from the result,
+    // and instead packaged in a separate extension.
+    // (boolean)
+    pub bundle: bool,
 
-// If this is true, the extension is removed during when finishing. This is only interesting for extensions in the add-build-extensions property.
-
-// Additionally the standard flatpak extension properties are supported, and put directly into the metadata file: autodelete, no-autodownload, subdirectories,
-// add-ld-path, download-if, enable-if, merge-dirs, subdirectory-suffix, locale-subset, version, versions. See the flatpak metadata documentation for more
-// information on these.
-// (boolean)
-const REMOVE_AFTER_BUILD: &str = "remove-after-build";
-
-
-
-
+    // If this is true, the extension is removed during when finishing.
+    // This is only interesting for extensions in the add-build-extensions property.
+    // Additionally the standard flatpak extension properties are supported, and put
+    // directly into the metadata file: autodelete, no-autodownload, subdirectories,
+    // add-ld-path, download-if, enable-if, merge-dirs, subdirectory-suffix, locale-subset,
+    // version, versions. See the flatpak metadata documentation for more information on these.
+    pub remove_after_build: bool,
+}
 
 // Build options specify the build environment of a module,
 // and can be specified globally as well as per-module.
@@ -412,7 +413,6 @@ struct FlatpakBuildOptions {
     // This is a dictionary defining for each arch a separate build options object that override the main one.
     // (object)
     // pub arch: &str,
-
 }
 
 pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
