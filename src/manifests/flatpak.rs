@@ -1,3 +1,5 @@
+use std::collections::BTreeMap;
+
 use serde::{Serialize, Deserialize};
 
 
@@ -384,8 +386,7 @@ struct FlatpakBuildOptions {
     // This is a dictionary defining environment variables to be set during the build.
     // Elements in this override the properties that set the environment, like
     // cflags and ldflags. Keys with a null value unset the corresponding variable.
-    // (object)
-    // pub build_env: &str,
+    pub build_env: BTreeMap<String, String>,
 
     // This is an array containing extra options to pass to flatpak build.
     pub build_args: Vec<String>,
@@ -415,8 +416,7 @@ struct FlatpakBuildOptions {
     pub no_debuginfo_compression: Option<bool>,
 
     // This is a dictionary defining for each arch a separate build options object that override the main one.
-    // (object)
-    // pub arch: &str,
+    pub arch: BTreeMap<String, FlatpakBuildOptions>,
 }
 
 pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
