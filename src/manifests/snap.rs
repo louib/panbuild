@@ -15,6 +15,10 @@ use yaml_rust::{Yaml, YamlLoader, YamlEmitter};
 // details on how apps and parts are configured within snapcraft.yaml.
 // Top-level details include a snap’s name, version and description, alongside operational values
 // such as its confinement level and supported architecture.
+#[derive(Deserialize, Serialize)]
+#[derive(Default)]
+#[serde(rename_all = "kebab-case")]
+#[serde(default)]
 struct SnapcraftManifest {
     // Incorporate external metadata via the referenced part.
     // See Using external metadata for more details.
@@ -135,13 +139,23 @@ struct SnapcraftManifest {
     // Plugs and slots for an interface are usually configured per-app or per-daemon within snapcraft.yaml.
     // See https://snapcraft.io/docs/snapcraft-app-and-service-metadata for more details.
     // However, snapcraft.yaml also enables global plugs and slots configuration for an entire snap
-    pub plugs: String,
-    pub slots: String,
+    pub plugs: HashMap<String, SnapcraftPlug>,
+    // pub slots: HashMap<String, SnapcraftSlot>,
 
     // A map of app-names representing entry points to run for the snap.
-    pub apps: String,
+    pub apps: HashMap<String, SnapcraftApp>,
 
-    pub parts: String,
+    pub parts: HashMap<String, SnapcraftPart>,
+}
+
+#[derive(Deserialize, Serialize)]
+#[derive(Default)]
+#[serde(rename_all = "kebab-case")]
+#[serde(default)]
+struct SnapcraftPlug {
+    pub interface: String,
+    pub target: String,
+    pub default_provider: String,
 }
 
 const REQUIRED_TOP_LEVEL_FIELDS:[&'static str; 0] = [
@@ -159,7 +173,6 @@ const REQUIRED_TOP_LEVEL_FIELDS:[&'static str; 0] = [
 // devmode: a special mode for snap creators and developers.
 // classic: allows access to your system’s resources in much the same way traditional packages do.
 // For more information, refer to https://snapcraft.io/docs/snap-confinement.
-#[allow(dead_code)]
 enum Confinement {
     Strict,
     Devmode,
@@ -168,7 +181,6 @@ enum Confinement {
 
 // devel (i.e. a development version of the snap, so not to be published to the stable or candidate channels).
 // stable (i.e. a stable release or release candidate, which can be released to all channels).
-#[allow(dead_code)]
 enum Grade {
     Stable,
     Devel,
