@@ -265,33 +265,31 @@ struct FlatpakModule {
 }
 
 
-#[derive(Deserialize, Serialize)]
-#[derive(Default)]
-#[serde(rename_all = "kebab-case")]
-struct FlatpakSource {
-
-}
-
-// **** Sources
-// The sources are a list pointer to the source code that  needs to be extracted into the build directory before the build starts.
+// The sources are a list pointer to the source code that needs to be extracted into
+// the build directory before the build starts.
 // They can be of several types, distinguished by the type property.
 //
 // Additionally, the sources list can contain a plain string, which is interpreted as the name
 // of a separate json or yaml file that is read and inserted at this
 // point. The file can contain a single source, or an array of sources.
-// Allowed source types are:
-//   * archive,
-//   * git,
-//   * bzr,
-//   * svn,
-//   * dir,
-//   * file,
-//   * script,
-//   * shell,
-//   * patch,
-//   * extra-data,
-const SOURCE_TYPE: &str = "type";
+#[derive(Deserialize, Serialize)]
+#[derive(Default)]
+#[serde(rename_all = "kebab-case")]
+struct FlatpakSource {
+    // Allowed source types are:
+    //   * archive,
+    //   * git,
+    //   * bzr,
+    //   * svn,
+    //   * dir,
+    //   * file,
+    //   * script,
+    //   * shell,
+    //   * patch,
+    //   * extra-data,
+    pub r#type: String,
 
+}
 
 // **** Extensions
 // Extension define extension points in the app/runtime that can be implemented by extensions,
@@ -317,147 +315,104 @@ const REMOVE_AFTER_BUILD: &str = "remove-after-build";
 
 
 
-// **** Build Options
-// Build options specify the build environment of a module, and can be specified globally as well as per-module.
+
+// Build options specify the build environment of a module,
+// and can be specified globally as well as per-module.
 // Options can also be specified on a per-architecture basis using the arch property.
-
-// This is set in the environment variable CFLAGS during the build. Multiple specifications of this (in e.g. per-arch area) are concatenated, separated by
-// spaces.
-// (string)
-const CFLAGS: &str = "cflags";
-
-
-// If this is true, clear cflags from previous build options before adding it from these options.
-// (boolean)
-const CFLAGS_OVERRIDE: &str = "cflags-override";
-
-
-// This is set in the environment variable CPPFLAGS during the build. Multiple specifications of this (in e.g. per-arch area) are concatenated, separated by
-// spaces.
-// (string)
-const CPPFLAGS: &str = "cppflags";
-
-
-// If this is true, clear cppflags from previous build options before adding it from these options.
-// (boolean)
-const CPPFLAGS_OVERRIDE: &str = "cppflags-override";
-
-
-// This is set in the environment variable CXXFLAGS during the build. Multiple specifications of this (in e.g. per-arch area) are concatenated, separated by
-// spaces.
-// (string)
-const CXXFLAGS: &str = "cxxflags";
-
-
-// If this is true, clear cxxflags from previous build options before adding it from these options.
-// (boolean)
-const CXXFLAGS_OVERRIDE: &str = "cxxflags-override";
-
-
-// This is set in the environment variable LDFLAGS during the build.
-// Multiple specifications of this (in e.g. per-arch area) are concatenated,
-// separated by spaces.
-// (string)
-const LDFLAGS: &str = "ldflags";
-
-
-// If this is true, clear ldflags from previous build options before adding it from these options.
-// (boolean)
-const LDFLAGS_OVERRIDE: &str = "ldflags-override";
-
-
-// The build prefix for the modules (defaults to /app for applications and /usr for runtimes).
-// (string)
-const PREFIX: &str = "prefix";
-
-
-// The build libdir for the modules (defaults to /app/lib for applications and /usr/lib for runtimes).
-// (string)
-const LIBDIR: &str = "libdir";
-
-
-// This will get appended to PATH in the build environment (with an leading colon if needed).
-// (string)
-const APPEND_PATH: &str = "append-path";
-
-
-// This will get prepended to PATH in the build environment (with an trailing colon if needed).
-// (string)
-const PREPEND_PATH: &str = "prepend-path";
-
-
-// This will get appended to LD_LIBRARY_PATH in the build environment (with an leading colon if needed).
-// (string)
-const APPEND_LD_LIBRARY_PATH: &str = "append-ld-library-path";
-
-
-// This will get prepended to LD_LIBRARY_PATH in the build environment (with an trailing colon if needed).
-// (string)
-const PREPEND_LD_LIBRARY_PATH: &str = "prepend-ld-library-path";
-
-
-// This will get appended to PKG_CONFIG_PATH in the build environment (with an leading colon if needed).
-// (string)
-const APPEND_PKG_CONFIG_PATH: &str = "append-pkg-config-path";
-
-
-// This will get prepended to PKG_CONFIG_PATH in the build environment (with an trailing colon if needed).
-// (string)
-const PREPEND_PKG_CONFIG_PATH: &str = "prepend-pkg-config-path";
-
-// This is a dictionary defining environment variables to be set during the build.
-// Elements in this override the properties that set the environment, like
-// cflags and ldflags. Keys with a null value unset the corresponding variable.
-// (object)
-const BUILD_ENV: &str = "env";
-
-// This is an array containing extra options to pass to flatpak build.
-// (array of strings)
-const BUILD_ARGS: &str = "build-args";
-
-// Similar to build-args but affects the tests, not the normal build.
-// (array of strings)
-const TEST_ARGS: &str = "test-args";
-
-// This is an array containing extra options to pass to configure.
-// (array of strings)
-const CONFIG_OPTS: &str = "config-opts";
-
-// An array of extra arguments that will be passed to make
-// (array of strings)
-const MAKE_ARGS: &str = "make-args";
-
-// An array of extra arguments that will be passed to make install
-// (array of strings)
-const MAKE_INSTALL_ARGS: &str = "make-install-args";
-
-// If this is true (the default is false) then all ELF files will be stripped after install.
-// (boolean)
-const STRIP: &str = "strip";
-
-// By default (if strip is not true) flatpak-builder extracts all debug info in ELF files to a
-// separate files and puts this in an extension. If you want to disable this, set no-debuginfo
-// to true.
-// (boolean)
-const NO_DEBUGINFO: &str = "no-debuginfo";
-
-// By default when extracting debuginfo we compress the debug sections.
-// If you want to disable this, set no-debuginfo-compression to true.
-// (boolean)
-const NO_DEBUGINFO_COMPRESSION: &str = "no-debuginfo-compression";
-
-// This is a dictionary defining for each arch a separate build options object that override the main one.
-// (object)
-const ARCH: &str = "arch";
-
-
 #[derive(Deserialize, Serialize)]
 #[derive(Default)]
 #[serde(rename_all = "kebab-case")]
 struct FlatpakBuildOptions {
+    // This is set in the environment variable CFLAGS during the build.
+    // Multiple specifications of this (in e.g. per-arch area) are concatenated, separated by spaces.
+    pub cflags: String,
+
+    // If this is true, clear cflags from previous build options before adding it from these options.
+    pub cflags_override: bool,
+
+    // This is set in the environment variable CPPFLAGS during the build.
+    // Multiple specifications of this (in e.g. per-arch area) are concatenated, separated by spaces.
+    pub cppflags: String,
+
+    // If this is true, clear cppflags from previous build options before adding it from these options.
+    pub cppflags_override: bool,
+
+    // This is set in the environment variable CXXFLAGS during the build.
+    // Multiple specifications of this (in e.g. per-arch area) are concatenated, separated by spaces.
+    pub cxxflags: String,
+
+    // If this is true, clear cxxflags from previous build options before adding it from these options.
+    pub cxxflags_override: bool,
+
+    // This is set in the environment variable LDFLAGS during the build.
+    // Multiple specifications of this (in e.g. per-arch area) are concatenated,
+    // separated by spaces.
+    pub ldflags: String,
+
+    // If this is true, clear ldflags from previous build options before adding it from these options.
+    pub ldflags_override: bool,
+
+    // The build prefix for the modules (defaults to /app for applications and /usr for runtimes).
+    pub prefix: String,
+
+    // The build libdir for the modules (defaults to /app/lib for applications and /usr/lib for runtimes).
+    pub libdir: String,
+
+    // This will get appended to PATH in the build environment (with an leading colon if needed).
     pub append_path: String,
+
+    // This will get prepended to PATH in the build environment (with an trailing colon if needed).
+    pub prepend_path: String,
+
+    // This will get appended to LD_LIBRARY_PATH in the build environment (with an leading colon if needed).
+    pub append_ld_library_path: String,
+
+    // This will get prepended to LD_LIBRARY_PATH in the build environment (with an trailing colon if needed).
+    pub prepend_ld_library_path: String,
+
+    // This will get appended to PKG_CONFIG_PATH in the build environment (with an leading colon if needed).
+    pub append_pkg_config_path: String,
+
+    // This will get prepended to PKG_CONFIG_PATH in the build environment (with an trailing colon if needed).
+    pub prepend_pkg_config_path: String,
+
+    // This is a dictionary defining environment variables to be set during the build.
+    // Elements in this override the properties that set the environment, like
+    // cflags and ldflags. Keys with a null value unset the corresponding variable.
+    // (object)
+    // pub build_env: &str,
+
+    // This is an array containing extra options to pass to flatpak build.
     pub build_args: Vec<String>,
-    // pub env is a map of environment variables.
+
+    // Similar to build-args but affects the tests, not the normal build.
+    pub test_args: Vec<String>,
+
+    // This is an array containing extra options to pass to configure.
+    pub config_opts: Vec<String>,
+
+    // An array of extra arguments that will be passed to make
+    pub make_args: Vec<String>,
+
+    // An array of extra arguments that will be passed to make install
+    pub make_install_args: Vec<String>,
+
+    // If this is true (the default is false) then all ELF files will be stripped after install.
+    pub strip: bool,
+
+    // By default (if strip is not true) flatpak-builder extracts all debug info in ELF files to a
+    // separate files and puts this in an extension. If you want to disable this, set no-debuginfo
+    // to true.
+    pub no_debuginfo: bool,
+
+    // By default when extracting debuginfo we compress the debug sections.
+    // If you want to disable this, set no-debuginfo-compression to true.
+    pub no_debuginfo_compression: bool,
+
+    // This is a dictionary defining for each arch a separate build options object that override the main one.
+    // (object)
+    // pub arch: &str,
+
 }
 
 pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
