@@ -1,3 +1,5 @@
+use serde::{Serialize, Deserialize};
+
 use std::collections::BTreeMap;
 
 extern crate yaml_rust;
@@ -14,6 +16,13 @@ const DEFAULT_RUNTIME_VERSION: &str = "master";
 const DEFAULT_SDK: &str = "org.freedesktop.Sdk";
 
 // See `man flatpak-manifest` for the flatpak manifest specs.
+#[derive(Serialize)]
+#[derive(Deserialize)]
+#[derive(Default)]
+struct FlatpakManifest {
+    pub name: String,
+
+}
 
 // **** Top-level Fields
 // Name of the application.
@@ -507,29 +516,10 @@ const ARCH: &str = "arch";
 pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
     let mut response = crate::manifests::manifest::AbstractManifest::default();
 
-    let yml_load_result = YamlLoader::load_from_str(&content);
-    if yml_load_result.is_err() {
-        eprintln!("Could not parse yaml file");
-        return response;
-    }
-
-    let manifest_content = &yml_load_result.unwrap()[0];
+    // TODO actually handle the error.
+    let flatpak_manifest: FlatpakManifest = serde_json::from_str(&content).unwrap();
 
     return response;
-}
-
-pub fn dump_permissions(module: &crate::manifests::manifest::AbstractPermission) -> Yaml {
-    return Yaml::from_str("");
-}
-
-pub fn dump_module(module: &crate::manifests::manifest::AbstractModule) -> Yaml {
-    let mut module_hash_map: LinkedHashMap<Yaml, Yaml> = LinkedHashMap::new();
-    module_hash_map.insert(Yaml::from_str(APP_NAME), Yaml::from_str(&module.name));
-    module_hash_map.insert(Yaml::from_str(RUNTIME_VERSION), Yaml::from_str(&module.version));
-    let module_document = Yaml::Hash(module_hash_map);
-
-    return module_document;
-    // return Yaml::from_str("");
 }
 
 pub fn dump(manifest: &crate::manifests::manifest::AbstractManifest) -> String {
@@ -550,16 +540,7 @@ pub fn dump(manifest: &crate::manifests::manifest::AbstractManifest) -> String {
         tags.push(Yaml::from_str(&keyword));
     }
 
-    let mut modules: Vec<Yaml> = vec![];
-    for module in &manifest.depends_on {
-        modules.push(dump_module(module));
-    }
-    lhm.insert(Yaml::from_str(MODULES), Yaml::Array(modules.to_vec()));
-
     let mut permissions: Vec<Yaml> = vec![];
-    for permission in &manifest.permissions {
-        permissions.push(dump_permissions(permission));
-    }
     lhm.insert(Yaml::from_str("permissions"), Yaml::Array(permissions.to_vec()));
 
     // TODO add language specific extensions, like rust, with the BASE_EXTENSIONS field.
