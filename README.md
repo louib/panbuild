@@ -16,7 +16,6 @@ The universal build manifest converter.
 The supported packaging systems are:
 * flatpak;
 * snap;
-* appimage;
 * debian packages (via debian `control` files);
 
 Panbuild aims to make Unix system package managers inter-operable, whether they are distribution
