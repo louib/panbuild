@@ -11,12 +11,15 @@ const DEFAULT_SDK: &str = "org.freedesktop.Sdk";
 #[derive(Deserialize, Serialize)]
 #[derive(Default)]
 #[serde(rename_all = "kebab-case")]
+#[serde(default)]
 struct FlatpakManifest {
     // Name of the application.
     pub app_name: String,
 
     // A string defining the application id.
+    // Both names (app-id and id) are accepted.
     pub app_id: String,
+    pub id: String,
 
     // The branch to use when exporting the application.
     // If this is unset the defaults come from the default-branch option.
@@ -36,7 +39,7 @@ struct FlatpakManifest {
     // repository to be shared over peer to peer systems without needing further configuration.
     // If building in an existing repository, the collection ID must match the existing
     // configured collection ID for that repository.
-    pub collection_id: Option<String>,
+    pub collection_id: String,
 
     // The name of the runtime that the application uses.
     pub runtime: String,
@@ -48,16 +51,16 @@ struct FlatpakManifest {
     pub sdk: String,
 
     // Initialize the (otherwise empty) writable /var in the build with a copy of this runtime.
-    pub var: Option<String>,
+    pub var: String,
 
     // Use this file as the base metadata file when finishing.
     pub metadata: String,
 
     // Build a new runtime instead of an application.
-    pub build_runtime: bool,
+    pub build_runtime: Option<bool>,
 
     // Build an extension.
-    pub build_extension: bool,
+    pub build_extension: Option<bool>,
 
     // Start with the files from the specified application.
     // This can be used to create applications that extend another application.
@@ -81,7 +84,7 @@ struct FlatpakManifest {
 
     // Inherit these extra extensions points from the base application or sdk when finishing the build,
     // but do not inherit them into the platform.
-    pub build_options: FlatpakBuildOptions,
+    pub build_options: Option<FlatpakBuildOptions>,
 
     // Add these tags to the metadata file.
     pub tags: Vec<String>,
@@ -143,7 +146,7 @@ struct FlatpakManifest {
     pub appdata_license: String,
 
     // If rename-icon is set, keep a copy of the old icon file.
-    pub copy_icon: bool,
+    pub copy_icon: Option<bool>,
 
     // This string will be prefixed to the Name key in the main application desktop file.
     pub desktop_file_name_prefix: String,
@@ -160,6 +163,7 @@ struct FlatpakManifest {
 #[derive(Deserialize, Serialize)]
 #[derive(Default)]
 #[serde(rename_all = "kebab-case")]
+#[serde(default)]
 struct FlatpakModule {
     // The name of the module, used in e.g. build logs. The name is also
     // used for constructing filenames and commandline arguments,
@@ -167,7 +171,7 @@ struct FlatpakModule {
     pub name: String,
 
     // If true, skip this module
-    pub disabled: bool,
+    pub disabled: Option<bool>,
 
     // An array of objects defining sources that will be downloaded and extracted in order.
     // String members in the array are interpreted as the name of a separate
@@ -185,37 +189,37 @@ struct FlatpakModule {
     pub make_install_args: Vec<String>,
 
     // If true, remove the configure script before starting build
-    pub rm_configure: bool,
+    pub rm_configure: Option<bool>,
 
     // Ignore the existence of an autogen script
-    pub no_autogen: bool,
+    pub no_autogen: Option<bool>,
 
     // Don't call make with arguments to build in parallel
-    pub no_parallel_make: bool,
+    pub no_parallel_make: Option<bool>,
 
     // Name of the rule passed to make for the install phase, default is install
     pub install_rule: String,
 
     // Don't run the make install (or equivalent) stage
-    pub no_make_install: bool,
+    pub no_make_install: Option<bool>,
 
     // Don't fix up the *.py[oc] header timestamps for ostree use.
-    pub no_python_timestamp_fix: bool,
+    pub no_python_timestamp_fix: Option<bool>,
 
     // Use cmake instead of configure (deprecated: use buildsystem instead)
-    pub cmake: bool,
+    pub cmake: Option<bool>,
 
     // Build system to use: autotools, cmake, cmake-ninja, meson, simple, qmake
     pub buildsystem: String,
 
     // Use a build directory that is separate from the source directory
-    pub builddir: bool,
+    pub builddir: Option<bool>,
 
     // Build inside this subdirectory of the extracted sources
     pub subdir: String,
 
     // A build options object that can override global options
-    pub build_options: FlatpakBuildOptions,
+    pub build_options: Option<FlatpakBuildOptions>,
 
     // An array of commands to run during build (between make and make install if those are used).
     // This is primarily useful when using the "simple" buildsystem.
@@ -248,8 +252,7 @@ struct FlatpakModule {
     pub cleanup_platform: Vec<String>,
 
     // If true this will run the tests after installing.
-    // (boolean)
-    pub run_tests: bool,
+    pub run_tests: Option<bool>,
 
     // The target to build when running the tests. Defaults to "check" for make and "test" for ninja.
     // Set to empty to disable.
@@ -289,7 +292,7 @@ struct FlatpakSource {
     //   * extra-data,
     pub r#type: String,
     pub url: String,
-    pub tag: String,
+    pub tag: Option<String>,
 
 }
 
@@ -298,6 +301,7 @@ struct FlatpakSource {
 #[derive(Deserialize, Serialize)]
 #[derive(Default)]
 #[serde(rename_all = "kebab-case")]
+#[serde(default)]
 struct FlatpakExtension {
     // The directory where the extension is mounted. If the extension point is for an application,
     // this path is relative to /app, otherwise it is relative to /usr.
@@ -305,8 +309,7 @@ struct FlatpakExtension {
 
     // If this is true, then the data created in the extension directory is omitted from the result,
     // and instead packaged in a separate extension.
-    // (boolean)
-    pub bundle: bool,
+    pub bundle: Option<bool>,
 
     // If this is true, the extension is removed during when finishing.
     // This is only interesting for extensions in the add-build-extensions property.
@@ -314,7 +317,7 @@ struct FlatpakExtension {
     // directly into the metadata file: autodelete, no-autodownload, subdirectories,
     // add-ld-path, download-if, enable-if, merge-dirs, subdirectory-suffix, locale-subset,
     // version, versions. See the flatpak metadata documentation for more information on these.
-    pub remove_after_build: bool,
+    pub remove_after_build: Option<bool>,
 }
 
 // Build options specify the build environment of a module,
@@ -323,27 +326,28 @@ struct FlatpakExtension {
 #[derive(Deserialize, Serialize)]
 #[derive(Default)]
 #[serde(rename_all = "kebab-case")]
+#[serde(default)]
 struct FlatpakBuildOptions {
     // This is set in the environment variable CFLAGS during the build.
     // Multiple specifications of this (in e.g. per-arch area) are concatenated, separated by spaces.
     pub cflags: String,
 
     // If this is true, clear cflags from previous build options before adding it from these options.
-    pub cflags_override: bool,
+    pub cflags_override: Option<bool>,
 
     // This is set in the environment variable CPPFLAGS during the build.
     // Multiple specifications of this (in e.g. per-arch area) are concatenated, separated by spaces.
     pub cppflags: String,
 
     // If this is true, clear cppflags from previous build options before adding it from these options.
-    pub cppflags_override: bool,
+    pub cppflags_override: Option<bool>,
 
     // This is set in the environment variable CXXFLAGS during the build.
     // Multiple specifications of this (in e.g. per-arch area) are concatenated, separated by spaces.
     pub cxxflags: String,
 
     // If this is true, clear cxxflags from previous build options before adding it from these options.
-    pub cxxflags_override: bool,
+    pub cxxflags_override: Option<bool>,
 
     // This is set in the environment variable LDFLAGS during the build.
     // Multiple specifications of this (in e.g. per-arch area) are concatenated,
@@ -351,7 +355,7 @@ struct FlatpakBuildOptions {
     pub ldflags: String,
 
     // If this is true, clear ldflags from previous build options before adding it from these options.
-    pub ldflags_override: bool,
+    pub ldflags_override: Option<bool>,
 
     // The build prefix for the modules (defaults to /app for applications and /usr for runtimes).
     pub prefix: String,
@@ -399,16 +403,16 @@ struct FlatpakBuildOptions {
     pub make_install_args: Vec<String>,
 
     // If this is true (the default is false) then all ELF files will be stripped after install.
-    pub strip: bool,
+    pub strip: Option<bool>,
 
     // By default (if strip is not true) flatpak-builder extracts all debug info in ELF files to a
     // separate files and puts this in an extension. If you want to disable this, set no-debuginfo
     // to true.
-    pub no_debuginfo: bool,
+    pub no_debuginfo: Option<bool>,
 
     // By default when extracting debuginfo we compress the debug sections.
     // If you want to disable this, set no-debuginfo-compression to true.
-    pub no_debuginfo_compression: bool,
+    pub no_debuginfo_compression: Option<bool>,
 
     // This is a dictionary defining for each arch a separate build options object that override the main one.
     // (object)
