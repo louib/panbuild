@@ -430,6 +430,9 @@ pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
 
 pub fn dump(manifest: &crate::manifests::manifest::AbstractManifest) -> String {
     let mut flatpak_manifest: FlatpakManifest = FlatpakManifest::default();
+    flatpak_manifest.sdk = DEFAULT_SDK.to_string();
+    flatpak_manifest.runtime = DEFAULT_RUNTIME.to_string();
+    flatpak_manifest.runtime_version = DEFAULT_RUNTIME_VERSION.to_string();
 
     for keyword in &manifest.keywords {
         flatpak_manifest.tags.push(keyword.clone());
