@@ -631,12 +631,12 @@ pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
         }
     }
 
-    response.package_name = manifest_content[NAME].as_str().unwrap_or("").to_string();
+    response.package_name = manifest_content["name"].as_str().unwrap_or("").to_string();
     // Defaulting to the name here...
-    response.package_id = manifest_content[NAME].as_str().unwrap_or("").to_string();
-    response.package_version = manifest_content[VERSION].as_str().unwrap_or(DEFAULT_VERSION).to_string();
-    response.description = manifest_content[DESCRIPTION].as_str().unwrap_or("").to_string();
-    response.short_description = manifest_content[SUMMARY].as_str().unwrap_or("").to_string();
+    response.package_id = manifest_content["name"].as_str().unwrap_or("").to_string();
+    response.package_version = manifest_content["version"].as_str().unwrap_or(DEFAULT_VERSION).to_string();
+    response.description = manifest_content["description"].as_str().unwrap_or("").to_string();
+    response.short_description = manifest_content["summary"].as_str().unwrap_or("").to_string();
 
     let default_archs = vec![];
     let architectures = manifest_content["architectures"].as_vec().unwrap_or(&default_archs);
@@ -661,36 +661,36 @@ pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
     }
 
     let default_apps: LinkedHashMap<Yaml, Yaml> = LinkedHashMap::new();
-    let apps = manifest_content[APPS].as_hash().unwrap_or(&default_apps);
+    let apps = manifest_content["apps"].as_hash().unwrap_or(&default_apps);
     for executable_name in apps.keys() {
         let mut executable = crate::manifests::manifest::AbstractExecutable::default();
     }
 
     let default_parts: LinkedHashMap<Yaml, Yaml> = LinkedHashMap::new();
-    let parts = manifest_content[PARTS].as_hash().unwrap_or(&default_parts);
+    let parts = manifest_content["parts"].as_hash().unwrap_or(&default_parts);
     for module_name in parts.keys() {
         let mut module = crate::manifests::manifest::AbstractModule::default();
         module.name = module_name.as_str().unwrap_or("").to_string();
         let snap_module = parts.get(module_name).unwrap();
 
         let mut prime_paths = vec![];
-        prime_paths = snap_module[PRIME].as_vec().unwrap_or(&prime_paths).to_vec();
+        prime_paths = snap_module["prime"].as_vec().unwrap_or(&prime_paths).to_vec();
         if prime_paths.len() != 0 {
             module.install_path = prime_paths[0].as_str().unwrap_or("").to_string();
         }
 
-        module.url = snap_module[SOURCE].as_str().unwrap_or("").to_string();
+        module.url = snap_module["source"].as_str().unwrap_or("").to_string();
 
-        let source_type = snap_module[SOURCE_TYPE].as_str().unwrap_or("").to_string();
+        let source_type = snap_module["source-type"].as_str().unwrap_or("").to_string();
         if source_type == "git" {
             module.url_type = crate::manifests::manifest::SourceType::Git;
         } else {
             module.url_type = crate::manifests::manifest::SourceType::Unknown;
         }
 
-        module.tag = snap_module[SOURCE_TAG].as_str().unwrap_or("").to_string();
+        module.tag = snap_module["source-tag"].as_str().unwrap_or("").to_string();
 
-        let build_system = snap_module[PLUGIN].as_str().unwrap_or("").to_string();
+        let build_system = snap_module["plugin"].as_str().unwrap_or("").to_string();
         if build_system == "cmake" {
             module.build_system = crate::manifests::manifest::BuildSystem::Cmake;
         } else if build_system == "nil" {
@@ -708,7 +708,7 @@ pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
         module.config_options = snap_module["configflags"].as_str().unwrap_or("").to_string();
 
         let mut prime_paths = vec![];
-        let build_packages = snap_module[BUILD_PACKAGES].as_vec().unwrap_or(&prime_paths).to_vec();
+        let build_packages = snap_module["build-packages"].as_vec().unwrap_or(&prime_paths).to_vec();
         for package_name in build_packages {
             let mut sub_module = crate::manifests::manifest::AbstractModule::default();
             sub_module.name = package_name.as_str().unwrap_or("").to_string();
