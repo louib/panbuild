@@ -19,34 +19,25 @@ const DEFAULT_SDK: &str = "org.freedesktop.Sdk";
 #[derive(Serialize)]
 #[derive(Deserialize)]
 #[derive(Default)]
+// TODO use kebab case for those fields.
 struct FlatpakManifest {
-    pub name: String,
+    // Name of the application.
+    pub app_name: String,
+    // A string defining the application id.
+    pub app_id: String,
+    // The branch to use when exporting the application.
+    // If this is unset the defaults come from the default-branch option.
+    //
+    // This key overrides both the default-branch key, and the --default-branch commandline option.
+    // Unless you need a very specific branchname (like for a runtime or an extension) it is recommended
+    // to use the default-branch key instead, because you can then override the default using
+    // --default-branch when building for instance a test build.
+    pub branch: String,
+    // The default branch to use when exporting the application. Defaults to master.
+    // This key can be overridden by the --default-branch commandline option.
+    pub default_branch: String,
 
 }
-
-// **** Top-level Fields
-// Name of the application.
-// string
-const APP_NAME: &str = "app-name";
-
-// A string defining the application id.
-// string
-const APP_ID: &str = "app-id";
-
-// The branch to use when exporting the application.
-// If this is unset the defaults come from the default-branch option.
-//
-// This key overrides both the default-branch key, and the --default-branch commandline option.
-// Unless you need a very specific branchname (like for a runtime or an extension) it is recommended
-// to use the default-branch key instead, because you can then override the default using
-// --default-branch when building for instance a test build.
-// string
-const BRANCH: &str = "branch";
-
-// The default branch to use when exporting the application. Defaults to master.
-// This key can be overridden by the --default-branch commandline option.
-// string
-const DEFAULT_BRANCH: &str = "default-branch";
 
 // The collection ID of the repository, defaults to being unset.
 // Setting a globally unique collection ID allows the apps in the
@@ -524,16 +515,6 @@ pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
 
 pub fn dump(manifest: &crate::manifests::manifest::AbstractManifest) -> String {
     let mut lhm: LinkedHashMap<Yaml, Yaml> = LinkedHashMap::new();
-    lhm.insert(Yaml::from_str(APP_NAME), Yaml::from_str(&manifest.package_name));
-    lhm.insert(Yaml::from_str(APP_ID), Yaml::from_str(&manifest.package_id));
-    lhm.insert(Yaml::from_str(DEFAULT_BRANCH), Yaml::from_str(&manifest.package_version));
-
-    lhm.insert(Yaml::from_str(RUNTIME), Yaml::from_str(DEFAULT_RUNTIME));
-    lhm.insert(Yaml::from_str(RUNTIME_VERSION), Yaml::from_str(DEFAULT_RUNTIME_VERSION));
-    lhm.insert(Yaml::from_str(SDK), Yaml::from_str(DEFAULT_SDK));
-
-    // I don't think we're going to use flatpak to build extensions.
-    lhm.insert(Yaml::from_str(BUILD_EXTENSION), Yaml::Boolean(false));
 
     let mut tags = [].to_vec();
     for keyword in &manifest.keywords {
