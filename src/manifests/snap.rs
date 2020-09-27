@@ -572,8 +572,6 @@ struct SnapcraftPart {
 }
 
 
-// See the following URL for the list of all the Yaml objects.
-// https://docs.rs/yaml-rust/0.4.4/yaml_rust/all.html
 pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
     let mut response = crate::manifests::manifest::AbstractManifest::default();
 
