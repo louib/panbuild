@@ -231,7 +231,7 @@ struct SnapcraftApp {
     pub common_id: String,
 
     // Declares that <app-name> is a system daemon.
-    pub daemon: Option<bool>,
+    pub daemon: String,
 
     // Location of the .desktop file.
     // A path relative to the prime directory pointing to a desktop file,
