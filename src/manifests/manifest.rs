@@ -57,8 +57,6 @@ pub struct AbstractManifest {
     pub architecture: Architecture,
     pub license: License,
 
-    // The main module that this manifest is installing.
-    pub main_module: AbstractModule,
     // The modules that the module being built requires.
     pub depends_on: Vec<AbstractModule>,
 
@@ -79,7 +77,6 @@ impl Default for AbstractManifest {
             architecture: DEFAULT_ARCH,
             license: DEFAULT_LICENSE,
 
-            main_module: AbstractModule::default(),
             depends_on: vec![],
             permissions: vec![],
             executables: vec![],
@@ -302,6 +299,7 @@ pub struct AbstractModule {
     // Array of files and directories to cleanup after installing.
     pub cleanup_files: Vec<String>,
     pub depends_on: Vec<AbstractModule>,
+    pub is_primary: bool,
 }
 
 #[derive(Default)]
