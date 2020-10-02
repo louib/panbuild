@@ -42,14 +42,6 @@ pub enum License {
 }
 pub const DEFAULT_LICENSE: License = License::Gpl2;
 
-// TODO maybe rename build system?
-pub trait Manifest {
-    fn file_path_matches(&self, file_path: String) -> bool;
-    fn file_content_matches(&self, file_path: String) -> bool;
-    fn parse(&self, file_path: String) -> bool;
-    fn dump(&self) -> String;
-}
-
 #[derive(Debug)]
 #[derive(Serialize)]
 #[derive(Deserialize)]

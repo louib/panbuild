@@ -58,6 +58,12 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
                 return 1;
             }
             ctx.source_type = source_type.to_string();
+        } else {
+            let mut exit_code: i32 = manifests::detect_type(&mut ctx);
+            if exit_code != 0 {
+                eprintln!("Could not detect manifest type of {}.", ctx.source_filename);
+                return exit_code;
+            }
         }
 
         if args.contains_key("output_format") {
@@ -69,12 +75,7 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
             ctx.destination_type = destination_type.to_string();
         }
 
-        let mut exit_code: i32 = manifests::get_type(&mut ctx);
-        if exit_code != 0 {
-            return exit_code;
-        }
-
-        exit_code = manifests::parse(&mut ctx);
+        let mut exit_code: i32 = manifests::parse(&mut ctx);
         if exit_code != 0 {
             eprintln!("Error while parsing");
             return exit_code;
@@ -118,14 +119,15 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
                 return 1;
             }
             ctx.source_type = source_type.to_string();
+        } else {
+            let mut exit_code: i32 = manifests::detect_type(&mut ctx);
+            if exit_code != 0 {
+                eprintln!("Could not detect manifest type of {}.", ctx.source_filename);
+                return exit_code;
+            }
         }
 
-        let mut exit_code: i32 = manifests::get_type(&mut ctx);
-        if exit_code != 0 {
-            return exit_code;
-        }
-
-        exit_code = manifests::parse(&mut ctx);
+        let mut exit_code: i32 = manifests::parse(&mut ctx);
         if exit_code != 0 {
             eprintln!("Error while parsing");
             return exit_code;
@@ -161,14 +163,15 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
                 return 1;
             }
             ctx.source_type = source_type.to_string();
+        } else {
+            let mut exit_code: i32 = manifests::detect_type(&mut ctx);
+            if exit_code != 0 {
+                eprintln!("Could not detect manifest type of {}.", ctx.source_filename);
+                return exit_code;
+            }
         }
 
-        let mut exit_code: i32 = manifests::get_type(&mut ctx);
-        if exit_code != 0 {
-            return exit_code;
-        }
-
-        exit_code = manifests::parse(&mut ctx);
+        let mut exit_code: i32 = manifests::parse(&mut ctx);
         if exit_code != 0 {
             eprintln!("Error while parsing");
             return exit_code;
