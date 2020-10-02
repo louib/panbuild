@@ -559,7 +559,7 @@ struct SnapcraftPart {
     // This entry supports additional syntax, for more information refer to Advanced grammar.
     //
     // Example: [python-zope.interface, python-bcrypt]
-    pub stage_packages: Vec<String>,
+    pub stage_packages: Vec<SnapcraftPackage>,
 
     // A list of snaps required at runtime by a snap.
     //
@@ -569,6 +569,20 @@ struct SnapcraftPart {
     //
     // Example: [hello, black/latest/edge]
     pub stage_snaps: Vec<String>,
+}
+
+#[derive(Deserialize, Serialize)]
+#[serde(rename_all = "kebab-case")]
+#[serde(untagged)]
+enum SnapcraftPackage {
+    PackageName(String),
+    OptionalPackages(SnapcraftOptionalPackages),
+}
+
+#[derive(Deserialize, Serialize)]
+#[serde(rename_all = "kebab-case")]
+struct SnapcraftOptionalPackages {
+    r#try: Vec<String>,
 }
 
 
