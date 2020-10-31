@@ -1,6 +1,6 @@
 //! # Panbuild
 //!
-//! `panbuild` is the universal build manifest converter.
+//! `panbuild` is the universal builder.
 use std::collections::HashMap;
 
 mod manifests;
@@ -15,6 +15,7 @@ use std::fs;
 use std::path;
 use std::env;
 
+const DEFAULT_CACHE_DIR: &str = ".panbuild/";
 const DEFAULT_PACKAGE_LIST_SEP: &str = ",";
 
 struct PanbuilbArguments {
@@ -197,7 +198,8 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
         println!("{}", output);
     }
 
-    if command_name == "ls" {
+    // Used for debugging. Show all the available projects.
+    if command_name == "projects" {
         let projects: Vec<crate::projects::project::Project> = crate::projects::db::get_all();
         for project in projects {
             println!("{0}: {1}", project.name, project.summary);
@@ -205,13 +207,20 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
         return 0;
     }
 
-    if command_name == "detect" {
+    if command_name == "ls" {
         let project_path_string = args.get("project_path").unwrap();
         let project_path = path::Path::new(project_path_string);
         if ! project_path.is_dir() {
             eprintln!("{} is not a directory!", project_path_string);
         }
         // TODO see visit_dirs function to complete detect command.
+    }
+
+    if command_name == "status" {
+        let project_path = path::Path::new(DEFAULT_CACHE_DIR);
+        if ! project_path.is_dir() {
+            println!("No environment configured yet. Run `ls` to show the available envs.");
+        }
     }
 
     eprintln!("Finishing...");
