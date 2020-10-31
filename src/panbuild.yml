@@ -16,14 +16,12 @@ args:
 subcommands:
     - status:
         about: Show the current build status for the repository.
-    - detect:
-        about: Detect the build systems used in a project.
+    - ls:
+        about: Lists the available build environments.
         args:
-            - project_path:
-                help: The path of the project.
-                value_name: project_path
-                required: true
-                index: 1
+            - parse:
+                short: p
+                help: Parse the project's files to detect build environments.
     - make:
         about: Build an environment.
         args:

@@ -16,6 +16,9 @@ use std::path;
 use std::env;
 
 const DEFAULT_CACHE_DIR: &str = ".panbuild/";
+const DEFAULT_GIT_CACHE_DIR: &str = ".git/";
+const DEFAULT_FLATPAK_BUILDER_CACHE_DIR: &str = ".flatpak-builder/";
+const DEFAULT_FLATPAK_BUILD_CACHE_DIR: &str = ".build/";
 const DEFAULT_PACKAGE_LIST_SEP: &str = ",";
 
 struct PanbuilbArguments {
@@ -28,7 +31,8 @@ struct PanbuilbArguments {
 }
 
 pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
-    eprintln!("running command {}.", command_name);
+    // FIXME put to debug once there is proper logging in place
+    // eprintln!("running command {}.", command_name);
     let mut ctx = crate::execution_context::ExecutionContext::default();
 
     if command_name == "convert" {
@@ -90,7 +94,8 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
             return exit_code;
         }
 
-        eprintln!("Finishing...");
+
+        // eprintln!("Finishing...");
         return 0;
     }
 
@@ -208,11 +213,18 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
     }
 
     if command_name == "ls" {
-        let project_path_string = args.get("project_path").unwrap();
-        let project_path = path::Path::new(project_path_string);
-        if ! project_path.is_dir() {
-            eprintln!("{} is not a directory!", project_path_string);
+        let git_cache_dir = path::Path::new(DEFAULT_GIT_CACHE_DIR);
+        if ! git_cache_dir.is_dir() {
+            eprintln!("This does not seem like a git project (.git/ was not found).");
+            return 1;
         }
+
+        let project_path = path::Path::new(".");
+        if ! project_path.is_dir() {
+            eprintln!("./ is not a directory!");
+        }
+
+        eprintln!("No available environment found for the project. Try running `ls -p`.");
         // TODO see visit_dirs function to complete detect command.
     }
 
@@ -223,6 +235,7 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
         }
     }
 
-    eprintln!("Finishing...");
+    // FIXME put to debug once there is proper logging in place
+    // eprintln!("Finishing...");
     return 0;
 }
