@@ -219,9 +219,15 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
             return 1;
         }
 
-        let project_path = path::Path::new(".");
-        if ! project_path.is_dir() {
-            eprintln!("./ is not a directory!");
+        let mut found_env = false;
+        let file_paths = fs::read_dir("./").unwrap();
+        for path in file_paths {
+            let path_str = path.unwrap().path();
+            let file_path = path::Path::new(&path_str);
+            if file_path.is_dir() {
+                continue;
+            }
+
         }
 
         eprintln!("No available environment found for the project. Try running `ls -p`.");
