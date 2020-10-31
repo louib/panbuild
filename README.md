@@ -7,7 +7,7 @@
 <!-- uncomment when there is a release available -->
 <!-- [![GitHub release](https://img.shields.io/github/release/louib/panbuild)](https://github.com/louib/panbuild/releases/) -->
 
-The universal build manifest converter.
+The universal builder.
 
 > **This repo is a work-in-progress and is not ready for general use.
   The command-line options, command names and file formats might change
@@ -17,11 +17,6 @@ The supported packaging systems are:
 * flatpak;
 * snap;
 * debian packages (via debian `control` files);
-
-Panbuild aims to make Unix system package managers inter-operable, whether they are distribution
-agnostic (snap, flatpak) or distribution based (deb, rpm, pacman, Homebrew). The executable is
-portable and comes with an internal database of projects that can be installed through
-various build systems.
 
 ## Install
 

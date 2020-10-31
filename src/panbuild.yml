@@ -1,7 +1,7 @@
 ---
 name: panbuild
 author: louib <code@louib.net>
-about: The universal build manifest converter.
+about: The universal builder.
 args:
     - verbose:
         short: v
