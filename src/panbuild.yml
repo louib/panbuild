@@ -16,6 +16,24 @@ args:
 subcommands:
     - status:
         about: Show the current build status for the repository.
+    - detect:
+        about: Detect the build systems used in a project.
+        args:
+            - project_path:
+                help: The path of the project.
+                value_name: project_path
+                required: true
+                index: 1
+    - make:
+        about: Build an environment.
+        args:
+            - env_name:
+                short: e
+                long: env
+                takes_value: true
+                value_name: ENV_NAME
+                required: true
+                help: The name of the environment to build.
     - convert:
         about: convert a manifest file.
         args:
@@ -89,23 +107,3 @@ subcommands:
                 value_name: FORMAT
                 required: true
                 help: Format of the manifest to generate.
-    - install:
-        about: install a package.
-        args:
-            - package_name:
-                short: i
-                long: install
-                takes_value: true
-                value_name: PACKAGE_APP_OR_LIB
-                required: true
-                help: The name of the package or app to install.
-    - search:
-        about: Search the databases.
-    - detect:
-        about: Detect the build systems used in a project.
-        args:
-            - project_path:
-                help: The path of the project.
-                value_name: project_path
-                required: true
-                index: 1
