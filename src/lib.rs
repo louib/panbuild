@@ -222,16 +222,34 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
         let mut found_env = false;
         let file_paths = fs::read_dir("./").unwrap();
         for path in file_paths {
-            let path_str = path.unwrap().path();
-            let file_path = path::Path::new(&path_str);
+            let file_path = path.unwrap().path();
+            let file_path = path::Path::new(&file_path);
+            let file_path_str = file_path.to_str().unwrap();
             if file_path.is_dir() {
                 continue;
             }
 
+            // TODO Test that if it starts with the cache directories listed above,
+            // you skip the file.
+
+            if crate::manifests::debian::file_path_matches(file_path_str) {
+                found_env = true;
+                println!("debian ({})", file_path_str);
+            }
+            if crate::manifests::snap::file_path_matches(file_path_str) {
+                found_env = true;
+                println!("snap ({})", file_path_str);
+            }
+            if crate::manifests::flatpak::file_path_matches(file_path_str) {
+                found_env = true;
+                println!("flatpak ({})", file_path_str);
+            }
+            println!("{}", file_path_str);
         }
 
-        eprintln!("No available environment found for the project. Try running `ls -p`.");
-        // TODO see visit_dirs function to complete detect command.
+        if ! found_env {
+            eprintln!("No available environment found for the project. Try running `ls -p`.");
+        }
     }
 
     if command_name == "status" {

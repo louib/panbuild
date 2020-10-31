@@ -325,6 +325,7 @@ pub fn dump(manifest: &crate::manifests::manifest::AbstractManifest) -> String {
 }
 
 pub fn file_path_matches(path: &str) -> bool {
+    // FIXME should we add the debian/ part to the path too?
     if path.ends_with("control") {
         return true;
     }

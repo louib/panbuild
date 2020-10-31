@@ -2,6 +2,10 @@ use std::fs::{self, DirEntry};
 use std::path::Path;
 use std::io;
 
+fn get_file_paths(dir: String) -> Vec<String> {
+    return vec![];
+}
+
 // one possible implementation of walking a directory only visiting files
 // Taken from https://doc.rust-lang.org/std/fs/fn.read_dir.html
 fn visit_dirs(dir: &Path, cb: &dyn Fn(&DirEntry)) -> io::Result<()> {

@@ -13,7 +13,7 @@ fi
 echo "🔍 Running smoke tests on the panbuild binary 🔍";
 
 help_output=$(panbuild -h 2>&1)
-if [[ ! "$help_output" == *"The universal build manifest converter."* ]]; then
+if [[ ! "$help_output" == *"The universal builder."* ]]; then
     die "Missing app description from the help output!";
 fi
 if [[ ! "$help_output" == *"SUBCOMMANDS"* ]]; then
