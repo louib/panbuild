@@ -14,16 +14,8 @@ args:
         required: false
         help: Show the version and exit.
 subcommands:
-    - bootstrap:
-        about: Bootstrap a project (create a manifest from nothing!).
-        args:
-            - manifest_format:
-                short: f
-                long: manifest-format
-                takes_value: true
-                value_name: FORMAT
-                required: true
-                help: The type of build system manifest to generate.
+    - status:
+        about: Show the current build status for the repository.
     - convert:
         about: convert a manifest file.
         args:
@@ -109,8 +101,6 @@ subcommands:
                 help: The name of the package or app to install.
     - search:
         about: Search the databases.
-    - spec:
-        about: Show the spec for a manifest type.
     - detect:
         about: Detect the build systems used in a project.
         args:
