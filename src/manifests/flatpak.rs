@@ -61,7 +61,9 @@ struct FlatpakManifest {
     // Build a new runtime instead of an application.
     pub build_runtime: Option<bool>,
 
-    // Build an extension.
+    // Whether the manifest describes an extension to be used by other manifests.
+    // Extensions can be used to bundle programming langages and their associated
+    // tools, for example.
     pub build_extension: Option<bool>,
 
     // Start with the files from the specified application.
