@@ -11,8 +11,10 @@ fi
 
 pushd "$PANBUILD_REPOS_PATH"
 
-while read line; do
-  echo "$line"
+while read repo; do
+  if git clone "$repo" 2> /dev/null; then
+      echo "Cloned repo $repo"
+  fi
 done < "${1:-/dev/stdin}"
 
 popd
