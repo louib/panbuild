@@ -43,9 +43,7 @@ if [[ ! -f "sources.txt" ]]; then
 
     cat *_sources.txt > sources.txt
     rm *_sources.txt
+    echo "👍 Fetched sources from common debian repos."
+else
+    echo "👍 No need to fetch sources from common debian repos."
 fi
-
-for line in sources.txt
-do
-    echo "$line"
-done
