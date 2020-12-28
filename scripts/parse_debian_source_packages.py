@@ -1,10 +1,9 @@
 """
 Gets all the known available projects
 """
-# import json
+import json
 # import os
 
-# import yaml
 import fileinput
 
 
@@ -40,7 +39,7 @@ if __name__ == '__main__':
         else:
             if field_name == 'Package':
                 current_package_name = field_value
+                current_package['name'] = current_package_name
                 continue
 
-    # output = yaml.yaml()
-    print(source_packages)
+    print(json.dumps(source_packages))
