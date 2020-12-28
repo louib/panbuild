@@ -12,6 +12,8 @@ if __name__ == '__main__':
     current_package_name = ""
     current_package = {}
 
+    filtered_packages = []
+
     for line in fileinput.input():
         line_parts = line.split(':')
         if len(line_parts) < 2:
@@ -42,4 +44,13 @@ if __name__ == '__main__':
                 current_package['name'] = current_package_name
                 continue
 
-    print(json.dumps(source_packages))
+    for package_name in source_packages.keys():
+        source_package = source_packages[package_name]
+        # We don't really need those that don't have a git url,
+        # at least for now.
+        if 'git_urls' not in source_package:
+            continue
+        source_package['git_urls'] = list(set(source_package['git_urls']))
+        filtered_packages.append(source_package)
+
+    print(json.dumps(filtered_packages))
