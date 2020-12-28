@@ -23,15 +23,24 @@ if __name__ == '__main__':
             continue
 
         field_name = line_parts[0]
-        field_value = line_parts[1]
+        field_value = ''.join(line_parts[1:])
+        field_value = field_value.strip(' \n')
 
         if current_package_name:
-            if field_name == 'Package:':
-
-                print("lol")
+            if field_name == 'Package':
+                # Finish the current package and start a new one.
+                source_packages[current_package_name] = current_package
+                current_package_name = ""
+                current_package = {}
+                continue
+            if field_name == 'Vcs-Git':
+                if 'git_urls' not in current_package:
+                    current_package['git_urls'] = []
+                current_package['git_urls'].append(field_value)
         else:
-            if field_name == 'Package:':
-                print("lol")
+            if field_name == 'Package':
+                current_package_name = field_value
+                continue
 
     # output = yaml.yaml()
     print(source_packages)
