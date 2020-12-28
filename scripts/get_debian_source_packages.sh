@@ -4,8 +4,6 @@
 
 die() { echo "🔥 Error: $*" 1>&2; exit 1; }
 
-SCRIPT_DIR=$(dirname "$0")
-
 set -e
 
 if [[ ! -f "sources.txt" ]]; then
@@ -41,8 +39,8 @@ if [[ ! -f "sources.txt" ]]; then
     unxz -d Sources.xz
     mv Sources pureos_byzantium_main_sources.txt
 
-    cat *_sources.txt > sources.txt
-    rm *_sources.txt
+    cat ./*_sources.txt > sources.txt
+    rm ./*_sources.txt
     echo "👍 Fetched sources from common debian repos."
 else
     echo "👍 No need to fetch sources from common debian repos."
