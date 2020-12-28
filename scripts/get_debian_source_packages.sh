@@ -41,3 +41,4 @@ unxz -d Sources.xz
 mv Sources pureos_byzantium_main_sources.txt
 
 cat *_sources.txt > sources.txt
+rm *_sources.txt
