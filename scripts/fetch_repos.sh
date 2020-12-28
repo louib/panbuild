@@ -11,7 +11,7 @@ fi
 
 pushd "$PANBUILD_REPOS_PATH"
 
-while read repo; do
+while read -r repo; do
   if git clone "$repo" 2> /dev/null; then
       echo "Cloned repo $repo"
   fi
