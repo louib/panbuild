@@ -265,7 +265,7 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
         eprintln!("Searching in {:#?} projects for installation candidates 🕰",projects.len());
         for project in &projects {
             for artifact_name in &project.artifact_names {
-                if artifact_name == package_name {
+                if artifact_name.contains(package_name) {
                     println!("found candidate artifact in {}.", project.name);
                 }
             }
