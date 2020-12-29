@@ -58,6 +58,8 @@ if __name__ == '__main__':
                 current_package['maintainers'] = []
                 current_package['web_urls'] = []
                 current_package['vcs_urls'] = []
+                current_package['is_core'] = False
+                current_package['layer'] = 4
                 continue
 
     for package_name in source_packages.keys():
