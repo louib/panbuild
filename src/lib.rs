@@ -251,10 +251,14 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
         let package_name  = match args.get("package_name") {
             Some(package_name) => package_name,
             None => {
-                eprintln!("an package name is required when converting!");
+                eprintln!("A package name to install is required!");
                 return 1;
             }
         };
+        if package_name.len() < 3 {
+            eprintln!("{} is too short for a package name!", package_name);
+            return 1;
+        }
         eprintln!("Installing {:#?}", &package_name);
 
         let projects: Vec<crate::projects::project::Project> = crate::projects::db::get_all();
