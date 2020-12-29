@@ -42,7 +42,7 @@ if __name__ == '__main__':
                 current_package['maintainers'].append(field_value)
             if field_name == 'Binary':
                 for artifact_name in field_value.split(','):
-                    current_package['artifact_names'].append(artifact_name)
+                    current_package['artifact_names'].append(artifact_name.strip())
             if field_name == 'Version':
                 current_package['versions'].append(field_value)
         else:
