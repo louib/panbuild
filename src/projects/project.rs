@@ -5,19 +5,6 @@ use std::process::Command;
 pub const PROJECTS_DIR: &str = "~/.panbuild/projects/";
 
 #[derive(Serialize, Deserialize, Default)]
-pub struct ProjectVersion {
-    pub project_id: String,
-    // Name of the version. Normally follows sem ver.
-    pub name: String,
-    pub url: String,
-    pub url_type: crate::manifests::manifest::SourceType,
-    pub tag: String,
-    pub branch: String,
-    pub sha256sum: String,
-    pub dependencies: Vec<Dependancy>,
-}
-
-#[derive(Serialize, Deserialize, Default)]
 pub struct Project {
     // Unique project id, if available
     pub id: String,
@@ -56,6 +43,19 @@ impl Project {
         response.push_str("}");
         response
     }
+}
+
+#[derive(Serialize, Deserialize, Default)]
+pub struct ProjectVersion {
+    pub project_id: String,
+    // Name of the version. Normally follows sem ver.
+    pub name: String,
+    pub url: String,
+    pub url_type: crate::manifests::manifest::SourceType,
+    pub tag: String,
+    pub branch: String,
+    pub sha256sum: String,
+    pub dependencies: Vec<Dependancy>,
 }
 
 // See https://github.com/rust-lang/rfcs/blob/master/text/1105-api-evolution.md

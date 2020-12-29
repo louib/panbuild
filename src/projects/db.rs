@@ -1,12 +1,22 @@
 use std::env;
+use std::fs;
 
 pub fn get_all() -> Vec<crate::projects::project::Project> {
     let core_projects = self::get_core_projects();
 
-    let projects_dir = env::var("PANBUILD_PROJECTS_DIR").unwrap_or(String::from("")).to_string();
-    if projects_dir.is_empty() {
+    let json_projects_db_path = env::var("PB_JSON_PROJECTS_DB_PATH").unwrap_or(String::from("")).to_string();
+    if json_projects_db_path.is_empty() {
         return core_projects;
     }
+
+    let json_projects = match fs::read_to_string(&json_projects_db_path) {
+        Ok(content) => content,
+        Err(e) => {
+            eprintln!("could not read file {}.", json_projects_db_path);
+            return core_projects;
+        }
+    };
+    let projects: Vec<crate::projects::project::Project> = serde_json::from_str(&json_projects).unwrap();
 
     // TODO validate the directory!
     return core_projects;
