@@ -8,6 +8,7 @@ pub struct ExecutionContext {
     pub data_dir: String,
     pub content: String,
     pub manifest: crate::manifests::manifest::AbstractManifest,
+    pub flatpak_manifest: Option<crate::manifests::flatpak::FlatpakManifest>,
 }
 
 impl Default for ExecutionContext {
@@ -19,6 +20,7 @@ impl Default for ExecutionContext {
             data_dir: "".to_string(),
             content: "".to_string(),
             manifest: crate::manifests::manifest::AbstractManifest::default(),
+            flatpak_manifest: None,
         };
     }
 }

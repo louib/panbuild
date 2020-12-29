@@ -12,7 +12,7 @@ const DEFAULT_SDK: &str = "org.freedesktop.Sdk";
 #[derive(Deserialize, Serialize, Default)]
 #[serde(rename_all = "kebab-case")]
 #[serde(default)]
-struct FlatpakManifest {
+pub struct FlatpakManifest {
     // Name of the application.
     pub app_name: String,
 
@@ -165,7 +165,7 @@ struct FlatpakManifest {
 #[derive(Deserialize, Serialize, Default)]
 #[serde(rename_all = "kebab-case")]
 #[serde(default)]
-struct FlatpakModule {
+pub struct FlatpakModule {
     // The name of the module, used in e.g. build logs. The name is also
     // used for constructing filenames and commandline arguments,
     // therefore using spaces or '/' in this string is a bad idea.
@@ -277,7 +277,7 @@ struct FlatpakModule {
 // point. The file can contain a single source, or an array of sources.
 #[derive(Deserialize, Serialize, Default)]
 #[serde(rename_all = "kebab-case")]
-struct FlatpakSource {
+pub struct FlatpakSource {
     // Allowed source types are:
     //   * archive,
     //   * git,
@@ -299,7 +299,7 @@ struct FlatpakSource {
 #[derive(Deserialize, Serialize, Default)]
 #[serde(rename_all = "kebab-case")]
 #[serde(default)]
-struct FlatpakExtension {
+pub struct FlatpakExtension {
     // The directory where the extension is mounted. If the extension point is for an application,
     // this path is relative to /app, otherwise it is relative to /usr.
     pub extension_directory: String,
@@ -323,7 +323,7 @@ struct FlatpakExtension {
 #[derive(Deserialize, Serialize, Default)]
 #[serde(rename_all = "kebab-case")]
 #[serde(default)]
-struct FlatpakBuildOptions {
+pub struct FlatpakBuildOptions {
     // This is set in the environment variable CFLAGS during the build.
     // Multiple specifications of this (in e.g. per-arch area) are concatenated, separated by spaces.
     pub cflags: String,
