@@ -13,7 +13,7 @@ pub struct Project {
     pub summary: String,
     pub description: String,
     pub web_urls: Vec<String>,
-    pub cvs_urls: Vec<String>,
+    pub vcs_urls: Vec<String>,
     // Name of the artifacts that this project produces. Can be binaries, libraries or assets.
     pub artifact_names: Vec<String>,
     pub maintainers: Vec<String>,

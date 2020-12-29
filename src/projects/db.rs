@@ -2,9 +2,9 @@ use std::env;
 use std::fs;
 
 pub fn get_all() -> Vec<crate::projects::project::Project> {
-    let core_projects = self::get_core_projects();
+    let mut core_projects = self::get_core_projects();
 
-    let json_projects_db_path = env::var("PB_JSON_PROJECTS_DB_PATH").unwrap_or(String::from("")).to_string();
+    let json_projects_db_path = env::var("PB_PROJECTS_DB_PATH").unwrap_or(String::from("")).to_string();
     if json_projects_db_path.is_empty() {
         return core_projects;
     }
@@ -16,10 +16,10 @@ pub fn get_all() -> Vec<crate::projects::project::Project> {
             return core_projects;
         }
     };
-    let projects: Vec<crate::projects::project::Project> = serde_json::from_str(&json_projects).unwrap();
+    let mut db_projects: Vec<crate::projects::project::Project> = serde_json::from_str(&json_projects).unwrap();
 
-    // TODO validate the directory!
-    return core_projects;
+    core_projects.append(&mut db_projects);
+    core_projects
 }
 
 pub fn get_core_projects() -> Vec<crate::projects::project::Project> {
@@ -32,7 +32,7 @@ pub fn get_core_projects() -> Vec<crate::projects::project::Project> {
         "
             .to_string(),
             web_urls: vec!["https://github.com/torvalds/linux".to_string()],
-            cvs_urls: vec!["https://github.com/torvalds/linux.git".to_string()],
+            vcs_urls: vec!["https://github.com/torvalds/linux.git".to_string()],
             maintainers: vec![],
             versions: vec![],
             artifact_names: vec![],
@@ -50,7 +50,7 @@ pub fn get_core_projects() -> Vec<crate::projects::project::Project> {
         "
             .to_string(),
             web_urls: vec!["http://flatpak.org/".to_string()],
-            cvs_urls: vec![],
+            vcs_urls: vec![],
             maintainers: vec![],
             versions: vec![],
             artifact_names: vec![],
@@ -67,7 +67,7 @@ pub fn get_core_projects() -> Vec<crate::projects::project::Project> {
         "
             .to_string(),
             web_urls: vec!["http://flatpak.org/".to_string()],
-            cvs_urls: vec![],
+            vcs_urls: vec![],
             maintainers: vec![],
             versions: vec![],
             artifact_names: vec![],
@@ -87,7 +87,7 @@ pub fn get_core_projects() -> Vec<crate::projects::project::Project> {
         "
             .to_string(),
             web_urls: vec!["https://gcc.gnu.org/".to_string()],
-            cvs_urls: vec!["https://gcc.gnu.org/git/gcc.git".to_string()],
+            vcs_urls: vec!["https://gcc.gnu.org/git/gcc.git".to_string()],
             maintainers: vec![],
             versions: vec![],
             artifact_names: vec![],
@@ -105,7 +105,7 @@ pub fn get_core_projects() -> Vec<crate::projects::project::Project> {
         "
             .to_string(),
             web_urls: vec!["https://source.puri.sm/Librem5/phosh".to_string()],
-            cvs_urls: vec!["https://source.puri.sm/Librem5/phosh.git".to_string()],
+            vcs_urls: vec!["https://source.puri.sm/Librem5/phosh.git".to_string()],
             maintainers: vec![],
             versions: vec![],
             artifact_names: vec![],
@@ -123,7 +123,7 @@ pub fn get_core_projects() -> Vec<crate::projects::project::Project> {
         "
             .to_string(),
             web_urls: vec!["https://source.puri.sm/Librem5/phoc".to_string()],
-            cvs_urls: vec!["https://source.puri.sm/Librem5/phoc.git".to_string()],
+            vcs_urls: vec!["https://source.puri.sm/Librem5/phoc.git".to_string()],
             maintainers: vec![],
             versions: vec![],
             artifact_names: vec![],
@@ -142,7 +142,7 @@ pub fn get_core_projects() -> Vec<crate::projects::project::Project> {
         "
             .to_string(),
             web_urls: vec!["https://github.com/curl/curl".to_string()],
-            cvs_urls: vec!["https://github.com/curl/curl.git".to_string()],
+            vcs_urls: vec!["https://github.com/curl/curl.git".to_string()],
             maintainers: vec![],
             versions: vec![],
             artifact_names: vec![],
@@ -162,7 +162,7 @@ pub fn get_core_projects() -> Vec<crate::projects::project::Project> {
         "
             .to_string(),
             web_urls: vec!["https://www.gnu.org/software/libc/".to_string()],
-            cvs_urls: vec!["git://sourceware.org/git/glibc.git".to_string()],
+            vcs_urls: vec!["git://sourceware.org/git/glibc.git".to_string()],
             maintainers: vec!["maintainers <libc-maintainers@gnu.org>".to_string()],
             versions: vec![],
             artifact_names: vec![],
@@ -183,7 +183,7 @@ pub fn get_core_projects() -> Vec<crate::projects::project::Project> {
         "
             .to_string(),
             web_urls: vec!["https://www.gnu.org/software/bash/".to_string()],
-            cvs_urls: vec!["https://git.savannah.gnu.org/git/bash.git".to_string()],
+            vcs_urls: vec!["https://git.savannah.gnu.org/git/bash.git".to_string()],
             maintainers: vec!["Chet Ramey".to_string()],
             versions: vec![],
             artifact_names: vec![],
@@ -201,7 +201,7 @@ pub fn get_core_projects() -> Vec<crate::projects::project::Project> {
         "
             .to_string(),
             web_urls: vec!["https://git-scm.com/".to_string()],
-            cvs_urls: vec!["https://github.com/git/git.git".to_string()],
+            vcs_urls: vec!["https://github.com/git/git.git".to_string()],
             maintainers: vec![],
             versions: vec![],
             artifact_names: vec![],
@@ -258,7 +258,7 @@ pub fn get_core_projects() -> Vec<crate::projects::project::Project> {
         "
             .to_string(),
             web_urls: vec!["http://git.savannah.gnu.org/cgit/wget.git".to_string()],
-            cvs_urls: vec!["https://git.savannah.gnu.org/git/wget.git".to_string()],
+            vcs_urls: vec!["https://git.savannah.gnu.org/git/wget.git".to_string()],
             maintainers: vec![],
             versions: vec![],
             artifact_names: vec![],

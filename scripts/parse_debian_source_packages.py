@@ -35,31 +35,38 @@ if __name__ == '__main__':
                 current_package = {}
                 continue
             if field_name == 'Vcs-Git':
-                if 'git_urls' not in current_package:
-                    current_package['git_urls'] = []
-                current_package['git_urls'].append(field_value)
+                current_package['vcs_urls'].append(field_value)
+            if field_name == 'Vcs-Browser' or field_name == 'Homepage':
+                current_package['web_urls'].append(field_value)
+            if field_name == 'Maintainer':
+                current_package['maintainers'].append(field_value)
             if field_name == 'Binary':
-                if 'artifact_names' not in current_package:
-                    current_package['artifact_names'] = []
                 for artifact_name in field_value.split(','):
                     current_package['artifact_names'].append(artifact_name)
             if field_name == 'Version':
-                if 'versions' not in current_package:
-                    current_package['versions'] = []
                 current_package['versions'].append(field_value)
         else:
             if field_name == 'Package':
                 current_package_name = field_value
                 current_package['name'] = current_package_name
+                current_package['id'] = current_package_name
+                current_package['description'] = ""
+                current_package['summary'] = ""
+                current_package['keywords'] = []
+                current_package['versions'] = []
+                current_package['artifact_names'] = []
+                current_package['maintainers'] = []
+                current_package['web_urls'] = []
+                current_package['vcs_urls'] = []
                 continue
 
     for package_name in source_packages.keys():
         source_package = source_packages[package_name]
         # We don't really need those that don't have a git url,
         # at least for now.
-        if 'git_urls' not in source_package:
+        if 'vcs_urls' not in source_package:
             continue
-        source_package['git_urls'] = list(set(source_package['git_urls']))
+        source_package['vcs_urls'] = list(set(source_package['vcs_urls']))
         filtered_packages.append(source_package)
 
-    print(json.dumps(filtered_packages))
+    print(json.dumps(filtered_packages, indent=2))
