@@ -54,6 +54,25 @@ subcommands:
                 value_name: FORMAT
                 required: true
                 help: Format of the manifest to generate.
+    - install:
+        about: install a package in a manifest file.
+        args:
+            - package_name:
+                multiple: false
+                required: true
+                help: Name of the package or artifact to install.
+            - input_file:
+                multiple: false
+                required: true
+                help: Path of the input build manifest.
+            - input_format:
+                short: i
+                long: input-format
+                takes_value: true
+                value_name: FORMAT
+                # TODO make it not required after implementing manifest type detection.
+                required: true
+                help: Format of the manifest provided for the conversion.
     - parse:
         about: parse the manifest file to panbuild's native format.
         args:

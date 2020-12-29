@@ -188,7 +188,7 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
 
         let mut output: String = String::from("");
         // FIXME we should fetch those recursively.
-        for module in ctx.manifest.depends_on {
+        for module in &ctx.manifest.depends_on {
             // FIXME should we check for duplicates here??
             if !output.is_empty() {
                 output.push_str(&separator)
@@ -204,6 +204,69 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
         for project in projects {
             println!("{0}: {1}", project.name, project.summary);
         }
+        return 0;
+    }
+
+    if command_name == "install" {
+        let input_file_path = match args.get("input_file") {
+            Some(input_file_path) => input_file_path,
+            None => {
+                eprintln!("an input file is required when converting!");
+                // TODO handle reading from stdin.
+                return 1;
+            }
+        };
+
+        ctx.content = match fs::read_to_string(path::Path::new(input_file_path)) {
+            Ok(content) => content,
+            Err(e) => {
+                eprintln!("could not read file {}.", input_file_path);
+                return 1;
+            }
+        };
+
+        if args.contains_key("input_format") {
+            let source_type = args.get("input_format").unwrap();
+            if !crate::manifests::has_type(source_type.to_string()) {
+                eprintln!("{} is an invalid manifest type.", source_type);
+                return 1;
+            }
+            ctx.source_type = source_type.to_string();
+        } else {
+            let mut exit_code: i32 = manifests::detect_type(&mut ctx);
+            if exit_code != 0 {
+                eprintln!("Could not detect manifest type of {}.", ctx.source_filename);
+                return exit_code;
+            }
+        }
+
+        let mut exit_code: i32 = manifests::parse(&mut ctx);
+        if exit_code != 0 {
+            eprintln!("Error while parsing");
+            return exit_code;
+        }
+
+        eprintln!("Parsing finished. Resulting manifest is {:#?}", &ctx.manifest);
+
+        let package_name  = match args.get("package_name") {
+            Some(package_name) => package_name,
+            None => {
+                eprintln!("an package name is required when converting!");
+                return 1;
+            }
+        };
+        eprintln!("Installing {:#?}", &package_name);
+
+        let projects: Vec<crate::projects::project::Project> = crate::projects::db::get_all();
+        eprintln!("Searching in {:#?} projects for installation candidates 🕰",projects.len());
+        for project in &projects {
+            for artifact_name in &project.artifact_names {
+                if artifact_name == package_name {
+                    println!("found candidate artifact in {}.", project.name);
+                }
+            }
+        }
+
         return 0;
     }
 
