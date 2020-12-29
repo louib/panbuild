@@ -50,18 +50,13 @@ impl Project {
     // Serializes the project to a native Rust struct creation.
     // This is used to include projects to the internal db.
     fn to_rust(self: &Self) -> String {
-        return String::from(r#####"
-        crate::projects::project::Project {
-            id: "{}".to_string(),
-            name: "{}".to_string(),
-            summary: "{}".to_string(),
-            description: "{}".to_string(),
-            web_urls: vec![],
-            cvs_urls: vec![],
-            layer: 7,
-            is_core: false,
-        }
-        "#####);
+        let mut response: String = String::from("crate::projects::project::Project {\n");
+        response.push_str(&format!("    id: \"{}\".to_string(),", self.id).to_string());
+        response.push_str(&format!("    name: \"{}\".to_string(),", self.name).to_string());
+        response.push_str(&format!("    summary: \"{}\".to_string(),", self.summary).to_string());
+        response.push_str(&format!("    description: \"{}\".to_string(),", self.description).to_string());
+        response.push_str("}");
+        response
     }
 }
 
