@@ -38,6 +38,15 @@ if __name__ == '__main__':
                 if 'git_urls' not in current_package:
                     current_package['git_urls'] = []
                 current_package['git_urls'].append(field_value)
+            if field_name == 'Binary':
+                if 'artifact_names' not in current_package:
+                    current_package['artifact_names'] = []
+                for artifact_name in field_value.split(','):
+                    current_package['artifact_names'].append(artifact_name)
+            if field_name == 'Version':
+                if 'versions' not in current_package:
+                    current_package['versions'] = []
+                current_package['versions'].append(field_value)
         else:
             if field_name == 'Package':
                 current_package_name = field_value
