@@ -34,6 +34,8 @@ pub struct Project {
     // Name of the artifacts that this project produces. Can be binaries, libraries or assets.
     pub artifact_names: Vec<String>,
     pub maintainers: Vec<String>,
+    // Thos
+    pub versions: Vec<String>,
     pub keywords: Vec<String>,
     // Whether the project is part of the internal projects db.
     pub is_core: bool,
@@ -69,6 +71,7 @@ pub struct SemanticVersion {
     pub major: i32,
     pub minor: i32,
     pub patch: i32,
+    // TODO there's a string after the patch...
 }
 
 #[derive(Serialize)]
