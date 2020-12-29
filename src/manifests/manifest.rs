@@ -4,6 +4,12 @@ use std::path::Path;
 
 use serde::{Deserialize, Serialize};
 
+pub enum ManifestFormat {
+    JSON,
+    YAML,
+    TEXT,
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub enum ReleaseType {
     Dev,
@@ -73,24 +79,6 @@ impl Default for AbstractManifest {
             permissions: vec![],
             executables: vec![],
         }
-    }
-}
-// We implement the Iterator Trait to offer a convenient
-// way to travers the package tree recursively.
-impl Iterator for AbstractManifest {
-    type Item = AbstractModule;
-
-    fn next(&mut self) -> Option<AbstractModule> {
-        return None;
-        //Some(self.curr);
-    }
-}
-impl AbstractManifest {
-    fn dump(&self) -> String {
-        return serde_json::to_string(&self).unwrap_or(String::from(""));
-    }
-    fn parse(content: &str) -> AbstractManifest {
-        return AbstractManifest::default();
     }
 }
 

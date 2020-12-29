@@ -12,7 +12,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Deserialize, Serialize, Default)]
 #[serde(rename_all = "kebab-case")]
 #[serde(default)]
-struct SnapcraftManifest {
+pub struct SnapcraftManifest {
     // Incorporate external metadata via the referenced part.
     // See Using external metadata for more details.
     pub adopt_info: String,
@@ -144,7 +144,7 @@ struct SnapcraftManifest {
 #[derive(Deserialize, Serialize, Default)]
 #[serde(rename_all = "kebab-case")]
 #[serde(default)]
-struct SnapcraftPlug {
+pub struct SnapcraftPlug {
     pub interface: String,
     pub target: String,
     pub default_provider: String,
@@ -185,7 +185,7 @@ enum Grade {
 #[derive(Deserialize, Serialize, Default)]
 #[serde(rename_all = "kebab-case")]
 #[serde(default)]
-struct SnapcraftApp {
+pub struct SnapcraftApp {
     // Can be one of the following:
     //   none (Disables the creation of an env variable wrapper.)
     //   full (default)
@@ -301,7 +301,7 @@ struct SnapcraftApp {
 #[derive(Deserialize, Serialize, Default)]
 #[serde(rename_all = "kebab-case")]
 #[serde(default)]
-struct SnapcraftSocket {
+pub struct SnapcraftSocket {
     pub listen_stream: String,
 
     // The mode of a socket in octal.
@@ -347,7 +347,7 @@ pub const ALLOWED_BUILD_ATTRIBUTES: [&str; 4] = [
 #[derive(Deserialize, Serialize, Default)]
 #[serde(rename_all = "kebab-case")]
 #[serde(default)]
-struct SnapcraftPart {
+pub struct SnapcraftPart {
     // Ensures that all the <part-names> listed in after are staged before this part begins its lifecycle.
     pub after: Vec<String>,
 
@@ -555,14 +555,14 @@ struct SnapcraftPart {
 #[derive(Deserialize, Serialize)]
 #[serde(rename_all = "kebab-case")]
 #[serde(untagged)]
-enum SnapcraftPackage {
+pub enum SnapcraftPackage {
     PackageName(String),
     OptionalPackages(SnapcraftOptionalPackages),
 }
 
 #[derive(Deserialize, Serialize)]
 #[serde(rename_all = "kebab-case")]
-struct SnapcraftOptionalPackages {
+pub struct SnapcraftOptionalPackages {
     r#try: Vec<String>,
 }
 
