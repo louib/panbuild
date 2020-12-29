@@ -1,21 +1,17 @@
-use std::io;
 use std::fs::{self, DirEntry};
+use std::io;
 use std::path::Path;
 
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
-#[derive(Debug)]
-#[derive(Serialize)]
-#[derive(Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub enum ReleaseType {
     Dev,
     Release,
 }
 pub const DEFAULT_RELEASE_TYPE: ReleaseType = ReleaseType::Dev;
 
-#[derive(Debug)]
-#[derive(Serialize)]
-#[derive(Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub enum Architecture {
     Amd64,
     I386,
@@ -25,9 +21,7 @@ pub enum Architecture {
 }
 pub const DEFAULT_ARCH: Architecture = Architecture::Any;
 
-#[derive(Debug)]
-#[derive(Serialize)]
-#[derive(Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 /// Software license used for a package.
 /// See https://spdx.org/licenses/ For the complete list of commonly found
 /// free and open source licenses.
@@ -42,9 +36,7 @@ pub enum License {
 }
 pub const DEFAULT_LICENSE: License = License::Gpl2;
 
-#[derive(Debug)]
-#[derive(Serialize)]
-#[derive(Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 /// Generic representation of a build manifest.
 pub struct AbstractManifest {
     pub package_name: String,
@@ -128,9 +120,7 @@ const JESSIE: OSVersion = OSVersion {
     // codename: String::from("stretch"),
 };
 
-#[derive(Debug)]
-#[derive(Serialize)]
-#[derive(Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub enum PackagingSystem {
     Flatpak,
     Snap,
@@ -141,16 +131,16 @@ pub enum PackagingSystem {
 }
 pub const DEFAULT_PACKAGING_SYSTEM: PackagingSystem = PackagingSystem::Unknown;
 impl Default for PackagingSystem {
-    fn default() -> Self { DEFAULT_PACKAGING_SYSTEM }
+    fn default() -> Self {
+        DEFAULT_PACKAGING_SYSTEM
+    }
 }
 
 // TODO Should we allow those systems to be available
 // when the generated manifest will be used? We could
 // consider optionally downloading those dependencies
 // to ensure the version of the build system...
-#[derive(Debug)]
-#[derive(Serialize)]
-#[derive(Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub enum BuildSystem {
     Make,
     Cmake,
@@ -180,9 +170,7 @@ pub enum BuildSystem {
     Unknown,
 }
 impl BuildSystem {
-    pub fn get_build_system(
-        path: &str,
-    ) -> BuildSystem {
+    pub fn get_build_system(path: &str) -> BuildSystem {
         if path.ends_with("meson_options.txt") {
             return BuildSystem::Meson;
         }
@@ -210,19 +198,18 @@ impl BuildSystem {
 
     pub fn get_manifest(self: &BuildSystem) -> AbstractManifest {
         return AbstractManifest::default();
-
     }
 }
 
 pub const DEFAULT_BUILD_SYSTEM: BuildSystem = BuildSystem::Unknown;
 
 impl Default for BuildSystem {
-    fn default() -> Self { DEFAULT_BUILD_SYSTEM }
+    fn default() -> Self {
+        DEFAULT_BUILD_SYSTEM
+    }
 }
 
-#[derive(Debug)]
-#[derive(Serialize)]
-#[derive(Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub enum SourceType {
     Bzr,
     Deb,
@@ -243,12 +230,12 @@ pub enum SourceType {
 pub const DEFAULT_SOURCE_TYPE: SourceType = SourceType::Unknown;
 
 impl Default for SourceType {
-    fn default() -> Self { DEFAULT_SOURCE_TYPE }
+    fn default() -> Self {
+        DEFAULT_SOURCE_TYPE
+    }
 }
 
-#[derive(Debug)]
-#[derive(Serialize)]
-#[derive(Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub enum ModuleType {
     CLIApp,
     GUIApp,
@@ -267,13 +254,12 @@ pub enum ModuleType {
 }
 pub const DEFAULT_MODULE_TYPE: ModuleType = ModuleType::Lib;
 impl Default for ModuleType {
-    fn default() -> Self { DEFAULT_MODULE_TYPE }
+    fn default() -> Self {
+        DEFAULT_MODULE_TYPE
+    }
 }
 
-#[derive(Default)]
-#[derive(Debug)]
-#[derive(Serialize)]
-#[derive(Deserialize)]
+#[derive(Default, Debug, Serialize, Deserialize)]
 /// Generic representation of a software module.
 /// TODO use the list of all debian packages at
 /// https://packages.debian.org/stable/allpackages
@@ -302,10 +288,7 @@ pub struct AbstractModule {
     pub is_primary: bool,
 }
 
-#[derive(Default)]
-#[derive(Debug)]
-#[derive(Serialize)]
-#[derive(Deserialize)]
+#[derive(Default, Debug, Serialize, Deserialize)]
 pub struct AbstractExecutable {
     pub name: String,
     pub path: String,
@@ -316,19 +299,14 @@ pub struct AbstractExecutable {
     pub icon_path: String,
 }
 
-#[derive(Default)]
-#[derive(Debug)]
-#[derive(Serialize)]
-#[derive(Deserialize)]
+#[derive(Default, Debug, Serialize, Deserialize)]
 pub struct AbstractPermission {
     pub name: String,
     pub description: String,
     pub api_type: APIType,
 }
 
-#[derive(Debug)]
-#[derive(Serialize)]
-#[derive(Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub enum APIType {
     Dbus,
     Files,
@@ -342,7 +320,9 @@ pub enum APIType {
 pub const DEFAULT_API_TYPE: APIType = APIType::Unknown;
 
 impl Default for APIType {
-    fn default() -> Self { DEFAULT_API_TYPE }
+    fn default() -> Self {
+        DEFAULT_API_TYPE
+    }
 }
 
 // Currently the documentation comes from the Debian control file documentation.
@@ -401,8 +381,8 @@ fn get_manifests_for_path(path: std::fs::DirEntry) -> Vec<AbstractManifest> {
         return manifests_in_project;
     } else if file_type.is_symlink() {
         return manifests_in_project;
-        // Maybe we should handle those. Detect if they point to a file in the project,
-        // and if not, give it a try!
+    // Maybe we should handle those. Detect if they point to a file in the project,
+    // and if not, give it a try!
     } else {
         assert!(false, "Unknown file type");
     }
@@ -411,6 +391,10 @@ fn get_manifests_for_path(path: std::fs::DirEntry) -> Vec<AbstractManifest> {
 
 pub fn get_manifests(project_path: String) -> Vec<AbstractManifest> {
     let mut manifests_in_project = vec![];
-    let mut manifests = fs::read_dir(project_path).unwrap().map(|res| res.map(get_manifests_for_path)).collect::<Result<Vec<_>, io::Error>>().unwrap();
+    let mut manifests = fs::read_dir(project_path)
+        .unwrap()
+        .map(|res| res.map(get_manifests_for_path))
+        .collect::<Result<Vec<_>, io::Error>>()
+        .unwrap();
     return manifests_in_project;
 }

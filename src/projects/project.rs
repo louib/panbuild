@@ -1,12 +1,10 @@
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 use std::process::Command;
 
 pub const PROJECTS_DIR: &str = "~/.panbuild/projects/";
 
-#[derive(Serialize)]
-#[derive(Deserialize)]
-#[derive(Default)]
+#[derive(Serialize, Deserialize, Default)]
 pub struct ProjectVersion {
     pub project_id: String,
     // Name of the version. Normally follows sem ver.
@@ -19,9 +17,7 @@ pub struct ProjectVersion {
     pub dependencies: Vec<Dependancy>,
 }
 
-#[derive(Serialize)]
-#[derive(Deserialize)]
-#[derive(Default)]
+#[derive(Serialize, Deserialize, Default)]
 pub struct Project {
     // Unique project id, if available
     pub id: String,
@@ -64,9 +60,7 @@ impl Project {
 
 // See https://github.com/rust-lang/rfcs/blob/master/text/1105-api-evolution.md
 // and https://doc.rust-lang.org/cargo/reference/manifest.html#the-version-field
-#[derive(Serialize)]
-#[derive(Deserialize)]
-#[derive(Default)]
+#[derive(Serialize, Deserialize, Default)]
 pub struct SemanticVersion {
     pub major: i32,
     pub minor: i32,
@@ -74,9 +68,7 @@ pub struct SemanticVersion {
     // TODO there's a string after the patch...
 }
 
-#[derive(Serialize)]
-#[derive(Deserialize)]
-#[derive(Default)]
+#[derive(Serialize, Deserialize, Default)]
 pub struct Dependancy {
     pub min_version: SemanticVersion,
     pub max_version: SemanticVersion,

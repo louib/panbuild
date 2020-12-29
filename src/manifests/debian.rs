@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use crate::manifests::manifest::{Priority, AbstractModule, AbstractManifest};
+use crate::manifests::manifest::{AbstractManifest, AbstractModule, Priority};
 
 // Package constants.
 const DEFAULT_ARCH: &str = "any";
@@ -69,7 +69,6 @@ const CONTROL_FILE_SEPARATOR: &str = ":";
 //];
 const DEFAULT_SECTION: &str = "libs";
 
-
 // See https://www.debian.org/doc/debian-policy/ch-controlfields.html
 // **** Top-level fields
 //
@@ -107,7 +106,6 @@ const VCS_GIT: &str = "Vcs-Git";
 // list of packages (see package fields below).
 const PACKAGES: &str = "packages";
 
-
 // **** Package fields
 const PACKAGE_NAME: &str = "Package";
 // A multi-line string
@@ -125,18 +123,17 @@ const PRE_DEPENDS: &str = "Pre-Depends";
 const CONFLICTS: &str = "Conflicts";
 const BREAKS: &str = "Breaks";
 
-
 fn parse_paragraphs(content: &str, paragraphs: &mut Vec<String>) {
     let content_str = content.to_string();
     let lines = content_str.split("\n");
     let mut paragraph: String = String::from("");
 
     for line in lines {
-        if ! is_empty_line(line) {
+        if !is_empty_line(line) {
             paragraph.push_str(line);
             paragraph.push_str("\n");
         }
-        if is_empty_line(line) && ! paragraph.is_empty() {
+        if is_empty_line(line) && !paragraph.is_empty() {
             paragraphs.push(paragraph);
             paragraph = String::from("");
         }
@@ -260,7 +257,7 @@ pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
                     if part == field_name {
                         continue;
                     }
-                    if ! field_value.is_empty() {
+                    if !field_value.is_empty() {
                         field_value.push_str(":");
                     }
                     field_value.push_str(part);
@@ -268,11 +265,9 @@ pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
                 last_field_name = field_name.clone();
             }
 
-
             if field_name == PACKAGE_NAME {
                 package.name = field_value.trim().to_string();
             } else if field_name == ARCHITECTURE {
-
             } else if field_name == DESCRIPTION {
                 // Here we append because the field can be multi-line.
                 description.push_str(&field_value);
@@ -302,7 +297,7 @@ pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
 
             let mut version_spec = String::from("");
             for part in module_spec_parts {
-                if ! version_spec.is_empty() {
+                if !version_spec.is_empty() {
                     version_spec.push_str(" ");
                 }
                 version_spec.push_str(part);
@@ -409,21 +404,14 @@ mod tests {
     #[test]
     pub fn test_parse() {
         let mut manifest = parse(&DEBIAN_CONTROL_EXAMPLE);
-        assert!(
-            manifest.package_name == "package_name",
-            "The app name was not package_name!",
-        );
+        assert!(manifest.package_name == "package_name", "The app name was not package_name!",);
     }
 
     #[test]
     pub fn test_dump() {
         let mut manifest = AbstractManifest::default();
         let debian_control_dump = dump(&manifest);
-        assert!(
-            !debian_control_dump.is_empty(),
-            "The dump from debian::parse was empty!",
-        );
-
+        assert!(!debian_control_dump.is_empty(), "The dump from debian::parse was empty!",);
     }
 
     #[test]

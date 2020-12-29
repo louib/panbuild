@@ -8,7 +8,6 @@
 pub fn dump(manifest: &crate::manifests::manifest::AbstractManifest) -> String {
     let mut response = String::from("");
     return response;
-
 }
 
 pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {

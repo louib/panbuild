@@ -8,8 +8,8 @@ use std::collections::HashMap;
 #[macro_use]
 extern crate clap;
 
-use clap::{Arg, App, ArgMatches, SubCommand};
-use std::process::{exit};
+use clap::{App, Arg, ArgMatches, SubCommand};
+use std::process::exit;
 
 const APP_VERSION: &str = "0.0.8";
 
@@ -37,7 +37,7 @@ fn main() {
             eprintln!("Please provide a command to execute.");
             eprintln!("{}", matches.usage());
             exit(1);
-        },
+        }
     };
 
     let subcommand_matches = match matches.subcommand_matches(command_name) {
@@ -46,24 +46,22 @@ fn main() {
             eprintln!("Invalid arguments for command {}", command_name);
             eprintln!("{}", matches.usage());
             exit(1);
-        },
+        }
     };
 
-    arguments.entry("input_format".to_string()).or_insert(
-        subcommand_matches.value_of("input_format").unwrap_or("default").to_string()
-    );
-    arguments.entry("input_file".to_string()).or_insert(
-        subcommand_matches.value_of("input_file").unwrap_or("default").to_string()
-    );
-    arguments.entry("destination_format".to_string()).or_insert(
-        subcommand_matches.value_of("destination_format").unwrap_or("default").to_string()
-    );
-    arguments.entry("separator".to_string()).or_insert(
-        subcommand_matches.value_of("separator").unwrap_or(",").to_string()
-    );
-    arguments.entry("project_path".to_string()).or_insert(
-        subcommand_matches.value_of("project_path").unwrap_or(",").to_string()
-    );
+    arguments
+        .entry("input_format".to_string())
+        .or_insert(subcommand_matches.value_of("input_format").unwrap_or("default").to_string());
+    arguments
+        .entry("input_file".to_string())
+        .or_insert(subcommand_matches.value_of("input_file").unwrap_or("default").to_string());
+    arguments
+        .entry("destination_format".to_string())
+        .or_insert(subcommand_matches.value_of("destination_format").unwrap_or("default").to_string());
+    arguments.entry("separator".to_string()).or_insert(subcommand_matches.value_of("separator").unwrap_or(",").to_string());
+    arguments
+        .entry("project_path".to_string())
+        .or_insert(subcommand_matches.value_of("project_path").unwrap_or(",").to_string());
 
     let exit_code = panbuild::run(command_name, arguments);
     exit(exit_code);

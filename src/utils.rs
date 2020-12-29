@@ -1,6 +1,6 @@
 use std::fs::{self, DirEntry};
-use std::path::Path;
 use std::io;
+use std::path::Path;
 
 fn get_file_paths(dir: String) -> Vec<String> {
     return vec![];
@@ -22,4 +22,3 @@ fn visit_dirs(dir: &Path, cb: &dyn Fn(&DirEntry)) -> io::Result<()> {
     }
     Ok(())
 }
-

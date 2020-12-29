@@ -1,7 +1,6 @@
 use std::collections::BTreeMap;
 
-use serde::{Serialize, Deserialize};
-
+use serde::{Deserialize, Serialize};
 
 // Other choices are org.gnome.Platform and org.kde.Platform
 const DEFAULT_RUNTIME: &str = "org.freedesktop.Platform";
@@ -10,8 +9,7 @@ const DEFAULT_RUNTIME_VERSION: &str = "master";
 const DEFAULT_SDK: &str = "org.freedesktop.Sdk";
 
 // See `man flatpak-manifest` for the flatpak manifest specs.
-#[derive(Deserialize, Serialize)]
-#[derive(Default)]
+#[derive(Deserialize, Serialize, Default)]
 #[serde(rename_all = "kebab-case")]
 #[serde(default)]
 struct FlatpakManifest {
@@ -164,8 +162,7 @@ struct FlatpakManifest {
 // building.
 //
 // Modules can be nested, in order to turn related modules on and off with a single key.
-#[derive(Deserialize, Serialize)]
-#[derive(Default)]
+#[derive(Deserialize, Serialize, Default)]
 #[serde(rename_all = "kebab-case")]
 #[serde(default)]
 struct FlatpakModule {
@@ -271,7 +268,6 @@ struct FlatpakModule {
     pub modules: Vec<FlatpakModule>,
 }
 
-
 // The sources are a list pointer to the source code that needs to be extracted into
 // the build directory before the build starts.
 // They can be of several types, distinguished by the type property.
@@ -279,8 +275,7 @@ struct FlatpakModule {
 // Additionally, the sources list can contain a plain string, which is interpreted as the name
 // of a separate json or yaml file that is read and inserted at this
 // point. The file can contain a single source, or an array of sources.
-#[derive(Deserialize, Serialize)]
-#[derive(Default)]
+#[derive(Deserialize, Serialize, Default)]
 #[serde(rename_all = "kebab-case")]
 struct FlatpakSource {
     // Allowed source types are:
@@ -297,13 +292,11 @@ struct FlatpakSource {
     pub r#type: String,
     pub url: String,
     pub tag: Option<String>,
-
 }
 
 // Extension define extension points in the app/runtime that can be implemented by extensions,
 // supplying extra files which are available during runtime..
-#[derive(Deserialize, Serialize)]
-#[derive(Default)]
+#[derive(Deserialize, Serialize, Default)]
 #[serde(rename_all = "kebab-case")]
 #[serde(default)]
 struct FlatpakExtension {
@@ -327,8 +320,7 @@ struct FlatpakExtension {
 // Build options specify the build environment of a module,
 // and can be specified globally as well as per-module.
 // Options can also be specified on a per-architecture basis using the arch property.
-#[derive(Deserialize, Serialize)]
-#[derive(Default)]
+#[derive(Deserialize, Serialize, Default)]
 #[serde(rename_all = "kebab-case")]
 #[serde(default)]
 struct FlatpakBuildOptions {
@@ -457,10 +449,10 @@ pub fn dump(manifest: &crate::manifests::manifest::AbstractManifest) -> String {
 pub fn file_path_matches(path: &str) -> bool {
     let parts: Vec<&str> = path.split("/").collect();
     if parts.len() == 0 {
-        return false
+        return false;
     }
     let last_part = parts[parts.len() - 1];
-    if ! last_part.to_lowercase().ends_with("yaml") && ! last_part.to_lowercase().ends_with("json") {
+    if !last_part.to_lowercase().ends_with("yaml") && !last_part.to_lowercase().ends_with("json") {
         return false;
     }
     let mut dot_count = 0;

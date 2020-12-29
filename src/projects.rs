@@ -1,5 +1,5 @@
-pub mod project;
 pub mod db;
+pub mod project;
 
 // Dump the project in the format required by the database.rs file.
 pub fn dump_project(project: crate::projects::project::Project) -> String {

@@ -1,8 +1,8 @@
-pub mod snap;
+pub mod arch;
 pub mod debian;
 pub mod flatpak;
-pub mod arch;
 pub mod manifest;
+pub mod snap;
 
 pub fn has_type(type_name: String) -> bool {
     if type_name == "debian" {

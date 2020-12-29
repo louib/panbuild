@@ -1,7 +1,6 @@
 use std::collections::HashMap;
 
-use serde::{Serialize, Deserialize};
-
+use serde::{Deserialize, Serialize};
 
 // See https://snapcraft.io/docs/snapcraft-yaml-reference for the full YAML reference.
 // TODO is https://snapcraft.io/docs/snapcraft-advanced-grammar relevant?
@@ -10,8 +9,7 @@ use serde::{Serialize, Deserialize};
 // details on how apps and parts are configured within snapcraft.yaml.
 // Top-level details include a snap’s name, version and description, alongside operational values
 // such as its confinement level and supported architecture.
-#[derive(Deserialize, Serialize)]
-#[derive(Default)]
+#[derive(Deserialize, Serialize, Default)]
 #[serde(rename_all = "kebab-case")]
 #[serde(default)]
 struct SnapcraftManifest {
@@ -143,8 +141,7 @@ struct SnapcraftManifest {
     pub parts: HashMap<String, SnapcraftPart>,
 }
 
-#[derive(Deserialize, Serialize)]
-#[derive(Default)]
+#[derive(Deserialize, Serialize, Default)]
 #[serde(rename_all = "kebab-case")]
 #[serde(default)]
 struct SnapcraftPlug {
@@ -153,7 +150,7 @@ struct SnapcraftPlug {
     pub default_provider: String,
 }
 
-const REQUIRED_TOP_LEVEL_FIELDS:[&'static str; 0] = [
+const REQUIRED_TOP_LEVEL_FIELDS: [&'static str; 0] = [
     // DESCRIPTION,
     // GRADE,
     // NAME,
@@ -181,13 +178,11 @@ enum Grade {
     Devel,
 }
 
-
 // The app keys and values in snapcraft.yaml detail the applications and services that
 // a snap wants to expose, including how they’re executed and which resources they can access.
 // See Snapcraft top-level metadata and Snapcraft parts metadata for details on
 // how apps and parts are configured within snapcraft.yaml.
-#[derive(Deserialize, Serialize)]
-#[derive(Default)]
+#[derive(Deserialize, Serialize, Default)]
 #[serde(rename_all = "kebab-case")]
 #[serde(default)]
 struct SnapcraftApp {
@@ -248,7 +243,6 @@ struct SnapcraftApp {
     //   Example: [gnome-3-28]
     pub extensions: Vec<String>,
 
-
     // <app-name> attributes to pass through to snap.yaml without snapcraft validation.
     // See Using in-development features for further details.
     // const PASSTHROUGH: &str = "passthrough";
@@ -304,8 +298,7 @@ struct SnapcraftApp {
 //     unix:
 //       listen-stream: $SNAP_COMMON/lxd/unix.socket
 //       socket-mode: 0660
-#[derive(Deserialize, Serialize)]
-#[derive(Default)]
+#[derive(Deserialize, Serialize, Default)]
 #[serde(rename_all = "kebab-case")]
 #[serde(default)]
 struct SnapcraftSocket {
@@ -317,24 +310,14 @@ struct SnapcraftSocket {
 }
 
 // Refer to systemd.service manual for details.
-pub const ALLOWED_RESTARTS_CONDITIONS: [&str; 6] = [
-    "on_failure",
-    "on_success",
-    "on_abnormal",
-    "on_abort",
-    "always",
-    "never",
-];
+pub const ALLOWED_RESTARTS_CONDITIONS: [&str; 6] = ["on_failure", "on_success", "on_abnormal", "on_abort", "always", "never"];
 
 pub const ALLOWED_DAEMON_TYPES: [&str; 4] = [
     // the command is the main process.
-    "simple",
-    // the configured command will exit after completion
-    "oneshot",
-    // the configured command calls fork() as part of its start-up.
+    "simple",  // the configured command will exit after completion
+    "oneshot", // the configured command calls fork() as part of its start-up.
     // The parent process is then expected to exit when start-up is complete
-    "forking",
-    // the command configured will send a signal to systemd to indicate that it’s running.
+    "forking", // the command configured will send a signal to systemd to indicate that it’s running.
     "notify",
 ];
 
@@ -352,7 +335,6 @@ pub const ALLOWED_BUILD_ATTRIBUTES: [&str; 4] = [
     "no_install",
 ];
 
-
 // The main building blocks of a snap are parts.
 // They are used to declare pieces of code that will be pulled into your snap package.
 // The parts keys and values in snapcraft.yaml detail how parts are configured and built
@@ -362,8 +344,7 @@ pub const ALLOWED_BUILD_ATTRIBUTES: [&str; 4] = [
 // details on how apps and parts are configured within snapcraft.yaml.
 // <part-name> represents the specific name of a building block which can be
 // then referenced by the command line tool (i.e. snapcraft).
-#[derive(Deserialize, Serialize)]
-#[derive(Default)]
+#[derive(Deserialize, Serialize, Default)]
 #[serde(rename_all = "kebab-case")]
 #[serde(default)]
 struct SnapcraftPart {
@@ -585,7 +566,6 @@ struct SnapcraftOptionalPackages {
     r#try: Vec<String>,
 }
 
-
 pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
     let mut response = crate::manifests::manifest::AbstractManifest::default();
 
@@ -643,22 +623,26 @@ mod tests {
     #[test]
     #[should_panic(expected = "Required top-level field grade is missing from snapcraft manifest.")]
     pub fn test_parse_missing_required_fields() {
-        parse(r###"
+        parse(
+            r###"
             name: app-name,
             description: description
             summary: this is my app,
             version: 0.0.1
-        "###);
+        "###,
+        );
     }
 
     #[test]
     pub fn test_parse_missing_version() {
-        let manifest: crate::manifests::manifest::AbstractManifest = parse(r###"
+        let manifest: crate::manifests::manifest::AbstractManifest = parse(
+            r###"
             name: app-name,
             description: description
             grade: devel
             summary: this is my app
-        "###);
+        "###,
+        );
         assert_eq!(manifest.package_version, "");
     }
 

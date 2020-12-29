@@ -3,17 +3,17 @@
 //! `panbuild` is the universal builder.
 use std::collections::HashMap;
 
+mod execution_context;
 mod manifests;
 mod projects;
-mod execution_context;
 mod utils;
 
 pub use manifests::manifest::AbstractManifest;
 pub use manifests::manifest::AbstractModule;
 
+use std::env;
 use std::fs;
 use std::path;
-use std::env;
 
 const DEFAULT_CACHE_DIR: &str = ".panbuild/";
 const DEFAULT_GIT_CACHE_DIR: &str = ".git/";
@@ -42,7 +42,7 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
                 eprintln!("an input file is required when converting!");
                 // TODO handle reading from stdin.
                 return 1;
-            },
+            }
         };
 
         ctx.content = match fs::read_to_string(path::Path::new(input_file_path)) {
@@ -51,14 +51,13 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
                 eprintln!("could not read file {}.", input_file_path);
                 return 1;
             }
-
         };
 
         ctx.data_dir = env::var("PANBUILD_DATA_DIR").unwrap_or(String::from("")).to_string();
 
         if args.contains_key("input_format") {
             let source_type = args.get("input_format").unwrap();
-            if ! crate::manifests::has_type(source_type.to_string()) {
+            if !crate::manifests::has_type(source_type.to_string()) {
                 eprintln!("{} is an invalid manifest type.", source_type);
                 return 1;
             }
@@ -73,7 +72,7 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
 
         if args.contains_key("output_format") {
             let destination_type = args.get("output_format").unwrap();
-            if ! crate::manifests::has_type(destination_type.to_string()) {
+            if !crate::manifests::has_type(destination_type.to_string()) {
                 eprintln!("{} is an invalid manifest type.", destination_type);
                 return 1;
             }
@@ -94,7 +93,6 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
             return exit_code;
         }
 
-
         // eprintln!("Finishing...");
         return 0;
     }
@@ -106,7 +104,7 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
                 eprintln!("an input file is required when converting!");
                 // TODO handle reading from stdin.
                 return 1;
-            },
+            }
         };
 
         ctx.content = match fs::read_to_string(path::Path::new(input_file_path)) {
@@ -115,12 +113,11 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
                 eprintln!("could not read file {}.", input_file_path);
                 return 1;
             }
-
         };
 
         if args.contains_key("input_format") {
             let source_type = args.get("input_format").unwrap();
-            if ! crate::manifests::has_type(source_type.to_string()) {
+            if !crate::manifests::has_type(source_type.to_string()) {
                 eprintln!("{} is an invalid manifest type.", source_type);
                 return 1;
             }
@@ -150,7 +147,7 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
                 eprintln!("an input file is required when converting!");
                 // TODO handle reading from stdin.
                 return 1;
-            },
+            }
         };
 
         ctx.content = match fs::read_to_string(path::Path::new(input_file_path)) {
@@ -159,12 +156,11 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
                 eprintln!("could not read file {}.", input_file_path);
                 return 1;
             }
-
         };
 
         if args.contains_key("input_format") {
             let source_type = args.get("input_format").unwrap();
-            if ! crate::manifests::has_type(source_type.to_string()) {
+            if !crate::manifests::has_type(source_type.to_string()) {
                 eprintln!("{} is an invalid manifest type.", source_type);
                 return 1;
             }
@@ -185,7 +181,6 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
 
         eprintln!("Parsing finished. Resulting manifest is {:#?}", &ctx.manifest);
 
-
         let mut separator = DEFAULT_PACKAGE_LIST_SEP;
         if args.contains_key("separator") {
             separator = args.get("separator").unwrap();
@@ -195,7 +190,7 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
         // FIXME we should fetch those recursively.
         for module in ctx.manifest.depends_on {
             // FIXME should we check for duplicates here??
-            if ! output.is_empty() {
+            if !output.is_empty() {
                 output.push_str(&separator)
             }
             output.push_str(&module.name);
@@ -214,7 +209,7 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
 
     if command_name == "ls" {
         let git_cache_dir = path::Path::new(DEFAULT_GIT_CACHE_DIR);
-        if ! git_cache_dir.is_dir() {
+        if !git_cache_dir.is_dir() {
             eprintln!("This does not seem like a git project (.git/ was not found).");
             return 1;
         }
@@ -247,14 +242,14 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
             println!("{}", file_path_str);
         }
 
-        if ! found_env {
+        if !found_env {
             eprintln!("No available environment found for the project. Try running `ls -p`.");
         }
     }
 
     if command_name == "status" {
         let project_path = path::Path::new(DEFAULT_CACHE_DIR);
-        if ! project_path.is_dir() {
+        if !project_path.is_dir() {
             println!("No environment configured yet. Run `ls` to show the available envs.");
         }
     }
