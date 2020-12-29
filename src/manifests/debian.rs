@@ -123,6 +123,12 @@ const PRE_DEPENDS: &str = "Pre-Depends";
 const CONFLICTS: &str = "Conflicts";
 const BREAKS: &str = "Breaks";
 
+pub struct DebianManifest {
+    pub maintainer: String,
+    pub app_name: String,
+    pub version: String,
+}
+
 fn parse_paragraphs(content: &str, paragraphs: &mut Vec<String>) {
     let content_str = content.to_string();
     let lines = content_str.split("\n");

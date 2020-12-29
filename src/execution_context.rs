@@ -9,7 +9,7 @@ pub struct ExecutionContext {
     pub content: String,
     pub manifest: crate::manifests::manifest::AbstractManifest,
     pub flatpak_manifest: Option<crate::manifests::flatpak::FlatpakManifest>,
-    // pub debian_manifest: Option<crate::manifests::debian::DebianManifest>,
+    pub debian_manifest: Option<crate::manifests::debian::DebianManifest>,
     pub snap_manifest: Option<crate::manifests::snap::SnapcraftManifest>,
 }
 
@@ -23,7 +23,7 @@ impl Default for ExecutionContext {
             content: "".to_string(),
             manifest: crate::manifests::manifest::AbstractManifest::default(),
             flatpak_manifest: None,
-            // debian_manifest: None,
+            debian_manifest: None,
             snap_manifest: None,
         };
     }
