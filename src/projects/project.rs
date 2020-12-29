@@ -23,6 +23,7 @@ pub struct ProjectVersion {
 #[derive(Deserialize)]
 #[derive(Default)]
 pub struct Project {
+    // Unique project id, if available
     pub id: String,
     pub name: String,
     // Basically a short description, or a title.
@@ -30,6 +31,8 @@ pub struct Project {
     pub description: String,
     pub web_urls: Vec<String>,
     pub cvs_urls: Vec<String>,
+    // Name of the artifacts that this project produces. Can be binaries, libraries or assets.
+    pub artifact_names: Vec<String>,
     pub maintainers: Vec<String>,
     pub keywords: Vec<String>,
     // Whether the project is part of the internal projects db.
@@ -54,6 +57,7 @@ impl Project {
             summary: "{}".to_string(),
             description: "{}".to_string(),
             web_urls: vec![],
+            cvs_urls: vec![],
             layer: 7,
             is_core: false,
         }
