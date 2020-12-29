@@ -19,8 +19,8 @@ pub fn get_core_projects() -> Vec<crate::projects::project::Project> { vec![
         summary: "The Linux Kernel".to_string(),
         description: "
         ".to_string(),
-        homepage: "https://github.com/torvalds/linux".to_string(),
-        url: "https://github.com/torvalds/linux.git".to_string(),
+        web_urls: vec!["https://github.com/torvalds/linux".to_string()],
+        cvs_urls: vec!["https://github.com/torvalds/linux.git".to_string()],
         maintainers: vec![],
         keywords: vec![],
         layer: 0,
@@ -34,8 +34,8 @@ pub fn get_core_projects() -> Vec<crate::projects::project::Project> { vec![
             Flatpak-builder is a tool for building flatpaks from sources.
             See http://flatpak.org/ for more information.
         ".to_string(),
-        homepage: "http://flatpak.org/".to_string(),
-        url: "".to_string(),
+        web_urls: vec!["http://flatpak.org/".to_string()],
+        cvs_urls: vec![],
         maintainers: vec![],
         keywords: vec![],
         layer: 0,
@@ -48,8 +48,8 @@ pub fn get_core_projects() -> Vec<crate::projects::project::Project> { vec![
         description: "
             Flatpak is a system for building, distributing, and running sandboxed desktop applications on Linux.
         ".to_string(),
-        homepage: "http://flatpak.org/".to_string(),
-        url: "".to_string(),
+        web_urls: vec!["http://flatpak.org/".to_string()],
+        cvs_urls: vec![],
         maintainers: vec![],
         keywords: vec![],
         layer: 0,
@@ -65,8 +65,8 @@ pub fn get_core_projects() -> Vec<crate::projects::project::Project> { vec![
             as the compiler for the GNU operating system. The GNU system was developed to be 100% free software,
             free in the sense that it respects the user's freedom.
         ".to_string(),
-        homepage: "https://gcc.gnu.org/".to_string(),
-        url: "https://gcc.gnu.org/git/gcc.git".to_string(),
+        web_urls: vec!["https://gcc.gnu.org/".to_string()],
+        cvs_urls: vec!["https://gcc.gnu.org/git/gcc.git".to_string()],
         maintainers: vec![],
         keywords: vec![],
         layer: 0,
@@ -80,8 +80,8 @@ pub fn get_core_projects() -> Vec<crate::projects::project::Project> { vec![
             A pure Wayland shell prototype for GNOME on mobile devices.
             For a matching compositor see https://source.puri.sm/Librem5/phoc but others implementing wlr-layer-shell should work as well.
         ".to_string(),
-        homepage: "https://source.puri.sm/Librem5/phosh".to_string(),
-        url: "https://source.puri.sm/Librem5/phosh.git".to_string(),
+        web_urls: vec!["https://source.puri.sm/Librem5/phosh".to_string()],
+        cvs_urls: vec!["https://source.puri.sm/Librem5/phosh.git".to_string()],
         maintainers: vec![],
         keywords: vec![],
         layer: 3,
@@ -95,8 +95,8 @@ pub fn get_core_projects() -> Vec<crate::projects::project::Project> { vec![
             wlroots based Phone compositor as used on the Librem5.
             Phoc is pronounced like the English word fog.
         ".to_string(),
-        homepage: "https://source.puri.sm/Librem5/phoc".to_string(),
-        url: "https://source.puri.sm/Librem5/phoc.git".to_string(),
+        web_urls: vec!["https://source.puri.sm/Librem5/phoc".to_string()],
+        cvs_urls: vec!["https://source.puri.sm/Librem5/phoc.git".to_string()],
         maintainers: vec![],
         keywords: vec![],
         layer: 3,
@@ -111,8 +111,8 @@ pub fn get_core_projects() -> Vec<crate::projects::project::Project> { vec![
             GOPHER, TFTP, SCP, SFTP, SMB, TELNET, DICT, LDAP, LDAPS, MQTT, FILE, IMAP, SMTP, POP3, RTSP and RTMP.
             libcurl offers a myriad of powerful features.
         ".to_string(),
-        homepage: "https://github.com/curl/curl.git".to_string(),
-        url: "https://github.com/curl/curl".to_string(),
+        web_urls: vec!["https://github.com/curl/curl".to_string()],
+        cvs_urls: vec!["https://github.com/curl/curl.git".to_string()],
         maintainers: vec![],
         keywords: vec![],
         layer: 1,
@@ -128,8 +128,8 @@ pub fn get_core_projects() -> Vec<crate::projects::project::Project> { vec![
             POSIX.1-2008, BSD, OS-specific APIs and more. These APIs include such foundational facilities as open, read, write,
             malloc, printf, getaddrinfo, dlopen, pthread_create, crypt, login, exit and more.
         ".to_string(),
-        homepage: "https://www.gnu.org/software/libc/".to_string(),
-        url: "git://sourceware.org/git/glibc.git".to_string(),
+        web_urls: vec!["https://www.gnu.org/software/libc/".to_string()],
+        cvs_urls: vec!["git://sourceware.org/git/glibc.git".to_string()],
         maintainers: vec![
             "maintainers <libc-maintainers@gnu.org>".to_string(),
         ],
@@ -148,8 +148,8 @@ pub fn get_core_projects() -> Vec<crate::projects::project::Project> { vec![
             architectures that support it, csh-like features such as history
             substitution and brace expansion, and a slew of other features.
         ".to_string(),
-        homepage: "https://www.gnu.org/software/bash/".to_string(),
-        url: "https://git.savannah.gnu.org/git/bash.git".to_string(),
+        web_urls: vec!["https://www.gnu.org/software/bash/".to_string()],
+        cvs_urls: vec!["https://git.savannah.gnu.org/git/bash.git".to_string()],
         maintainers: vec![
             "Chet Ramey".to_string(),
         ],
@@ -165,8 +165,8 @@ pub fn get_core_projects() -> Vec<crate::projects::project::Project> { vec![
                 Git is a fast, scalable, distributed revision control system with an unusually rich
                 command set that provides both high-level operations and full access to internals.
         ".to_string(),
-        homepage: "https://git-scm.com/".to_string(),
-        url: "https://github.com/git/git.git".to_string(),
+        web_urls: vec!["https://git-scm.com/".to_string()],
+        cvs_urls: vec!["https://github.com/git/git.git".to_string()],
         maintainers: vec![],
         keywords: vec![
             "c".to_string(),
@@ -222,8 +222,8 @@ pub fn get_core_projects() -> Vec<crate::projects::project::Project> { vec![
 
             Please report bugs in Wget to <bug-wget@gnu.org>.
         ".to_string(),
-        homepage: "http://git.savannah.gnu.org/cgit/wget.git".to_string(),
-        url: "https://git.savannah.gnu.org/git/wget.git".to_string(),
+        web_urls: vec!["http://git.savannah.gnu.org/cgit/wget.git".to_string()],
+        cvs_urls: vec!["https://git.savannah.gnu.org/git/wget.git".to_string()],
         maintainers: vec![],
         keywords: vec![],
         layer: 1,

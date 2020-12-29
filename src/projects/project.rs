@@ -28,8 +28,8 @@ pub struct Project {
     // Basically a short description, or a title.
     pub summary: String,
     pub description: String,
-    pub homepage: String,
-    pub url: String,
+    pub web_urls: Vec<String>,
+    pub cvs_urls: Vec<String>,
     pub maintainers: Vec<String>,
     pub keywords: Vec<String>,
     // Whether the project is part of the internal projects db.
@@ -53,38 +53,11 @@ impl Project {
             name: "{}".to_string(),
             summary: "{}".to_string(),
             description: "{}".to_string(),
-            homepage: "{}".to_string(),
-            layer: 0,
-            is_core: true,
+            web_urls: vec![],
+            layer: 7,
+            is_core: false,
         }
         "#####);
-    }
-    fn fetch(self: &Self) {
-        if self.url.starts_with("https") && self.url.ends_with(".git") {
-            let clone_output = Command::new("mkdir")
-                .arg("-p")
-                .arg(PROJECTS_DIR)
-                .output()
-                .expect(&format!("failed to create projects directory at {}!", PROJECTS_DIR).to_string());
-            if ! clone_output.status.success() {
-                panic!("The clone did not work :(");
-            }
-
-            let clone_output = Command::new("git")
-                .arg("clone")
-                .arg(&self.url)
-                .arg(PROJECTS_DIR)
-                .output()
-                .expect(&format!("failed to clone git repository at {}!", &self.url).to_string());
-            if ! clone_output.status.success() {
-                panic!("The clone did not work :(");
-            }
-        }
-    }
-
-    fn get_github_projects() -> Vec<Project> {
-        let mut github_projects = vec![];
-        return github_projects;
     }
 }
 
