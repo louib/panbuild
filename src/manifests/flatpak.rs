@@ -413,21 +413,11 @@ pub struct FlatpakBuildOptions {
     pub arch: BTreeMap<String, FlatpakBuildOptions>,
 }
 
-pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
-    let mut response = crate::manifests::manifest::AbstractManifest::default();
-
+pub fn parse(ctx: &mut crate::execution_context::ExecutionContext) -> FlatpakManifest {
     // TODO actually handle the error.
-    let flatpak_manifest: FlatpakManifest = serde_yaml::from_str(&content).unwrap();
+    let flatpak_manifest: FlatpakManifest = serde_yaml::from_str(&ctx.content).unwrap();
 
-    response.package_name = flatpak_manifest.app_name;
-    response.package_id = flatpak_manifest.app_id;
-    response.package_version = flatpak_manifest.base_version;
-
-    for tag in flatpak_manifest.tags {
-        response.keywords.push(tag.clone());
-    }
-
-    return response;
+    return flatpak_manifest;
 }
 
 pub fn dump(manifest: &crate::manifests::manifest::AbstractManifest) -> String {

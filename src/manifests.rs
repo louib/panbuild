@@ -53,7 +53,7 @@ pub fn parse(ctx: &mut crate::execution_context::ExecutionContext) -> i32 {
     }
 
     if ctx.source_type == "flatpak" {
-        ctx.manifest = crate::manifests::flatpak::parse(&ctx.content);
+        ctx.flatpak_manifest = Some(crate::manifests::flatpak::parse(ctx));
         return 0;
     }
 
