@@ -535,7 +535,6 @@ pub fn dump_native(abstract_manifest: &crate::manifests::manifest::AbstractManif
         None => panic!("Called flatpak.dump_native without a native Flatpak manifest!"),
     };
 
-
     if let crate::manifests::manifest::ManifestFormat::JSON = abstract_manifest.format {
         let manifest_dump: String = match serde_json::to_string(&flatpak_manifest) {
             Ok(d) => d,

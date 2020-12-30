@@ -624,7 +624,8 @@ mod tests {
             description: description
             summary: this is my app,
             version: 0.0.1
-        "###.to_string();
+        "###
+        .to_string();
         parse(&mut ctx);
     }
 
@@ -652,13 +653,14 @@ mod tests {
             description: description
             grade: devel
             summary: this is my app
-        "###.to_string();
+        "###
+        .to_string();
         parse(&mut ctx);
         match ctx.manifest.snap_manifest {
             None => panic!("Error while parsing the snap manifest."),
             Some(manifest) => {
                 assert_eq!(manifest.name, "app-name");
-            },
+            }
         }
     }
 }

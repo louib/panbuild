@@ -202,7 +202,7 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
 
         eprintln!("Parsing finished. Resulting manifest is {:#?}", &ctx.manifest);
 
-        let package_name  = match args.get("package_name") {
+        let package_name = match args.get("package_name") {
             Some(package_name) => package_name,
             None => {
                 eprintln!("A package name to install is required!");
@@ -216,7 +216,7 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
         eprintln!("Installing {:#?}", &package_name);
 
         let projects: Vec<crate::projects::project::Project> = crate::projects::db::get_all();
-        eprintln!("Searching in {:#?} projects for installation candidates 🕰",projects.len());
+        eprintln!("Searching in {:#?} projects for installation candidates 🕰", projects.len());
         for project in &projects {
             for artifact_name in &project.artifact_names {
                 if artifact_name.contains(package_name) {
