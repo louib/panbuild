@@ -566,8 +566,8 @@ pub struct SnapcraftOptionalPackages {
     r#try: Vec<String>,
 }
 
-pub fn parse(ctx: &mut crate::execution_context::ExecutionContext) -> crate::manifests::manifest::AbstractManifest {
-    let mut response = crate::manifests::manifest::AbstractManifest::default();
+pub fn parse(ctx: &mut crate::execution_context::ExecutionContext) {
+    ctx.manifest = crate::manifests::manifest::AbstractManifest::default();
 
     // TODO actually handle the error.
     let snapcraft_manifest: SnapcraftManifest = match serde_yaml::from_str(&ctx.content) {
@@ -583,8 +583,7 @@ pub fn parse(ctx: &mut crate::execution_context::ExecutionContext) -> crate::man
         panic!("Required top-level field grade is missing from snapcraft manifest.");
     }
 
-    response.snap_manifest = Some(snapcraft_manifest);
-    response
+    ctx.manifest.snap_manifest = Some(snapcraft_manifest);
 }
 
 pub fn file_path_matches(path: &str) -> bool {
