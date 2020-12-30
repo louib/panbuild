@@ -616,38 +616,42 @@ mod tests {
     #[test]
     #[should_panic(expected = "Required top-level field grade is missing from snapcraft manifest.")]
     pub fn test_parse_missing_required_fields() {
-        parse(
-            r###"
+        let mut ctx = crate::execution_context::ExecutionContext::default();
+        ctx.content = r###"
             name: app-name,
             description: description
             summary: this is my app,
             version: 0.0.1
-        "###,
-        );
-    }
-
-    #[test]
-    pub fn test_parse_missing_version() {
-        let manifest: crate::manifests::manifest::AbstractManifest = parse(
-            r###"
-            name: app-name,
-            description: description
-            grade: devel
-            summary: this is my app
-        "###,
-        );
-        assert_eq!(manifest.package_version, "");
+        "###.to_string();
+        parse(&mut ctx);
     }
 
     #[test]
     #[should_panic(expected = "Failed to parse the Snapcraft manifest: EOF while parsing a value.")]
     pub fn test_parse_empty_string() {
-        parse("");
+        let mut ctx = crate::execution_context::ExecutionContext::default();
+        ctx.content = "".to_string();
+        parse(&mut ctx);
     }
 
     #[test]
     #[should_panic]
     pub fn test_parse_invalid_yaml() {
-        parse("----------------------------");
+        let mut ctx = crate::execution_context::ExecutionContext::default();
+        ctx.content = "----------------------------".to_string();
+        parse(&mut ctx);
+    }
+
+    #[test]
+    pub fn test_parse_missing_version() {
+        let mut ctx = crate::execution_context::ExecutionContext::default();
+        ctx.content = r###"
+            name: app-name
+            description: description
+            grade: devel
+            summary: this is my app
+        "###.to_string();
+        let snap_manifest: SnapcraftManifest = parse(&mut ctx);
+        assert_eq!(snap_manifest.name, "app-name");
     }
 }
