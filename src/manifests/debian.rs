@@ -319,12 +319,6 @@ pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
     return response;
 }
 
-pub fn dump(manifest: &crate::manifests::manifest::AbstractManifest) -> String {
-    let mut response = String::from("");
-    response.push_str(&format!("Source: {}", manifest.package_name));
-    return response;
-}
-
 pub fn file_path_matches(path: &str) -> bool {
     // FIXME should we add the debian/ part to the path too?
     if path.ends_with("control") {
@@ -411,13 +405,6 @@ mod tests {
     pub fn test_parse() {
         let mut manifest = parse(&DEBIAN_CONTROL_EXAMPLE);
         assert!(manifest.package_name == "package_name", "The app name was not package_name!",);
-    }
-
-    #[test]
-    pub fn test_dump() {
-        let mut manifest = AbstractManifest::default();
-        let debian_control_dump = dump(&manifest);
-        assert!(!debian_control_dump.is_empty(), "The dump from debian::parse was empty!",);
     }
 
     #[test]

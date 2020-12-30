@@ -32,28 +32,6 @@ subcommands:
                 value_name: ENV_NAME
                 required: true
                 help: The name of the environment to build.
-    - convert:
-        about: convert a manifest file.
-        args:
-            - input_file:
-                multiple: false
-                required: true
-                help: Path of the input build manifest.
-            - input_format:
-                short: i
-                long: input-format
-                takes_value: true
-                value_name: FORMAT
-                # TODO make it not required after implementing manifest type detection.
-                required: true
-                help: Format of the manifest provided for the conversion.
-            - output_format:
-                short: o
-                long: output-format
-                takes_value: true
-                value_name: FORMAT
-                required: true
-                help: Format of the manifest to generate.
     - install:
         about: install a package in a manifest file.
         args:
@@ -110,17 +88,3 @@ subcommands:
                 value_name: SEP
                 required: false
                 help: Separator used when printing the package list.
-    - dump:
-        about: Dump a native panbuild manifest file to another format.
-        args:
-            - input_file:
-                multiple: false
-                required: true
-                help: Path of the input panbuild build manifest.
-            - output_format:
-                short: o
-                long: output-format
-                takes_value: true
-                value_name: FORMAT
-                required: true
-                help: Format of the manifest to generate.

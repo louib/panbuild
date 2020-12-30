@@ -584,10 +584,6 @@ pub fn parse(ctx: &mut crate::execution_context::ExecutionContext) -> SnapcraftM
     return snapcraft_manifest;
 }
 
-pub fn dump(manifest: &crate::manifests::manifest::AbstractManifest) -> String {
-    return String::from("");
-}
-
 pub fn file_path_matches(path: &str) -> bool {
     if path.to_lowercase().ends_with("snapcraft.yaml") {
         return true;

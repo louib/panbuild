@@ -60,26 +60,3 @@ pub fn parse(ctx: &mut crate::execution_context::ExecutionContext) -> i32 {
     eprintln!("Invalid source type {}.", ctx.source_type);
     return 1;
 }
-
-pub fn dump(ctx: &mut crate::execution_context::ExecutionContext) -> i32 {
-    if ctx.destination_type == "debian" {
-        let dump: String = crate::manifests::debian::dump(&ctx.manifest);
-        println!("{}", dump);
-        return 0;
-    }
-
-    if ctx.destination_type == "snap" {
-        let dump: String = crate::manifests::snap::dump(&ctx.manifest);
-        println!("{}", dump);
-        return 0;
-    }
-
-    if ctx.destination_type == "flatpak" {
-        let dump: String = crate::manifests::flatpak::dump(&ctx.manifest);
-        println!("{}", dump);
-        return 0;
-    }
-
-    eprintln!("Invalid destination type {}.", ctx.destination_type);
-    return 1;
-}

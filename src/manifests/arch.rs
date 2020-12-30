@@ -5,11 +5,6 @@
 // https://wiki.archlinux.org/index.php/Arch_package_guidelines
 // for details on the pkgbuild format.
 
-pub fn dump(manifest: &crate::manifests::manifest::AbstractManifest) -> String {
-    let mut response = String::from("");
-    return response;
-}
-
 pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
     let mut response = crate::manifests::manifest::AbstractManifest::default();
     return response;

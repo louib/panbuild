@@ -35,73 +35,11 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
     // eprintln!("running command {}.", command_name);
     let mut ctx = crate::execution_context::ExecutionContext::default();
 
-    if command_name == "convert" {
-        let input_file_path = match args.get("input_file") {
-            Some(input_file_path) => input_file_path,
-            None => {
-                eprintln!("an input file is required when converting!");
-                // TODO handle reading from stdin.
-                return 1;
-            }
-        };
-
-        ctx.content = match fs::read_to_string(path::Path::new(input_file_path)) {
-            Ok(content) => content,
-            Err(e) => {
-                eprintln!("could not read file {}.", input_file_path);
-                return 1;
-            }
-        };
-
-        ctx.data_dir = env::var("PANBUILD_DATA_DIR").unwrap_or(String::from("")).to_string();
-
-        if args.contains_key("input_format") {
-            let source_type = args.get("input_format").unwrap();
-            if !crate::manifests::has_type(source_type.to_string()) {
-                eprintln!("{} is an invalid manifest type.", source_type);
-                return 1;
-            }
-            ctx.source_type = source_type.to_string();
-        } else {
-            let mut exit_code: i32 = manifests::detect_type(&mut ctx);
-            if exit_code != 0 {
-                eprintln!("Could not detect manifest type of {}.", ctx.source_filename);
-                return exit_code;
-            }
-        }
-
-        if args.contains_key("output_format") {
-            let destination_type = args.get("output_format").unwrap();
-            if !crate::manifests::has_type(destination_type.to_string()) {
-                eprintln!("{} is an invalid manifest type.", destination_type);
-                return 1;
-            }
-            ctx.destination_type = destination_type.to_string();
-        }
-
-        let mut exit_code: i32 = manifests::parse(&mut ctx);
-        if exit_code != 0 {
-            eprintln!("Error while parsing");
-            return exit_code;
-        }
-
-        eprintln!("Parsing finished. Resulting manifest is {:#?}", &ctx.manifest);
-
-        exit_code = manifests::dump(&mut ctx);
-        if exit_code != 0 {
-            eprintln!("Error while dumping");
-            return exit_code;
-        }
-
-        // eprintln!("Finishing...");
-        return 0;
-    }
-
     if command_name == "parse" {
         let input_file_path = match args.get("input_file") {
             Some(input_file_path) => input_file_path,
             None => {
-                eprintln!("an input file is required when converting!");
+                eprintln!("an input file is required!");
                 // TODO handle reading from stdin.
                 return 1;
             }
@@ -144,7 +82,7 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
         let input_file_path = match args.get("input_file") {
             Some(input_file_path) => input_file_path,
             None => {
-                eprintln!("an input file is required when converting!");
+                eprintln!("an input file is required!");
                 // TODO handle reading from stdin.
                 return 1;
             }
@@ -211,7 +149,7 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
         let input_file_path = match args.get("input_file") {
             Some(input_file_path) => input_file_path,
             None => {
-                eprintln!("an input file is required when converting!");
+                eprintln!("an input file is required!");
                 // TODO handle reading from stdin.
                 return 1;
             }

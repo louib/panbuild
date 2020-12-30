@@ -423,22 +423,6 @@ pub fn parse(ctx: &mut crate::execution_context::ExecutionContext) -> FlatpakMan
     return flatpak_manifest;
 }
 
-pub fn dump(manifest: &crate::manifests::manifest::AbstractManifest) -> String {
-    let mut flatpak_manifest: FlatpakManifest = FlatpakManifest::default();
-    flatpak_manifest.sdk = DEFAULT_SDK.to_string();
-    flatpak_manifest.runtime = DEFAULT_RUNTIME.to_string();
-    flatpak_manifest.runtime_version = DEFAULT_RUNTIME_VERSION.to_string();
-
-    for keyword in &manifest.keywords {
-        flatpak_manifest.tags.push(keyword.clone());
-    }
-
-    // TODO add language specific extensions, like rust, with the BASE_EXTENSIONS field.
-
-    // TODO actually handle the error.
-    return serde_yaml::to_string(&flatpak_manifest).unwrap();
-}
-
 pub fn file_path_matches(path: &str) -> bool {
     let parts: Vec<&str> = path.split("/").collect();
     if parts.len() == 0 {
