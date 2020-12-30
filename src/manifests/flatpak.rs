@@ -440,13 +440,13 @@ pub fn dump_native(abstract_manifest: &crate::manifests::manifest::AbstractManif
         return manifest_dump;
     }
 
+    // TODO we might want to assert that the format is YAML before dumping.
+    // Assuming default YAML format.
     let manifest_dump: String = match serde_yaml::to_string(&flatpak_manifest) {
         Ok(d) => d,
         Err(e) => panic!("Failed to dump the Flatpak manifest: {}.", e),
     };
     manifest_dump
-    // Assuming default YAML format.
-
 }
 
 pub fn file_path_matches(path: &str) -> bool {
