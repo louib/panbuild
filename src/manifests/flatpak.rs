@@ -50,6 +50,9 @@ pub struct FlatpakManifest {
     // The name of the development runtime that the application builds with.
     pub sdk: String,
 
+    // The name of the development extensions that the application requires to build.
+    pub sdk_extensions: Vec<String>,
+
     // Initialize the (otherwise empty) writable /var in the build with a copy of this runtime.
     pub var: String,
 
@@ -292,6 +295,8 @@ pub struct FlatpakSource {
     pub r#type: String,
     pub url: String,
     pub tag: Option<String>,
+    // The name of the branch to checkout.
+    pub branch: Option<String>,
 }
 
 // Extension define extension points in the app/runtime that can be implemented by extensions,
