@@ -2,10 +2,6 @@ use std::collections::HashMap;
 
 use crate::manifests::manifest::{AbstractManifest, AbstractModule, Priority};
 
-// Package constants.
-const DEFAULT_ARCH: &str = "any";
-const DEFAULT_MULTI_ARCH: &str = "same";
-
 const CONTROL_FILE_SEPARATOR: &str = ":";
 
 //static mut ALLOWED_SECTIONS: Vec<&str> = vec![
@@ -67,44 +63,10 @@ const CONTROL_FILE_SEPARATOR: &str = ":";
 //    "xfce",
 //    "zope",
 //];
-const DEFAULT_SECTION: &str = "libs";
 
-// See https://www.debian.org/doc/debian-policy/ch-controlfields.html
-// **** Top-level fields
-//
-// The name of the source described in this manifest.
-// (mandatory)
-// string
-const SOURCE: &str = "Source";
-// The packages in the archive areas main, contrib and non-free are grouped further into sections to simplify handling.
-// string
-const SECTION: &str = "Section";
-// The priority
-const PRIORITY: &str = "Priority";
-// Format is name <email@address.com>
-// (mandatory)
-// string
-const MAINTAINER: &str = "Maintainer";
-// List of the names and email addresses of co-maintainers of the package, if any.
-// Format is name <email@address.com>
-// list of strings
-const UPLOADERS: &str = "Uploaders";
-// list of strings
-const BUILD_DEPENDS: &str = "Build-Depends";
-// A semver reference to a "canonical" version.
-// (mandatory)
-// string
-const STANDARDS_VERSIONS: &str = "Standards-Versions";
-// string
-const HOMEPAGE: &str = "Homepage";
-// URL of a website to browser the source code.
-// string
-const VCS_BROWSER: &str = "Vcs-Browser";
-// URL of the git repo.
-// string
-const VCS_GIT: &str = "Vcs-Git";
 // list of packages (see package fields below).
 const PACKAGES: &str = "packages";
+
 
 // **** Package fields
 const PACKAGE_NAME: &str = "Package";
@@ -125,16 +87,29 @@ const BREAKS: &str = "Breaks";
 
 #[derive(Default)]
 pub struct DebianManifest {
+    // The name of the source described in this manifest.
+    // (mandatory)
     pub source: String,
     pub version: String,
+    // The packages in the archive areas main, contrib and non-free are grouped
+    // further into sections to simplify handling.
     pub section: String,
     pub priority: String,
     // Format is name <email@address.com>
+    // (mandatory)
     pub maintainer: String,
     // List of the names and email addresses of co-maintainers of the package, if any.
     // Format is name <email@address.com>
     pub uploaders: Vec<String>,
     pub build_depends: Vec<String>,
+    // A semver reference to a "canonical" version.
+    // (mandatory)
+    pub standards_version: String,
+    pub homepage: String,
+    // URL of a website to browser the source code.
+    pub vcs_browser: String,
+    // URL of the git repo.
+    pub vcs_git: String,
 }
 
 fn parse_paragraphs(content: &str, paragraphs: &mut Vec<String>) {
@@ -219,7 +194,7 @@ pub fn parse(ctx: &mut crate::execution_context::ExecutionContext) -> DebianMani
         if is_commented_line(line) {
             continue;
         }
-        let parts: Vec<&str> = line.split(':').collect();
+        let parts: Vec<&str> = line.split(CONTROL_FILE_SEPARATOR).collect();
         if parts.len() < 2 {
             // FIXME we should return a Result<> instead of exiting here or
             // returning a default value.
@@ -261,7 +236,7 @@ pub fn parse(ctx: &mut crate::execution_context::ExecutionContext) -> DebianMani
                 field_name = last_field_name.clone();
                 field_value = line.to_string();
             } else {
-                let parts: Vec<&str> = line.split(':').collect();
+                let parts: Vec<&str> = line.split(CONTROL_FILE_SEPARATOR).collect();
                 if parts.len() < 2 {
                     // FIXME we should return a Result<> instead of exiting here or
                     // returning a default value.
@@ -276,7 +251,7 @@ pub fn parse(ctx: &mut crate::execution_context::ExecutionContext) -> DebianMani
                         continue;
                     }
                     if !field_value.is_empty() {
-                        field_value.push_str(":");
+                        field_value.push_str(CONTROL_FILE_SEPARATOR);
                     }
                     field_value.push_str(part);
                 }
