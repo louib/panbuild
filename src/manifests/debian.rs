@@ -123,10 +123,18 @@ const PRE_DEPENDS: &str = "Pre-Depends";
 const CONFLICTS: &str = "Conflicts";
 const BREAKS: &str = "Breaks";
 
+#[derive(Default)]
 pub struct DebianManifest {
-    pub maintainer: String,
-    pub app_name: String,
+    pub source: String,
     pub version: String,
+    pub section: String,
+    pub priority: String,
+    // Format is name <email@address.com>
+    pub maintainer: String,
+    // List of the names and email addresses of co-maintainers of the package, if any.
+    // Format is name <email@address.com>
+    pub uploaders: Vec<String>,
+    pub build_depends: Vec<String>,
 }
 
 fn parse_paragraphs(content: &str, paragraphs: &mut Vec<String>) {
@@ -188,15 +196,16 @@ fn is_commented_line(line: &str) -> bool {
     return false;
 }
 
-pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
+pub fn parse(ctx: &mut crate::execution_context::ExecutionContext) -> DebianManifest {
     let mut paragraphs: Vec<String> = vec![];
-    parse_paragraphs(&content, &mut paragraphs);
+    parse_paragraphs(&ctx.content, &mut paragraphs);
 
     let mut response = crate::manifests::manifest::AbstractManifest::default();
-
     if paragraphs.len() < 2 {
         panic!("There is only {} paragraphs in the debian control file?", paragraphs.len())
     }
+
+    let mut debian_manifest = DebianManifest::default();
 
     let first_paragraph = &paragraphs[0];
     for line in first_paragraph.split('\n') {
@@ -215,13 +224,16 @@ pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
             // FIXME we should return a Result<> instead of exiting here or
             // returning a default value.
             eprintln!("Invalid debian control file line {}", line);
-            return response;
+            return debian_manifest;
         }
         let field_name = parts[0].trim();
         let field_value = parts[1].trim();
 
-        if field_name == SOURCE {
-            response.package_name = field_value.to_string();
+        if field_name == "Source" {
+            debian_manifest.source = field_value.to_string();
+        }
+        if field_name == "Maintainer" {
+            debian_manifest.maintainer = field_value.to_string();
         }
     }
 
@@ -254,7 +266,7 @@ pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
                     // FIXME we should return a Result<> instead of exiting here or
                     // returning a default value.
                     eprintln!("Invalid debian control file line {}", line);
-                    return response;
+                    return debian_manifest;
                 }
 
                 field_name = parts[0].trim().to_string();
@@ -316,7 +328,7 @@ pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
     }
 
     eprintln!("finished parsing debian control file.");
-    return response;
+    debian_manifest
 }
 
 pub fn file_path_matches(path: &str) -> bool {
@@ -403,8 +415,10 @@ mod tests {
 
     #[test]
     pub fn test_parse() {
-        let mut manifest = parse(&DEBIAN_CONTROL_EXAMPLE);
-        assert!(manifest.package_name == "package_name", "The app name was not package_name!",);
+        let mut ctx = crate::execution_context::ExecutionContext::default();
+        ctx.content = DEBIAN_CONTROL_EXAMPLE.to_string();
+        let mut debian_manifest = parse(&mut ctx);
+        assert!(debian_manifest.source == "package_name", "The app name was not package_name!",);
     }
 
     #[test]
