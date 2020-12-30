@@ -420,9 +420,14 @@ mod tests {
     pub fn test_parse() {
         let mut ctx = crate::execution_context::ExecutionContext::default();
         ctx.content = DEBIAN_CONTROL_EXAMPLE.to_string();
-        let mut debian_manifest = parse(&mut ctx);
-        assert!(debian_manifest.source == "package_name", "The app name was not package_name!",);
-        assert!(debian_manifest.vcs_browser == "https://code.cloud.com/projects/package_name");
+        parse(&mut ctx);
+        match ctx.manifest.debian_manifest {
+            None => panic!("Error while parsing the debian manifest."),
+            Some(manifest) => {
+                assert!(manifest.source == "package_name", "The app name was not package_name!",);
+                assert!(manifest.vcs_browser == "https://code.cloud.com/projects/package_name");
+            },
+        }
     }
 
     #[test]

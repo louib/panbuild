@@ -653,7 +653,12 @@ mod tests {
             grade: devel
             summary: this is my app
         "###.to_string();
-        let snap_manifest: SnapcraftManifest = parse(&mut ctx);
-        assert_eq!(snap_manifest.name, "app-name");
+        parse(&mut ctx);
+        match ctx.manifest.snap_manifest {
+            None => panic!("Error while parsing the snap manifest."),
+            Some(manifest) => {
+                assert_eq!(manifest.name, "app-name");
+            },
+        }
     }
 }
