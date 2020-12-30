@@ -14,11 +14,14 @@ const DEFAULT_SDK: &str = "org.freedesktop.Sdk";
 #[serde(default)]
 pub struct FlatpakManifest {
     // Name of the application.
+    #[serde(skip_serializing_if = "String::is_empty")]
     pub app_name: String,
 
     // A string defining the application id.
     // Both names (app-id and id) are accepted.
+    #[serde(skip_serializing_if = "String::is_empty")]
     pub app_id: String,
+    #[serde(skip_serializing_if = "String::is_empty")]
     pub id: String,
 
     // The branch to use when exporting the application.
@@ -28,6 +31,7 @@ pub struct FlatpakManifest {
     // Unless you need a very specific branchname (like for a runtime or an extension) it is recommended
     // to use the default-branch key instead, because you can then override the default using
     // --default-branch when building for instance a test build.
+    #[serde(skip_serializing_if = "String::is_empty")]
     pub branch: String,
 
     // The default branch to use when exporting the application. Defaults to master.
@@ -105,6 +109,10 @@ pub struct FlatpakManifest {
     // but do not inherit them into the platform.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub build_options: Option<FlatpakBuildOptions>,
+
+    // The name of the command that the flatpak should run on execution.
+    #[serde(skip_serializing_if = "String::is_empty")]
+    pub command: String,
 
     // Add these tags to the metadata file.
     #[serde(skip_serializing_if = "Vec::is_empty")]
@@ -469,7 +477,7 @@ pub struct FlatpakBuildOptions {
     // This is a dictionary defining environment variables to be set during the build.
     // Elements in this override the properties that set the environment, like
     // cflags and ldflags. Keys with a null value unset the corresponding variable.
-    pub build_env: BTreeMap<String, String>,
+    pub env: BTreeMap<String, String>,
 
     // This is an array containing extra options to pass to flatpak build.
     #[serde(skip_serializing_if = "Vec::is_empty")]
