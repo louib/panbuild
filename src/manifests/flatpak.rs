@@ -88,14 +88,17 @@ pub struct FlatpakManifest {
 
     // Install these extra extensions from the base application when
     // initializing the application directory.
+    #[serde(skip_serializing_if = "Vec::is_empty")]
     pub base_extensions: Vec<String>,
 
     // Inherit these extra extensions points from the base application or
     // sdk when finishing the build.
+    #[serde(skip_serializing_if = "Vec::is_empty")]
     pub inherit_extensions: Vec<String>,
 
     // Inherit these extra extensions points from the base application or sdk
     // when finishing the build, but do not inherit them into the platform.
+    #[serde(skip_serializing_if = "Vec::is_empty")]
     pub inherit_sdk_extensions: Vec<String>,
 
     // Inherit these extra extensions points from the base application or sdk when finishing the build,
@@ -104,43 +107,53 @@ pub struct FlatpakManifest {
     pub build_options: Option<FlatpakBuildOptions>,
 
     // Add these tags to the metadata file.
+    #[serde(skip_serializing_if = "Vec::is_empty")]
     pub tags: Vec<String>,
 
     // An array of strings specifying the modules to be built in order.
     // String members in the array are interpreted as the name of a separate
     // json or yaml file that contains a module. See below for details.
+    #[serde(skip_serializing_if = "Vec::is_empty")]
     pub modules: Vec<FlatpakModule>,
 
     // This is a dictionary of extension objects.
     // The key is the name of the extension.
     // See below for details.
+    #[serde(skip_serializing_if = "Vec::is_empty")]
     pub add_extensions: Vec<String>,
 
     // This is a dictionary of extension objects similar to add-extensions.
     // The main difference is that the extensions are added early and are
     // available for use during the build.
+    #[serde(skip_serializing_if = "Vec::is_empty")]
     pub add_build_extensions: Vec<String>,
 
     // An array of file patterns that should be removed at the end.
     // Patterns starting with / are taken to be full pathnames (without the /app prefix),
     // otherwise they just match the basename.
+    #[serde(skip_serializing_if = "Vec::is_empty")]
     pub cleanup: Vec<String>,
 
     // An array of commandlines that are run during the cleanup phase.
+    #[serde(skip_serializing_if = "Vec::is_empty")]
     pub cleanup_commands: Vec<String>,
 
     // Extra files to clean up in the platform.
+    #[serde(skip_serializing_if = "Vec::is_empty")]
     pub cleanup_platform: Vec<String>,
 
     // An array of commandlines that are run during the cleanup phase of the platform.
+    #[serde(skip_serializing_if = "Vec::is_empty")]
     pub cleanup_platform_commands: Vec<String>,
 
     // An array of commandlines that are run after importing the base platform,
     // but before applying the new files from the sdk. This is a good place to e.g. delete
     // things from the base that may conflict with the files added in the sdk.
+    #[serde(skip_serializing_if = "Vec::is_empty")]
     pub prepare_platform_commands: Vec<String>,
 
     // An array of arguments passed to the flatpak build-finish command.
+    #[serde(skip_serializing_if = "Vec::is_empty")]
     pub finish_args: Vec<String>,
 
     // Any desktop file with this name will be renamed to a name
@@ -201,15 +214,19 @@ pub struct FlatpakModule {
     // String members in the array are interpreted as the name of a separate
     // json or yaml file that contains sources. See below for details.
     // FIXME this can also be a string, which represents a local path to a module file.
+    #[serde(skip_serializing_if = "Vec::is_empty")]
     pub sources: Vec<FlatpakSource>,
 
     // An array of options that will be passed to configure
+    #[serde(skip_serializing_if = "Vec::is_empty")]
     pub config_opts: Vec<String>,
 
     // An array of arguments that will be passed to make
+    #[serde(skip_serializing_if = "Vec::is_empty")]
     pub make_args: Vec<String>,
 
     // An array of arguments that will be passed to make install
+    #[serde(skip_serializing_if = "Vec::is_empty")]
     pub make_install_args: Vec<String>,
 
     // If true, remove the configure script before starting build
@@ -259,31 +276,38 @@ pub struct FlatpakModule {
     // An array of commands to run during build (between make and make install if those are used).
     // This is primarily useful when using the "simple" buildsystem.
     // Each command is run in /bin/sh -c, so it can use standard POSIX shell syntax such as piping output.
+    #[serde(skip_serializing_if = "Vec::is_empty")]
     pub build_commands: Vec<String>,
 
     // An array of shell commands that are run after the install phase.
     // Can for example clean up the install dir, or install extra files.
+    #[serde(skip_serializing_if = "Vec::is_empty")]
     pub post_install: Vec<String>,
 
     // An array of file patterns that should be removed at the end.
     // Patterns starting with / are taken to be full pathnames (without the /app prefix), otherwise
     // they just match the basename. Note that any patterns will only match
     // files installed by this module.
+    #[serde(skip_serializing_if = "Vec::is_empty")]
     pub cleanup: Vec<String>,
 
     // The way the builder works is that files in the install directory are hard-links to the cached files,
     // so you're not allowed to modify them in-place. If you list a file in this then the hardlink
     // will be broken and you can modify it. This is a workaround, ideally installing files should
     // replace files, not modify existing ones.
+    #[serde(skip_serializing_if = "Vec::is_empty")]
     pub ensure_writable: Vec<String>,
 
     // If non-empty, only build the module on the arches listed.
+    #[serde(skip_serializing_if = "Vec::is_empty")]
     pub only_arches: Vec<String>,
 
     // Don't build on any of the arches listed.
+    #[serde(skip_serializing_if = "Vec::is_empty")]
     pub skip_arches: Vec<String>,
 
     // Extra files to clean up in the platform.
+    #[serde(skip_serializing_if = "Vec::is_empty")]
     pub cleanup_platform: Vec<String>,
 
     // If true this will run the tests after installing.
@@ -296,11 +320,13 @@ pub struct FlatpakModule {
     pub test_rule: String,
 
     // Array of commands to run during the tests.
+    #[serde(skip_serializing_if = "Vec::is_empty")]
     pub test_commands: Vec<String>,
 
     // An array of objects specifying nested modules to be built before this one.
     // String members in the array are interpreted as names of a separate json or
     // yaml file that contains a module.
+    #[serde(skip_serializing_if = "Vec::is_empty")]
     pub modules: Vec<FlatpakModule>,
 }
 
@@ -434,18 +460,23 @@ pub struct FlatpakBuildOptions {
     pub build_env: BTreeMap<String, String>,
 
     // This is an array containing extra options to pass to flatpak build.
+    #[serde(skip_serializing_if = "Vec::is_empty")]
     pub build_args: Vec<String>,
 
     // Similar to build-args but affects the tests, not the normal build.
+    #[serde(skip_serializing_if = "Vec::is_empty")]
     pub test_args: Vec<String>,
 
     // This is an array containing extra options to pass to configure.
+    #[serde(skip_serializing_if = "Vec::is_empty")]
     pub config_opts: Vec<String>,
 
     // An array of extra arguments that will be passed to make
+    #[serde(skip_serializing_if = "Vec::is_empty")]
     pub make_args: Vec<String>,
 
     // An array of extra arguments that will be passed to make install
+    #[serde(skip_serializing_if = "Vec::is_empty")]
     pub make_install_args: Vec<String>,
 
     // If this is true (the default is false) then all ELF files will be stripped after install.
