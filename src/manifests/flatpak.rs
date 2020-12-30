@@ -413,16 +413,15 @@ pub struct FlatpakBuildOptions {
     pub arch: BTreeMap<String, FlatpakBuildOptions>,
 }
 
-pub fn parse(ctx: &mut crate::execution_context::ExecutionContext) -> crate::manifests::manifest::AbstractManifest {
-    let mut response = crate::manifests::manifest::AbstractManifest::default();
+pub fn parse(ctx: &mut crate::execution_context::ExecutionContext) {
+    ctx.manifest = crate::manifests::manifest::AbstractManifest::default();
     // TODO actually handle the error.
     let flatpak_manifest: FlatpakManifest = match serde_yaml::from_str(&ctx.content) {
         Ok(m) => m,
         Err(e) => panic!("Failed to parse the Flatpak manifest: {}.", e),
     };
 
-    response.flatpak_manifest = Some(flatpak_manifest);
-    response
+    ctx.manifest.flatpak_manifest = Some(flatpak_manifest);
 }
 
 pub fn dump_native(abstract_manifest: &crate::manifests::manifest::AbstractManifest) -> String {
