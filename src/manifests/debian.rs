@@ -105,6 +105,7 @@ pub struct DebianManifest {
     // A semver reference to a "canonical" version.
     // (mandatory)
     pub standards_version: String,
+    // URL of a website to browser the source code.
     pub homepage: String,
     // URL of a website to browser the source code.
     pub vcs_browser: String,
@@ -202,7 +203,10 @@ pub fn parse(ctx: &mut crate::execution_context::ExecutionContext) -> DebianMani
             return debian_manifest;
         }
         let field_name = parts[0].trim();
-        let field_value = parts[1].trim();
+
+        let value_parts: Vec<&str> = parts[1..].to_vec();
+        let mut field_value = value_parts.join(CONTROL_FILE_SEPARATOR);
+        field_value = field_value.trim().to_string();
 
         if field_name == "Source" {
             debian_manifest.source = field_value.to_string();
@@ -215,6 +219,13 @@ pub fn parse(ctx: &mut crate::execution_context::ExecutionContext) -> DebianMani
         }
         if field_name == "Priority" {
             debian_manifest.priority = field_value.to_string();
+        }
+        if field_name == "Standards-Version" {
+            debian_manifest.standards_version = field_value.to_string();
+        }
+        if field_name == "Homepage" {
+            debian_manifest.vcs_browser = field_value.to_string();
+            debian_manifest.homepage = field_value.to_string();
         }
         if field_name == "Section" {
             debian_manifest.section = field_value.to_string();
@@ -409,6 +420,7 @@ mod tests {
         ctx.content = DEBIAN_CONTROL_EXAMPLE.to_string();
         let mut debian_manifest = parse(&mut ctx);
         assert!(debian_manifest.source == "package_name", "The app name was not package_name!",);
+        assert!(debian_manifest.vcs_browser == "https://code.cloud.com/projects/package_name");
     }
 
     #[test]
