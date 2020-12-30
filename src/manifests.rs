@@ -48,7 +48,7 @@ pub fn parse(ctx: &mut crate::execution_context::ExecutionContext) -> i32 {
     }
 
     if ctx.source_type == "snap" {
-        ctx.snap_manifest = Some(crate::manifests::snap::parse(ctx));
+        crate::manifests::snap::parse(ctx);
         return 0;
     }
 
