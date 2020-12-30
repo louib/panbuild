@@ -32,6 +32,7 @@ pub struct FlatpakManifest {
 
     // The default branch to use when exporting the application. Defaults to master.
     // This key can be overridden by the --default-branch commandline option.
+    #[serde(skip_serializing_if = "String::is_empty")]
     pub default_branch: String,
 
     // The collection ID of the repository, defaults to being unset.
@@ -39,24 +40,30 @@ pub struct FlatpakManifest {
     // repository to be shared over peer to peer systems without needing further configuration.
     // If building in an existing repository, the collection ID must match the existing
     // configured collection ID for that repository.
+    #[serde(skip_serializing_if = "String::is_empty")]
     pub collection_id: String,
 
     // The name of the runtime that the application uses.
+    #[serde(skip_serializing_if = "String::is_empty")]
     pub runtime: String,
 
     // The version of the runtime that the application uses, defaults to master.
+    #[serde(skip_serializing_if = "String::is_empty")]
     pub runtime_version: String,
 
     // The name of the development runtime that the application builds with.
+    #[serde(skip_serializing_if = "String::is_empty")]
     pub sdk: String,
 
     // The name of the development extensions that the application requires to build.
     pub sdk_extensions: Vec<String>,
 
     // Initialize the (otherwise empty) writable /var in the build with a copy of this runtime.
+    #[serde(skip_serializing_if = "String::is_empty")]
     pub var: String,
 
     // Use this file as the base metadata file when finishing.
+    #[serde(skip_serializing_if = "String::is_empty")]
     pub metadata: String,
 
     // Build a new runtime instead of an application.
@@ -71,10 +78,12 @@ pub struct FlatpakManifest {
 
     // Start with the files from the specified application.
     // This can be used to create applications that extend another application.
+    #[serde(skip_serializing_if = "String::is_empty")]
     pub base: String,
 
     // Use this specific version of the application specified in base.
     // If unspecified, this uses the value specified in branch
+    #[serde(skip_serializing_if = "String::is_empty")]
     pub base_version: String,
 
     // Install these extra extensions from the base application when
@@ -136,21 +145,25 @@ pub struct FlatpakManifest {
 
     // Any desktop file with this name will be renamed to a name
     // based on id during the cleanup phase.
+    #[serde(skip_serializing_if = "String::is_empty")]
     pub rename_desktop_file: String,
 
     // Any appdata file with this name will be renamed to a name based
     // on id during the cleanup phase.
+    #[serde(skip_serializing_if = "String::is_empty")]
     pub rename_appdata_file: String,
 
     // Any icon with this name will be renamed to a name based on id during
     // the cleanup phase. Note that this is the icon name, not the full filenames,
     // so it should not include a filename extension.
+    #[serde(skip_serializing_if = "String::is_empty")]
     pub rename_icon: String,
 
     // Replace the appdata project-license field with this string.
     // This is useful as the upstream license is typically only about
     // the application itself, whereas the bundled app can contain other
     // licenses too.
+    #[serde(skip_serializing_if = "String::is_empty")]
     pub appdata_license: String,
 
     // If rename-icon is set, keep a copy of the old icon file.
@@ -158,9 +171,11 @@ pub struct FlatpakManifest {
     pub copy_icon: Option<bool>,
 
     // This string will be prefixed to the Name key in the main application desktop file.
+    #[serde(skip_serializing_if = "String::is_empty")]
     pub desktop_file_name_prefix: String,
 
     // This string will be suffixed to the Name key in the main application desktop file.
+    #[serde(skip_serializing_if = "String::is_empty")]
     pub desktop_file_name_suffix: String,
 }
 
@@ -210,6 +225,7 @@ pub struct FlatpakModule {
     pub no_parallel_make: Option<bool>,
 
     // Name of the rule passed to make for the install phase, default is install
+    #[serde(skip_serializing_if = "String::is_empty")]
     pub install_rule: String,
 
     // Don't run the make install (or equivalent) stage
@@ -225,6 +241,7 @@ pub struct FlatpakModule {
     pub cmake: Option<bool>,
 
     // Build system to use: autotools, cmake, cmake-ninja, meson, simple, qmake
+    #[serde(skip_serializing_if = "String::is_empty")]
     pub buildsystem: String,
 
     // Use a build directory that is separate from the source directory
@@ -232,6 +249,7 @@ pub struct FlatpakModule {
     pub builddir: Option<bool>,
 
     // Build inside this subdirectory of the extracted sources
+    #[serde(skip_serializing_if = "String::is_empty")]
     pub subdir: String,
 
     // A build options object that can override global options
@@ -274,6 +292,7 @@ pub struct FlatpakModule {
 
     // The target to build when running the tests. Defaults to "check" for make and "test" for ninja.
     // Set to empty to disable.
+    #[serde(skip_serializing_if = "String::is_empty")]
     pub test_rule: String,
 
     // Array of commands to run during the tests.
@@ -306,10 +325,15 @@ pub struct FlatpakSource {
     //   * shell,
     //   * patch,
     //   * extra-data,
+    #[serde(skip_serializing_if = "String::is_empty")]
     pub r#type: String,
+
+    #[serde(skip_serializing_if = "String::is_empty")]
     pub url: String,
+
     #[serde(skip_serializing_if = "Option::is_none")]
     pub tag: Option<String>,
+
     // The name of the branch to checkout.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub branch: Option<String>,
