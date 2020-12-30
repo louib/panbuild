@@ -35,7 +35,7 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
     // eprintln!("running command {}.", command_name);
     let mut ctx = crate::execution_context::ExecutionContext::default();
 
-    if command_name == "parse" {
+    if command_name == "lint" {
         let input_file_path = match args.get("input_file") {
             Some(input_file_path) => input_file_path,
             None => {
@@ -75,6 +75,22 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
         }
 
         eprintln!("Parsing finished. Resulting manifest is {:#?}", &ctx.manifest);
+
+        exit_code = manifests::dump(&mut ctx);
+        if exit_code != 0 {
+            eprintln!("Error while dumping");
+            return exit_code;
+        }
+
+        match fs::write(path::Path::new(input_file_path), ctx.content) {
+            Ok(content) => content,
+            Err(e) => {
+                eprintln!("could not write file {}.", input_file_path);
+                return 1;
+            }
+        };
+
+        eprintln!("Dumped the manifest!");
         return 0;
     }
 

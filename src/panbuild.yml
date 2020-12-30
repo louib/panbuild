@@ -51,13 +51,13 @@ subcommands:
                 # TODO make it not required after implementing manifest type detection.
                 required: true
                 help: Format of the manifest provided for the conversion.
-    - parse:
-        about: parse the manifest file to panbuild's native format.
+    - lint:
+        about: lint a manifest file.
         args:
             - input_file:
                 multiple: false
                 required: true
-                help: Path of the input build manifest.
+                help: Path of the manifest file.
             - input_format:
                 short: i
                 long: input-format
