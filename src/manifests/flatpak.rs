@@ -60,11 +60,13 @@ pub struct FlatpakManifest {
     pub metadata: String,
 
     // Build a new runtime instead of an application.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub build_runtime: Option<bool>,
 
     // Whether the manifest describes an extension to be used by other manifests.
     // Extensions can be used to bundle programming langages and their associated
     // tools, for example.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub build_extension: Option<bool>,
 
     // Start with the files from the specified application.
@@ -89,6 +91,7 @@ pub struct FlatpakManifest {
 
     // Inherit these extra extensions points from the base application or sdk when finishing the build,
     // but do not inherit them into the platform.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub build_options: Option<FlatpakBuildOptions>,
 
     // Add these tags to the metadata file.
@@ -151,6 +154,7 @@ pub struct FlatpakManifest {
     pub appdata_license: String,
 
     // If rename-icon is set, keep a copy of the old icon file.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub copy_icon: Option<bool>,
 
     // This string will be prefixed to the Name key in the main application desktop file.
@@ -175,6 +179,7 @@ pub struct FlatpakModule {
     pub name: String,
 
     // If true, skip this module
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub disabled: Option<bool>,
 
     // An array of objects defining sources that will be downloaded and extracted in order.
@@ -193,36 +198,44 @@ pub struct FlatpakModule {
     pub make_install_args: Vec<String>,
 
     // If true, remove the configure script before starting build
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub rm_configure: Option<bool>,
 
     // Ignore the existence of an autogen script
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub no_autogen: Option<bool>,
 
     // Don't call make with arguments to build in parallel
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub no_parallel_make: Option<bool>,
 
     // Name of the rule passed to make for the install phase, default is install
     pub install_rule: String,
 
     // Don't run the make install (or equivalent) stage
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub no_make_install: Option<bool>,
 
     // Don't fix up the *.py[oc] header timestamps for ostree use.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub no_python_timestamp_fix: Option<bool>,
 
     // Use cmake instead of configure (deprecated: use buildsystem instead)
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub cmake: Option<bool>,
 
     // Build system to use: autotools, cmake, cmake-ninja, meson, simple, qmake
     pub buildsystem: String,
 
     // Use a build directory that is separate from the source directory
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub builddir: Option<bool>,
 
     // Build inside this subdirectory of the extracted sources
     pub subdir: String,
 
     // A build options object that can override global options
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub build_options: Option<FlatpakBuildOptions>,
 
     // An array of commands to run during build (between make and make install if those are used).
@@ -256,6 +269,7 @@ pub struct FlatpakModule {
     pub cleanup_platform: Vec<String>,
 
     // If true this will run the tests after installing.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub run_tests: Option<bool>,
 
     // The target to build when running the tests. Defaults to "check" for make and "test" for ninja.
@@ -294,8 +308,10 @@ pub struct FlatpakSource {
     //   * extra-data,
     pub r#type: String,
     pub url: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub tag: Option<String>,
     // The name of the branch to checkout.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub branch: Option<String>,
 }
 
@@ -311,6 +327,7 @@ pub struct FlatpakExtension {
 
     // If this is true, then the data created in the extension directory is omitted from the result,
     // and instead packaged in a separate extension.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub bundle: Option<bool>,
 
     // If this is true, the extension is removed during when finishing.
@@ -319,6 +336,7 @@ pub struct FlatpakExtension {
     // directly into the metadata file: autodelete, no-autodownload, subdirectories,
     // add-ld-path, download-if, enable-if, merge-dirs, subdirectory-suffix, locale-subset,
     // version, versions. See the flatpak metadata documentation for more information on these.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub remove_after_build: Option<bool>,
 }
 
@@ -334,6 +352,7 @@ pub struct FlatpakBuildOptions {
     pub cflags: String,
 
     // If this is true, clear cflags from previous build options before adding it from these options.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub cflags_override: Option<bool>,
 
     // This is set in the environment variable CPPFLAGS during the build.
@@ -341,6 +360,7 @@ pub struct FlatpakBuildOptions {
     pub cppflags: String,
 
     // If this is true, clear cppflags from previous build options before adding it from these options.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub cppflags_override: Option<bool>,
 
     // This is set in the environment variable CXXFLAGS during the build.
@@ -348,6 +368,7 @@ pub struct FlatpakBuildOptions {
     pub cxxflags: String,
 
     // If this is true, clear cxxflags from previous build options before adding it from these options.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub cxxflags_override: Option<bool>,
 
     // This is set in the environment variable LDFLAGS during the build.
@@ -356,6 +377,7 @@ pub struct FlatpakBuildOptions {
     pub ldflags: String,
 
     // If this is true, clear ldflags from previous build options before adding it from these options.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub ldflags_override: Option<bool>,
 
     // The build prefix for the modules (defaults to /app for applications and /usr for runtimes).
@@ -403,15 +425,18 @@ pub struct FlatpakBuildOptions {
     pub make_install_args: Vec<String>,
 
     // If this is true (the default is false) then all ELF files will be stripped after install.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub strip: Option<bool>,
 
     // By default (if strip is not true) flatpak-builder extracts all debug info in ELF files to a
     // separate files and puts this in an extension. If you want to disable this, set no-debuginfo
     // to true.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub no_debuginfo: Option<bool>,
 
     // By default when extracting debuginfo we compress the debug sections.
     // If you want to disable this, set no-debuginfo-compression to true.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub no_debuginfo_compression: Option<bool>,
 
     // This is a dictionary defining for each arch a separate build options object that override the main one.
