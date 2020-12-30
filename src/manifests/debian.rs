@@ -174,7 +174,7 @@ fn is_commented_line(line: &str) -> bool {
     return false;
 }
 
-pub fn parse(ctx: &mut crate::execution_context::ExecutionContext) -> DebianManifest {
+pub fn parse(ctx: &mut crate::execution_context::ExecutionContext) -> crate::manifests::manifest::AbstractManifest {
     let mut paragraphs: Vec<String> = vec![];
     parse_paragraphs(&ctx.content, &mut paragraphs);
 
@@ -202,7 +202,7 @@ pub fn parse(ctx: &mut crate::execution_context::ExecutionContext) -> DebianMani
             // FIXME we should return a Result<> instead of exiting here or
             // returning a default value.
             eprintln!("Invalid debian control file line {}", line);
-            return debian_manifest;
+            return response;
         }
         let field_name = parts[0].trim();
 
@@ -235,7 +235,7 @@ pub fn parse(ctx: &mut crate::execution_context::ExecutionContext) -> DebianMani
                 // FIXME we should return a Result<> instead of exiting here or
                 // returning a default value.
                 eprintln!("Invalid debian control section {}", debian_manifest.section);
-                return debian_manifest;
+                return response;
             }
         }
     }
@@ -269,7 +269,7 @@ pub fn parse(ctx: &mut crate::execution_context::ExecutionContext) -> DebianMani
                     // FIXME we should return a Result<> instead of exiting here or
                     // returning a default value.
                     eprintln!("Invalid debian control file line {}", line);
-                    return debian_manifest;
+                    return response;
                 }
 
                 field_name = parts[0].trim().to_string();
@@ -331,7 +331,8 @@ pub fn parse(ctx: &mut crate::execution_context::ExecutionContext) -> DebianMani
     }
 
     eprintln!("finished parsing debian control file.");
-    debian_manifest
+    response.debian_manifest = Some(debian_manifest);
+    response
 }
 
 pub fn file_path_matches(path: &str) -> bool {
