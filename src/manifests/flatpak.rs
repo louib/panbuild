@@ -425,6 +425,30 @@ pub fn parse(ctx: &mut crate::execution_context::ExecutionContext) -> crate::man
     response
 }
 
+pub fn dump_native(abstract_manifest: &crate::manifests::manifest::AbstractManifest) -> String {
+    let flatpak_manifest = match &abstract_manifest.flatpak_manifest {
+        Some(m) => m,
+        None => panic!("Called flatpak.dump_native without a native Flatpak manifest!"),
+    };
+
+
+    if let crate::manifests::manifest::ManifestFormat::JSON = abstract_manifest.format {
+        let manifest_dump: String = match serde_json::to_string(&flatpak_manifest) {
+            Ok(d) => d,
+            Err(e) => panic!("Failed to dump the Flatpak manifest: {}.", e),
+        };
+        return manifest_dump;
+    }
+
+    let manifest_dump: String = match serde_yaml::to_string(&flatpak_manifest) {
+        Ok(d) => d,
+        Err(e) => panic!("Failed to dump the Flatpak manifest: {}.", e),
+    };
+    manifest_dump
+    // Assuming default YAML format.
+
+}
+
 pub fn file_path_matches(path: &str) -> bool {
     let parts: Vec<&str> = path.split("/").collect();
     if parts.len() == 0 {
