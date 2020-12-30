@@ -415,7 +415,10 @@ pub struct FlatpakBuildOptions {
 
 pub fn parse(ctx: &mut crate::execution_context::ExecutionContext) -> FlatpakManifest {
     // TODO actually handle the error.
-    let flatpak_manifest: FlatpakManifest = serde_yaml::from_str(&ctx.content).unwrap();
+    let flatpak_manifest: FlatpakManifest = match serde_yaml::from_str(&ctx.content) {
+        Ok(m) => m,
+        Err(e) => panic!("Failed to parse the Flatpak manifest: {}.", e),
+    };
 
     return flatpak_manifest;
 }
