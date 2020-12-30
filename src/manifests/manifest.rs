@@ -4,6 +4,7 @@ use std::path::Path;
 
 use serde::{Deserialize, Serialize};
 
+#[derive(Debug, Serialize, Deserialize)]
 pub enum ManifestFormat {
     JSON,
     YAML,
@@ -45,6 +46,10 @@ pub const DEFAULT_LICENSE: License = License::Gpl2;
 #[derive(Debug, Serialize, Deserialize)]
 /// Generic representation of a build manifest.
 pub struct AbstractManifest {
+    // The path that the manifest was loaded from.
+    pub path: String,
+    pub format: ManifestFormat,
+
     pub package_name: String,
     pub package_id: String,
     pub package_version: String,
@@ -62,6 +67,9 @@ impl Default for AbstractManifest {
             package_name: String::from(""),
             package_id: "".to_string(),
             package_version: "".to_string(),
+
+            path: "".to_string(),
+            format: ManifestFormat::TEXT,
 
             depends_on: vec![],
 
