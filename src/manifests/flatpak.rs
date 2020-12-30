@@ -399,6 +399,7 @@ pub struct FlatpakExtension {
 pub struct FlatpakBuildOptions {
     // This is set in the environment variable CFLAGS during the build.
     // Multiple specifications of this (in e.g. per-arch area) are concatenated, separated by spaces.
+    #[serde(skip_serializing_if = "String::is_empty")]
     pub cflags: String,
 
     // If this is true, clear cflags from previous build options before adding it from these options.
@@ -407,6 +408,7 @@ pub struct FlatpakBuildOptions {
 
     // This is set in the environment variable CPPFLAGS during the build.
     // Multiple specifications of this (in e.g. per-arch area) are concatenated, separated by spaces.
+    #[serde(skip_serializing_if = "String::is_empty")]
     pub cppflags: String,
 
     // If this is true, clear cppflags from previous build options before adding it from these options.
@@ -415,6 +417,7 @@ pub struct FlatpakBuildOptions {
 
     // This is set in the environment variable CXXFLAGS during the build.
     // Multiple specifications of this (in e.g. per-arch area) are concatenated, separated by spaces.
+    #[serde(skip_serializing_if = "String::is_empty")]
     pub cxxflags: String,
 
     // If this is true, clear cxxflags from previous build options before adding it from these options.
@@ -424,6 +427,7 @@ pub struct FlatpakBuildOptions {
     // This is set in the environment variable LDFLAGS during the build.
     // Multiple specifications of this (in e.g. per-arch area) are concatenated,
     // separated by spaces.
+    #[serde(skip_serializing_if = "String::is_empty")]
     pub ldflags: String,
 
     // If this is true, clear ldflags from previous build options before adding it from these options.
@@ -431,27 +435,35 @@ pub struct FlatpakBuildOptions {
     pub ldflags_override: Option<bool>,
 
     // The build prefix for the modules (defaults to /app for applications and /usr for runtimes).
+    #[serde(skip_serializing_if = "String::is_empty")]
     pub prefix: String,
 
     // The build libdir for the modules (defaults to /app/lib for applications and /usr/lib for runtimes).
+    #[serde(skip_serializing_if = "String::is_empty")]
     pub libdir: String,
 
     // This will get appended to PATH in the build environment (with an leading colon if needed).
+    #[serde(skip_serializing_if = "String::is_empty")]
     pub append_path: String,
 
     // This will get prepended to PATH in the build environment (with an trailing colon if needed).
+    #[serde(skip_serializing_if = "String::is_empty")]
     pub prepend_path: String,
 
     // This will get appended to LD_LIBRARY_PATH in the build environment (with an leading colon if needed).
+    #[serde(skip_serializing_if = "String::is_empty")]
     pub append_ld_library_path: String,
 
     // This will get prepended to LD_LIBRARY_PATH in the build environment (with an trailing colon if needed).
+    #[serde(skip_serializing_if = "String::is_empty")]
     pub prepend_ld_library_path: String,
 
     // This will get appended to PKG_CONFIG_PATH in the build environment (with an leading colon if needed).
+    #[serde(skip_serializing_if = "String::is_empty")]
     pub append_pkg_config_path: String,
 
     // This will get prepended to PKG_CONFIG_PATH in the build environment (with an trailing colon if needed).
+    #[serde(skip_serializing_if = "String::is_empty")]
     pub prepend_pkg_config_path: String,
 
     // This is a dictionary defining environment variables to be set during the build.
