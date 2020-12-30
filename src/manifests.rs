@@ -63,7 +63,7 @@ pub fn parse(ctx: &mut crate::execution_context::ExecutionContext) -> i32 {
 
 pub fn dump(ctx: &mut crate::execution_context::ExecutionContext) -> i32 {
     if let Some(_) = ctx.manifest.flatpak_manifest {
-        crate::manifests::flatpak::dump_native(&ctx.manifest);
+        ctx.content = crate::manifests::flatpak::dump_native(&ctx.manifest);
         return 0;
     }
 
