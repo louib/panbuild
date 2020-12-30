@@ -1,5 +1,7 @@
 use std::collections::HashMap;
 
+use serde::{Deserialize, Serialize};
+
 use crate::manifests::manifest::{AbstractManifest, AbstractModule, Priority};
 
 const CONTROL_FILE_SEPARATOR: &str = ":";
@@ -85,7 +87,7 @@ const PRE_DEPENDS: &str = "Pre-Depends";
 const CONFLICTS: &str = "Conflicts";
 const BREAKS: &str = "Breaks";
 
-#[derive(Default, Debug)]
+#[derive(Serialize, Deserialize, Default, Debug)]
 pub struct DebianManifest {
     // The name of the source described in this manifest.
     // (mandatory)

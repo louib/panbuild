@@ -48,18 +48,13 @@ pub struct AbstractManifest {
     pub package_name: String,
     pub package_id: String,
     pub package_version: String,
-    pub short_description: String,
-    pub description: String,
-    pub keywords: Vec<String>,
-    pub release_type: ReleaseType,
-    pub architecture: Architecture,
-    pub license: License,
 
     // The modules that the module being built requires.
     pub depends_on: Vec<AbstractModule>,
 
-    pub permissions: Vec<AbstractPermission>,
-    pub executables: Vec<AbstractExecutable>,
+    pub flatpak_manifest: Option<crate::manifests::flatpak::FlatpakManifest>,
+    pub debian_manifest: Option<crate::manifests::debian::DebianManifest>,
+    pub snap_manifest: Option<crate::manifests::snap::SnapcraftManifest>,
 }
 impl Default for AbstractManifest {
     fn default() -> Self {
@@ -68,16 +63,11 @@ impl Default for AbstractManifest {
             package_id: "".to_string(),
             package_version: "".to_string(),
 
-            short_description: "".to_string(),
-            description: "".to_string(),
-            keywords: vec![],
-            release_type: DEFAULT_RELEASE_TYPE,
-            architecture: DEFAULT_ARCH,
-            license: DEFAULT_LICENSE,
-
             depends_on: vec![],
-            permissions: vec![],
-            executables: vec![],
+
+            flatpak_manifest: None,
+            debian_manifest: None,
+            snap_manifest: None,
         }
     }
 }

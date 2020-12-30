@@ -9,7 +9,7 @@ const DEFAULT_RUNTIME_VERSION: &str = "master";
 const DEFAULT_SDK: &str = "org.freedesktop.Sdk";
 
 // See `man flatpak-manifest` for the flatpak manifest specs.
-#[derive(Deserialize, Serialize, Default)]
+#[derive(Deserialize, Serialize, Debug, Default)]
 #[serde(rename_all = "kebab-case")]
 #[serde(default)]
 pub struct FlatpakManifest {
@@ -162,7 +162,7 @@ pub struct FlatpakManifest {
 // building.
 //
 // Modules can be nested, in order to turn related modules on and off with a single key.
-#[derive(Deserialize, Serialize, Default)]
+#[derive(Debug, Default, Deserialize, Serialize)]
 #[serde(rename_all = "kebab-case")]
 #[serde(default)]
 pub struct FlatpakModule {
@@ -275,7 +275,7 @@ pub struct FlatpakModule {
 // Additionally, the sources list can contain a plain string, which is interpreted as the name
 // of a separate json or yaml file that is read and inserted at this
 // point. The file can contain a single source, or an array of sources.
-#[derive(Deserialize, Serialize, Default)]
+#[derive(Debug, Default, Deserialize, Serialize)]
 #[serde(rename_all = "kebab-case")]
 pub struct FlatpakSource {
     // Allowed source types are:
@@ -320,7 +320,7 @@ pub struct FlatpakExtension {
 // Build options specify the build environment of a module,
 // and can be specified globally as well as per-module.
 // Options can also be specified on a per-architecture basis using the arch property.
-#[derive(Deserialize, Serialize, Default)]
+#[derive(Deserialize, Serialize, Debug, Default)]
 #[serde(rename_all = "kebab-case")]
 #[serde(default)]
 pub struct FlatpakBuildOptions {

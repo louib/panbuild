@@ -9,7 +9,7 @@ use serde::{Deserialize, Serialize};
 // details on how apps and parts are configured within snapcraft.yaml.
 // Top-level details include a snap’s name, version and description, alongside operational values
 // such as its confinement level and supported architecture.
-#[derive(Deserialize, Serialize, Default)]
+#[derive(Deserialize, Serialize, Debug, Default)]
 #[serde(rename_all = "kebab-case")]
 #[serde(default)]
 pub struct SnapcraftManifest {
@@ -141,7 +141,7 @@ pub struct SnapcraftManifest {
     pub parts: HashMap<String, SnapcraftPart>,
 }
 
-#[derive(Deserialize, Serialize, Default)]
+#[derive(Deserialize, Serialize, Debug, Default)]
 #[serde(rename_all = "kebab-case")]
 #[serde(default)]
 pub struct SnapcraftPlug {
@@ -182,7 +182,7 @@ enum Grade {
 // a snap wants to expose, including how they’re executed and which resources they can access.
 // See Snapcraft top-level metadata and Snapcraft parts metadata for details on
 // how apps and parts are configured within snapcraft.yaml.
-#[derive(Deserialize, Serialize, Default)]
+#[derive(Deserialize, Serialize, Debug, Default)]
 #[serde(rename_all = "kebab-case")]
 #[serde(default)]
 pub struct SnapcraftApp {
@@ -298,7 +298,7 @@ pub struct SnapcraftApp {
 //     unix:
 //       listen-stream: $SNAP_COMMON/lxd/unix.socket
 //       socket-mode: 0660
-#[derive(Deserialize, Serialize, Default)]
+#[derive(Deserialize, Serialize, Debug, Default)]
 #[serde(rename_all = "kebab-case")]
 #[serde(default)]
 pub struct SnapcraftSocket {
@@ -344,7 +344,7 @@ pub const ALLOWED_BUILD_ATTRIBUTES: [&str; 4] = [
 // details on how apps and parts are configured within snapcraft.yaml.
 // <part-name> represents the specific name of a building block which can be
 // then referenced by the command line tool (i.e. snapcraft).
-#[derive(Deserialize, Serialize, Default)]
+#[derive(Deserialize, Serialize, Debug, Default)]
 #[serde(rename_all = "kebab-case")]
 #[serde(default)]
 pub struct SnapcraftPart {
@@ -552,7 +552,7 @@ pub struct SnapcraftPart {
     pub stage_snaps: Vec<String>,
 }
 
-#[derive(Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize)]
 #[serde(rename_all = "kebab-case")]
 #[serde(untagged)]
 pub enum SnapcraftPackage {
@@ -560,7 +560,7 @@ pub enum SnapcraftPackage {
     OptionalPackages(SnapcraftOptionalPackages),
 }
 
-#[derive(Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize)]
 #[serde(rename_all = "kebab-case")]
 pub struct SnapcraftOptionalPackages {
     r#try: Vec<String>,
