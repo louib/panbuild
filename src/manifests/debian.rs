@@ -4,65 +4,65 @@ use crate::manifests::manifest::{AbstractManifest, AbstractModule, Priority};
 
 const CONTROL_FILE_SEPARATOR: &str = ":";
 
-//static mut ALLOWED_SECTIONS: Vec<&str> = vec![
-//    "admin",
-//    "cli-mono",
-//    "comm",
-//    "database",
-//    "debug",
-//    "devel",
-//    "doc",
-//    "editors",
-//    "education",
-//    "electronics",
-//    "embedded",
-//    "fonts",
-//    "games",
-//    "gnome",
-//    "gnu-r",
-//    "gnustep",
-//    "graphics",
-//    "hamradio",
-//    "haskell",
-//    "httpd",
-//    "interpreters",
-//    "introspection",
-//    "java",
-//    "javascript",
-//    "kde",
-//    "kernel",
-//    "libdevel",
-//    "libs",
-//    "lisp",
-//    "localization",
-//    "mail",
-//    "math",
-//    "metapackages",
-//    "misc",
-//    "net",
-//    "news",
-//    "ocaml",
-//    "oldlibs",
-//    "otherosfs",
-//    "perl",
-//    "php",
-//    "python",
-//    "ruby",
-//    "rust",
-//    "science",
-//    "shells",
-//    "sound",
-//    "tasks",
-//    "tex",
-//    "text",
-//    "utils",
-//    "vcs",
-//    "video",
-//    "web",
-//    "x11",
-//    "xfce",
-//    "zope",
-//];
+pub const ALLOWED_SECTIONS: [&'static str; 57] = [
+    "admin",
+    "cli-mono",
+    "comm",
+    "database",
+    "debug",
+    "devel",
+    "doc",
+    "editors",
+    "education",
+    "electronics",
+    "embedded",
+    "fonts",
+    "games",
+    "gnome",
+    "gnu-r",
+    "gnustep",
+    "graphics",
+    "hamradio",
+    "haskell",
+    "httpd",
+    "interpreters",
+    "introspection",
+    "java",
+    "javascript",
+    "kde",
+    "kernel",
+    "libdevel",
+    "libs",
+    "lisp",
+    "localization",
+    "mail",
+    "math",
+    "metapackages",
+    "misc",
+    "net",
+    "news",
+    "ocaml",
+    "oldlibs",
+    "otherosfs",
+    "perl",
+    "php",
+    "python",
+    "ruby",
+    "rust",
+    "science",
+    "shells",
+    "sound",
+    "tasks",
+    "tex",
+    "text",
+    "utils",
+    "vcs",
+    "video",
+    "web",
+    "x11",
+    "xfce",
+    "zope",
+];
 
 // list of packages (see package fields below).
 const PACKAGES: &str = "packages";
@@ -85,7 +85,7 @@ const PRE_DEPENDS: &str = "Pre-Depends";
 const CONFLICTS: &str = "Conflicts";
 const BREAKS: &str = "Breaks";
 
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct DebianManifest {
     // The name of the source described in this manifest.
     // (mandatory)
@@ -209,6 +209,21 @@ pub fn parse(ctx: &mut crate::execution_context::ExecutionContext) -> DebianMani
         }
         if field_name == "Maintainer" {
             debian_manifest.maintainer = field_value.to_string();
+        }
+        if field_name == "Version" {
+            debian_manifest.version = field_value.to_string();
+        }
+        if field_name == "Priority" {
+            debian_manifest.priority = field_value.to_string();
+        }
+        if field_name == "Section" {
+            debian_manifest.section = field_value.to_string();
+            if ! ALLOWED_SECTIONS.contains(&&debian_manifest.section[..]) {
+                // FIXME we should return a Result<> instead of exiting here or
+                // returning a default value.
+                eprintln!("Invalid debian control section {}", debian_manifest.section);
+                return debian_manifest;
+            }
         }
     }
 

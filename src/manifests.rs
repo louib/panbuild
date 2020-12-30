@@ -44,6 +44,7 @@ pub fn detect_type(ctx: &mut crate::execution_context::ExecutionContext) -> i32 
 pub fn parse(ctx: &mut crate::execution_context::ExecutionContext) -> i32 {
     if ctx.source_type == "debian" {
         ctx.debian_manifest = Some(crate::manifests::debian::parse(ctx));
+        print!("{:#?}", ctx.debian_manifest);
         return 0;
     }
 
