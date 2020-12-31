@@ -38,7 +38,18 @@ pub struct PanbuildConfig {
 }
 
 pub fn write_config(config: &PanbuildConfig) -> Result<PanbuildConfig, String> {
-    Ok(PanbuildConfig::default())
+    let config_content = match serde_yaml::to_string(&config) {
+        Ok(m) => m,
+        Err(e) => return Err(format!("Failed to dump the config {}", e)),
+    };
+
+    let config_path = path::Path::new(&".panbuild/config.yaml");
+    match fs::write(config_path, config_content) {
+        Ok(m) => m,
+        Err(e) => return Err(format!("Failed to write the config file at {}: {}", config_path.to_str().unwrap_or(""), e)),
+    };
+
+    read_config()
 }
 
 pub fn read_config() -> Result<PanbuildConfig, String> {
