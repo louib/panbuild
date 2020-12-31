@@ -1,4 +1,6 @@
 use std::collections::BTreeMap;
+use std::fs;
+use std::path;
 
 use serde::{Deserialize, Serialize};
 
@@ -32,7 +34,7 @@ pub struct PanbuildConfig {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub last_build: Option<String>,
 
-    pub envs: BTreeMap<String, String>,
+    pub workspaces: BTreeMap<String, String>,
 }
 
 pub fn write_config(config: &PanbuildConfig) -> Result<PanbuildConfig, String> {
@@ -40,5 +42,16 @@ pub fn write_config(config: &PanbuildConfig) -> Result<PanbuildConfig, String> {
 }
 
 pub fn read_config() -> Result<PanbuildConfig, String> {
-    Ok(PanbuildConfig::default())
+    // Make that more robust maybe?
+    let config_path = path::Path::new(&".panbuild/config.yaml");
+    let config_content = match fs::read_to_string(config_path) {
+        Ok(m) => m,
+        Err(e) => return Err(format!("Failed to read the config file at {}", config_path.to_str().unwrap_or(""))),
+    };
+
+    let config: PanbuildConfig = match serde_yaml::from_str(&config_content) {
+        Ok(m) => m,
+        Err(e) => return Err(format!("Failed to parse the config file at {}: {}.", config_path.to_str().unwrap_or(""), e)),
+    };
+    Ok(config)
 }
