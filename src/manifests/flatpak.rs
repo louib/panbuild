@@ -557,8 +557,8 @@ pub fn file_path_matches(path: &str) -> bool {
     if parts.len() == 0 {
         return false;
     }
-    let last_part = parts[parts.len() - 1];
-    if !last_part.to_lowercase().ends_with("yaml") && !last_part.to_lowercase().ends_with("json") {
+    let last_part = parts[parts.len() - 1].to_lowercase();
+    if !last_part.ends_with("yaml") && !last_part.ends_with("yml") && !last_part.ends_with("json") {
         return false;
     }
     let mut dot_count = 0;
@@ -594,6 +594,7 @@ mod tests {
     pub fn test_file_path_matches() {
         assert!(file_path_matches("com.example.appName.yaml"));
         assert!(file_path_matches("/path/to/com.example.appName.yaml"));
+        assert!(file_path_matches("/path/to/com.example.appName.yml"));
         assert!(file_path_matches("/path/to/com.example.department.product.yaml"));
         assert!(!file_path_matches("/path/to/file.yaml"));
         assert!(!file_path_matches("/path/to/file.json"));

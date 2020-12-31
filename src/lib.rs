@@ -265,7 +265,6 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
                 found_manifest = true;
                 println!("flatpak ({})", file_path_str);
             }
-            println!("{}", file_path_str);
         }
 
         if !found_manifest {
