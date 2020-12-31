@@ -11,19 +11,20 @@ if [[ -z "$output_dir" ]]; then
     die "You must define the SHARED_MODULES_OUT_DIR variable."
 fi
 
-projects_dir="$PROJECTS_DIR"
-if [[ -z "$projects_dir" ]]; then
+if [[ -z "$PROJECTS_DIR" ]]; then
     echo "⚠️ PROJECTS_DIR variable is undefined. Defaulting to current directory!"
-    projects_dir="."
-elif [[ ! -d "$projects_dir" ]]; then
+    PROJECTS_DIR="."
+elif [[ ! -d "$PROJECTS_DIR" ]]; then
     die "$PROJECTS_DIR is not a directory!"
 fi
 
-if [[ ! -d "$projects_dir/shared-modules" ]]; then
-    echo "👍 Did not find shared modules at ./shared-modules/. Fetching ⬇️!"
+if [[ ! -d "$PROJECTS_DIR/shared-modules" ]]; then
+    echo "👍 Did not find shared modules at $PROJECTS_DIR/shared-modules/. Fetching ⬇️!"
+    cd "$PROJECTS_DIR";
     git clone https://github.com/flathub/shared-modules.git
 else
     echo "👍 No need to fetch the shared modules!"
+    cd "$PROJECTS_DIR";
 fi
 
 cd shared-modules
@@ -36,8 +37,14 @@ fi
 
 files=$(find "./")
 IFS=$'\n'; for file in $files; do
+    filename=$(basename "$file")
+    if [[ -f "$SHARED_MODULES_OUT_DIR/$filename" ]]; then
+        echo "🗃️ $SHARED_MODULES_OUT_DIR/$filename is already a file in the parsing directory."
+        continue
+    fi
+
     if [[ "$file" == *.json ]]; then
-        cp "$file" "SHARED_MODULES_OUT_DIR"
+        cp "$file" "$SHARED_MODULES_OUT_DIR"
         echo "🗃️ Sending $file to output dir for parsing."
     fi
 done
