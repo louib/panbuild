@@ -140,10 +140,14 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
             separator = args.get("separator").unwrap();
         }
 
+        exit_code = manifests::get_modules(&mut ctx);
+        if exit_code != 0 {
+            eprintln!("Error while getting modules");
+            return exit_code;
+        }
+
         let mut output: String = String::from("");
-        // FIXME we should fetch those recursively.
         for module in &ctx.manifest.depends_on {
-            // FIXME should we check for duplicates here??
             if !output.is_empty() {
                 output.push_str(&separator)
             }

@@ -529,6 +529,25 @@ pub fn parse(ctx: &mut crate::execution_context::ExecutionContext) {
     ctx.manifest.flatpak_manifest = Some(flatpak_manifest);
 }
 
+pub fn get_modules(abstract_manifest: &crate::manifests::manifest::AbstractManifest) -> Vec<crate::manifests::manifest::AbstractModule> {
+    let mut response = vec![];
+    if let None = abstract_manifest.flatpak_manifest {
+        // FIXME not sure that's the best way to handle this.
+        return response;
+    } else {
+        let manifest = abstract_manifest.flatpak_manifest.as_ref().unwrap();
+        // FIXME we should fetch those recursively.
+        for module in &manifest.modules {
+            let mut abstract_module = crate::manifests::manifest::AbstractModule::default();
+            abstract_module.name = module.name.to_string();
+            // TODO fetch the version from the sources.
+            // FIXME should we check for duplicates here??
+            response.push(abstract_module);
+        }
+        response
+    }
+}
+
 pub fn dump_native(abstract_manifest: &crate::manifests::manifest::AbstractManifest) -> String {
     let flatpak_manifest = match &abstract_manifest.flatpak_manifest {
         Some(m) => m,
