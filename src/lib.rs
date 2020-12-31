@@ -241,7 +241,7 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
             Err(message) => {
                 eprintln!("Could not get the file paths :sad: {}", message);
                 return 1;
-            },
+            }
         };
         for path in file_paths.iter() {
             let file_path = path;
@@ -278,7 +278,7 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
         let cache_dir = path::Path::new(DEFAULT_CACHE_DIR);
         if !cache_dir.is_dir() {
             match fs::create_dir(cache_dir) {
-                Ok(_) => {},
+                Ok(_) => {}
                 Err(e) => panic!("Could not create cache dir at {}", DEFAULT_CACHE_DIR),
             };
         }
@@ -302,7 +302,7 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
         let cache_dir = path::Path::new(DEFAULT_CACHE_DIR);
         if !cache_dir.is_dir() {
             match fs::create_dir(cache_dir) {
-                Ok(_) => {},
+                Ok(_) => {}
                 Err(e) => panic!("Could not create cache dir at {}", DEFAULT_CACHE_DIR),
             };
         }
@@ -320,7 +320,6 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
         } else {
             println!("No active workspace. Call `ls` to show the available workspaces.");
         }
-
     }
 
     // FIXME put to debug once there is proper logging in place
