@@ -17,23 +17,15 @@ subcommands:
     - status:
         about: Show the current build status for the repository.
     - ls:
-        about: Lists the available build environments.
+        about: Lists the available build workspaces.
         args:
             - parse:
                 short: p
                 help: Parse the project's files to detect build environments.
     - make:
-        about: Build an environment.
-        args:
-            - env_name:
-                short: e
-                long: env
-                takes_value: true
-                value_name: ENV_NAME
-                required: true
-                help: The name of the environment to build.
+        about: Build a workspace.
     - install:
-        about: install a package in a manifest file.
+        about: install a package in the current workspace.
         args:
             - package_name:
                 multiple: false

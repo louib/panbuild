@@ -235,7 +235,7 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
             return 1;
         }
 
-        let mut found_env = false;
+        let mut found_manifest = false;
         let file_paths = fs::read_dir("./").unwrap();
         for path in file_paths {
             let file_path = path.unwrap().path();
@@ -249,30 +249,52 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
             // you skip the file.
 
             if crate::manifests::debian::file_path_matches(file_path_str) {
-                found_env = true;
+                found_manifest = true;
                 println!("debian ({})", file_path_str);
             }
             if crate::manifests::snap::file_path_matches(file_path_str) {
-                found_env = true;
+                found_manifest = true;
                 println!("snap ({})", file_path_str);
             }
             if crate::manifests::flatpak::file_path_matches(file_path_str) {
-                found_env = true;
+                found_manifest = true;
                 println!("flatpak ({})", file_path_str);
             }
             println!("{}", file_path_str);
         }
 
-        if !found_env {
-            eprintln!("No available environment found for the project. Try running `ls -p`.");
+        if !found_manifest {
+            eprintln!("No available workspace found for the project. Try running `ls -p`.");
+        } else {
+            println!("Use `checkout` to select a workspace.");
         }
     }
 
     if command_name == "status" {
-        let project_path = path::Path::new(DEFAULT_CACHE_DIR);
-        if !project_path.is_dir() {
-            println!("No environment configured yet. Run `ls` to show the available envs.");
+        let cache_dir = path::Path::new(DEFAULT_CACHE_DIR);
+        if !cache_dir.is_dir() {
+            match fs::create_dir(cache_dir) {
+                Ok(_) => {},
+                Err(e) => panic!("Could not create cache dir at {}", DEFAULT_CACHE_DIR),
+            };
+
+            println!("No environment configured yet. Run `ls` to show the available workspaces.");
         }
+
+        let current_workspace_file_path = DEFAULT_CACHE_DIR.to_owned() + "/workspace";
+        let current_workspace_file_path = path::Path::new(&current_workspace_file_path);
+        if current_workspace_file_path.is_file() {
+            let current_workspace = match fs::read_to_string(path::Path::new(current_workspace_file_path)) {
+                Ok(content) => content,
+                Err(e) => {
+                    eprintln!("could not read workspace file {}.", e);
+                    return 1;
+                }
+            };
+        } else {
+            println!("No active workspace. Call `ls` to show the available workspaces.");
+        }
+
     }
 
     // FIXME put to debug once there is proper logging in place
