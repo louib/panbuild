@@ -270,6 +270,30 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
         }
     }
 
+    if command_name == "checkout" {
+        let cache_dir = path::Path::new(DEFAULT_CACHE_DIR);
+        if !cache_dir.is_dir() {
+            match fs::create_dir(cache_dir) {
+                Ok(_) => {},
+                Err(e) => panic!("Could not create cache dir at {}", DEFAULT_CACHE_DIR),
+            };
+        }
+
+        let current_workspace_file_path = DEFAULT_CACHE_DIR.to_owned() + "/workspace";
+        let current_workspace_file_path = path::Path::new(&current_workspace_file_path);
+        if current_workspace_file_path.is_file() {
+            let current_workspace = match fs::read_to_string(current_workspace_file_path) {
+                Ok(content) => content,
+                Err(e) => {
+                    eprintln!("could not read workspace file {}.", e);
+                    return 1;
+                }
+            };
+        } else {
+            println!("No active workspace. Call `ls` to show the available workspaces.");
+        }
+    }
+
     if command_name == "status" {
         let cache_dir = path::Path::new(DEFAULT_CACHE_DIR);
         if !cache_dir.is_dir() {
@@ -277,14 +301,12 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
                 Ok(_) => {},
                 Err(e) => panic!("Could not create cache dir at {}", DEFAULT_CACHE_DIR),
             };
-
-            println!("No environment configured yet. Run `ls` to show the available workspaces.");
         }
 
         let current_workspace_file_path = DEFAULT_CACHE_DIR.to_owned() + "/workspace";
         let current_workspace_file_path = path::Path::new(&current_workspace_file_path);
         if current_workspace_file_path.is_file() {
-            let current_workspace = match fs::read_to_string(path::Path::new(current_workspace_file_path)) {
+            let current_workspace = match fs::read_to_string(current_workspace_file_path) {
                 Ok(content) => content,
                 Err(e) => {
                     eprintln!("could not read workspace file {}.", e);

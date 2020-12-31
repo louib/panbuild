@@ -24,6 +24,13 @@ subcommands:
                 help: Parse the project's files to detect build environments.
     - make:
         about: Build a workspace.
+    - checkout:
+        about: Checkout a workspace.
+        args:
+            - env_name:
+              multiple: false
+              required: true
+              help: The name of the workspace to checkout.
     - install:
         about: install a package in the current workspace.
         args:
