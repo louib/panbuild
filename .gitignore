@@ -6,4 +6,6 @@ __pycache__/
 target/
 tests/.output/
 
+.panbuild
+
 net.louib.panbuild.json

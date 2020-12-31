@@ -202,6 +202,11 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
 
         eprintln!("Parsing finished. Resulting manifest is {:#?}", &ctx.manifest);
 
+        let config = match crate::execution_context::read_or_init_config() {
+            Ok(c) => c,
+            Err(e) => panic!("Could not load or init config: {}", e),
+        };
+
         let package_name = match args.get("package_name") {
             Some(package_name) => package_name,
             None => {
