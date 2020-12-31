@@ -15,6 +15,29 @@ pub fn get_projects() -> Vec<project::Project> {
     return db::get_all();
 }
 
+// Get the potential modules that are inferable from the
+// projects.
+pub fn get_modules() -> Vec<crate::manifests::manifest::AbstractModule> {
+    let mut modules = vec![];
+    for project in db::get_all() {
+        for project_version in &project.versions {
+            for artifact_name in &project.artifact_names {
+                let mut module = crate::manifests::manifest::AbstractModule::default();
+                module.name = artifact_name.to_string();
+                module.version = project_version.to_string();
+                module.tag = project_version.to_string();
+                if project.vcs_urls.len() != 0 {
+                    module.url = project.vcs_urls[0].to_string();
+                    module.url_type = crate::manifests::manifest::SourceType::Git;
+                }
+                modules.push(module);
+                // println!("Project {} could install {} version {}.", project.name, artifact_name, project_version);
+            }
+        }
+    }
+    modules
+}
+
 pub fn get_project_tag_names() -> Vec<String> {
     // call tag_names(&self, pattern: Option<&str>) -> Result<StringArray, Error>
     // on the repository.

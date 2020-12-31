@@ -213,15 +213,13 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
             eprintln!("{} is too short for a package name!", package_name);
             return 1;
         }
-        eprintln!("Installing {:#?}", &package_name);
+        eprintln!("Installing module {:#?}", &package_name);
 
-        let projects: Vec<crate::projects::project::Project> = crate::projects::db::get_all();
-        eprintln!("Searching in {:#?} projects for installation candidates 🕰", projects.len());
-        for project in &projects {
-            for artifact_name in &project.artifact_names {
-                if artifact_name.contains(package_name) {
-                    println!("found candidate artifact in {}.", project.name);
-                }
+        let packages: Vec<crate::manifests::manifest::AbstractModule> = crate::projects::get_modules();
+        eprintln!("Searching in {:#?} packages for installation candidates 🕰", packages.len());
+        for package in &packages {
+            if package.name.contains(package_name) {
+                println!("found candidate artifact in {}.", package.name);
             }
         }
 
