@@ -28,9 +28,9 @@ subcommands:
         about: Checkout a workspace.
         args:
             - env_name:
-              multiple: false
-              required: true
-              help: The name of the workspace to checkout.
+                multiple: false
+                required: true
+                help: The name of the workspace to checkout.
     - install:
         about: install a package in the current workspace.
         args:
