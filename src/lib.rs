@@ -236,10 +236,15 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
         }
 
         let mut found_manifest = false;
-        let file_paths = fs::read_dir("./").unwrap();
-        for path in file_paths {
-            let file_path = path.unwrap().path();
-            let file_path = path::Path::new(&file_path);
+        let file_paths = match utils::get_all_paths(path::Path::new("./")) {
+            Ok(paths) => paths,
+            Err(message) => {
+                eprintln!("Could not get the file paths :sad: {}", message);
+                return 1;
+            },
+        };
+        for path in file_paths.iter() {
+            let file_path = path;
             let file_path_str = file_path.to_str().unwrap();
             if file_path.is_dir() {
                 continue;
