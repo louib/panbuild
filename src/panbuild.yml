@@ -31,6 +31,17 @@ subcommands:
                 multiple: false
                 required: true
                 help: The name of the workspace to checkout.
+    - create:
+        about: Create a workspace using a build manifest.
+        args:
+            - env_name:
+                multiple: false
+                required: true
+                help: The name of the workspace to checkout.
+            - input_file:
+                multiple: false
+                required: true
+                help: The path of the manifest to build the workspace with.
     - install:
         about: install a package in the current workspace.
         args:

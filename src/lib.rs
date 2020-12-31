@@ -278,6 +278,24 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
     }
 
     if command_name == "checkout" {
+        let mut config = match crate::execution_context::read_or_init_config() {
+            Ok(c) => c,
+            Err(e) => panic!("Could not load or init config: {}", e),
+        };
+
+        let env_name = match args.get("env_name") {
+            Some(n) => n,
+            None => panic!("An env name is required to checkout."),
+        };
+
+        config.current_workspace = Some(env_name.to_string());
+        match crate::execution_context::write_config(&config) {
+            Ok(c) => c,
+            Err(e) => panic!("Could not write config: {}", e),
+        };
+    }
+
+    if command_name == "create" {
         let cache_dir = path::Path::new(DEFAULT_CACHE_DIR);
         if !cache_dir.is_dir() {
             match fs::create_dir(cache_dir) {
@@ -302,27 +320,15 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
     }
 
     if command_name == "status" {
-        let cache_dir = path::Path::new(DEFAULT_CACHE_DIR);
-        if !cache_dir.is_dir() {
-            match fs::create_dir(cache_dir) {
-                Ok(_) => {}
-                Err(e) => panic!("Could not create cache dir at {}", DEFAULT_CACHE_DIR),
-            };
-        }
+        let mut config = match crate::execution_context::read_or_init_config() {
+            Ok(c) => c,
+            Err(e) => panic!("Could not load or init config: {}", e),
+        };
 
-        let current_workspace_file_path = DEFAULT_CACHE_DIR.to_owned() + "/workspace";
-        let current_workspace_file_path = path::Path::new(&current_workspace_file_path);
-        if current_workspace_file_path.is_file() {
-            let current_workspace = match fs::read_to_string(current_workspace_file_path) {
-                Ok(content) => content,
-                Err(e) => {
-                    eprintln!("could not read workspace file {}.", e);
-                    return 1;
-                }
-            };
-        } else {
-            println!("No active workspace. Call `ls` to show the available workspaces.");
-        }
+        match config.current_workspace {
+            Some(workspace) => println!("Current workspace is {}.", workspace),
+            None => println!("No current workspace. Call `ls` to list the available manifests."),
+        };
     }
 
     // FIXME put to debug once there is proper logging in place
