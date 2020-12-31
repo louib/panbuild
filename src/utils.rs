@@ -20,14 +20,21 @@ pub fn visit_dirs(dir: &Path, cb: &dyn Fn(&DirEntry)) -> io::Result<()> {
 }
 
 pub fn get_all_paths(dir: &Path) -> Result<Vec<std::path::PathBuf>, String> {
-    let entries = match fs::read_dir(dir) {
-        Ok(paths) => paths,
+    let mut all_paths: Vec<std::path::PathBuf> = vec![];
+
+    let dir_entries = match fs::read_dir(dir) {
+        Ok(entries) => entries,
         Err(err) => return Err(format!("Error reading directory {}: {}", dir.to_str().unwrap(), err)),
     };
-    let entries = entries.map(|res| res.map(|e| e.path()));
-    let entries = match entries.collect::<Result<Vec<_>, io::Error>>() {
-        Ok(entry) => entry,
-        Err(err) => return Err(format!("Error collecting the entries: {}", err)),
-    };
-    Ok(entries)
+    for entry in dir_entries {
+        let entry_path = entry.unwrap().path();
+        if entry_path.is_dir() {
+            let mut dir_paths: Vec<std::path::PathBuf> = get_all_paths(&entry_path)?;
+            all_paths.append(&mut dir_paths);
+        } else {
+            all_paths.push(entry_path);
+        }
+    }
+
+    Ok(all_paths)
 }
