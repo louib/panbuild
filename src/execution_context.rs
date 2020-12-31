@@ -81,12 +81,10 @@ pub fn read_config() -> Result<PanbuildConfig, String> {
 
 pub fn read_or_init_config() -> Result<PanbuildConfig, String> {
     match read_config() {
-      Ok(config) => Ok(config),
-      Err(_) => {
-        match write_config(&PanbuildConfig::default()) {
+        Ok(config) => Ok(config),
+        Err(_) => match write_config(&PanbuildConfig::default()) {
             Ok(c) => return Ok(c),
             Err(e) => return Err(e),
-        }
-      }
+        },
     }
 }
