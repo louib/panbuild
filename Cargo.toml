@@ -15,12 +15,12 @@ keywords = [
   "converter",
 ]
 
-exclude = [
-    ".github/*",
-    "scripts/*",
-    "build-aux/*",
-    "tests/*",
-    "remotes.txt",
+include = [
+    "src/**/*",
+    "doc/**/*",
+    "README.md",
+    "LICENSE.txt",
+    "Cargo.lock",
 ]
 
 [dependencies]
