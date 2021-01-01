@@ -39,57 +39,6 @@ def normalize_project_name(project_name):
     return response
 
 
-def get_projects_from_homebrew():
-    homebrew_projects = []
-
-    # All the formulae for macOS
-    response = requests.get('https://formulae.brew.sh/api/formula.json')
-    response.raise_for_status()
-    homebrew_projects.extend(response.json())
-
-    # All the formulae for Linux
-    response = requests.get('https://formulae.brew.sh/api/formula-linux.json')
-    response.raise_for_status()
-    homebrew_projects.extend(response.json())
-
-    # All the casks
-    response = requests.get('https://formulae.brew.sh/api/cask.json')
-    response.raise_for_status()
-    homebrew_projects.extend(response.json())
-
-    for homebrew_project in homebrew_projects:
-        print(homebrew_project)
-        project = {}
-
-        # Weird but that happends sometimes.
-        if isinstance(homebrew_project['name'], list):
-            continue
-
-        project['name'] = normalize_project_name(homebrew_project['name'])
-        project['description'] = homebrew_project['desc']
-        project['urls'] = []
-        project['urls'].append(homebrew_project['homepage'])
-        project['urls'] = sorted(project['urls'])
-        project['aliases'] = sorted(project.get('aliases', []))
-        project['vcs_urls'] = []
-
-        project['versions'] = []
-        if project.get('versions'):
-            if project['versions'].get('stable'):
-                project['versions'].append(project['versions'].get('stable'))
-            if project['versions'].get('devel'):
-                project['versions'].append(project['versions'].get('devel'))
-        if project.get('version'):
-            project['versions'].append(project['version'])
-        project['versions'] = sorted(project['versions'])
-
-        print(project)
-
-        projects.append(project)
-
-    return projects
-
-
 def get_all_projects_from_github():
     projects_url = "https://api.github.com/repositories?".format()
     projects = []
@@ -319,8 +268,6 @@ if __name__ == '__main__':
     # https://sourceforge.net/software/customer-service/?page=2
     # launchpad?
 
-    projects.extend(get_projects_from_homebrew())
-
     # Bitbucket
 
     # https://repo.or.cz/
@@ -331,14 +278,6 @@ if __name__ == '__main__':
     #
     # sr.ht?
     # aka https://sir.hat.com"
-
-    # Field for a package in Debian:
-    # Package, Version, Installed-Size, Maintainer, Architecture, Depends,
-    # Description, Multi-Arch, Homepage, Description-md5, Section, Priority
-    # Filename, Size, SHA256
-    # https://repo.puri.sm/pureos/dists/amber/main/binary-amd64/Packages.xz
-    # https://repo.puri.sm/pureos/dists/amber/main/binary-arm64/Packages.xz
-    # https://repo.puri.sm/pureos/dists/amber/main/binary-all/Packages.xz
 
     if not os.path.exists(PROJECTS_DIR):
         os.mkdir(PROJECTS_DIR)
