@@ -1,5 +1,5 @@
 """
-Gets all the known available projects
+Parses the native debian sources format into panbuild's project format.
 """
 import json
 # import os
