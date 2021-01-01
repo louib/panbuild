@@ -548,6 +548,31 @@ pub fn get_modules(abstract_manifest: &crate::manifests::manifest::AbstractManif
     }
 }
 
+// Returns the updated list of modules in the manifest.
+pub fn add_module(abstract_manifest: &mut crate::manifests::manifest::AbstractManifest, new_module: &crate::manifests::manifest::AbstractModule) {
+    if let None = abstract_manifest.flatpak_manifest {
+        // FIXME not sure that's the best way to handle this.
+        return;
+    } else {
+        let manifest = abstract_manifest.flatpak_manifest.as_mut().unwrap();
+        for module in &manifest.modules {
+            if module.name == new_module.name {
+                eprintln!("Already a module named {}.", module.name);
+                return;
+            }
+        }
+        let mut new_flatpak_module = FlatpakModule::default();
+        new_flatpak_module.name = new_module.name.to_string();
+
+        let mut flatpak_sources = FlatpakSource::default();
+        flatpak_sources.r#type = "git".to_string(); // FIXME use the url_type
+        flatpak_sources.url = new_module.url.to_string();
+        new_flatpak_module.sources = vec![flatpak_sources];
+
+        manifest.modules.push(new_flatpak_module);
+    }
+}
+
 pub fn dump_native(abstract_manifest: &crate::manifests::manifest::AbstractManifest) -> String {
     let flatpak_manifest = match &abstract_manifest.flatpak_manifest {
         Some(m) => m,
