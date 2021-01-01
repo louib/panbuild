@@ -310,10 +310,14 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
             None => panic!("An env name is required to checkout."),
         };
 
-        if *env_name == config.current_workspace.unwrap_or("".to_string()) {
-            println!("Already in workspace {}.", env_name);
-            return 0;
+        if let Some(current_workspace) = &config.current_workspace {
+            if (current_workspace == env_name) {
+                println!("Already in workspace {}.", env_name);
+                return 0;
+
+            }
         }
+
         if config.workspaces.contains_key(env_name) {
             eprintln!("Workspace {} already exists.", env_name);
             return 1;
@@ -328,6 +332,11 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
             }
         };
 
+        config.workspaces.insert(env_name.to_string(), manifest_file_path.to_string());
+        match crate::execution_context::write_config(&config) {
+            Ok(c) => c,
+            Err(e) => panic!("Could not write config: {}", e),
+        };
         println!("🗃 Created workspace {} with manifest file {}.", env_name, manifest_file_path);
     }
 
