@@ -3,7 +3,7 @@ name = "panbuild"
 version = "0.0.10"
 authors = ["louib <code@louib.net>"]
 edition = "2018"
-description = "The universal build manifest converter."
+description = "The universal builder."
 license = "BSD-3-Clause"
 repository = "https://github.com/louib/panbuild/"
 readme = "README.md"
@@ -12,13 +12,14 @@ keywords = [
   "snap",
   "packages",
   "manifest",
-  "converter",
+  "workspace",
 ]
 
 include = [
     "src/**/*",
     "doc/**/*",
     "README.md",
+    "VERSION",
     "LICENSE.txt",
     "Cargo.lock",
 ]
