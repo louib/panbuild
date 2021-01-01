@@ -300,27 +300,35 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
     }
 
     if command_name == "create" {
-        let cache_dir = path::Path::new(DEFAULT_CACHE_DIR);
-        if !cache_dir.is_dir() {
-            match fs::create_dir(cache_dir) {
-                Ok(_) => {}
-                Err(e) => panic!("Could not create cache dir at {}", DEFAULT_CACHE_DIR),
-            };
+        let mut config = match crate::execution_context::read_or_init_config() {
+            Ok(c) => c,
+            Err(e) => panic!("Could not load or init config: {}", e),
+        };
+
+        let env_name = match args.get("env_name") {
+            Some(n) => n,
+            None => panic!("An env name is required to checkout."),
+        };
+
+        if *env_name == config.current_workspace.unwrap_or("".to_string()) {
+            println!("Already in workspace {}.", env_name);
+            return 0;
+        }
+        if config.workspaces.contains_key(env_name) {
+            eprintln!("Workspace {} already exists.", env_name);
+            return 1;
         }
 
-        let current_workspace_file_path = DEFAULT_CACHE_DIR.to_owned() + "/workspace";
-        let current_workspace_file_path = path::Path::new(&current_workspace_file_path);
-        if current_workspace_file_path.is_file() {
-            let current_workspace = match fs::read_to_string(current_workspace_file_path) {
-                Ok(content) => content,
-                Err(e) => {
-                    eprintln!("could not read workspace file {}.", e);
-                    return 1;
-                }
-            };
-        } else {
-            println!("No active workspace. Call `ls` to show the available workspaces.");
-        }
+        let manifest_file_path = match args.get("manifest_file_path") {
+            Some(p) => p,
+            None => {
+                eprintln!("a manifest file is required to create a new workspace!");
+                // TODO handle reading from stdin.
+                return 1;
+            }
+        };
+
+        println!("🗃 Created workspace {} with manifest file {}.", env_name, manifest_file_path);
     }
 
     if command_name == "status" {

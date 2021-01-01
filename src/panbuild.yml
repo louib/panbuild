@@ -38,7 +38,7 @@ subcommands:
                 multiple: false
                 required: true
                 help: The name of the workspace to checkout.
-            - input_file:
+            - manifest_file_path:
                 multiple: false
                 required: true
                 help: The path of the manifest to build the workspace with.
