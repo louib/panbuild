@@ -296,7 +296,6 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
             if (current_workspace == env_name) {
                 println!("Already in workspace {}.", env_name);
                 return 0;
-
             }
         }
 
@@ -327,7 +326,6 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
             if (current_workspace == env_name) {
                 println!("Already in workspace {}.", env_name);
                 return 0;
-
             }
         }
 
