@@ -2,13 +2,14 @@
 Parses the brew JSON packages dumps into panbuild's project format.
 """
 import json
+import sys
 # import os
 
 import fileinput
 
 
 if __name__ == '__main__':
-    brew_packages = json.reads(fileinput.readall())
+    brew_packages = json.loads(sys.stdin.read())
 
     source_packages = {}
     for package in brew_packages:
@@ -31,7 +32,7 @@ if __name__ == '__main__':
 
         current_package['artifact_names'] = []
         for alias in package.get('aliases', []):
-            current_package['artifact_names'].push(alias)
+            current_package['artifact_names'].append(alias)
         current_package['maintainers'] = []
         current_package['web_urls'] = []
         current_package['web_urls'].append(package['homepage'])
