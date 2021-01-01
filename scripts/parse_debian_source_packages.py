@@ -66,7 +66,7 @@ if __name__ == '__main__':
         source_package = source_packages[package_name]
         # We don't really need those that don't have a git url,
         # at least for now.
-        if 'vcs_urls' not in source_package:
+        if not len(source_package.get('vcs_urls', [])):
             continue
         source_package['vcs_urls'] = list(set(source_package['vcs_urls']))
         filtered_packages.append(source_package)
