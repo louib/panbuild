@@ -292,6 +292,19 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
             None => panic!("An env name is required to checkout."),
         };
 
+        if let Some(current_workspace) = &config.current_workspace {
+            if (current_workspace == env_name) {
+                println!("Already in workspace {}.", env_name);
+                return 0;
+
+            }
+        }
+
+        if !config.workspaces.contains_key(env_name) {
+            eprintln!("Workspace {} does not exist. Use `ls` to list the available workspaces and manifests.", env_name);
+            return 1;
+        }
+
         config.current_workspace = Some(env_name.to_string());
         match crate::execution_context::write_config(&config) {
             Ok(c) => c,
@@ -333,6 +346,7 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
         };
 
         config.workspaces.insert(env_name.to_string(), manifest_file_path.to_string());
+        config.current_workspace = Some(env_name.to_string());
         match crate::execution_context::write_config(&config) {
             Ok(c) => c,
             Err(e) => panic!("Could not write config: {}", e),
@@ -346,12 +360,24 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
             Err(e) => panic!("Could not load or init config: {}", e),
         };
 
-        match config.current_workspace {
-            Some(workspace) => println!("Current workspace is {}.", workspace),
-            None => println!("No current workspace. Call `ls` to list the available manifests."),
+        let current_workspace = match config.current_workspace {
+            Some(workspace) => workspace,
+            None => "".to_string(),
         };
-    }
 
+        if current_workspace.len() == 0 {
+            println!("Not current in a workspace. Call `ls` to list the available workspaces and manifest files.");
+            return 0;
+        }
+
+        if !config.workspaces.contains_key(&current_workspace) {
+            panic!("Workspace {} not found in config!.", current_workspace);
+            return 1;
+        }
+
+        let manifest_file_path = config.workspaces.get(&current_workspace).unwrap();
+        println!("Current workspace is {} ({}).", current_workspace, manifest_file_path);
+    }
     // FIXME put to debug once there is proper logging in place
     // eprintln!("Finishing...");
     return 0;
