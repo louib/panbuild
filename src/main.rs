@@ -11,7 +11,7 @@ extern crate clap;
 use clap::{App, Arg, ArgMatches, SubCommand};
 use std::process::exit;
 
-const APP_VERSION: &str = "0.0.9";
+const APP_VERSION: &str = "0.0.10";
 
 fn main() {
     let yaml = load_yaml!("panbuild.yml");
