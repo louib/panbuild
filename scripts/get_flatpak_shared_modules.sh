@@ -6,9 +6,9 @@ die() { echo "🔥 Error: $*" 1>&2; exit 1; }
 
 set -e
 
-output_dir="$SHARED_MODULES_OUT_DIR"
+output_dir="$PB_OUT_DIR"
 if [[ -z "$output_dir" ]]; then
-    die "You must define the SHARED_MODULES_OUT_DIR variable."
+    die "You must define the PB_OUT_DIR variable."
 fi
 
 if [[ -z "$PROJECTS_DIR" ]]; then
@@ -28,23 +28,23 @@ else
 fi
 
 cd shared-modules
-mkdir -p "$SHARED_MODULES_OUT_DIR"
+mkdir -p "$PB_OUT_DIR"
 
 # sanity check.
-if [[ ! -d "$SHARED_MODULES_OUT_DIR" ]]; then
-    die "$SHARED_MODULES_OUT_DIR (the output dir) is not a directory!"
+if [[ ! -d "$PB_OUT_DIR" ]]; then
+    die "$PB_OUT_DIR (the output dir) is not a directory!"
 fi
 
 files=$(find "./")
 IFS=$'\n'; for file in $files; do
     filename=$(basename "$file")
-    if [[ -f "$SHARED_MODULES_OUT_DIR/$filename" ]]; then
-        echo "🗃️ $SHARED_MODULES_OUT_DIR/$filename is already a file in the parsing directory."
+    if [[ -f "$PB_OUT_DIR/$filename" ]]; then
+        echo "🗃️ $PB_OUT_DIR/$filename is already a file in the output directory."
         continue
     fi
 
     if [[ "$file" == *.json ]]; then
-        cp "$file" "$SHARED_MODULES_OUT_DIR"
+        cp "$file" "$PB_OUT_DIR"
         echo "🗃️ Sending $file to output dir for parsing."
     fi
 done
