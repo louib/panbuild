@@ -9,6 +9,7 @@ import os
 if __name__ == '__main__':
     projects_dir = os.environ['OUT_DIR']
     all_projects = []
+    all_projects_filtered = []
     num_files = 0
     num_projects_initial = 0
 
@@ -29,4 +30,11 @@ if __name__ == '__main__':
         except Exception:
             sys.exit(1)
 
-    print(json.dumps(all_projects, indent=2))
+    for project in all_projects:
+        if not len(project.get('vcs_urls', [])):
+            continue
+        all_projects_filtered.append(project)
+
+    print('Loaded {} projects for {} files.'.format(len(all_projects), num_files))
+    print('Writing {} projects.'.format(len(all_projects_filtered)))
+    # print(json.dumps(all_projects, indent=2))
