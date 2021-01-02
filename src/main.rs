@@ -52,9 +52,7 @@ fn main() {
     arguments
         .entry("input_format".to_string())
         .or_insert(subcommand_matches.value_of("input_format").unwrap_or("").to_string());
-    arguments
-        .entry("input_file".to_string())
-        .or_insert(subcommand_matches.value_of("input_file").unwrap_or("").to_string());
+    arguments.entry("input_file".to_string()).or_insert(subcommand_matches.value_of("input_file").unwrap_or("").to_string());
     arguments
         .entry("manifest_file_path".to_string())
         .or_insert(subcommand_matches.value_of("manifest_file_path").unwrap_or("").to_string());
