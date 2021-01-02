@@ -649,4 +649,44 @@ mod tests {
         assert!(!file_path_matches(""));
         assert!(!file_path_matches("/////////////"));
     }
+
+    #[test]
+    #[should_panic]
+    pub fn test_parse_invalid_yaml() {
+        let mut ctx = crate::execution_context::ExecutionContext::default();
+        ctx.content = "----------------------------".to_string();
+        parse(&mut ctx);
+    }
+
+    #[test]
+    pub fn test_parse() {
+        let mut ctx = crate::execution_context::ExecutionContext::default();
+        ctx.content = r###"
+            app-id: net.louib.panbuild
+            runtime: org.gnome.Platform
+            runtime-version: "3.36"
+            sdk: org.gnome.Sdk
+            command: panbuild
+            tags: ["nightly"]
+            modules:
+              -
+                name: "panbuild"
+                buildsystem: simple
+                cleanup: [ "*" ]
+                config-opts: []
+                sources:
+                  -
+                    type: git
+                    url: https://github.com/louib/panbuild.git
+                    branch: master
+        "###
+        .to_string();
+        parse(&mut ctx);
+        match ctx.manifest.flatpak_manifest {
+            None => panic!("Error while parsing the snap manifest."),
+            Some(manifest) => {
+                assert_eq!(manifest.app_id, "net.louib.panbuild");
+            }
+        }
+    }
 }
