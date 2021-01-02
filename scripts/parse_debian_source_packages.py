@@ -12,8 +12,6 @@ if __name__ == '__main__':
     current_package_name = ""
     current_package = {}
 
-    filtered_packages = []
-
     for line in fileinput.input():
         line_parts = line.split(':')
         if len(line_parts) < 2:
@@ -62,13 +60,4 @@ if __name__ == '__main__':
                 current_package['layer'] = 4
                 continue
 
-    for package_name in source_packages.keys():
-        source_package = source_packages[package_name]
-        # We don't really need those that don't have a git url,
-        # at least for now.
-        if not len(source_package.get('vcs_urls', [])):
-            continue
-        source_package['vcs_urls'] = list(set(source_package['vcs_urls']))
-        filtered_packages.append(source_package)
-
-    print(json.dumps(filtered_packages, indent=2))
+    print(json.dumps(list(source_packages.values()), indent=2))
