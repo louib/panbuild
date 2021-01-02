@@ -61,6 +61,19 @@ subcommands:
                 # TODO make it not required after implementing manifest type detection.
                 required: true
                 help: Format of the manifest provided for the conversion.
+    - search:
+        about: search for packages.
+        args:
+            - search_term:
+                multiple: false
+                required: true
+                help: Term to search for in the projects database.
+            - input_format:
+                short: d
+                long: deep
+                takes_value: false
+                required: false
+                help: Perform a deep search of the database.
     - lint:
         about: lint a manifest file.
         args:

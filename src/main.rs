@@ -59,8 +59,8 @@ fn main() {
         .entry("manifest_file_path".to_string())
         .or_insert(subcommand_matches.value_of("manifest_file_path").unwrap_or("default").to_string());
     arguments
-        .entry("destination_format".to_string())
-        .or_insert(subcommand_matches.value_of("destination_format").unwrap_or("default").to_string());
+        .entry("search_term".to_string())
+        .or_insert(subcommand_matches.value_of("search_term").unwrap_or("default").to_string());
     arguments.entry("separator".to_string()).or_insert(subcommand_matches.value_of("separator").unwrap_or(",").to_string());
     arguments
         .entry("project_path".to_string())

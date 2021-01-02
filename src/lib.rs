@@ -156,13 +156,27 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
         println!("{}", output);
     }
 
-    // Used for debugging. Show all the available projects.
-    if command_name == "projects" {
-        let projects: Vec<crate::projects::project::Project> = crate::projects::db::get_all();
-        for project in projects {
-            println!("{0}: {1}", project.name, project.summary);
+    if command_name == "search" {
+        let search_term = match args.get("search_term") {
+            Some(search_term) => search_term,
+            None => {
+                eprintln!("A search term is required!");
+                return 1;
+            }
+        };
+        if search_term.len() < 3 {
+            eprintln!("{} is too short for a search term!", search_term);
+            return 1;
         }
-        return 0;
+        eprintln!("Search for {} in the projects database.", &search_term);
+
+        let packages: Vec<crate::manifests::manifest::AbstractModule> = crate::projects::get_modules();
+        eprintln!("Searching in {:#?} packages for installation candidates 🕰", packages.len());
+        for package in &packages {
+            if package.name.contains(search_term) {
+                println!("found candidate artifact in {}.", package.name);
+            }
+        }
     }
 
     if command_name == "install" {
