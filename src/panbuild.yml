@@ -49,18 +49,6 @@ subcommands:
                 multiple: false
                 required: true
                 help: Name of the package or artifact to install.
-            - input_file:
-                multiple: false
-                required: true
-                help: Path of the input build manifest.
-            - input_format:
-                short: i
-                long: input-format
-                takes_value: true
-                value_name: FORMAT
-                # TODO make it not required after implementing manifest type detection.
-                required: true
-                help: Format of the manifest provided for the conversion.
     - search:
         about: search for packages.
         args:

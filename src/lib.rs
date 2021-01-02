@@ -180,14 +180,25 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
     }
 
     if command_name == "install" {
-        let input_file_path = match args.get("input_file") {
-            Some(input_file_path) => input_file_path,
+        let mut config = match crate::execution_context::read_or_init_config() {
+            Ok(c) => c,
+            Err(e) => panic!("Could not load or init config: {}", e),
+        };
+
+        let workspace_name = match &config.current_workspace {
+            Some(w) => w,
             None => {
-                eprintln!("an input file is required!");
-                // TODO handle reading from stdin.
+                eprintln!("Not currently in a workspace. Use `ls` to list the available workspaces and manifests.");
                 return 1;
             }
         };
+
+        if !config.workspaces.contains_key(workspace_name) {
+            eprintln!("Workspace {} does not exist. Use `ls` to list the available workspaces and manifests.", workspace_name);
+            return 1;
+        }
+
+        let input_file_path = config.workspaces.get(workspace_name).unwrap();
 
         ctx.content = match fs::read_to_string(path::Path::new(input_file_path)) {
             Ok(content) => content,
@@ -219,11 +230,6 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
         }
 
         eprintln!("Parsing finished. Resulting manifest is {:#?}", &ctx.manifest);
-
-        let config = match crate::execution_context::read_or_init_config() {
-            Ok(c) => c,
-            Err(e) => panic!("Could not load or init config: {}", e),
-        };
 
         let package_name = match args.get("package_name") {
             Some(package_name) => package_name,
