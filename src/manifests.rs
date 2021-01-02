@@ -97,7 +97,7 @@ pub fn run_build(ctx: &crate::execution_context::ExecutionContext) -> i32 {
             Ok(r) => return 0,
             Err(e) => {
                 return 1;
-            },
+            }
         };
     }
 
