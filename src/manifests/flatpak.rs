@@ -637,6 +637,7 @@ mod tests {
     #[test]
     pub fn test_file_path_matches() {
         assert!(file_path_matches("com.example.appName.yaml"));
+        assert!(file_path_matches("io.github.user.repo.Devel.yaml"));
         assert!(file_path_matches("/path/to/com.example.appName.yaml"));
         assert!(file_path_matches("/path/to/com.example.appName.yml"));
         assert!(file_path_matches("/path/to/com.example.department.product.yaml"));

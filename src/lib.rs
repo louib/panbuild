@@ -53,13 +53,13 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
             }
         };
 
-        if args.contains_key("input_format") {
-            let source_type = args.get("input_format").unwrap();
-            if !crate::manifests::has_type(source_type.to_string()) {
-                eprintln!("{} is an invalid manifest type.", source_type);
+        let input_format = args.get("input_format").unwrap();
+        if !input_format.is_empty() {
+            if !crate::manifests::has_type(input_format.to_string()) {
+                eprintln!("{} is an invalid manifest type.", input_format);
                 return 1;
             }
-            ctx.source_type = source_type.to_string();
+            ctx.source_type = input_format.to_string();
         } else {
             let mut exit_code: i32 = manifests::detect_type(&mut ctx);
             if exit_code != 0 {
@@ -112,13 +112,13 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
             }
         };
 
-        if args.contains_key("input_format") {
-            let source_type = args.get("input_format").unwrap();
-            if !crate::manifests::has_type(source_type.to_string()) {
-                eprintln!("{} is an invalid manifest type.", source_type);
+        let input_format = args.get("input_format").unwrap();
+        if !input_format.is_empty() {
+            if !crate::manifests::has_type(input_format.to_string()) {
+                eprintln!("{} is an invalid manifest type.", input_format);
                 return 1;
             }
-            ctx.source_type = source_type.to_string();
+            ctx.source_type = input_format.to_string();
         } else {
             let mut exit_code: i32 = manifests::detect_type(&mut ctx);
             if exit_code != 0 {
@@ -198,23 +198,24 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
             return 1;
         }
 
-        let input_file_path = config.workspaces.get(workspace_name).unwrap();
+        ctx.source_filename = config.workspaces.get(workspace_name).unwrap().to_string();
+        println!("Using source_filename {}", &ctx.source_filename);
 
-        ctx.content = match fs::read_to_string(path::Path::new(input_file_path)) {
+        ctx.content = match fs::read_to_string(path::Path::new(&ctx.source_filename)) {
             Ok(content) => content,
             Err(e) => {
-                eprintln!("could not read file {}.", input_file_path);
+                eprintln!("could not read file {}.", &ctx.source_filename);
                 return 1;
             }
         };
 
-        if args.contains_key("input_format") {
-            let source_type = args.get("input_format").unwrap();
-            if !crate::manifests::has_type(source_type.to_string()) {
-                eprintln!("{} is an invalid manifest type.", source_type);
+        let input_format = args.get("input_format").unwrap();
+        if !input_format.is_empty() {
+            if !crate::manifests::has_type(input_format.to_string()) {
+                eprintln!("{} is an invalid manifest type.", input_format);
                 return 1;
             }
-            ctx.source_type = source_type.to_string();
+            ctx.source_type = input_format.to_string();
         } else {
             let mut exit_code: i32 = manifests::detect_type(&mut ctx);
             if exit_code != 0 {
@@ -276,10 +277,10 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
             return exit_code;
         }
 
-        match fs::write(path::Path::new(input_file_path), ctx.content) {
+        match fs::write(path::Path::new(&ctx.source_filename), ctx.content) {
             Ok(content) => content,
             Err(e) => {
-                eprintln!("could not write file {}.", input_file_path);
+                eprintln!("could not write file {}.", &ctx.source_filename);
                 return 1;
             }
         };

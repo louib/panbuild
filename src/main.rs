@@ -51,20 +51,17 @@ fn main() {
 
     arguments
         .entry("input_format".to_string())
-        .or_insert(subcommand_matches.value_of("input_format").unwrap_or("default").to_string());
+        .or_insert(subcommand_matches.value_of("input_format").unwrap_or("").to_string());
     arguments
         .entry("input_file".to_string())
-        .or_insert(subcommand_matches.value_of("input_file").unwrap_or("default").to_string());
+        .or_insert(subcommand_matches.value_of("input_file").unwrap_or("").to_string());
     arguments
         .entry("manifest_file_path".to_string())
-        .or_insert(subcommand_matches.value_of("manifest_file_path").unwrap_or("default").to_string());
+        .or_insert(subcommand_matches.value_of("manifest_file_path").unwrap_or("").to_string());
     arguments
         .entry("search_term".to_string())
-        .or_insert(subcommand_matches.value_of("search_term").unwrap_or("default").to_string());
+        .or_insert(subcommand_matches.value_of("search_term").unwrap_or("").to_string());
     arguments.entry("separator".to_string()).or_insert(subcommand_matches.value_of("separator").unwrap_or(",").to_string());
-    arguments
-        .entry("project_path".to_string())
-        .or_insert(subcommand_matches.value_of("project_path").unwrap_or(",").to_string());
     arguments
         .entry("package_name".to_string())
         .or_insert(subcommand_matches.value_of("package_name").unwrap_or("").to_string());
