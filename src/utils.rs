@@ -1,23 +1,6 @@
 use std::fs::{self, DirEntry};
-use std::io;
+use std::io::{stdin, stdout, Write};
 use std::path::Path;
-
-// one possible implementation of walking a directory only visiting files
-// Taken from https://doc.rust-lang.org/std/fs/fn.read_dir.html
-pub fn visit_dirs(dir: &Path, cb: &dyn Fn(&DirEntry)) -> io::Result<()> {
-    if dir.is_dir() {
-        for entry in fs::read_dir(dir)? {
-            let entry = entry?;
-            let path = entry.path();
-            if path.is_dir() {
-                visit_dirs(&path, cb)?;
-            } else {
-                cb(&entry);
-            }
-        }
-    }
-    Ok(())
-}
 
 pub fn get_all_paths(dir: &Path) -> Result<Vec<std::path::PathBuf>, String> {
     let mut all_paths: Vec<std::path::PathBuf> = vec![];
@@ -37,4 +20,21 @@ pub fn get_all_paths(dir: &Path) -> Result<Vec<std::path::PathBuf>, String> {
     }
 
     Ok(all_paths)
+}
+
+pub fn ask_yes_no_question(question: String) -> bool {
+    let mut answer = String::new();
+    print!("{}? [Y/n]: ", question);
+    let _ = stdout().flush();
+    stdin().read_line(&mut answer).expect("Error while reading answer for question.");
+    if let Some('\n') = answer.chars().next_back() {
+        answer.pop();
+    }
+    if let Some('\r') = answer.chars().next_back() {
+        answer.pop();
+    }
+    if answer == "Y" || answer == "y" {
+        return true;
+    }
+    return false;
 }

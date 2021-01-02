@@ -239,13 +239,44 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
         eprintln!("Installing module {:#?}", &package_name);
 
         let packages: Vec<crate::manifests::manifest::AbstractModule> = crate::projects::get_modules();
+        let mut installed_package: Option<&crate::manifests::manifest::AbstractModule> = None;
         eprintln!("Searching in {:#?} packages for installation candidates 🕰", packages.len());
         for package in &packages {
             if package.name.contains(package_name) {
                 println!("found candidate artifact in {}.", package.name);
+                let question = format!("Do you want to install {} ({})", package.name, package.url);
+                if crate::utils::ask_yes_no_question(question) {
+                    println!("installing {}.", package.name);
+                    crate::manifests::add_module(&mut ctx, package);
+                    installed_package = Some(package);
+                    break;
+                }
             }
         }
 
+        let installed_package_name = match installed_package {
+            Some(p) => p,
+            None => {
+                println!("Did not install any package.");
+                return 1;
+            },
+        };
+        let installed_package_name = &installed_package_name.name;
+        println!("Installed package {}.", installed_package_name);
+
+        exit_code = manifests::dump(&mut ctx);
+        if exit_code != 0 {
+            eprintln!("Error while dumping");
+            return exit_code;
+        }
+
+        match fs::write(path::Path::new(input_file_path), ctx.content) {
+            Ok(content) => content,
+            Err(e) => {
+                eprintln!("could not write file {}.", input_file_path);
+                return 1;
+            }
+        };
         return 0;
     }
 

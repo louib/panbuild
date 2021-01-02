@@ -80,3 +80,13 @@ pub fn get_modules(ctx: &mut crate::execution_context::ExecutionContext) -> i32 
     eprintln!("Could not get modules for whatever we tried to get modules for.");
     return 0;
 }
+
+pub fn add_module(ctx: &mut crate::execution_context::ExecutionContext, module: &crate::manifests::manifest::AbstractModule) -> i32 {
+    if let Some(_) = ctx.manifest.flatpak_manifest {
+        crate::manifests::flatpak::add_module(&mut ctx.manifest, module);
+        return 0;
+    }
+
+    eprintln!("Could not get modules for whatever we tried to get modules for.");
+    return 0;
+}
