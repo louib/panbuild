@@ -16,6 +16,7 @@ if __name__ == '__main__':
         current_project['name'] = current_project_name
         current_project['id'] = current_project_name
         current_project['description'] = package['desc']
+        current_project['summary'] = ""
         current_project['keywords'] = []
         current_project['versions'] = []
         if package.get('versions'):
