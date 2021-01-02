@@ -118,12 +118,6 @@ pub struct FlatpakManifest {
     #[serde(skip_serializing_if = "Vec::is_empty")]
     pub tags: Vec<String>,
 
-    // An array of strings specifying the modules to be built in order.
-    // String members in the array are interpreted as the name of a separate
-    // json or yaml file that contains a module. See below for details.
-    #[serde(skip_serializing_if = "Vec::is_empty")]
-    pub modules: Vec<FlatpakModule>,
-
     // This is a dictionary of extension objects.
     // The key is the name of the extension.
     // See below for details.
@@ -198,6 +192,12 @@ pub struct FlatpakManifest {
     // This string will be suffixed to the Name key in the main application desktop file.
     #[serde(skip_serializing_if = "String::is_empty")]
     pub desktop_file_name_suffix: String,
+
+    // An array of strings specifying the modules to be built in order.
+    // String members in the array are interpreted as the name of a separate
+    // json or yaml file that contains a module. See below for details.
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    pub modules: Vec<FlatpakModule>,
 }
 
 // Each module specifies a source that has to be separately built and installed.
