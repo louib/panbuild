@@ -259,7 +259,7 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
             None => {
                 println!("Did not install any package.");
                 return 1;
-            },
+            }
         };
         let installed_package_name = &installed_package_name.name;
         println!("Installed package {}.", installed_package_name);
