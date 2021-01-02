@@ -334,8 +334,7 @@ pub fn parse(ctx: &mut crate::execution_context::ExecutionContext) {
 }
 
 pub fn file_path_matches(path: &str) -> bool {
-    // FIXME should we add the debian/ part to the path too?
-    if path.ends_with("control") {
+    if path.to_lowercase().ends_with("debian/control") {
         return true;
     }
     return false;
@@ -431,8 +430,11 @@ mod tests {
 
     #[test]
     pub fn test_file_path_matches() {
-        assert!(file_path_matches("control"));
-        assert!(file_path_matches("/path/to/control"));
+        assert!(file_path_matches("debian/control"));
+        assert!(file_path_matches("path/to/the/debian/control"));
+        assert!(file_path_matches("the/Debian/CONTROL"));
+        assert!(!file_path_matches("control"));
+        assert!(!file_path_matches(".flatpak-builder/cache/objects/54/.file/user/1000/keyring/control"));
         assert!(!file_path_matches("/path/to/file.yaml"));
         assert!(!file_path_matches("/path/to/file.json"));
         assert!(!file_path_matches(""));
