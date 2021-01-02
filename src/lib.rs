@@ -35,6 +35,11 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
     // eprintln!("running command {}.", command_name);
     let mut ctx = crate::execution_context::ExecutionContext::default();
 
+    let mut config = match crate::execution_context::read_or_init_config() {
+        Ok(c) => c,
+        Err(e) => panic!("Could not load or init config: {}", e),
+    };
+
     if command_name == "lint" {
         let input_file_path = match args.get("input_file") {
             Some(input_file_path) => input_file_path,
@@ -180,11 +185,6 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
     }
 
     if command_name == "install" {
-        let mut config = match crate::execution_context::read_or_init_config() {
-            Ok(c) => c,
-            Err(e) => panic!("Could not load or init config: {}", e),
-        };
-
         let workspace_name = match &config.current_workspace {
             Some(w) => w,
             None => {
@@ -334,11 +334,6 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
     }
 
     if command_name == "checkout" {
-        let mut config = match crate::execution_context::read_or_init_config() {
-            Ok(c) => c,
-            Err(e) => panic!("Could not load or init config: {}", e),
-        };
-
         let env_name = match args.get("env_name") {
             Some(n) => n,
             None => panic!("An env name is required to checkout."),
@@ -364,11 +359,6 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
     }
 
     if command_name == "create" {
-        let mut config = match crate::execution_context::read_or_init_config() {
-            Ok(c) => c,
-            Err(e) => panic!("Could not load or init config: {}", e),
-        };
-
         let env_name = match args.get("env_name") {
             Some(n) => n,
             None => panic!("An env name is required to checkout."),
@@ -405,11 +395,6 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
     }
 
     if command_name == "status" {
-        let mut config = match crate::execution_context::read_or_init_config() {
-            Ok(c) => c,
-            Err(e) => panic!("Could not load or init config: {}", e),
-        };
-
         let current_workspace = match config.current_workspace {
             Some(workspace) => workspace,
             None => "".to_string(),

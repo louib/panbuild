@@ -1,4 +1,5 @@
 use std::collections::BTreeMap;
+use std::process::{Command, Output};
 
 use serde::{Deserialize, Serialize};
 
@@ -594,6 +595,13 @@ pub fn dump_native(abstract_manifest: &crate::manifests::manifest::AbstractManif
         Err(e) => panic!("Failed to dump the Flatpak manifest: {}.", e),
     };
     manifest_dump
+}
+
+pub fn run_build(ctx: &crate::execution_context::ExecutionContext) -> Result<Output, std::io::Error> {
+    // TODO replace this maybe?.
+    let dir_name = ".panbuild/flatpak-builder/";
+
+    Command::new("flatpak-builder").arg("--user").arg("--force-clean").arg(dir_name).arg(&ctx.source_filename).output()
 }
 
 pub fn file_path_matches(path: &str) -> bool {
