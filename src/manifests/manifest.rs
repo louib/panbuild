@@ -100,7 +100,7 @@ impl AbstractManifest {
         if file_path.ends_with(".json") {
             manifest_format = ManifestFormat::JSON;
         } else if file_path.ends_with(".yaml") || file_path.ends_with(".yml") {
-            manifest_format = ManifestFormat::JSON;
+            manifest_format = ManifestFormat::YAML;
         }
 
         Some(AbstractManifest {
