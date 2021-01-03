@@ -1,7 +1,7 @@
 use std::fs::{self, DirEntry};
 use std::io;
 use std::path;
-use std::process::{Output};
+use std::process::Output;
 
 use serde::{Deserialize, Serialize};
 
