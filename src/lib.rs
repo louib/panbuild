@@ -49,7 +49,7 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
         };
 
         ctx.manifest = abstract_manifest;
-        eprintln!("Parsed abstract manifest finished. Resulting manifest is {:#?}", &ctx.manifest);
+        eprintln!("Parsed abstract manifest. Resulting manifest is {:#?}", &ctx.manifest);
 
         let manifest_dump = match ctx.manifest.dump() {
             Ok(d) => d,
@@ -160,47 +160,18 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
             return 1;
         }
 
-        ctx.source_filename = config.workspaces.get(workspace_name).unwrap().to_string();
-        println!("Using source_filename {}", &ctx.source_filename);
+        let manifest_file_path = config.workspaces.get(workspace_name).unwrap().to_string();
+        println!("Using manifest file {}.", &manifest_file_path);
 
-        ctx.content = match fs::read_to_string(path::Path::new(&ctx.source_filename)) {
-            Ok(content) => content,
-            Err(e) => {
-                eprintln!("could not read file {}.", &ctx.source_filename);
-                return 1;
-            }
+        let abstract_manifest = match crate::manifests::manifest::AbstractManifest::load_from_file(manifest_file_path.to_string()) {
+            Some(m) => m,
+            None => return 1,
         };
 
-        let input_format = args.get("input_format").unwrap();
-        if !input_format.is_empty() {
-            if !crate::manifests::has_type(input_format.to_string()) {
-                eprintln!("{} is an invalid manifest type.", input_format);
-                return 1;
-            }
-            ctx.source_type = input_format.to_string();
-        } else {
-            let mut exit_code: i32 = manifests::detect_type(&mut ctx);
-            if exit_code != 0 {
-                eprintln!("Could not detect manifest type of {}.", ctx.source_filename);
-                return exit_code;
-            }
-        }
+        ctx.manifest = abstract_manifest;
+        eprintln!("Parsed abstract manifest. Resulting manifest is {:#?}", &ctx.manifest);
 
-        let mut exit_code: i32 = manifests::parse(&mut ctx);
-        if exit_code != 0 {
-            eprintln!("Error while parsing");
-            return exit_code;
-        }
-
-        eprintln!("Parsing finished. Resulting manifest is {:#?}", &ctx.manifest);
-
-        let package_name = match args.get("package_name") {
-            Some(package_name) => package_name,
-            None => {
-                eprintln!("A package name to install is required!");
-                return 1;
-            }
-        };
+        let package_name = args.get("package_name").expect("A package name to install is required!");
         if package_name.len() < 3 {
             eprintln!("{} is too short for a package name!", package_name);
             return 1;
@@ -233,16 +204,15 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
         let installed_package_name = &installed_package_name.name;
         println!("Installed package {}.", installed_package_name);
 
-        exit_code = manifests::dump(&mut ctx);
-        if exit_code != 0 {
-            eprintln!("Error while dumping");
-            return exit_code;
-        }
+        let manifest_dump = match ctx.manifest.dump() {
+            Ok(d) => d,
+            Err(e) => return 1,
+        };
 
-        match fs::write(path::Path::new(&ctx.source_filename), ctx.content) {
+        match fs::write(path::Path::new(&manifest_file_path), manifest_dump) {
             Ok(content) => content,
             Err(e) => {
-                eprintln!("could not write file {}.", &ctx.source_filename);
+                eprintln!("could not write file {}.", &manifest_file_path);
                 return 1;
             }
         };

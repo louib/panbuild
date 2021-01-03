@@ -61,16 +61,6 @@ pub fn parse(ctx: &mut crate::execution_context::ExecutionContext) -> i32 {
     return 1;
 }
 
-pub fn dump(ctx: &mut crate::execution_context::ExecutionContext) -> i32 {
-    if let Some(_) = ctx.manifest.flatpak_manifest {
-        ctx.content = crate::manifests::flatpak::dump_native(&ctx.manifest);
-        return 0;
-    }
-
-    eprintln!("💩 Could not dump whatever we tried to dump.");
-    return 1;
-}
-
 pub fn get_modules(ctx: &mut crate::execution_context::ExecutionContext) -> i32 {
     if let Some(_) = ctx.manifest.flatpak_manifest {
         ctx.manifest.depends_on = crate::manifests::flatpak::get_modules(&ctx.manifest);
