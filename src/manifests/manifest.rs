@@ -57,10 +57,6 @@ pub struct AbstractManifest {
     pub path: String,
     pub format: ManifestFormat,
 
-    pub package_name: String,
-    pub package_id: String,
-    pub package_version: String,
-
     // The modules that the module being built requires.
     pub depends_on: Vec<AbstractModule>,
 
@@ -72,10 +68,6 @@ pub struct AbstractManifest {
 impl Default for AbstractManifest {
     fn default() -> Self {
         AbstractManifest {
-            package_name: String::from(""),
-            package_id: "".to_string(),
-            package_version: "".to_string(),
-
             path: "".to_string(),
             format: ManifestFormat::TEXT,
 
@@ -112,10 +104,6 @@ impl AbstractManifest {
         }
         // FIXME actually set the format here!
         Some(AbstractManifest {
-            package_name: String::from(""),
-            package_id: "".to_string(),
-            package_version: "".to_string(),
-
             path: file_path,
             format: ManifestFormat::TEXT,
 
