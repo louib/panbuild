@@ -1,7 +1,7 @@
+pub mod manifest;
 pub mod arch;
 pub mod debian;
 pub mod flatpak;
-pub mod manifest;
 pub mod snap;
 
 pub fn has_type(type_name: String) -> bool {
@@ -39,26 +39,6 @@ pub fn detect_type(ctx: &mut crate::execution_context::ExecutionContext) -> i32 
     }
 
     return -1;
-}
-
-pub fn parse(ctx: &mut crate::execution_context::ExecutionContext) -> i32 {
-    if ctx.source_type == "debian" {
-        crate::manifests::debian::parse(ctx);
-        return 0;
-    }
-
-    if ctx.source_type == "snap" {
-        crate::manifests::snap::parse(ctx);
-        return 0;
-    }
-
-    if ctx.source_type == "flatpak" {
-        crate::manifests::flatpak::parse(ctx);
-        return 0;
-    }
-
-    eprintln!("Invalid source type {}.", ctx.source_type);
-    return 1;
 }
 
 pub fn get_modules(ctx: &mut crate::execution_context::ExecutionContext) -> i32 {

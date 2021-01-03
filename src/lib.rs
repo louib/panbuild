@@ -71,43 +71,20 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
     if command_name == "get-package-list" {
         let input_file_path = args.get("input_file").expect("an input file is required!");
 
-        ctx.content = match fs::read_to_string(path::Path::new(input_file_path)) {
-            Ok(content) => content,
-            Err(e) => {
-                eprintln!("could not read file {}.", input_file_path);
-                return 1;
-            }
+        let abstract_manifest = match crate::manifests::manifest::AbstractManifest::load_from_file(input_file_path.to_string()) {
+            Some(m) => m,
+            None => return 1,
         };
 
-        let input_format = args.get("input_format").unwrap();
-        if !input_format.is_empty() {
-            if !crate::manifests::has_type(input_format.to_string()) {
-                eprintln!("{} is an invalid manifest type.", input_format);
-                return 1;
-            }
-            ctx.source_type = input_format.to_string();
-        } else {
-            let mut exit_code: i32 = manifests::detect_type(&mut ctx);
-            if exit_code != 0 {
-                eprintln!("Could not detect manifest type of {}.", ctx.source_filename);
-                return exit_code;
-            }
-        }
-
-        let mut exit_code: i32 = manifests::parse(&mut ctx);
-        if exit_code != 0 {
-            eprintln!("Error while parsing");
-            return exit_code;
-        }
-
-        eprintln!("Parsing finished. Resulting manifest is {:#?}", &ctx.manifest);
+        ctx.manifest = abstract_manifest;
+        eprintln!("Parsed abstract manifest. Resulting manifest is {:#?}", &ctx.manifest);
 
         let mut separator = DEFAULT_PACKAGE_LIST_SEP;
         if args.contains_key("separator") {
             separator = args.get("separator").unwrap();
         }
 
-        exit_code = manifests::get_modules(&mut ctx);
+        let exit_code = manifests::get_modules(&mut ctx);
         if exit_code != 0 {
             eprintln!("Error while getting modules");
             return exit_code;
