@@ -147,7 +147,7 @@ impl SnapcraftManifest {
             Err(e) => {
                 eprintln!("Failed to parse the Snapcraft manifest: {}.", e);
                 return None;
-            },
+            }
         };
 
         // TODO I think there's other fields to validate here.

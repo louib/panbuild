@@ -45,9 +45,9 @@ pub const DEFAULT_LICENSE: License = License::Gpl2;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub enum NativeManifest {
-  Flatpak(crate::manifests::flatpak::FlatpakManifest),
-  Debian(crate::manifests::debian::DebianManifest),
-  Snapcraft(crate::manifests::snap::SnapcraftManifest),
+    Flatpak(crate::manifests::flatpak::FlatpakManifest),
+    Debian(crate::manifests::debian::DebianManifest),
+    Snapcraft(crate::manifests::snap::SnapcraftManifest),
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -95,7 +95,7 @@ impl AbstractManifest {
             Err(e) => {
                 eprintln!("could not read manifest file {}: {}.", file_path, e);
                 return None;
-            },
+            }
         };
         let mut native_manifest: Option<NativeManifest> = None;
         if let Some(flatpak_manifest) = crate::manifests::flatpak::FlatpakManifest::parse(&file_path, &manifest_content) {

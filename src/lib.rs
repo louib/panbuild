@@ -61,7 +61,7 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
             Err(e) => {
                 eprintln!("could not write file {}.", input_file_path);
                 return 1;
-            },
+            }
         };
 
         eprintln!("Dumped the manifest!");

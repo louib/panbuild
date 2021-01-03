@@ -207,7 +207,7 @@ impl FlatpakManifest {
             Err(e) => {
                 eprintln!("Failed to parse the Flatpak manifest: {}.", e);
                 return None;
-            },
+            }
         };
     }
 }
