@@ -195,6 +195,42 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
         return 0;
     }
 
+    if command_name == "make" {
+        let workspace_name = match &config.current_workspace {
+            Some(w) => w,
+            None => {
+                eprintln!("Not currently in a workspace. Use `ls` to list the available workspaces and manifests.");
+                return 1;
+            }
+        };
+
+        if !config.workspaces.contains_key(workspace_name) {
+            eprintln!("Workspace {} does not exist. Use `ls` to list the available workspaces and manifests.", workspace_name);
+            return 1;
+        }
+
+        let manifest_file_path = config.workspaces.get(workspace_name).unwrap().to_string();
+        println!("Using manifest file {}.", &manifest_file_path);
+
+        let abstract_manifest = match crate::manifests::manifest::AbstractManifest::load_from_file(manifest_file_path.to_string()) {
+            Some(m) => m,
+            None => return 1,
+        };
+
+        ctx.manifest = abstract_manifest;
+        eprintln!("Parsed abstract manifest. Resulting manifest is {:#?}", &ctx.manifest);
+
+        match ctx.manifest.run_build() {
+            Ok(content) => content,
+            Err(e) => {
+                eprintln!("could not run build for manifest file {}: {}", &manifest_file_path, e);
+                return 1;
+            }
+        };
+        // TODO report on the build!
+        return 0;
+    }
+
     if command_name == "ls" {
         let git_cache_dir = path::Path::new(DEFAULT_GIT_CACHE_DIR);
         if !git_cache_dir.is_dir() {

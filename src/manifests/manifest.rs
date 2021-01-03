@@ -93,14 +93,11 @@ impl AbstractManifest {
         let mut native_manifest: Option<NativeManifest> = None;
         if let Some(flatpak_manifest) = crate::manifests::flatpak::FlatpakManifest::parse(&file_path, &manifest_content) {
             native_manifest = Some(NativeManifest::Flatpak(flatpak_manifest));
-        }
-        if let Some(snapcraft_manifest) = crate::manifests::snap::SnapcraftManifest::parse(&file_path, &manifest_content) {
+        } else if let Some(snapcraft_manifest) = crate::manifests::snap::SnapcraftManifest::parse(&file_path, &manifest_content) {
             native_manifest = Some(NativeManifest::Snapcraft(snapcraft_manifest));
-        }
-        if let Some(debian_manifest) = crate::manifests::debian::DebianManifest::parse(&file_path, &manifest_content) {
+        } else if let Some(debian_manifest) = crate::manifests::debian::DebianManifest::parse(&file_path, &manifest_content) {
             native_manifest = Some(NativeManifest::Debian(debian_manifest));
-        }
-        if let None = native_manifest {
+        } else {
             return None;
         }
         // FIXME actually set the format here!
