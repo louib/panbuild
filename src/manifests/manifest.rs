@@ -89,7 +89,7 @@ impl Default for AbstractManifest {
     }
 }
 impl AbstractManifest {
-    fn load_from_file(file_path: String) -> Option<AbstractManifest> {
+    pub fn load_from_file(file_path: String) -> Option<AbstractManifest> {
         let manifest_content = match fs::read_to_string(path::Path::new(&file_path)) {
             Ok(content) => content,
             Err(e) => {
@@ -106,6 +106,9 @@ impl AbstractManifest {
         }
         if let Some(debian_manifest) = crate::manifests::debian::DebianManifest::parse(&file_path, &manifest_content) {
             native_manifest = Some(NativeManifest::Debian(debian_manifest));
+        }
+        if let None = native_manifest {
+            return None;
         }
         // FIXME actually set the format here!
         Some(AbstractManifest {
@@ -125,7 +128,7 @@ impl AbstractManifest {
         })
     }
 
-    fn dump(&self) -> Result<String, String> {
+    pub fn dump(&self) -> Result<String, String> {
         match &self.native_manifest {
             Some(n) => match n {
                 NativeManifest::Flatpak(m) => Ok(crate::manifests::flatpak::dump_native(&self)),

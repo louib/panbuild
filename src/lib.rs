@@ -50,49 +50,25 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
             }
         };
 
-        ctx.content = match fs::read_to_string(path::Path::new(input_file_path)) {
-            Ok(content) => content,
-            Err(e) => {
-                eprintln!("could not read file {}.", input_file_path);
-                return 1;
-            }
+        let abstract_manifest = match crate::manifests::manifest::AbstractManifest::load_from_file(input_file_path.to_string()) {
+            Some(m) => m,
+            None => return 1,
         };
 
-        let input_format = args.get("input_format").unwrap();
-        if !input_format.is_empty() {
-            if !crate::manifests::has_type(input_format.to_string()) {
-                eprintln!("{} is an invalid manifest type.", input_format);
-                return 1;
-            }
-            ctx.source_type = input_format.to_string();
-        } else {
-            let mut exit_code: i32 = manifests::detect_type(&mut ctx);
-            if exit_code != 0 {
-                eprintln!("Could not detect manifest type of {}.", ctx.source_filename);
-                return exit_code;
-            }
-        }
+        ctx.manifest = abstract_manifest;
+        eprintln!("Parsed abstract manifest finished. Resulting manifest is {:#?}", &ctx.manifest);
 
-        let mut exit_code: i32 = manifests::parse(&mut ctx);
-        if exit_code != 0 {
-            eprintln!("Error while parsing");
-            return exit_code;
-        }
+        let manifest_dump = match ctx.manifest.dump() {
+            Ok(d) => d,
+            Err(e) => return 1,
+        };
 
-        eprintln!("Parsing finished. Resulting manifest is {:#?}", &ctx.manifest);
-
-        exit_code = manifests::dump(&mut ctx);
-        if exit_code != 0 {
-            eprintln!("Error while dumping");
-            return exit_code;
-        }
-
-        match fs::write(path::Path::new(input_file_path), ctx.content) {
+        match fs::write(path::Path::new(input_file_path), manifest_dump) {
             Ok(content) => content,
             Err(e) => {
                 eprintln!("could not write file {}.", input_file_path);
                 return 1;
-            }
+            },
         };
 
         eprintln!("Dumped the manifest!");
