@@ -113,6 +113,12 @@ pub struct DebianManifest {
     // URL of the git repo.
     pub vcs_git: String,
 }
+impl DebianManifest {
+    pub fn parse(file_path: &String, manifest_content: &String) -> Option<DebianManifest> {
+        // FIXME we need to migrate the function from down below.
+        None
+    }
+}
 
 fn parse_paragraphs(content: &str, paragraphs: &mut Vec<String>) {
     let content_str = content.to_string();

@@ -104,6 +104,9 @@ impl AbstractManifest {
         if let Some(snapcraft_manifest) = crate::manifests::snap::SnapcraftManifest::parse(&file_path, &manifest_content) {
             native_manifest = Some(NativeManifest::Snapcraft(snapcraft_manifest));
         }
+        if let Some(debian_manifest) = crate::manifests::debian::DebianManifest::parse(&file_path, &manifest_content) {
+            native_manifest = Some(NativeManifest::Debian(debian_manifest));
+        }
         Some(AbstractManifest {
             package_name: String::from(""),
             package_id: "".to_string(),
