@@ -163,7 +163,7 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
                 let question = format!("Do you want to install {} ({})", package.name, package.url);
                 if crate::utils::ask_yes_no_question(question) {
                     println!("installing {}.", package.name);
-                    crate::manifests::add_module(&mut ctx, package);
+                    ctx.manifest.add_module(package);
                     installed_package = Some(package);
                     break;
                 }
