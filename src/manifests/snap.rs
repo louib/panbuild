@@ -152,10 +152,12 @@ impl SnapcraftManifest {
 
         // TODO I think there's other fields to validate here.
         if snapcraft_manifest.name.is_empty() {
-            panic!("Required top-level field name is missing from snapcraft manifest.");
+            eprintln!("Required top-level field name is missing from snapcraft manifest.");
+            return None;
         }
         if snapcraft_manifest.grade.is_empty() {
-            panic!("Required top-level field grade is missing from snapcraft manifest.");
+            eprintln!("Required top-level field grade is missing from snapcraft manifest.");
+            return None;
         }
 
         Some(snapcraft_manifest)
@@ -617,24 +619,19 @@ mod tests {
     }
 
     #[test]
-    #[should_panic(expected = "Required top-level field grade is missing from snapcraft manifest.")]
     pub fn test_parse_missing_required_fields() {
-        SnapcraftManifest::parse(
+        assert!(SnapcraftManifest::parse(
             &r###"
             name: app-name,
             description: description
             summary: this is my app,
             version: 0.0.1
-        "###
-            .to_string(),
-        )
-        .unwrap();
+        "###.to_string()).is_none());
     }
 
     #[test]
-    #[should_panic(expected = "Failed to parse the Snapcraft manifest: EOF while parsing a value.")]
     pub fn test_parse_empty_string() {
-        SnapcraftManifest::parse(&"".to_string()).unwrap();
+        assert!(SnapcraftManifest::parse(&"".to_string()).is_none());
     }
 
     #[test]
