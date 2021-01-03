@@ -84,14 +84,13 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
             separator = args.get("separator").unwrap();
         }
 
-        let exit_code = manifests::get_modules(&mut ctx);
-        if exit_code != 0 {
-            eprintln!("Error while getting modules");
-            return exit_code;
-        }
+        let modules = match ctx.manifest.get_modules() {
+            Ok(m) => m,
+            Err(m) => return 1,
+        };
 
         let mut output: String = String::from("");
-        for module in &ctx.manifest.depends_on {
+        for module in &modules {
             if !output.is_empty() {
                 output.push_str(&separator)
             }
