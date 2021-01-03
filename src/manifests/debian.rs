@@ -115,8 +115,154 @@ pub struct DebianManifest {
 }
 impl DebianManifest {
     pub fn parse(manifest_content: &String) -> Option<DebianManifest> {
-        // FIXME we need to migrate the function from down below.
-        None
+        let mut paragraphs: Vec<String> = vec![];
+        parse_paragraphs(&manifest_content, &mut paragraphs);
+        if paragraphs.len() < 2 {
+            eprintln!("There is only {} paragraphs in the debian control file?", paragraphs.len());
+            return None;
+        }
+
+        let mut debian_manifest = DebianManifest::default();
+
+        let first_paragraph = &paragraphs[0];
+        for line in first_paragraph.split('\n') {
+            if line.starts_with(" ") {
+                // Obviously a mistake
+                continue;
+            }
+            if is_empty_line(line) {
+                continue;
+            }
+            if is_commented_line(line) {
+                continue;
+            }
+            let parts: Vec<&str> = line.split(CONTROL_FILE_SEPARATOR).collect();
+            if parts.len() < 2 {
+                eprintln!("Invalid debian control file line {}", line);
+                return None;
+            }
+            let field_name = parts[0].trim();
+
+            let value_parts: Vec<&str> = parts[1..].to_vec();
+            let mut field_value = value_parts.join(CONTROL_FILE_SEPARATOR);
+            field_value = field_value.trim().to_string();
+
+            if field_name == "Source" {
+                debian_manifest.source = field_value.to_string();
+            }
+            if field_name == "Maintainer" {
+                debian_manifest.maintainer = field_value.to_string();
+            }
+            if field_name == "Version" {
+                debian_manifest.version = field_value.to_string();
+            }
+            if field_name == "Priority" {
+                debian_manifest.priority = field_value.to_string();
+            }
+            if field_name == "Standards-Version" {
+                debian_manifest.standards_version = field_value.to_string();
+            }
+            if field_name == "Homepage" {
+                debian_manifest.vcs_browser = field_value.to_string();
+                debian_manifest.homepage = field_value.to_string();
+            }
+            if field_name == "Section" {
+                debian_manifest.section = field_value.to_string();
+                if !ALLOWED_SECTIONS.contains(&&debian_manifest.section[..]) {
+                    eprintln!("Invalid debian control section {}", debian_manifest.section);
+                    return None;
+                }
+            }
+        }
+
+        for paragraph_index in 1..paragraphs.len() {
+            let mut package = AbstractModule::default();
+            let paragraph = &paragraphs[paragraph_index];
+            let mut last_field_name: String = String::from("");
+
+            // Those fields can be multi-line.
+            let mut build_depends: String = String::from("");
+            let mut description: String = String::from("");
+
+            for line in paragraph.split('\n') {
+                if is_commented_line(line) {
+                    continue;
+                }
+                if is_empty_line(line) {
+                    continue;
+                }
+
+                let mut field_name: String;
+                let mut field_value: String;
+
+                if is_indented_line(line) {
+                    field_name = last_field_name.clone();
+                    field_value = line.to_string();
+                } else {
+                    let parts: Vec<&str> = line.split(CONTROL_FILE_SEPARATOR).collect();
+                    if parts.len() < 2 {
+                        eprintln!("Invalid debian control file line {}", line);
+                        return None;
+                    }
+
+                    field_name = parts[0].trim().to_string();
+                    field_value = String::from("");
+                    for part in parts {
+                        if part == field_name {
+                            continue;
+                        }
+                        if !field_value.is_empty() {
+                            field_value.push_str(CONTROL_FILE_SEPARATOR);
+                        }
+                        field_value.push_str(part);
+                    }
+                    last_field_name = field_name.clone();
+                }
+
+                if field_name == PACKAGE_NAME {
+                    package.name = field_value.trim().to_string();
+                } else if field_name == ARCHITECTURE {
+                } else if field_name == DESCRIPTION {
+                    // Here we append because the field can be multi-line.
+                    description.push_str(&field_value);
+                } else if field_name == DEPENDS {
+                    build_depends.push_str(&field_value);
+                } else {
+                    eprintln!("Unknown debian package field {}", field_name);
+                    return None;
+                }
+            }
+
+            for package_name in build_depends.split(",") {
+                if package_name.is_empty() {
+                    continue;
+                }
+                let mut new_module = crate::manifests::manifest::AbstractModule::default();
+
+                let module_spec = package_name.trim().to_string();
+                // Still not sure what this is about.
+                if module_spec.starts_with("${") {
+                    continue;
+                }
+
+                let mut module_spec_parts: Vec<&str> = module_spec.split(" ").collect();
+
+                let module_name = module_spec_parts[0].to_string();
+                module_spec_parts.remove(0);
+
+                let mut version_spec = String::from("");
+                for part in module_spec_parts {
+                    if !version_spec.is_empty() {
+                        version_spec.push_str(" ");
+                    }
+                    version_spec.push_str(part);
+                }
+                // new_module.version = version_spec;
+
+                debian_manifest.build_depends.push(module_name);
+            }
+        }
+        Some(debian_manifest)
     }
 }
 
@@ -179,165 +325,10 @@ fn is_commented_line(line: &str) -> bool {
     return false;
 }
 
-pub fn parse(manifest_content: &String) -> Option<DebianManifest> {
-    let mut paragraphs: Vec<String> = vec![];
-    parse_paragraphs(&manifest_content, &mut paragraphs);
-    if paragraphs.len() < 2 {
-        eprintln!("There is only {} paragraphs in the debian control file?", paragraphs.len());
-        return None;
-    }
-
-    let mut debian_manifest = DebianManifest::default();
-
-    let first_paragraph = &paragraphs[0];
-    for line in first_paragraph.split('\n') {
-        if line.starts_with(" ") {
-            // Obviously a mistake
-            continue;
-        }
-        if is_empty_line(line) {
-            continue;
-        }
-        if is_commented_line(line) {
-            continue;
-        }
-        let parts: Vec<&str> = line.split(CONTROL_FILE_SEPARATOR).collect();
-        if parts.len() < 2 {
-            eprintln!("Invalid debian control file line {}", line);
-            return None;
-        }
-        let field_name = parts[0].trim();
-
-        let value_parts: Vec<&str> = parts[1..].to_vec();
-        let mut field_value = value_parts.join(CONTROL_FILE_SEPARATOR);
-        field_value = field_value.trim().to_string();
-
-        if field_name == "Source" {
-            debian_manifest.source = field_value.to_string();
-        }
-        if field_name == "Maintainer" {
-            debian_manifest.maintainer = field_value.to_string();
-        }
-        if field_name == "Version" {
-            debian_manifest.version = field_value.to_string();
-        }
-        if field_name == "Priority" {
-            debian_manifest.priority = field_value.to_string();
-        }
-        if field_name == "Standards-Version" {
-            debian_manifest.standards_version = field_value.to_string();
-        }
-        if field_name == "Homepage" {
-            debian_manifest.vcs_browser = field_value.to_string();
-            debian_manifest.homepage = field_value.to_string();
-        }
-        if field_name == "Section" {
-            debian_manifest.section = field_value.to_string();
-            if !ALLOWED_SECTIONS.contains(&&debian_manifest.section[..]) {
-                eprintln!("Invalid debian control section {}", debian_manifest.section);
-                return None;
-            }
-        }
-    }
-
-    for paragraph_index in 1..paragraphs.len() {
-        let mut package = AbstractModule::default();
-        let paragraph = &paragraphs[paragraph_index];
-        let mut last_field_name: String = String::from("");
-
-        // Those fields can be multi-line.
-        let mut build_depends: String = String::from("");
-        let mut description: String = String::from("");
-
-        for line in paragraph.split('\n') {
-            if is_commented_line(line) {
-                continue;
-            }
-            if is_empty_line(line) {
-                continue;
-            }
-
-            let mut field_name: String;
-            let mut field_value: String;
-
-            if is_indented_line(line) {
-                field_name = last_field_name.clone();
-                field_value = line.to_string();
-            } else {
-                let parts: Vec<&str> = line.split(CONTROL_FILE_SEPARATOR).collect();
-                if parts.len() < 2 {
-                    eprintln!("Invalid debian control file line {}", line);
-                    return None;
-                }
-
-                field_name = parts[0].trim().to_string();
-                field_value = String::from("");
-                for part in parts {
-                    if part == field_name {
-                        continue;
-                    }
-                    if !field_value.is_empty() {
-                        field_value.push_str(CONTROL_FILE_SEPARATOR);
-                    }
-                    field_value.push_str(part);
-                }
-                last_field_name = field_name.clone();
-            }
-
-            if field_name == PACKAGE_NAME {
-                package.name = field_value.trim().to_string();
-            } else if field_name == ARCHITECTURE {
-            } else if field_name == DESCRIPTION {
-                // Here we append because the field can be multi-line.
-                description.push_str(&field_value);
-            } else if field_name == DEPENDS {
-                build_depends.push_str(&field_value);
-            } else {
-                eprintln!("Unknown debian package field {}", field_name);
-                return None;
-            }
-        }
-
-        for package_name in build_depends.split(",") {
-            if package_name.is_empty() {
-                continue;
-            }
-            let mut new_module = crate::manifests::manifest::AbstractModule::default();
-
-            let module_spec = package_name.trim().to_string();
-            // Still not sure what this is about.
-            if module_spec.starts_with("${") {
-                continue;
-            }
-
-            let mut module_spec_parts: Vec<&str> = module_spec.split(" ").collect();
-
-            let module_name = module_spec_parts[0].to_string();
-            module_spec_parts.remove(0);
-
-            let mut version_spec = String::from("");
-            for part in module_spec_parts {
-                if !version_spec.is_empty() {
-                    version_spec.push_str(" ");
-                }
-                version_spec.push_str(part);
-            }
-            // new_module.version = version_spec;
-
-            debian_manifest.build_depends.push(module_name);
-        }
-    }
-    Some(debian_manifest)
-}
-
 pub fn file_path_matches(path: &str) -> bool {
     if path.to_lowercase().ends_with("debian/control") {
         return true;
     }
-    return false;
-}
-
-pub fn file_content_matches(content: &str) -> bool {
     return false;
 }
 

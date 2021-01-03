@@ -544,7 +544,10 @@ pub fn get_modules(manifest: &FlatpakManifest) -> Vec<crate::manifests::manifest
 }
 
 // Returns the updated list of modules in the manifest.
-pub fn add_module(manifest: &mut FlatpakManifest, new_module: &crate::manifests::manifest::AbstractModule) -> Result<Vec<crate::manifests::manifest::AbstractModule>, String> {
+pub fn add_module(
+    manifest: &mut FlatpakManifest,
+    new_module: &crate::manifests::manifest::AbstractModule,
+) -> Result<Vec<crate::manifests::manifest::AbstractModule>, String> {
     for module in &manifest.modules {
         if module.name == new_module.name {
             return Err(format!("Already a module named {}.", module.name));
@@ -585,7 +588,12 @@ pub fn run_build(abstract_manifest: &crate::manifests::manifest::AbstractManifes
     // TODO replace this maybe?.
     let dir_name = ".panbuild/flatpak-builder/";
 
-    Command::new("flatpak-builder").arg("--user").arg("--force-clean").arg(dir_name).arg(&abstract_manifest.path).output()
+    Command::new("flatpak-builder")
+        .arg("--user")
+        .arg("--force-clean")
+        .arg(dir_name)
+        .arg(&abstract_manifest.path)
+        .output()
 }
 
 pub fn file_path_matches(path: &str) -> bool {

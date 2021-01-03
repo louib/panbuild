@@ -131,7 +131,10 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
         };
 
         if !config.workspaces.contains_key(workspace_name) {
-            eprintln!("Workspace {} does not exist. Use `ls` to list the available workspaces and manifests.", workspace_name);
+            eprintln!(
+                "Workspace {} does not exist. Use `ls` to list the available workspaces and manifests.",
+                workspace_name
+            );
             return 1;
         }
 
@@ -204,7 +207,10 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
         };
 
         if !config.workspaces.contains_key(workspace_name) {
-            eprintln!("Workspace {} does not exist. Use `ls` to list the available workspaces and manifests.", workspace_name);
+            eprintln!(
+                "Workspace {} does not exist. Use `ls` to list the available workspaces and manifests.",
+                workspace_name
+            );
             return 1;
         }
 
@@ -290,7 +296,10 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
         }
 
         if !config.workspaces.contains_key(env_name) {
-            eprintln!("Workspace {} does not exist. Use `ls` to list the available workspaces and manifests.", env_name);
+            eprintln!(
+                "Workspace {} does not exist. Use `ls` to list the available workspaces and manifests.",
+                env_name
+            );
             return 1;
         }
 
