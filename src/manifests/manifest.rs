@@ -100,10 +100,17 @@ impl AbstractManifest {
         } else {
             return None;
         }
-        // FIXME actually set the format here!
+
+        let mut manifest_format = ManifestFormat::TEXT;
+        if file_path.ends_with(".json") {
+            manifest_format = ManifestFormat::JSON;
+        } else if file_path.ends_with(".yaml") || file_path.ends_with(".yml") {
+            manifest_format = ManifestFormat::JSON;
+        }
+
         Some(AbstractManifest {
             path: file_path,
-            format: ManifestFormat::TEXT,
+            format: manifest_format,
 
             depends_on: vec![],
 
