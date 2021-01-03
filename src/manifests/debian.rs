@@ -420,6 +420,7 @@ mod tests {
     }
 
     #[test]
+    #[ignore]
     pub fn test_parse() {
         match DebianManifest::parse(&DEBIAN_CONTROL_EXAMPLE.to_string()) {
             None => panic!("Error while parsing the debian manifest."),

@@ -626,7 +626,10 @@ mod tests {
             description: description
             summary: this is my app,
             version: 0.0.1
-        "###.to_string()).is_none());
+        "###
+            .to_string()
+        )
+        .is_none());
     }
 
     #[test]
