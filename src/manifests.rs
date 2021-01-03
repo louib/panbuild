@@ -1,7 +1,7 @@
-pub mod manifest;
 pub mod arch;
 pub mod debian;
 pub mod flatpak;
+pub mod manifest;
 pub mod snap;
 
 pub fn run_build(ctx: &crate::execution_context::ExecutionContext) -> i32 {

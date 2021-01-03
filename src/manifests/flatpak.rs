@@ -550,7 +550,10 @@ pub fn get_modules(abstract_manifest: &crate::manifests::manifest::AbstractManif
 }
 
 // Returns the updated list of modules in the manifest.
-pub fn add_module(abstract_manifest: &mut crate::manifests::manifest::AbstractManifest, new_module: &crate::manifests::manifest::AbstractModule) -> Result<Vec<crate::manifests::manifest::AbstractModule>, String> {
+pub fn add_module(
+    abstract_manifest: &mut crate::manifests::manifest::AbstractManifest,
+    new_module: &crate::manifests::manifest::AbstractModule,
+) -> Result<Vec<crate::manifests::manifest::AbstractModule>, String> {
     let manifest = abstract_manifest.flatpak_manifest.as_mut().expect("Should not happen!");
 
     for module in &manifest.modules {
