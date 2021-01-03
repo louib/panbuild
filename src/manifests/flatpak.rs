@@ -597,11 +597,11 @@ pub fn dump_native(abstract_manifest: &crate::manifests::manifest::AbstractManif
     manifest_dump
 }
 
-pub fn run_build(ctx: &crate::execution_context::ExecutionContext) -> Result<Output, std::io::Error> {
+pub fn run_build(abstract_manifest: &crate::manifests::manifest::AbstractManifest) -> Result<Output, std::io::Error> {
     // TODO replace this maybe?.
     let dir_name = ".panbuild/flatpak-builder/";
 
-    Command::new("flatpak-builder").arg("--user").arg("--force-clean").arg(dir_name).arg(&ctx.source_filename).output()
+    Command::new("flatpak-builder").arg("--user").arg("--force-clean").arg(dir_name).arg(&abstract_manifest.path).output()
 }
 
 pub fn file_path_matches(path: &str) -> bool {

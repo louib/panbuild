@@ -1,6 +1,7 @@
 use std::fs::{self, DirEntry};
 use std::io;
 use std::path;
+use std::process::{Output};
 
 use serde::{Deserialize, Serialize};
 
@@ -143,6 +144,20 @@ impl AbstractManifest {
                 _ => Err("Getting the modules is not supported for this manifest format.".to_string()),
             },
             None => Err("No manifest to get the modules from!".to_string()),
+        }
+    }
+
+    pub fn run_build(&self) -> Result<Output, String> {
+        let output = match &self.native_manifest {
+            Some(n) => match n {
+                NativeManifest::Flatpak(m) => crate::manifests::flatpak::run_build(self),
+                _ => return Err("Running a build is not supported for this manifest format.".to_string()),
+            },
+            None => return Err("No manifest to run the build with!".to_string()),
+        };
+        match output {
+            Ok(o) => Ok(o),
+            Err(e) => Err(e.to_string()),
         }
     }
 }
