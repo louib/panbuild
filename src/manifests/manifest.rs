@@ -98,8 +98,11 @@ impl AbstractManifest {
             },
         };
         let mut native_manifest: Option<NativeManifest> = None;
-        if let Some(flatpak_manifest) = crate::manifests::flatpak::FlatpakManifest::parse(file_path, manifest_content) {
+        if let Some(flatpak_manifest) = crate::manifests::flatpak::FlatpakManifest::parse(&file_path, &manifest_content) {
             native_manifest = Some(NativeManifest::Flatpak(flatpak_manifest));
+        }
+        if let Some(snapcraft_manifest) = crate::manifests::snap::SnapcraftManifest::parse(&file_path, &manifest_content) {
+            native_manifest = Some(NativeManifest::Snapcraft(snapcraft_manifest));
         }
         Some(AbstractManifest {
             package_name: String::from(""),
@@ -114,7 +117,7 @@ impl AbstractManifest {
             flatpak_manifest: None,
             debian_manifest: None,
             snap_manifest: None,
-            native_manifest: None,
+            native_manifest: native_manifest,
         })
     }
 }

@@ -140,6 +140,27 @@ pub struct SnapcraftManifest {
 
     pub parts: HashMap<String, SnapcraftPart>,
 }
+impl SnapcraftManifest {
+    pub fn parse(file_path: &String, manifest_content: &String) -> Option<SnapcraftManifest> {
+        let snapcraft_manifest: SnapcraftManifest = match serde_yaml::from_str(&manifest_content) {
+            Ok(m) => m,
+            Err(e) => {
+                eprintln!("Failed to parse the Snapcraft manifest: {}.", e);
+                return None;
+            },
+        };
+
+        // TODO I think there's other fields to validate here.
+        if snapcraft_manifest.name.is_empty() {
+            panic!("Required top-level field name is missing from snapcraft manifest.");
+        }
+        if snapcraft_manifest.grade.is_empty() {
+            panic!("Required top-level field grade is missing from snapcraft manifest.");
+        }
+
+        Some(snapcraft_manifest)
+    }
+}
 
 #[derive(Deserialize, Serialize, Debug, Default)]
 #[serde(rename_all = "kebab-case")]

@@ -201,7 +201,7 @@ pub struct FlatpakManifest {
     pub modules: Vec<FlatpakModule>,
 }
 impl FlatpakManifest {
-    pub fn parse(file_path: String, manifest_content: String) -> Option<FlatpakManifest> {
+    pub fn parse(file_path: &String, manifest_content: &String) -> Option<FlatpakManifest> {
         match serde_yaml::from_str(&manifest_content) {
             Ok(m) => return Some(m),
             Err(e) => {
