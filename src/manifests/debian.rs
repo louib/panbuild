@@ -336,7 +336,6 @@ pub fn parse(ctx: &mut crate::execution_context::ExecutionContext) {
     }
 
     eprintln!("finished parsing debian control file.");
-    ctx.manifest.debian_manifest = Some(debian_manifest);
 }
 
 pub fn file_path_matches(path: &str) -> bool {

@@ -530,32 +530,24 @@ pub struct FlatpakBuildOptions {
     pub arch: BTreeMap<String, FlatpakBuildOptions>,
 }
 
-pub fn get_modules(abstract_manifest: &crate::manifests::manifest::AbstractManifest) -> Vec<crate::manifests::manifest::AbstractModule> {
+pub fn get_modules(manifest: &FlatpakManifest) -> Vec<crate::manifests::manifest::AbstractModule> {
     let mut response = vec![];
-    if let None = abstract_manifest.flatpak_manifest {
-        // FIXME not sure that's the best way to handle this.
-        return response;
-    } else {
-        let manifest = abstract_manifest.flatpak_manifest.as_ref().unwrap();
-        // FIXME we should fetch those recursively.
-        for module in &manifest.modules {
-            let mut abstract_module = crate::manifests::manifest::AbstractModule::default();
-            abstract_module.name = module.name.to_string();
-            // TODO fetch the version from the sources.
-            // FIXME should we check for duplicates here??
-            response.push(abstract_module);
-        }
-        response
+    // FIXME we should fetch those recursively.
+    for module in &manifest.modules {
+        let mut abstract_module = crate::manifests::manifest::AbstractModule::default();
+        abstract_module.name = module.name.to_string();
+        // TODO fetch the version from the sources.
+        // FIXME should we check for duplicates here??
+        response.push(abstract_module);
     }
+    response
 }
 
 // Returns the updated list of modules in the manifest.
 pub fn add_module(
-    abstract_manifest: &mut crate::manifests::manifest::AbstractManifest,
+    manifest: &mut FlatpakManifest,
     new_module: &crate::manifests::manifest::AbstractModule,
 ) -> Result<Vec<crate::manifests::manifest::AbstractModule>, String> {
-    let manifest = abstract_manifest.flatpak_manifest.as_mut().expect("Should not happen!");
-
     for module in &manifest.modules {
         if module.name == new_module.name {
             return Err(format!("Already a module named {}.", module.name));
@@ -571,30 +563,25 @@ pub fn add_module(
 
     manifest.modules.push(new_flatpak_module);
 
-    return abstract_manifest.get_modules();
+    return Ok(get_modules(manifest));
 }
 
-pub fn dump_native(abstract_manifest: &crate::manifests::manifest::AbstractManifest) -> String {
-    let flatpak_manifest = match &abstract_manifest.flatpak_manifest {
-        Some(m) => m,
-        None => panic!("Called flatpak.dump_native without a native Flatpak manifest!"),
-    };
-
-    if let crate::manifests::manifest::ManifestFormat::JSON = abstract_manifest.format {
-        let manifest_dump: String = match serde_json::to_string(&flatpak_manifest) {
-            Ok(d) => d,
-            Err(e) => panic!("Failed to dump the Flatpak manifest: {}.", e),
+pub fn dump(manifest: &FlatpakManifest, format: &crate::manifests::manifest::ManifestFormat) -> Result<String, String> {
+    if let crate::manifests::manifest::ManifestFormat::JSON = format {
+        return match serde_json::to_string(&manifest) {
+            Ok(d) => Ok(d),
+            Err(e) => return Err(format!("Failed to dump the Flatpak manifest: {}.", e)),
         };
-        return manifest_dump;
     }
 
-    // TODO we might want to assert that the format is YAML before dumping.
-    // Assuming default YAML format.
-    let manifest_dump: String = match serde_yaml::to_string(&flatpak_manifest) {
-        Ok(d) => d,
-        Err(e) => panic!("Failed to dump the Flatpak manifest: {}.", e),
-    };
-    manifest_dump
+    if let crate::manifests::manifest::ManifestFormat::JSON = format {
+        return match serde_yaml::to_string(&manifest) {
+            Ok(d) => Ok(d),
+            Err(e) => return Err(format!("Failed to dump the Flatpak manifest: {}.", e)),
+        };
+    }
+
+    Err(format!("Invalid format for Flatpak manifest."))
 }
 
 pub fn run_build(abstract_manifest: &crate::manifests::manifest::AbstractManifest) -> Result<Output, std::io::Error> {
@@ -632,10 +619,6 @@ pub fn file_path_matches(path: &str) -> bool {
         return false;
     }
     return true;
-}
-
-pub fn file_content_matches(content: &str) -> bool {
-    return false;
 }
 
 #[cfg(test)]

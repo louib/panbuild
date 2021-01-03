@@ -59,11 +59,9 @@ pub struct AbstractManifest {
     pub format: ManifestFormat,
 
     // The modules that the module being built requires.
+    // FIXME remove this in favor of using the function.
     pub depends_on: Vec<AbstractModule>,
 
-    pub flatpak_manifest: Option<crate::manifests::flatpak::FlatpakManifest>,
-    pub debian_manifest: Option<crate::manifests::debian::DebianManifest>,
-    pub snap_manifest: Option<crate::manifests::snap::SnapcraftManifest>,
     pub native_manifest: Option<NativeManifest>,
 }
 impl Default for AbstractManifest {
@@ -74,9 +72,6 @@ impl Default for AbstractManifest {
 
             depends_on: vec![],
 
-            flatpak_manifest: None,
-            debian_manifest: None,
-            snap_manifest: None,
             native_manifest: None,
         }
     }
@@ -114,9 +109,6 @@ impl AbstractManifest {
 
             depends_on: vec![],
 
-            flatpak_manifest: None,
-            debian_manifest: None,
-            snap_manifest: None,
             native_manifest: native_manifest,
         })
     }
@@ -124,7 +116,7 @@ impl AbstractManifest {
     pub fn dump(&self) -> Result<String, String> {
         match &self.native_manifest {
             Some(n) => match n {
-                NativeManifest::Flatpak(m) => Ok(crate::manifests::flatpak::dump_native(&self)),
+                NativeManifest::Flatpak(m) => crate::manifests::flatpak::dump(&m, &self.format),
                 _ => Err("Dumping is not supported for this manifest format.".to_string()),
             },
             None => Err("No manifest to dump!".to_string()),
@@ -134,7 +126,7 @@ impl AbstractManifest {
     pub fn get_modules(&self) -> Result<Vec<AbstractModule>, String> {
         match &self.native_manifest {
             Some(n) => match n {
-                NativeManifest::Flatpak(m) => Ok(crate::manifests::flatpak::get_modules(&self)),
+                NativeManifest::Flatpak(m) => Ok(crate::manifests::flatpak::get_modules(&m)),
                 _ => Err("Getting the modules is not supported for this manifest format.".to_string()),
             },
             None => Err("No manifest to get the modules from!".to_string()),
@@ -142,9 +134,9 @@ impl AbstractManifest {
     }
 
     pub fn add_module(&mut self, module: &AbstractModule) -> Result<Vec<AbstractModule>, String> {
-        match &self.native_manifest {
+        match &mut self.native_manifest {
             Some(n) => match n {
-                NativeManifest::Flatpak(m) => crate::manifests::flatpak::add_module(self, module),
+                NativeManifest::Flatpak(m) => crate::manifests::flatpak::add_module(m, module),
                 _ => Err("Getting the modules is not supported for this manifest format.".to_string()),
             },
             None => Err("No manifest to get the modules from!".to_string()),
