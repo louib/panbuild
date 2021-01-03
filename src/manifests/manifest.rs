@@ -1,6 +1,6 @@
 use std::fs::{self, DirEntry};
 use std::io;
-use std::path::Path;
+use std::path;
 
 use serde::{Deserialize, Serialize};
 
@@ -44,6 +44,13 @@ pub enum License {
 pub const DEFAULT_LICENSE: License = License::Gpl2;
 
 #[derive(Debug, Serialize, Deserialize)]
+pub enum NativeManifest {
+  Flatpak(crate::manifests::flatpak::FlatpakManifest),
+  Debian(crate::manifests::debian::DebianManifest),
+  Snapcraft(crate::manifests::snap::SnapcraftManifest),
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 /// Generic representation of a build manifest.
 pub struct AbstractManifest {
     // The path that the manifest was loaded from.
@@ -60,6 +67,7 @@ pub struct AbstractManifest {
     pub flatpak_manifest: Option<crate::manifests::flatpak::FlatpakManifest>,
     pub debian_manifest: Option<crate::manifests::debian::DebianManifest>,
     pub snap_manifest: Option<crate::manifests::snap::SnapcraftManifest>,
+    pub native_manifest: Option<NativeManifest>,
 }
 impl Default for AbstractManifest {
     fn default() -> Self {
@@ -76,7 +84,38 @@ impl Default for AbstractManifest {
             flatpak_manifest: None,
             debian_manifest: None,
             snap_manifest: None,
+            native_manifest: None,
         }
+    }
+}
+impl AbstractManifest {
+    fn load_from_file(file_path: String) -> Option<AbstractManifest> {
+        let manifest_content = match fs::read_to_string(path::Path::new(&file_path)) {
+            Ok(content) => content,
+            Err(e) => {
+                eprintln!("could not read manifest file {}: {}.", file_path, e);
+                return None;
+            },
+        };
+        let mut native_manifest: Option<NativeManifest> = None;
+        if let Some(flatpak_manifest) = crate::manifests::flatpak::FlatpakManifest::parse(file_path, manifest_content) {
+            native_manifest = Some(NativeManifest::Flatpak(flatpak_manifest));
+        }
+        Some(AbstractManifest {
+            package_name: String::from(""),
+            package_id: "".to_string(),
+            package_version: "".to_string(),
+
+            path: "".to_string(),
+            format: ManifestFormat::TEXT,
+
+            depends_on: vec![],
+
+            flatpak_manifest: None,
+            debian_manifest: None,
+            snap_manifest: None,
+            native_manifest: None,
+        })
     }
 }
 

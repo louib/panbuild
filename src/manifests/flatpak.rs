@@ -200,6 +200,17 @@ pub struct FlatpakManifest {
     #[serde(skip_serializing_if = "Vec::is_empty")]
     pub modules: Vec<FlatpakModule>,
 }
+impl FlatpakManifest {
+    pub fn parse(file_path: String, manifest_content: String) -> Option<FlatpakManifest> {
+        match serde_yaml::from_str(&manifest_content) {
+            Ok(m) => return Some(m),
+            Err(e) => {
+                eprintln!("Failed to parse the Flatpak manifest: {}.", e);
+                return None;
+            },
+        };
+    }
+}
 
 // Each module specifies a source that has to be separately built and installed.
 // It contains the build options and a list of sources to download and extract before
