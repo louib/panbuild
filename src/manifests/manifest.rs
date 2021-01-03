@@ -107,12 +107,13 @@ impl AbstractManifest {
         if let Some(debian_manifest) = crate::manifests::debian::DebianManifest::parse(&file_path, &manifest_content) {
             native_manifest = Some(NativeManifest::Debian(debian_manifest));
         }
+        // FIXME actually set the format here!
         Some(AbstractManifest {
             package_name: String::from(""),
             package_id: "".to_string(),
             package_version: "".to_string(),
 
-            path: "".to_string(),
+            path: file_path,
             format: ManifestFormat::TEXT,
 
             depends_on: vec![],
@@ -122,6 +123,16 @@ impl AbstractManifest {
             snap_manifest: None,
             native_manifest: native_manifest,
         })
+    }
+
+    fn dump(&self) -> Result<String, String> {
+        match &self.native_manifest {
+            Some(n) => match n {
+                NativeManifest::Flatpak(m) => Ok(crate::manifests::flatpak::dump_native(&self)),
+                _ => Err("Dumping is not supported for this manifest format.".to_string()),
+            },
+            None => Err("No manifest to dump!".to_string()),
+        }
     }
 }
 
