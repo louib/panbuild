@@ -4,19 +4,6 @@ pub mod debian;
 pub mod flatpak;
 pub mod snap;
 
-pub fn has_type(type_name: String) -> bool {
-    if type_name == "debian" {
-        return true;
-    }
-    if type_name == "flatpak" {
-        return true;
-    }
-    if type_name == "snap" {
-        return true;
-    }
-    return false;
-}
-
 // Determines if the filename is a potential manifest
 // of any supported build system, using the path of the input file.
 pub fn detect_type(ctx: &mut crate::execution_context::ExecutionContext) -> i32 {
