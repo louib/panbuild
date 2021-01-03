@@ -26,7 +26,6 @@ struct PanbuilbArguments {
     command_name: String,
     arguments: Vec<String>,
     // TODO use enums for those?
-    input_format: String,
     output_format: String,
 }
 
@@ -41,9 +40,9 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
     };
 
     if command_name == "lint" {
-        let input_file_path = args.get("input_file").expect("an input file is required!");
+        let manifest_file_path = args.get("manifest_file_path").expect("an input file is required!");
 
-        let abstract_manifest = match crate::manifests::manifest::AbstractManifest::load_from_file(input_file_path.to_string()) {
+        let abstract_manifest = match crate::manifests::manifest::AbstractManifest::load_from_file(manifest_file_path.to_string()) {
             Some(m) => m,
             None => return 1,
         };
@@ -56,10 +55,10 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
             Err(e) => return 1,
         };
 
-        match fs::write(path::Path::new(input_file_path), manifest_dump) {
+        match fs::write(path::Path::new(manifest_file_path), manifest_dump) {
             Ok(content) => content,
             Err(e) => {
-                eprintln!("could not write file {}.", input_file_path);
+                eprintln!("could not write file {}.", manifest_file_path);
                 return 1;
             }
         };
@@ -69,9 +68,9 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
     }
 
     if command_name == "get-package-list" {
-        let input_file_path = args.get("input_file").expect("an input file is required!");
+        let manifest_file_path = args.get("manifest_file_path").expect("a manifest file is required!");
 
-        let abstract_manifest = match crate::manifests::manifest::AbstractManifest::load_from_file(input_file_path.to_string()) {
+        let abstract_manifest = match crate::manifests::manifest::AbstractManifest::load_from_file(manifest_file_path.to_string()) {
             Some(m) => m,
             None => return 1,
         };

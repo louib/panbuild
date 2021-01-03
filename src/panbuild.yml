@@ -56,42 +56,20 @@ subcommands:
                 multiple: false
                 required: true
                 help: Term to search for in the projects database.
-            - input_format:
-                short: d
-                long: deep
-                takes_value: false
-                required: false
-                help: Perform a deep search of the database.
     - lint:
         about: lint a manifest file.
         args:
-            - input_file:
+            - manifest_file_path:
                 multiple: false
                 required: true
                 help: Path of the manifest file.
-            - input_format:
-                short: i
-                long: input-format
-                takes_value: true
-                value_name: FORMAT
-                # TODO make it required false after implementing manifest type detection.
-                required: true
-                help: Format of the manifest provided for the conversion.
     - get-package-list:
         about: Get a comma-separated list of packages parsed from the manifest file. The default separator can be changed with the -s option.
         args:
-            - input_file:
+            - manifest_file_path:
                 multiple: false
                 required: true
                 help: Path of the input build manifest.
-            - input_format:
-                short: i
-                long: input-format
-                takes_value: true
-                value_name: FORMAT
-                # TODO make it required false after implementing manifest type detection.
-                required: true
-                help: Format of the manifest provided for the conversion.
             - separator:
                 short: s
                 long: sep
