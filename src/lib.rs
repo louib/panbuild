@@ -41,14 +41,7 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
     };
 
     if command_name == "lint" {
-        let input_file_path = match args.get("input_file") {
-            Some(input_file_path) => input_file_path,
-            None => {
-                eprintln!("an input file is required!");
-                // TODO handle reading from stdin.
-                return 1;
-            }
-        };
+        let input_file_path = args.get("input_file").expect("an input file is required!");
 
         let abstract_manifest = match crate::manifests::manifest::AbstractManifest::load_from_file(input_file_path.to_string()) {
             Some(m) => m,
@@ -76,14 +69,7 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
     }
 
     if command_name == "get-package-list" {
-        let input_file_path = match args.get("input_file") {
-            Some(input_file_path) => input_file_path,
-            None => {
-                eprintln!("an input file is required!");
-                // TODO handle reading from stdin.
-                return 1;
-            }
-        };
+        let input_file_path = args.get("input_file").expect("an input file is required!");
 
         ctx.content = match fs::read_to_string(path::Path::new(input_file_path)) {
             Ok(content) => content,
