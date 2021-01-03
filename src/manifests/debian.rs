@@ -179,13 +179,12 @@ fn is_commented_line(line: &str) -> bool {
     return false;
 }
 
-pub fn parse(ctx: &mut crate::execution_context::ExecutionContext) {
+pub fn parse(manifest_content: &String) -> Option<DebianManifest> {
     let mut paragraphs: Vec<String> = vec![];
-    // parse_paragraphs(&ctx.content, &mut paragraphs);
-
-    ctx.manifest = crate::manifests::manifest::AbstractManifest::default();
+    parse_paragraphs(&manifest_content, &mut paragraphs);
     if paragraphs.len() < 2 {
-        panic!("There is only {} paragraphs in the debian control file?", paragraphs.len())
+        eprintln!("There is only {} paragraphs in the debian control file?", paragraphs.len());
+        return None;
     }
 
     let mut debian_manifest = DebianManifest::default();
@@ -204,10 +203,8 @@ pub fn parse(ctx: &mut crate::execution_context::ExecutionContext) {
         }
         let parts: Vec<&str> = line.split(CONTROL_FILE_SEPARATOR).collect();
         if parts.len() < 2 {
-            // FIXME we should return a Result<> instead of exiting here or
-            // returning a default value.
             eprintln!("Invalid debian control file line {}", line);
-            return;
+            return None;
         }
         let field_name = parts[0].trim();
 
@@ -237,10 +234,8 @@ pub fn parse(ctx: &mut crate::execution_context::ExecutionContext) {
         if field_name == "Section" {
             debian_manifest.section = field_value.to_string();
             if !ALLOWED_SECTIONS.contains(&&debian_manifest.section[..]) {
-                // FIXME we should return a Result<> instead of exiting here or
-                // returning a default value.
                 eprintln!("Invalid debian control section {}", debian_manifest.section);
-                return;
+                return None;
             }
         }
     }
@@ -271,10 +266,8 @@ pub fn parse(ctx: &mut crate::execution_context::ExecutionContext) {
             } else {
                 let parts: Vec<&str> = line.split(CONTROL_FILE_SEPARATOR).collect();
                 if parts.len() < 2 {
-                    // FIXME we should return a Result<> instead of exiting here or
-                    // returning a default value.
                     eprintln!("Invalid debian control file line {}", line);
-                    return;
+                    return None;
                 }
 
                 field_name = parts[0].trim().to_string();
@@ -301,6 +294,7 @@ pub fn parse(ctx: &mut crate::execution_context::ExecutionContext) {
                 build_depends.push_str(&field_value);
             } else {
                 eprintln!("Unknown debian package field {}", field_name);
+                return None;
             }
         }
 
@@ -318,7 +312,7 @@ pub fn parse(ctx: &mut crate::execution_context::ExecutionContext) {
 
             let mut module_spec_parts: Vec<&str> = module_spec.split(" ").collect();
 
-            new_module.name = module_spec_parts[0].to_string();
+            let module_name = module_spec_parts[0].to_string();
             module_spec_parts.remove(0);
 
             let mut version_spec = String::from("");
@@ -328,14 +322,12 @@ pub fn parse(ctx: &mut crate::execution_context::ExecutionContext) {
                 }
                 version_spec.push_str(part);
             }
-            new_module.version = version_spec;
+            // new_module.version = version_spec;
 
-            package.depends_on.push(new_module);
+            debian_manifest.build_depends.push(module_name);
         }
-        ctx.manifest.depends_on.push(package);
     }
-
-    eprintln!("finished parsing debian control file.");
+    Some(debian_manifest)
 }
 
 pub fn file_path_matches(path: &str) -> bool {
@@ -427,6 +419,7 @@ mod tests {
             Some(manifest) => {
                 assert!(manifest.source == "package_name", "The app name was not package_name!",);
                 assert!(manifest.vcs_browser == "https://code.cloud.com/projects/package_name");
+                assert_ne!(manifest.build_depends.len(), 0);
             }
         }
     }
