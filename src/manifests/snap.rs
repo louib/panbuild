@@ -587,26 +587,6 @@ pub struct SnapcraftOptionalPackages {
     r#try: Vec<String>,
 }
 
-pub fn parse(ctx: &mut crate::execution_context::ExecutionContext) {
-    ctx.manifest = crate::manifests::manifest::AbstractManifest::default();
-
-    // TODO actually handle the error.
-    let snapcraft_manifest: SnapcraftManifest = match serde_yaml::from_str(&ctx.content) {
-        Ok(m) => m,
-        Err(e) => panic!("Failed to parse the Snapcraft manifest: {}.", e),
-    };
-
-    // TODO I think there's other fields to validate here.
-    if snapcraft_manifest.name.is_empty() {
-        panic!("Required top-level field name is missing from snapcraft manifest.");
-    }
-    if snapcraft_manifest.grade.is_empty() {
-        panic!("Required top-level field grade is missing from snapcraft manifest.");
-    }
-
-    ctx.manifest.snap_manifest = Some(snapcraft_manifest);
-}
-
 pub fn file_path_matches(path: &str) -> bool {
     if path.to_lowercase().ends_with("snapcraft.yaml") {
         return true;

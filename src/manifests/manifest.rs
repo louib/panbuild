@@ -135,6 +135,16 @@ impl AbstractManifest {
             None => Err("No manifest to get the modules from!".to_string()),
         }
     }
+
+    pub fn add_module(&mut self, module: &AbstractModule) -> Result<Vec<AbstractModule>, String> {
+        match &self.native_manifest {
+            Some(n) => match n {
+                NativeManifest::Flatpak(m) => crate::manifests::flatpak::add_module(self, module),
+                _ => Err("Getting the modules is not supported for this manifest format.".to_string()),
+            },
+            None => Err("No manifest to get the modules from!".to_string()),
+        }
+    }
 }
 
 pub enum OS {

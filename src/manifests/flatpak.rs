@@ -530,17 +530,6 @@ pub struct FlatpakBuildOptions {
     pub arch: BTreeMap<String, FlatpakBuildOptions>,
 }
 
-pub fn parse(ctx: &mut crate::execution_context::ExecutionContext) {
-    ctx.manifest = crate::manifests::manifest::AbstractManifest::default();
-    // TODO actually handle the error.
-    let flatpak_manifest: FlatpakManifest = match serde_yaml::from_str(&ctx.content) {
-        Ok(m) => m,
-        Err(e) => panic!("Failed to parse the Flatpak manifest: {}.", e),
-    };
-
-    ctx.manifest.flatpak_manifest = Some(flatpak_manifest);
-}
-
 pub fn get_modules(abstract_manifest: &crate::manifests::manifest::AbstractManifest) -> Vec<crate::manifests::manifest::AbstractModule> {
     let mut response = vec![];
     if let None = abstract_manifest.flatpak_manifest {
@@ -561,28 +550,25 @@ pub fn get_modules(abstract_manifest: &crate::manifests::manifest::AbstractManif
 }
 
 // Returns the updated list of modules in the manifest.
-pub fn add_module(abstract_manifest: &mut crate::manifests::manifest::AbstractManifest, new_module: &crate::manifests::manifest::AbstractModule) {
-    if let None = abstract_manifest.flatpak_manifest {
-        // FIXME not sure that's the best way to handle this.
-        return;
-    } else {
-        let manifest = abstract_manifest.flatpak_manifest.as_mut().unwrap();
-        for module in &manifest.modules {
-            if module.name == new_module.name {
-                eprintln!("Already a module named {}.", module.name);
-                return;
-            }
+pub fn add_module(abstract_manifest: &mut crate::manifests::manifest::AbstractManifest, new_module: &crate::manifests::manifest::AbstractModule) -> Result<Vec<crate::manifests::manifest::AbstractModule>, String> {
+    let manifest = abstract_manifest.flatpak_manifest.as_mut().expect("Should not happen!");
+
+    for module in &manifest.modules {
+        if module.name == new_module.name {
+            return Err(format!("Already a module named {}.", module.name));
         }
-        let mut new_flatpak_module = FlatpakModule::default();
-        new_flatpak_module.name = new_module.name.to_string();
-
-        let mut flatpak_sources = FlatpakSource::default();
-        flatpak_sources.r#type = "git".to_string(); // FIXME use the url_type
-        flatpak_sources.url = new_module.url.to_string();
-        new_flatpak_module.sources = vec![flatpak_sources];
-
-        manifest.modules.push(new_flatpak_module);
     }
+    let mut new_flatpak_module = FlatpakModule::default();
+    new_flatpak_module.name = new_module.name.to_string();
+
+    let mut flatpak_sources = FlatpakSource::default();
+    flatpak_sources.r#type = "git".to_string(); // FIXME use the url_type
+    flatpak_sources.url = new_module.url.to_string();
+    new_flatpak_module.sources = vec![flatpak_sources];
+
+    manifest.modules.push(new_flatpak_module);
+
+    return abstract_manifest.get_modules();
 }
 
 pub fn dump_native(abstract_manifest: &crate::manifests::manifest::AbstractManifest) -> String {
