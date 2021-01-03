@@ -181,7 +181,7 @@ fn is_commented_line(line: &str) -> bool {
 
 pub fn parse(ctx: &mut crate::execution_context::ExecutionContext) {
     let mut paragraphs: Vec<String> = vec![];
-    parse_paragraphs(&ctx.content, &mut paragraphs);
+    // parse_paragraphs(&ctx.content, &mut paragraphs);
 
     ctx.manifest = crate::manifests::manifest::AbstractManifest::default();
     if paragraphs.len() < 2 {
