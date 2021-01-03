@@ -201,7 +201,7 @@ pub struct FlatpakManifest {
     pub modules: Vec<FlatpakModule>,
 }
 impl FlatpakManifest {
-    pub fn parse(file_path: &String, manifest_content: &String) -> Option<FlatpakManifest> {
+    pub fn parse(manifest_content: &String) -> Option<FlatpakManifest> {
         match serde_yaml::from_str(&manifest_content) {
             Ok(m) => return Some(m),
             Err(e) => {
@@ -641,15 +641,13 @@ mod tests {
     #[test]
     #[should_panic]
     pub fn test_parse_invalid_yaml() {
-        let mut ctx = crate::execution_context::ExecutionContext::default();
-        ctx.content = "----------------------------".to_string();
-        parse(&mut ctx);
+        FlatpakManifest::parse(&"----------------------------".to_string()).unwrap();
     }
 
     #[test]
     pub fn test_parse() {
-        let mut ctx = crate::execution_context::ExecutionContext::default();
-        ctx.content = r###"
+        match FlatpakManifest::parse(
+            &r###"
             app-id: net.louib.panbuild
             runtime: org.gnome.Platform
             runtime-version: "3.36"
@@ -668,10 +666,9 @@ mod tests {
                     url: https://github.com/louib/panbuild.git
                     branch: master
         "###
-        .to_string();
-        parse(&mut ctx);
-        match ctx.manifest.flatpak_manifest {
-            None => panic!("Error while parsing the snap manifest."),
+            .to_string(),
+        ) {
+            None => panic!("Error while parsing the flatpak manifest."),
             Some(manifest) => {
                 assert_eq!(manifest.app_id, "net.louib.panbuild");
             }

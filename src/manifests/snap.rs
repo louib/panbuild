@@ -141,7 +141,7 @@ pub struct SnapcraftManifest {
     pub parts: HashMap<String, SnapcraftPart>,
 }
 impl SnapcraftManifest {
-    pub fn parse(file_path: &String, manifest_content: &String) -> Option<SnapcraftManifest> {
+    pub fn parse(manifest_content: &String) -> Option<SnapcraftManifest> {
         let snapcraft_manifest: SnapcraftManifest = match serde_yaml::from_str(&manifest_content) {
             Ok(m) => m,
             Err(e) => {
@@ -619,45 +619,41 @@ mod tests {
     #[test]
     #[should_panic(expected = "Required top-level field grade is missing from snapcraft manifest.")]
     pub fn test_parse_missing_required_fields() {
-        let mut ctx = crate::execution_context::ExecutionContext::default();
-        ctx.content = r###"
+        SnapcraftManifest::parse(
+            &r###"
             name: app-name,
             description: description
             summary: this is my app,
             version: 0.0.1
         "###
-        .to_string();
-        parse(&mut ctx);
+            .to_string(),
+        )
+        .unwrap();
     }
 
     #[test]
     #[should_panic(expected = "Failed to parse the Snapcraft manifest: EOF while parsing a value.")]
     pub fn test_parse_empty_string() {
-        let mut ctx = crate::execution_context::ExecutionContext::default();
-        ctx.content = "".to_string();
-        parse(&mut ctx);
+        SnapcraftManifest::parse(&"".to_string()).unwrap();
     }
 
     #[test]
     #[should_panic]
     pub fn test_parse_invalid_yaml() {
-        let mut ctx = crate::execution_context::ExecutionContext::default();
-        ctx.content = "----------------------------".to_string();
-        parse(&mut ctx);
+        SnapcraftManifest::parse(&"----------------------------".to_string()).unwrap();
     }
 
     #[test]
     pub fn test_parse_missing_version() {
-        let mut ctx = crate::execution_context::ExecutionContext::default();
-        ctx.content = r###"
+        match SnapcraftManifest::parse(
+            &r###"
             name: app-name
             description: description
             grade: devel
             summary: this is my app
         "###
-        .to_string();
-        parse(&mut ctx);
-        match ctx.manifest.snap_manifest {
+            .to_string(),
+        ) {
             None => panic!("Error while parsing the snap manifest."),
             Some(manifest) => {
                 assert_eq!(manifest.name, "app-name");

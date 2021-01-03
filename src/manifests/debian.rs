@@ -114,7 +114,7 @@ pub struct DebianManifest {
     pub vcs_git: String,
 }
 impl DebianManifest {
-    pub fn parse(file_path: &String, manifest_content: &String) -> Option<DebianManifest> {
+    pub fn parse(manifest_content: &String) -> Option<DebianManifest> {
         // FIXME we need to migrate the function from down below.
         None
     }
@@ -421,10 +421,7 @@ mod tests {
 
     #[test]
     pub fn test_parse() {
-        let mut ctx = crate::execution_context::ExecutionContext::default();
-        ctx.content = DEBIAN_CONTROL_EXAMPLE.to_string();
-        parse(&mut ctx);
-        match ctx.manifest.debian_manifest {
+        match DebianManifest::parse(&DEBIAN_CONTROL_EXAMPLE.to_string()) {
             None => panic!("Error while parsing the debian manifest."),
             Some(manifest) => {
                 assert!(manifest.source == "package_name", "The app name was not package_name!",);
