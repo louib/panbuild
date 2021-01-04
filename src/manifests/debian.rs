@@ -143,7 +143,6 @@ impl DebianManifest {
             if dependency.contains("meson") {
                 continue;
             }
-            dbg!(dependency);
 
             debian_manifest.build_depends.push(dependency.trim().to_string());
         }
