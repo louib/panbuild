@@ -4,6 +4,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::manifests::manifest::{AbstractManifest, AbstractModule, Priority};
 
+
 const CONTROL_FILE_SEPARATOR: &str = ":";
 
 pub const ALLOWED_SECTIONS: [&'static str; 57] = [
@@ -66,25 +67,25 @@ pub const ALLOWED_SECTIONS: [&'static str; 57] = [
     "zope",
 ];
 
-// list of packages (see package fields below).
-const PACKAGES: &str = "packages";
+pub const ALLOWED_PACKAGE_FIELDS: [&'static str; 11] = [
+    // The name of the package being described.
+    "Package",
+    // A multi-line description.
+    "Description",
+    // Can be "any"
+    "Architecture",
+    "Multi-Arch",
+    // These seven fields are used to declare a dependency relationship by one package on another.
+    // See https://www.debian.org/doc/debian-policy/ch-relationships.html#binary-dependencies-depends-recommends-suggests-enhances-pre-depends
+    "Depends",
+    "Recommends",
+    "Suggests",
+    "Enhances",
+    "Pre-Depends",
+    "Conflicts",
+    "Breaks",
+];
 
-// **** Package fields
-const PACKAGE_NAME: &str = "Package";
-// A multi-line string
-const DESCRIPTION: &str = "Description";
-// Can be "any"
-const ARCHITECTURE: &str = "Architecture";
-const MULTI_ARCH: &str = "Multi-Arch";
-// These seven fields are used to declare a dependency relationship by one package on another.
-// See https://www.debian.org/doc/debian-policy/ch-relationships.html#binary-dependencies-depends-recommends-suggests-enhances-pre-depends
-const DEPENDS: &str = "Depends";
-const RECOMMENDS: &str = "Recommends";
-const SUGGESTS: &str = "Suggests";
-const ENHANCES: &str = "Enhances";
-const PRE_DEPENDS: &str = "Pre-Depends";
-const CONFLICTS: &str = "Conflicts";
-const BREAKS: &str = "Breaks";
 
 #[derive(Serialize, Deserialize, Default, Debug)]
 pub struct DebianManifest {
@@ -219,13 +220,13 @@ impl DebianManifest {
                     last_field_name = field_name.clone();
                 }
 
-                if field_name == PACKAGE_NAME {
+                if field_name == "Package" {
                     package.name = field_value.trim().to_string();
-                } else if field_name == ARCHITECTURE {
-                } else if field_name == DESCRIPTION {
+                } else if field_name == "Arch" {
+                } else if field_name == "Description" {
                     // Here we append because the field can be multi-line.
                     description.push_str(&field_value);
-                } else if field_name == DEPENDS {
+                } else if field_name == "Depends" {
                     build_depends.push_str(&field_value);
                 } else {
                     eprintln!("Unknown debian package field {}", field_name);
