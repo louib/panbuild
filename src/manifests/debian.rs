@@ -116,8 +116,7 @@ pub struct DebianManifest {
 }
 impl DebianManifest {
     pub fn parse(manifest_content: &String) -> Option<DebianManifest> {
-        let mut paragraphs: Vec<String> = vec![];
-        parse_paragraphs(&manifest_content, &mut paragraphs);
+        let paragraphs = parse_paragraphs(manifest_content);
         if paragraphs.len() < 2 {
             eprintln!("There is only {} paragraphs in the debian control file?", paragraphs.len());
             return None;
@@ -267,9 +266,9 @@ impl DebianManifest {
     }
 }
 
-fn parse_paragraphs(content: &str, paragraphs: &mut Vec<String>) {
-    let content_str = content.to_string();
-    let lines = content_str.split("\n");
+fn parse_paragraphs(content: &String) -> Vec<String> {
+    let mut paragraphs = vec![];
+    let lines = content.split("\n");
     let mut paragraph: String = String::from("");
 
     for line in lines {
@@ -282,6 +281,7 @@ fn parse_paragraphs(content: &str, paragraphs: &mut Vec<String>) {
             paragraph = String::from("");
         }
     }
+    paragraphs
 }
 
 fn is_empty_line(line: &str) -> bool {
