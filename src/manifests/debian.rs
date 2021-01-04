@@ -124,55 +124,25 @@ impl DebianManifest {
 
         let mut debian_manifest = DebianManifest::default();
 
-        let first_paragraph = &paragraphs[0];
-        for line in first_paragraph.split('\n') {
-            if line.starts_with(" ") {
-                // Obviously a mistake
-                continue;
-            }
-            if is_empty_line(line) {
-                continue;
-            }
-            if is_commented_line(line) {
-                continue;
-            }
-            let parts: Vec<&str> = line.split(CONTROL_FILE_SEPARATOR).collect();
-            if parts.len() < 2 {
-                eprintln!("Invalid debian control file line {}", line);
-                return None;
-            }
-            let field_name = parts[0].trim();
+        let first_paragraph = parse_paragraph(&paragraphs[0]);
+        debian_manifest.source = first_paragraph.get("Source").unwrap().to_string();
+        debian_manifest.maintainer = first_paragraph.get("Maintainer").unwrap_or(&"".to_string()).to_string();
+        debian_manifest.version = first_paragraph.get("Version").unwrap_or(&"".to_string()).to_string();
+        debian_manifest.priority = first_paragraph.get("Priority").unwrap_or(&"".to_string()).to_string();
+        debian_manifest.standards_version = first_paragraph.get("Standards-Version").unwrap_or(&"".to_string()).to_string();
+        debian_manifest.vcs_browser = first_paragraph.get("Homepage").unwrap_or(&"".to_string()).to_string();
 
-            let value_parts: Vec<&str> = parts[1..].to_vec();
-            let mut field_value = value_parts.join(CONTROL_FILE_SEPARATOR);
-            field_value = field_value.trim().to_string();
+        dbg!(&first_paragraph);
+        let build_depends = first_paragraph.get("Build-Depends").unwrap().to_string();
+        for dependency in build_depends.split(',') {
+            debian_manifest.build_depends.push(dependency.to_string());
+        }
 
-            if field_name == "Source" {
-                debian_manifest.source = field_value.to_string();
-            }
-            if field_name == "Maintainer" {
-                debian_manifest.maintainer = field_value.to_string();
-            }
-            if field_name == "Version" {
-                debian_manifest.version = field_value.to_string();
-            }
-            if field_name == "Priority" {
-                debian_manifest.priority = field_value.to_string();
-            }
-            if field_name == "Standards-Version" {
-                debian_manifest.standards_version = field_value.to_string();
-            }
-            if field_name == "Homepage" {
-                debian_manifest.vcs_browser = field_value.to_string();
-                debian_manifest.homepage = field_value.to_string();
-            }
-            if field_name == "Section" {
-                debian_manifest.section = field_value.to_string();
-                if !ALLOWED_SECTIONS.contains(&&debian_manifest.section[..]) {
-                    eprintln!("Invalid debian control section {}", debian_manifest.section);
-                    return None;
-                }
-            }
+        debian_manifest.homepage = first_paragraph.get("Homepage").unwrap_or(&"".to_string()).to_string();
+        debian_manifest.section = first_paragraph.get("Section").unwrap_or(&"".to_string()).to_string();
+        if !ALLOWED_SECTIONS.contains(&&debian_manifest.section[..]) {
+            eprintln!("Invalid debian control section {}", debian_manifest.section);
+            return None;
         }
 
         for paragraph_index in 1..paragraphs.len() {
@@ -233,34 +203,6 @@ impl DebianManifest {
                 }
             }
 
-            for package_name in build_depends.split(",") {
-                if package_name.is_empty() {
-                    continue;
-                }
-                let mut new_module = crate::manifests::manifest::AbstractModule::default();
-
-                let module_spec = package_name.trim().to_string();
-                // Still not sure what this is about.
-                if module_spec.starts_with("${") {
-                    continue;
-                }
-
-                let mut module_spec_parts: Vec<&str> = module_spec.split(" ").collect();
-
-                let module_name = module_spec_parts[0].to_string();
-                module_spec_parts.remove(0);
-
-                let mut version_spec = String::from("");
-                for part in module_spec_parts {
-                    if !version_spec.is_empty() {
-                        version_spec.push_str(" ");
-                    }
-                    version_spec.push_str(part);
-                }
-                // new_module.version = version_spec;
-
-                debian_manifest.build_depends.push(module_name);
-            }
         }
         Some(debian_manifest)
     }
@@ -297,7 +239,7 @@ fn parse_paragraph(paragraph: &String) -> HashMap<String, String> {
         }
         if is_field_start(line) {
             if !field_name.is_empty() {
-                fields.insert(field_name, field_value);
+                fields.insert(field_name, field_value.trim().to_string());
             }
 
             let parts: Vec<&str> = line.split(CONTROL_FILE_SEPARATOR).collect();
@@ -325,6 +267,9 @@ fn parse_paragraph(paragraph: &String) -> HashMap<String, String> {
 fn is_field_start(line: &str) -> bool {
     for c in line.chars() {
         if c.is_alphanumeric() {
+            continue;
+        }
+        if c == '-' {
             continue;
         }
         if c == CONTROL_FILE_SEPARATOR.chars().nth(0).unwrap() {
@@ -455,7 +400,6 @@ mod tests {
     }
 
     #[test]
-    #[ignore]
     pub fn test_parse() {
         match DebianManifest::parse(&DEBIAN_CONTROL_EXAMPLE.to_string()) {
             None => panic!("Error while parsing the debian manifest."),
