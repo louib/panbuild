@@ -289,10 +289,50 @@ fn parse_paragraph(paragraph: &String) -> HashMap<String, String> {
     let lines = paragraph.split("\n");
 
     let mut field_name: String = String::from("");
+    let mut field_value: String = String::from("");
 
-    //for line in lines {
-    //}
+    for line in lines {
+        if is_empty_line(line) {
+            continue;
+        }
+        if is_field_start(line) {
+            if !field_name.is_empty() {
+                fields.insert(field_name, field_value);
+            }
+
+            let parts: Vec<&str> = line.split(CONTROL_FILE_SEPARATOR).collect();
+
+            field_name = parts[0].trim().to_string();
+            field_value = String::from("");
+            for part in parts {
+                if part == field_name {
+                    continue;
+                }
+                if !field_value.is_empty() {
+                    field_value.push_str(CONTROL_FILE_SEPARATOR);
+                }
+                field_value.push_str(part);
+            }
+        } else if field_name.is_empty() {
+            continue;
+        } else {
+            field_value += line;
+        }
+    }
     fields
+}
+
+fn is_field_start(line: &str) -> bool {
+    for c in line.chars() {
+        if c.is_alphanumeric() {
+            continue;
+        }
+        if c == CONTROL_FILE_SEPARATOR.chars().nth(0).unwrap() {
+            return true;
+        }
+        return false;
+    }
+    return true;
 }
 
 fn is_empty_line(line: &str) -> bool {
