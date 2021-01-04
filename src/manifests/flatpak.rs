@@ -236,7 +236,6 @@ impl FlatpakManifest {
 
         Err(format!("Invalid format for Flatpak manifest."))
     }
-
 }
 
 // Each module specifies a source that has to be separately built and installed.
@@ -671,7 +670,8 @@ mod tests {
             command: panbuild
         "###
             .to_string(),
-        ).is_none());
+        )
+        .is_none());
     }
 
     #[test]
