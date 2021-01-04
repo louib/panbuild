@@ -284,6 +284,17 @@ fn parse_paragraphs(content: &String) -> Vec<String> {
     paragraphs
 }
 
+fn parse_paragraph(paragraph: &String) -> HashMap<String, String> {
+    let mut fields: HashMap<String, String> = HashMap::new();
+    let lines = paragraph.split("\n");
+
+    let mut field_name: String = String::from("");
+
+    //for line in lines {
+    //}
+    fields
+}
+
 fn is_empty_line(line: &str) -> bool {
     for c in line.chars() {
         if c == ' ' {
