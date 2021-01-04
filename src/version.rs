@@ -42,21 +42,21 @@ impl SemanticVersion {
             Err(e) => {
                 eprintln!("Invalid major version {}", version_parts[0]);
                 return None;
-            },
+            }
         };
         let minor: i32 = match version_parts[1].parse() {
             Ok(v) => v,
             Err(e) => {
                 eprintln!("Invalid minor version {}", version_parts[1]);
                 return None;
-            },
+            }
         };
         let patch: i32 = match version_parts[2].parse() {
             Ok(v) => v,
             Err(e) => {
                 eprintln!("Invalid patch version {}", version_parts[2]);
                 return None;
-            },
+            }
         };
 
         Some(SemanticVersion {
