@@ -137,6 +137,16 @@ impl DebianManifest {
             if dependency.is_empty() {
                 continue;
             }
+            // We ignore documentation related dependencies.
+            if dependency.contains("<!nodoc>") {
+                continue;
+            }
+            // Known build tools.
+            if dependency.contains("meson") {
+                continue;
+            }
+            dbg!(dependency);
+
             debian_manifest.build_depends.push(dependency.trim().to_string());
         }
 
