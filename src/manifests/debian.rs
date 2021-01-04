@@ -4,7 +4,6 @@ use serde::{Deserialize, Serialize};
 
 use crate::manifests::manifest::{AbstractManifest, AbstractModule, Priority};
 
-
 const CONTROL_FILE_SEPARATOR: &str = ":";
 
 pub const ALLOWED_SECTIONS: [&'static str; 57] = [
@@ -85,7 +84,6 @@ pub const ALLOWED_PACKAGE_FIELDS: [&'static str; 11] = [
     "Conflicts",
     "Breaks",
 ];
-
 
 #[derive(Serialize, Deserialize, Default, Debug)]
 pub struct DebianManifest {

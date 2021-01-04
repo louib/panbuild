@@ -4,10 +4,10 @@
 use std::collections::HashMap;
 
 mod execution_context;
-mod version;
 mod manifests;
 mod projects;
 mod utils;
+mod version;
 
 pub use manifests::manifest::AbstractManifest;
 pub use manifests::manifest::AbstractModule;
