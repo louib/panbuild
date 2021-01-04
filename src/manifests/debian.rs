@@ -132,10 +132,12 @@ impl DebianManifest {
         debian_manifest.standards_version = first_paragraph.get("Standards-Version").unwrap_or(&"".to_string()).to_string();
         debian_manifest.vcs_browser = first_paragraph.get("Homepage").unwrap_or(&"".to_string()).to_string();
 
-        dbg!(&first_paragraph);
         let build_depends = first_paragraph.get("Build-Depends").unwrap().to_string();
         for dependency in build_depends.split(',') {
-            debian_manifest.build_depends.push(dependency.to_string());
+            if dependency.is_empty() {
+                continue;
+            }
+            debian_manifest.build_depends.push(dependency.trim().to_string());
         }
 
         debian_manifest.homepage = first_paragraph.get("Homepage").unwrap_or(&"".to_string()).to_string();
@@ -145,65 +147,7 @@ impl DebianManifest {
             return None;
         }
 
-        for paragraph_index in 1..paragraphs.len() {
-            let mut package = AbstractModule::default();
-            let paragraph = &paragraphs[paragraph_index];
-            let mut last_field_name: String = String::from("");
-
-            // Those fields can be multi-line.
-            let mut build_depends: String = String::from("");
-            let mut description: String = String::from("");
-
-            for line in paragraph.split('\n') {
-                if is_commented_line(line) {
-                    continue;
-                }
-                if is_empty_line(line) {
-                    continue;
-                }
-
-                let mut field_name: String;
-                let mut field_value: String;
-
-                if is_indented_line(line) {
-                    field_name = last_field_name.clone();
-                    field_value = line.to_string();
-                } else {
-                    let parts: Vec<&str> = line.split(CONTROL_FILE_SEPARATOR).collect();
-                    if parts.len() < 2 {
-                        eprintln!("Invalid debian control file line {}", line);
-                        return None;
-                    }
-
-                    field_name = parts[0].trim().to_string();
-                    field_value = String::from("");
-                    for part in parts {
-                        if part == field_name {
-                            continue;
-                        }
-                        if !field_value.is_empty() {
-                            field_value.push_str(CONTROL_FILE_SEPARATOR);
-                        }
-                        field_value.push_str(part);
-                    }
-                    last_field_name = field_name.clone();
-                }
-
-                if field_name == "Package" {
-                    package.name = field_value.trim().to_string();
-                } else if field_name == "Arch" {
-                } else if field_name == "Description" {
-                    // Here we append because the field can be multi-line.
-                    description.push_str(&field_value);
-                } else if field_name == "Depends" {
-                    build_depends.push_str(&field_value);
-                } else {
-                    eprintln!("Unknown debian package field {}", field_name);
-                    return None;
-                }
-            }
-
-        }
+        // TODO parse the other paragraphs when we support executables.
         Some(debian_manifest)
     }
 }
@@ -223,6 +167,9 @@ fn parse_paragraphs(content: &String) -> Vec<String> {
             paragraph = String::from("");
         }
     }
+    if !paragraph.is_empty() {
+        paragraphs.push(paragraph);
+    }
     paragraphs
 }
 
@@ -235,6 +182,9 @@ fn parse_paragraph(paragraph: &String) -> HashMap<String, String> {
 
     for line in lines {
         if is_empty_line(line) {
+            continue;
+        }
+        if is_commented_line(line) {
             continue;
         }
         if is_field_start(line) {
@@ -260,6 +210,10 @@ fn parse_paragraph(paragraph: &String) -> HashMap<String, String> {
         } else {
             field_value += line;
         }
+    }
+
+    if !field_name.is_empty() {
+        fields.insert(field_name, field_value.trim().to_string());
     }
     fields
 }
