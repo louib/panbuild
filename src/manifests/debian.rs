@@ -247,19 +247,6 @@ fn is_empty_line(line: &str) -> bool {
     return true;
 }
 
-fn is_indented_line(line: &str) -> bool {
-    for c in line.chars() {
-        if c == ' ' {
-            return true;
-        }
-        if c == '\t' {
-            return true;
-        }
-        return false;
-    }
-    return false;
-}
-
 fn is_commented_line(line: &str) -> bool {
     for c in line.chars() {
         if c == ' ' {
@@ -343,14 +330,6 @@ mod tests {
         assert_eq!(true, is_commented_line("# comment"));
         assert_eq!(true, is_commented_line("         # comment"));
         assert_eq!(false, is_commented_line("Field: Value # with a comment after."));
-    }
-
-    #[test]
-    pub fn test_is_indented_line() {
-        assert_eq!(false, is_indented_line(""));
-        assert_eq!(true, is_indented_line("  line"));
-        assert_eq!(true, is_indented_line("  comment    "));
-        assert_eq!(false, is_indented_line("Field: Value # with a comment after."));
     }
 
     #[test]
