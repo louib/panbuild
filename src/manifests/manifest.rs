@@ -57,11 +57,6 @@ pub struct AbstractManifest {
     // The path that the manifest was loaded from.
     pub path: String,
     pub format: ManifestFormat,
-
-    // The modules that the module being built requires.
-    // FIXME remove this in favor of using the function.
-    pub depends_on: Vec<AbstractModule>,
-
     pub native_manifest: Option<NativeManifest>,
 }
 impl Default for AbstractManifest {
@@ -69,9 +64,6 @@ impl Default for AbstractManifest {
         AbstractManifest {
             path: "".to_string(),
             format: ManifestFormat::TEXT,
-
-            depends_on: vec![],
-
             native_manifest: None,
         }
     }
@@ -106,9 +98,6 @@ impl AbstractManifest {
         Some(AbstractManifest {
             path: file_path,
             format: manifest_format,
-
-            depends_on: vec![],
-
             native_manifest: native_manifest,
         })
     }
@@ -349,7 +338,6 @@ pub struct AbstractModule {
     pub config_options: String,
     // Array of files and directories to cleanup after installing.
     pub cleanup_files: Vec<String>,
-    pub depends_on: Vec<AbstractModule>,
     pub is_primary: bool,
 }
 

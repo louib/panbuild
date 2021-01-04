@@ -202,13 +202,21 @@ pub struct FlatpakManifest {
 }
 impl FlatpakManifest {
     pub fn parse(manifest_content: &String) -> Option<FlatpakManifest> {
-        match serde_yaml::from_str(&manifest_content) {
-            Ok(m) => return Some(m),
+        let flatpak_manifest: FlatpakManifest = match serde_yaml::from_str(&manifest_content) {
+            Ok(m) => m,
             Err(e) => {
                 eprintln!("Failed to parse the Flatpak manifest: {}.", e);
                 return None;
             }
         };
+
+        // TODO I think there's other fields to validate here.
+        if flatpak_manifest.app_id.is_empty() && flatpak_manifest.id.is_empty() {
+            eprintln!("Required top-level field id (or app-id) is missing from flatpak manifest.");
+            return None;
+        }
+
+        Some(flatpak_manifest)
     }
 
     pub fn dump(&self, format: &crate::manifests::manifest::ManifestFormat) -> Result<String, String> {
@@ -219,7 +227,7 @@ impl FlatpakManifest {
             };
         }
 
-        if let crate::manifests::manifest::ManifestFormat::JSON = format {
+        if let crate::manifests::manifest::ManifestFormat::YAML = format {
             return match serde_yaml::to_string(&self) {
                 Ok(d) => Ok(d),
                 Err(e) => return Err(format!("Failed to dump the Flatpak manifest: {}.", e)),
@@ -651,6 +659,19 @@ mod tests {
     #[should_panic]
     pub fn test_parse_invalid_yaml() {
         FlatpakManifest::parse(&"----------------------------".to_string()).unwrap();
+    }
+
+    #[test]
+    pub fn test_parse_missing_fields() {
+        assert!(FlatpakManifest::parse(
+            &r###"
+            runtime: org.gnome.Platform
+            runtime-version: "3.36"
+            sdk: org.gnome.Sdk
+            command: panbuild
+        "###
+            .to_string(),
+        ).is_none());
     }
 
     #[test]
