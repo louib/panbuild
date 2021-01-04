@@ -58,19 +58,9 @@ pub struct ProjectVersion {
     pub dependencies: Vec<Dependancy>,
 }
 
-// See https://github.com/rust-lang/rfcs/blob/master/text/1105-api-evolution.md
-// and https://doc.rust-lang.org/cargo/reference/manifest.html#the-version-field
-#[derive(Serialize, Deserialize, Default)]
-pub struct SemanticVersion {
-    pub major: i32,
-    pub minor: i32,
-    pub patch: i32,
-    // TODO there's a string after the patch...
-}
-
 #[derive(Serialize, Deserialize, Default)]
 pub struct Dependancy {
-    pub min_version: SemanticVersion,
-    pub max_version: SemanticVersion,
+    pub min_version: crate::version::SemanticVersion,
+    pub max_version: crate::version::SemanticVersion,
     pub project_id: String,
 }

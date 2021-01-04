@@ -4,6 +4,7 @@
 use std::collections::HashMap;
 
 mod execution_context;
+mod version;
 mod manifests;
 mod projects;
 mod utils;
