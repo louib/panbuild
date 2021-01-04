@@ -117,6 +117,7 @@ impl AbstractManifest {
         match &self.native_manifest {
             Some(n) => match n {
                 NativeManifest::Flatpak(m) => m.dump(&self.format),
+                NativeManifest::Snapcraft(m) => m.dump(&self.format),
                 _ => Err("Dumping is not supported for this manifest format.".to_string()),
             },
             None => Err("No manifest to dump!".to_string()),

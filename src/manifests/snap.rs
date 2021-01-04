@@ -162,6 +162,17 @@ impl SnapcraftManifest {
 
         Some(snapcraft_manifest)
     }
+
+    pub fn dump(&self, format: &crate::manifests::manifest::ManifestFormat) -> Result<String, String> {
+        if let crate::manifests::manifest::ManifestFormat::JSON = format {
+            return match serde_json::to_string_pretty(&self) {
+                Ok(d) => Ok(d),
+                Err(e) => return Err(format!("Failed to dump the snap manifest: {}.", e)),
+            };
+        }
+
+        Err(format!("Invalid format for Snap manifest."))
+    }
 }
 
 #[derive(Deserialize, Serialize, Debug, Default)]
