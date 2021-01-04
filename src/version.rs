@@ -17,20 +17,20 @@ impl SemanticVersion {
     //                  | <version core> "+" <build>
     //                  | <version core> "-" <pre-release> "+" <build>
     pub fn parse(version: &String) -> Option<SemanticVersion> {
-        let parts: Vec<&str> = version.split('-').collect();
         let mut pre_release = "".to_string();
         let mut build = "".to_string();
 
-        let version_core = parts[0].trim().to_string();
-
-        if parts.len() >= 2 {
-            let right_part: Vec<&str> = parts[1].split('+').collect();
-            pre_release = right_part[0].to_string();
+        let parts: Vec<&str> = version.split('+').collect();
+        if parts.len() == 2 {
+            build = parts[1].to_string();
         }
 
-        // let right_part: Vec<&str> = version.split('+').collect();
-        // build = right_part[0];
+        let parts: Vec<&str> = parts[0].split('-').collect();
+        if parts.len() == 2 {
+            pre_release = parts[1].to_string();
+        }
 
+        let version_core = parts[0].trim().to_string();
         let version_parts: Vec<&str> = version_core.split('.').collect();
         if version_parts.len() != 3 {
             eprintln!("Invalid semantic version {}.", version_core);
@@ -99,6 +99,29 @@ mod tests {
         assert_eq!(sem_ver.major, 1);
         assert_eq!(sem_ver.minor, 2);
         assert_eq!(sem_ver.patch, 3);
+        assert_eq!(sem_ver.pre_release, "alpha".to_string());
+    }
+
+    #[test]
+    pub fn test_parse_version_with_build() {
+        let mut sem_ver = SemanticVersion::parse(&"1.2.3+build".to_string());
+        assert!(sem_ver.is_some());
+        let sem_ver = sem_ver.unwrap();
+        assert_eq!(sem_ver.major, 1);
+        assert_eq!(sem_ver.minor, 2);
+        assert_eq!(sem_ver.patch, 3);
+        assert_eq!(sem_ver.build, "build".to_string());
+    }
+
+    #[test]
+    pub fn test_parse_version_with_build_and_release() {
+        let mut sem_ver = SemanticVersion::parse(&"1.2.3-alpha+build".to_string());
+        assert!(sem_ver.is_some());
+        let sem_ver = sem_ver.unwrap();
+        assert_eq!(sem_ver.major, 1);
+        assert_eq!(sem_ver.minor, 2);
+        assert_eq!(sem_ver.patch, 3);
+        assert_eq!(sem_ver.build, "build".to_string());
         assert_eq!(sem_ver.pre_release, "alpha".to_string());
     }
 }
