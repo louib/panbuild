@@ -210,6 +210,25 @@ impl FlatpakManifest {
             }
         };
     }
+
+    pub fn dump(&self, format: &crate::manifests::manifest::ManifestFormat) -> Result<String, String> {
+        if let crate::manifests::manifest::ManifestFormat::JSON = format {
+            return match serde_json::to_string_pretty(&self) {
+                Ok(d) => Ok(d),
+                Err(e) => return Err(format!("Failed to dump the Flatpak manifest: {}.", e)),
+            };
+        }
+
+        if let crate::manifests::manifest::ManifestFormat::JSON = format {
+            return match serde_yaml::to_string(&self) {
+                Ok(d) => Ok(d),
+                Err(e) => return Err(format!("Failed to dump the Flatpak manifest: {}.", e)),
+            };
+        }
+
+        Err(format!("Invalid format for Flatpak manifest."))
+    }
+
 }
 
 // Each module specifies a source that has to be separately built and installed.
@@ -564,24 +583,6 @@ pub fn add_module(
     manifest.modules.push(new_flatpak_module);
 
     return Ok(get_modules(manifest));
-}
-
-pub fn dump(manifest: &FlatpakManifest, format: &crate::manifests::manifest::ManifestFormat) -> Result<String, String> {
-    if let crate::manifests::manifest::ManifestFormat::JSON = format {
-        return match serde_json::to_string(&manifest) {
-            Ok(d) => Ok(d),
-            Err(e) => return Err(format!("Failed to dump the Flatpak manifest: {}.", e)),
-        };
-    }
-
-    if let crate::manifests::manifest::ManifestFormat::JSON = format {
-        return match serde_yaml::to_string(&manifest) {
-            Ok(d) => Ok(d),
-            Err(e) => return Err(format!("Failed to dump the Flatpak manifest: {}.", e)),
-        };
-    }
-
-    Err(format!("Invalid format for Flatpak manifest."))
 }
 
 pub fn run_build(abstract_manifest: &crate::manifests::manifest::AbstractManifest) -> Result<Output, std::io::Error> {

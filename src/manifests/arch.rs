@@ -22,7 +22,3 @@ pub fn file_path_matches(path: &str) -> bool {
     }
     return false;
 }
-
-pub fn file_content_matches(content: &str) -> bool {
-    return false;
-}
