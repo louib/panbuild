@@ -22,7 +22,7 @@ if __name__ == '__main__':
             continue
 
         field_name = line_parts[0]
-        field_value = ''.join(line_parts[1:])
+        field_value = ':'.join(line_parts[1:])
         field_value = field_value.strip(' \n')
 
         if current_package_name:

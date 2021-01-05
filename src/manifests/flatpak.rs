@@ -591,7 +591,7 @@ pub fn add_module(
 
     manifest.modules.insert(0, new_flatpak_module);
 
-    return Ok(get_modules(manifest));
+    Ok(get_modules(manifest))
 }
 
 pub fn run_build(abstract_manifest: &crate::manifests::manifest::AbstractManifest) -> Result<Output, std::io::Error> {
