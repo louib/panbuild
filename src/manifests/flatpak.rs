@@ -585,9 +585,11 @@ pub fn add_module(
     let mut flatpak_sources = FlatpakSource::default();
     flatpak_sources.r#type = "git".to_string(); // FIXME use the url_type
     flatpak_sources.url = new_module.url.to_string();
+    // This is the default, unless a version is explicitely declared.
+    flatpak_sources.branch = Some("master".to_string());
     new_flatpak_module.sources = vec![flatpak_sources];
 
-    manifest.modules.push(new_flatpak_module);
+    manifest.modules.insert(0, new_flatpak_module);
 
     return Ok(get_modules(manifest));
 }
