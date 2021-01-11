@@ -68,7 +68,7 @@ def get_all_projects_from_github():
             [url, rel] = link.split(';')
             if rel.strip() == 'rel="next"':
                 # Removing leading < and trailing >
-                next_page_url = url[1:-1]
+                next_page_url = url.strip()[1:-1]
                 break
 
     return projects
