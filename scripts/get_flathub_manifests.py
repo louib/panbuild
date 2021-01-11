@@ -9,6 +9,7 @@ def get_all_flathub_repositories():
 
     next_page_url = projects_url
     while next_page_url:
+        print("Fetching page", next_page_url, file=sys.stderr)
         response = requests.get(next_page_url)
 
         try:
@@ -20,7 +21,10 @@ def get_all_flathub_repositories():
 
         github_projects = response.json()
         for project in github_projects:
-            projects.append(project.get('clone_url', ''))
+            clone_url = project.get('clone_url', '')
+            if not clone_url:
+                continue
+            print(clone_url)
 
         link_header = response.headers.get('link')
         if not link_header:
@@ -38,5 +42,4 @@ def get_all_flathub_repositories():
 
 
 if __name__ == '__main__':
-    for clone_url in get_all_flathub_repositories():
-        print(clone_url)
+    get_all_flathub_repositories()
