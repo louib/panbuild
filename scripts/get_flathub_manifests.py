@@ -4,7 +4,7 @@ import requests
 
 
 def get_all_flathub_repositories():
-    projects_url = "https://api.github.com/orgs/flathub/repos?type=all"
+    projects_url = "https://api.github.com/orgs/flathub/repos?type=all&per_page=100"
     projects = []
 
     next_page_url = projects_url
