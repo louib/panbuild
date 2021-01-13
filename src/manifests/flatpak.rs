@@ -4,8 +4,8 @@ use std::time::SystemTime;
 
 use serde::{Deserialize, Serialize};
 
-const DEFAULT_FLATPAK_BUILDER_CACHE_DIR: &str = ".flatpak-builder/";
-const DEFAULT_FLATPAK_OUTPUT_DIR: &str = "build/";
+const DEFAULT_FLATPAK_BUILDER_CACHE_DIR: &str = ".flatpak-builder";
+const DEFAULT_FLATPAK_OUTPUT_DIR: &str = "build";
 
 // Other choices are org.gnome.Platform and org.kde.Platform
 const DEFAULT_RUNTIME: &str = "org.freedesktop.Platform";
@@ -404,8 +404,11 @@ pub struct FlatpakSource {
     #[serde(skip_serializing_if = "String::is_empty")]
     pub r#type: String,
 
-    #[serde(skip_serializing_if = "String::is_empty")]
-    pub url: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub url: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub path: Option<String>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub tag: Option<String>,
@@ -588,7 +591,7 @@ pub fn add_module(
 
     let mut flatpak_sources = FlatpakSource::default();
     flatpak_sources.r#type = "git".to_string(); // FIXME use the url_type
-    flatpak_sources.url = new_module.url.to_string();
+    flatpak_sources.url = Some(new_module.url.to_string());
     // This is the default, unless a version is explicitely declared.
     flatpak_sources.branch = Some("master".to_string());
     new_flatpak_module.sources = vec![flatpak_sources];
@@ -605,11 +608,18 @@ pub fn run_build(abstract_manifest: &crate::manifests::manifest::AbstractManifes
     // TODO copy the folder!!
     //
     //
+    println!("Making a backup of the flatpak-builder cache folder at {}", backup_folder_name);
     let output = Command::new("cp")
         .arg("-R")
         .arg(DEFAULT_FLATPAK_BUILDER_CACHE_DIR)
         .arg(backup_folder_name)
-        .output();
+        .spawn();
+
+    let output = match output {
+        Ok(o) => o,
+        Err(e) => return Err(e),
+    };
+    println!("juste apres le cp");
 
     Command::new("flatpak-builder")
         .arg("--user")
