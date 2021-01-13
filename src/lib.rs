@@ -18,8 +18,6 @@ use std::path;
 
 const DEFAULT_CACHE_DIR: &str = ".panbuild/";
 const DEFAULT_GIT_CACHE_DIR: &str = ".git/";
-const DEFAULT_FLATPAK_BUILDER_CACHE_DIR: &str = ".flatpak-builder/";
-const DEFAULT_FLATPAK_BUILD_CACHE_DIR: &str = ".build/";
 const DEFAULT_PACKAGE_LIST_SEP: &str = ",";
 
 struct PanbuilbArguments {

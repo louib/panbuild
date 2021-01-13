@@ -1,7 +1,11 @@
 use std::collections::BTreeMap;
+use std::time::SystemTime;
 use std::process::{Command, Output};
 
 use serde::{Deserialize, Serialize};
+
+const DEFAULT_FLATPAK_BUILDER_CACHE_DIR: &str = ".flatpak-builder/";
+const DEFAULT_FLATPAK_OUTPUT_DIR: &str = "build/";
 
 // Other choices are org.gnome.Platform and org.kde.Platform
 const DEFAULT_RUNTIME: &str = "org.freedesktop.Platform";
@@ -595,13 +599,24 @@ pub fn add_module(
 }
 
 pub fn run_build(abstract_manifest: &crate::manifests::manifest::AbstractManifest) -> Result<Output, std::io::Error> {
-    // TODO replace this maybe?.
-    let dir_name = ".panbuild/flatpak-builder/";
+    let timestamp = SystemTime::now().duration_since(SystemTime::UNIX_EPOCH);
+
+    let backup_folder_name = format!("{}-{}", DEFAULT_FLATPAK_BUILDER_CACHE_DIR.to_owned(), timestamp.unwrap().as_secs());
+    // TODO copy the folder!!
+    //
+    //
+    let output = Command::new("cp")
+        .arg("-R")
+        .arg(DEFAULT_FLATPAK_BUILDER_CACHE_DIR)
+        .arg(backup_folder_name)
+        .output();
 
     Command::new("flatpak-builder")
         .arg("--user")
         .arg("--force-clean")
-        .arg(dir_name)
+        // .arg("-v")
+        .arg("--keep-build-dirs")
+        .arg(DEFAULT_FLATPAK_BUILDER_CACHE_DIR)
         .arg(&abstract_manifest.path)
         .output()
 }
