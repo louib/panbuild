@@ -1,6 +1,6 @@
 use std::collections::BTreeMap;
-use std::time::SystemTime;
 use std::process::{Command, Output};
+use std::time::SystemTime;
 
 use serde::{Deserialize, Serialize};
 
