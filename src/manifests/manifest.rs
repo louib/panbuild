@@ -133,7 +133,7 @@ impl AbstractManifest {
         }
     }
 
-    pub fn run_build(&self) -> Result<Output, String> {
+    pub fn run_build(&self) -> Result<String, String> {
         let output = match &self.native_manifest {
             Some(n) => match n {
                 NativeManifest::Flatpak(m) => crate::manifests::flatpak::run_build(self),

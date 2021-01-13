@@ -1,5 +1,5 @@
 use std::collections::BTreeMap;
-use std::process::{Command, Output};
+use std::process::{Command, Output, Stdio};
 use std::time::SystemTime;
 
 use serde::{Deserialize, Serialize};
@@ -601,7 +601,7 @@ pub fn add_module(
     Ok(get_modules(manifest))
 }
 
-pub fn run_build(abstract_manifest: &crate::manifests::manifest::AbstractManifest) -> Result<Output, std::io::Error> {
+pub fn run_build(abstract_manifest: &crate::manifests::manifest::AbstractManifest) -> Result<String, String> {
     let timestamp = SystemTime::now().duration_since(SystemTime::UNIX_EPOCH);
 
     let backup_folder_name = format!("{}-{}", DEFAULT_FLATPAK_BUILDER_CACHE_DIR.to_owned(), timestamp.unwrap().as_secs());
@@ -609,26 +609,37 @@ pub fn run_build(abstract_manifest: &crate::manifests::manifest::AbstractManifes
     //
     //
     println!("Making a backup of the flatpak-builder cache folder at {}", backup_folder_name);
-    let output = Command::new("cp")
+    let mut output = Command::new("cp")
         .arg("-R")
         .arg(DEFAULT_FLATPAK_BUILDER_CACHE_DIR)
         .arg(backup_folder_name)
         .spawn();
 
-    let output = match output {
+    let mut output = match output {
         Ok(o) => o,
-        Err(e) => return Err(e),
+        Err(e) => return Err(e.to_string()),
     };
     println!("juste apres le cp");
 
-    Command::new("flatpak-builder")
+    let child = Command::new("flatpak-builder")
         .arg("--user")
         .arg("--force-clean")
         // .arg("-v")
         .arg("--keep-build-dirs")
         .arg(DEFAULT_FLATPAK_BUILDER_CACHE_DIR)
         .arg(&abstract_manifest.path)
-        .output()
+        .stdout(Stdio::piped())
+        .spawn()
+        .unwrap();
+
+    let output = match child.wait_with_output() {
+        Ok(o) => o,
+        Err(e) => return Err(e.to_string()),
+    };
+    if !output.status.success() {
+        return Ok("it went ok".to_string());
+    }
+    Ok(String::from("lol"))
 }
 
 pub fn file_path_matches(path: &str) -> bool {
