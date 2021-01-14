@@ -21,7 +21,7 @@ fn get_log_level() -> log::LevelFilter {
         Err(e) => {
             eprintln!("Invalid log level value {}", log_level_string);
             return DEFAULT_LOG_LEVEL;
-        },
+        }
     };
 
     return log_level;
