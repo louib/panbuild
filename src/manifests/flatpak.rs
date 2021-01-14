@@ -209,14 +209,14 @@ impl FlatpakManifest {
         let flatpak_manifest: FlatpakManifest = match serde_yaml::from_str(&manifest_content) {
             Ok(m) => m,
             Err(e) => {
-                eprintln!("Failed to parse the Flatpak manifest: {}.", e);
+                log::debug!("Failed to parse the Flatpak manifest: {}.", e);
                 return None;
             }
         };
 
         // TODO I think there's other fields to validate here.
         if flatpak_manifest.app_id.is_empty() && flatpak_manifest.id.is_empty() {
-            eprintln!("Required top-level field id (or app-id) is missing from flatpak manifest.");
+            log::debug!("Required top-level field id (or app-id) is missing from flatpak manifest.");
             return None;
         }
 
