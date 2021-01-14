@@ -619,14 +619,13 @@ pub fn run_build(abstract_manifest: &crate::manifests::manifest::AbstractManifes
         Ok(o) => o,
         Err(e) => return Err(e.to_string()),
     };
-    println!("juste apres le cp");
 
     let child = Command::new("flatpak-builder")
         .arg("--user")
         .arg("--force-clean")
         // .arg("-v")
         .arg("--keep-build-dirs")
-        .arg(DEFAULT_FLATPAK_BUILDER_CACHE_DIR)
+        .arg(DEFAULT_FLATPAK_OUTPUT_DIR)
         .arg(&abstract_manifest.path)
         .stdout(Stdio::piped())
         .spawn()

@@ -146,7 +146,8 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
         };
 
         ctx.manifest = abstract_manifest;
-        eprintln!("Parsed abstract manifest. Resulting manifest is {:#?}", &ctx.manifest);
+        // TODO add when we have proper logging.
+        // eprintln!("Parsed abstract manifest. Resulting manifest is {:#?}", &ctx.manifest);
 
         let package_name = args.get("package_name").expect("A package name to install is required!");
         if package_name.len() < 3 {
