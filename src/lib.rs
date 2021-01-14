@@ -47,7 +47,6 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
         };
 
         ctx.manifest = abstract_manifest;
-        eprintln!("Parsed abstract manifest. Resulting manifest is {:#?}", &ctx.manifest);
 
         let manifest_dump = match ctx.manifest.dump() {
             Ok(d) => d,
@@ -75,7 +74,6 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
         };
 
         ctx.manifest = abstract_manifest;
-        eprintln!("Parsed abstract manifest. Resulting manifest is {:#?}", &ctx.manifest);
 
         let mut separator = DEFAULT_PACKAGE_LIST_SEP;
         if args.contains_key("separator") {
@@ -146,8 +144,6 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
         };
 
         ctx.manifest = abstract_manifest;
-        // TODO add when we have proper logging.
-        // eprintln!("Parsed abstract manifest. Resulting manifest is {:#?}", &ctx.manifest);
 
         let package_name = args.get("package_name").expect("A package name to install is required!");
         if package_name.len() < 3 {
@@ -223,7 +219,6 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
         };
 
         ctx.manifest = abstract_manifest;
-        eprintln!("Parsed abstract manifest. Resulting manifest is {:#?}", &ctx.manifest);
 
         match ctx.manifest.run_build() {
             Ok(content) => content,
@@ -251,6 +246,7 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
                 return 1;
             }
         };
+        // TODO print also those already matched to workspaces.
         for path in file_paths.iter() {
             let file_path = path;
             let file_path_str = file_path.to_str().unwrap();
@@ -263,15 +259,15 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
 
             if crate::manifests::debian::file_path_matches(file_path_str) {
                 found_manifest = true;
-                println!("debian ({})", file_path_str);
+                println!("debian {}", file_path_str);
             }
             if crate::manifests::snap::file_path_matches(file_path_str) {
                 found_manifest = true;
-                println!("snap ({})", file_path_str);
+                println!("snap {}", file_path_str);
             }
             if crate::manifests::flatpak::file_path_matches(file_path_str) {
                 found_manifest = true;
-                println!("flatpak ({})", file_path_str);
+                println!("flatpak {}", file_path_str);
             }
         }
 

@@ -95,11 +95,14 @@ impl AbstractManifest {
             manifest_format = ManifestFormat::YAML;
         }
 
-        Some(AbstractManifest {
+        let manifest = AbstractManifest {
             path: file_path,
             format: manifest_format,
             native_manifest: native_manifest,
-        })
+        };
+        // TODO add when we have proper logging.
+        // eprintln!("Parsed abstract manifest. Resulting manifest is {:#?}", &manifest);
+        Some(manifest)
     }
 
     pub fn dump(&self) -> Result<String, String> {
