@@ -352,7 +352,7 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
         };
 
         if current_workspace.len() == 0 {
-            println!("Not current in a workspace. Call `ls` to list the available workspaces and manifest files.");
+            println!("Not in a workspace. Call `ls` to list the workspaces and manifest files.");
             return 0;
         }
 
@@ -362,7 +362,7 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
         }
 
         let manifest_file_path = config.workspaces.get(&current_workspace).unwrap();
-        println!("Current workspace is {} ({}).", current_workspace, manifest_file_path);
+        println!("Workspace {} using {}.", current_workspace, manifest_file_path);
     }
     // FIXME put to debug once there is proper logging in place
     // eprintln!("Finishing...");
