@@ -16,15 +16,6 @@ tags: []
 cleanup: []
 modules:
   -
-    name: flatpak-shared-modules
-    buildsystem: simple
-    build-commands:
-      - echo "Not installing shared modules just yet."
-    sources:
-      - type: git
-        url: https://github.com/flathub/shared-modules.git
-        branch: master
-  -
     name: panbuild
     buildsystem: simple
     build-commands:
