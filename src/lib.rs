@@ -7,6 +7,7 @@ mod execution_context;
 mod manifests;
 mod projects;
 mod utils;
+mod logger;
 mod version;
 
 pub use manifests::manifest::AbstractManifest;
@@ -29,6 +30,8 @@ struct PanbuilbArguments {
 }
 
 pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
+    logger::init();
+
     // FIXME put to debug once there is proper logging in place
     // eprintln!("running command {}.", command_name);
     let mut ctx = crate::execution_context::ExecutionContext::default();

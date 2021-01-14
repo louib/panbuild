@@ -100,8 +100,7 @@ impl AbstractManifest {
             format: manifest_format,
             native_manifest: native_manifest,
         };
-        // TODO add when we have proper logging.
-        // eprintln!("Parsed abstract manifest. Resulting manifest is {:#?}", &manifest);
+        log::debug!("Parsed abstract manifest. Resulting manifest is {:#?}", &manifest);
         Some(manifest)
     }
 
