@@ -22,8 +22,8 @@ jobs:
     - name: adding flathub repo
       run: flatpak remote-add --if-not-exists --user flathub https://flathub.org/repo/flathub.flatpakrepo
     - name: installing the flatpak runtime and SDK
-      run: flatpak install -y --user flathub org.gnome.Platform/x86_64/3.36 org.gnome.Sdk/x86_64/3.36
+      run: flatpak install -y --user flathub org.freedesktop.Platform/x86_64/20.08 org.freedesktop.Sdk/x86_64/20.08
     - name: installing the rust extension
-      run: flatpak install -y --user flathub org.freedesktop.Sdk.Extension.rust-stable//19.08
+      run: flatpak install -y --user flathub org.freedesktop.Sdk.Extension.rust-stable//20.08
     - name: building the flatpak
       run: flatpak-builder --user --force-clean build build-aux/net.louib.panbuild.yml
