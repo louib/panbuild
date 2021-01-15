@@ -603,23 +603,24 @@ pub fn add_module(
 }
 
 pub fn run_build(abstract_manifest: &crate::manifests::manifest::AbstractManifest) -> Result<String, String> {
-    let timestamp = SystemTime::now().duration_since(SystemTime::UNIX_EPOCH);
+    let flatpak_cache_dir = path::Path::new(DEFAULT_FLATPAK_BUILDER_CACHE_DIR);
+    if flatpak_cache_dir.is_dir() {
+        println!("Making a backup of the flatpak-builder cache folder at {}", backup_folder_name);
 
-    let backup_folder_name = format!("{}-{}", DEFAULT_FLATPAK_BUILDER_CACHE_DIR.to_owned(), timestamp.unwrap().as_secs());
-    // TODO copy the folder!!
-    //
-    //
-    println!("Making a backup of the flatpak-builder cache folder at {}", backup_folder_name);
-    let mut output = Command::new("cp")
-        .arg("-R")
-        .arg(DEFAULT_FLATPAK_BUILDER_CACHE_DIR)
-        .arg(backup_folder_name)
-        .spawn();
+        let timestamp = SystemTime::now().duration_since(SystemTime::UNIX_EPOCH);
 
-    let mut output = match output {
-        Ok(o) => o,
-        Err(e) => return Err(e.to_string()),
-    };
+        let backup_folder_name = format!("{}-{}", DEFAULT_FLATPAK_BUILDER_CACHE_DIR.to_owned(), timestamp.unwrap().as_secs());
+        let mut output = Command::new("cp")
+            .arg("-R")
+            .arg(DEFAULT_FLATPAK_BUILDER_CACHE_DIR)
+            .arg(backup_folder_name)
+            .spawn();
+
+        let mut output = match output {
+            Ok(o) => o,
+            Err(e) => return Err(e.to_string()),
+        };
+    }
 
     let child = Command::new("flatpak-builder")
         .arg("--user")
@@ -649,12 +650,10 @@ pub fn run_command(abstract_manifest: &crate::manifests::manifest::AbstractManif
     }
 
     let child = Command::new("flatpak-builder")
-        .arg("--user")
-        .arg("--force-clean")
-        // .arg("-v")
-        .arg("--keep-build-dirs")
+        .arg("--run")
         .arg(DEFAULT_FLATPAK_OUTPUT_DIR)
         .arg(&abstract_manifest.path)
+        .arg(command)
         .stdout(Stdio::piped())
         .spawn()
         .unwrap();
