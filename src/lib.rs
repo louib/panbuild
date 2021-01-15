@@ -32,8 +32,8 @@ struct PanbuilbArguments {
 pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
     logger::init();
 
-    // FIXME put to debug once there is proper logging in place
-    // eprintln!("running command {}.", command_name);
+    log::debug!("running command {}.", command_name);
+
     let mut ctx = crate::execution_context::ExecutionContext::default();
 
     let mut config = match crate::execution_context::read_or_init_config() {
@@ -364,7 +364,7 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
         let manifest_file_path = config.workspaces.get(&current_workspace).unwrap();
         println!("Workspace {} using {}.", current_workspace, manifest_file_path);
     }
-    // FIXME put to debug once there is proper logging in place
-    // eprintln!("Finishing...");
+
+    log::debug!("Finishing...");
     return 0;
 }
