@@ -1,7 +1,7 @@
 use std::collections::BTreeMap;
+use std::path;
 use std::process::{Command, Output, Stdio};
 use std::time::SystemTime;
-use std::path;
 
 use serde::{Deserialize, Serialize};
 
@@ -605,11 +605,10 @@ pub fn add_module(
 pub fn run_build(abstract_manifest: &crate::manifests::manifest::AbstractManifest) -> Result<String, String> {
     let flatpak_cache_dir = path::Path::new(DEFAULT_FLATPAK_BUILDER_CACHE_DIR);
     if flatpak_cache_dir.is_dir() {
+        let timestamp = SystemTime::now().duration_since(SystemTime::UNIX_EPOCH);
+        let backup_folder_name = format!("{}-{}", DEFAULT_FLATPAK_BUILDER_CACHE_DIR.to_owned(), timestamp.unwrap().as_secs());
         println!("Making a backup of the flatpak-builder cache folder at {}", backup_folder_name);
 
-        let timestamp = SystemTime::now().duration_since(SystemTime::UNIX_EPOCH);
-
-        let backup_folder_name = format!("{}-{}", DEFAULT_FLATPAK_BUILDER_CACHE_DIR.to_owned(), timestamp.unwrap().as_secs());
         let mut output = Command::new("cp")
             .arg("-R")
             .arg(DEFAULT_FLATPAK_BUILDER_CACHE_DIR)
