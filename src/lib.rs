@@ -139,7 +139,7 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
         }
 
         let manifest_file_path = config.workspaces.get(workspace_name).unwrap().to_string();
-        println!("Using manifest file {}.", &manifest_file_path);
+        log::debug!("Using manifest file {}.", &manifest_file_path);
 
         let abstract_manifest = match crate::manifests::manifest::AbstractManifest::load_from_file(manifest_file_path.to_string()) {
             Some(m) => m,
@@ -214,7 +214,7 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
         }
 
         let manifest_file_path = config.workspaces.get(workspace_name).unwrap().to_string();
-        println!("Using manifest file {}.", &manifest_file_path);
+        log::debug!("Using manifest file {}.", &manifest_file_path);
 
         let abstract_manifest = match crate::manifests::manifest::AbstractManifest::load_from_file(manifest_file_path.to_string()) {
             Some(m) => m,
@@ -252,7 +252,7 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
         }
 
         let manifest_file_path = config.workspaces.get(workspace_name).unwrap().to_string();
-        println!("Using manifest file {}.", &manifest_file_path);
+        log::debug!("Using manifest file {}.", &manifest_file_path);
 
         let abstract_manifest = match crate::manifests::manifest::AbstractManifest::load_from_file(manifest_file_path.to_string()) {
             Some(m) => m,
