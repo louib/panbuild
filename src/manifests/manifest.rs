@@ -148,6 +148,20 @@ impl AbstractManifest {
             Err(e) => Err(e.to_string()),
         }
     }
+
+    pub fn run_command(&self, command: &str) -> Result<String, String> {
+        let output = match &self.native_manifest {
+            Some(n) => match n {
+                NativeManifest::Flatpak(m) => crate::manifests::flatpak::run_command(self, command),
+                _ => return Err("Running a command is not supported for this manifest format.".to_string()),
+            },
+            None => return Err("No manifest to run the command with!".to_string()),
+        };
+        match output {
+            Ok(o) => Ok(o),
+            Err(e) => Err(e.to_string()),
+        }
+    }
 }
 
 pub enum OS {

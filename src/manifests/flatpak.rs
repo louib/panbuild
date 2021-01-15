@@ -1,6 +1,7 @@
 use std::collections::BTreeMap;
 use std::process::{Command, Output, Stdio};
 use std::time::SystemTime;
+use std::path;
 
 use serde::{Deserialize, Serialize};
 
@@ -619,6 +620,33 @@ pub fn run_build(abstract_manifest: &crate::manifests::manifest::AbstractManifes
         Ok(o) => o,
         Err(e) => return Err(e.to_string()),
     };
+
+    let child = Command::new("flatpak-builder")
+        .arg("--user")
+        .arg("--force-clean")
+        // .arg("-v")
+        .arg("--keep-build-dirs")
+        .arg(DEFAULT_FLATPAK_OUTPUT_DIR)
+        .arg(&abstract_manifest.path)
+        .stdout(Stdio::piped())
+        .spawn()
+        .unwrap();
+
+    let output = match child.wait_with_output() {
+        Ok(o) => o,
+        Err(e) => return Err(e.to_string()),
+    };
+    if !output.status.success() {
+        return Ok("it went ok".to_string());
+    }
+    Ok(String::from("lol"))
+}
+
+pub fn run_command(abstract_manifest: &crate::manifests::manifest::AbstractManifest, command: &str) -> Result<String, String> {
+    let flatpak_build_dir = path::Path::new(DEFAULT_FLATPAK_OUTPUT_DIR);
+    if !flatpak_build_dir.is_dir() {
+        return Err("Looks like this workspace was not built. Run `panbuild make` first.".to_string());
+    }
 
     let child = Command::new("flatpak-builder")
         .arg("--user")

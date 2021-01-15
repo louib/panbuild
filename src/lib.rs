@@ -265,7 +265,15 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
             Some(n) => n,
             None => panic!("A command to run is required."),
         };
+        println!("Running command `{}` in workspace {}", command, workspace_name);
 
+        match ctx.manifest.run_command(command) {
+            Ok(content) => content,
+            Err(e) => {
+                eprintln!("could not run build for manifest file {}: {}", &manifest_file_path, e);
+                return 1;
+            }
+        };
         return 0;
     }
 
