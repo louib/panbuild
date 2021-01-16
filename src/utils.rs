@@ -1,6 +1,17 @@
 use std::fs::{self, DirEntry};
 use std::io::{stdin, stdout, Write};
 use std::path::Path;
+use std::time::SystemTime;
+
+pub fn clone_git_repo(repo_url: String) -> Result<String, String> {
+    let timestamp = SystemTime::now().duration_since(SystemTime::UNIX_EPOCH);
+    let repo_dir = format!("/tmp/panbuild-git-clone-{}", timestamp.unwrap().as_secs());
+    if let Err(e) = fs::create_dir(&repo_dir) {
+        return Err(e.to_string());
+    }
+
+    Ok(repo_dir)
+}
 
 pub fn get_all_paths(dir: &Path) -> Result<Vec<std::path::PathBuf>, String> {
     let mut all_paths: Vec<std::path::PathBuf> = vec![];
