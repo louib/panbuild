@@ -1,7 +1,7 @@
 use std::fs::{self, DirEntry};
 use std::io::{stdin, stdout, Write};
-use std::process::{Command, Output, Stdio};
 use std::path::Path;
+use std::process::{Command, Output, Stdio};
 use std::time::SystemTime;
 
 pub fn clone_git_repo(repo_url: String) -> Result<String, String> {
@@ -12,11 +12,7 @@ pub fn clone_git_repo(repo_url: String) -> Result<String, String> {
     }
 
     println!("Cloning repo {}", repo_url);
-    let mut output = Command::new("git")
-        .arg("clone")
-        .arg(repo_url.to_string())
-        .arg(&repo_dir)
-        .spawn();
+    let mut output = Command::new("git").arg("clone").arg(repo_url.to_string()).arg(&repo_dir).spawn();
 
     let mut output = match output {
         Ok(o) => o,

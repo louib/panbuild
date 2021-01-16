@@ -28,7 +28,6 @@ fn main() {
                 },
             };
         }
-        println!("ici");
     }
 
     exit(exit_code);
