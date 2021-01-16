@@ -13,7 +13,9 @@ The universal builder.
   The command-line options, command names and file formats might change
   at any time until the project reaches version 1.0.0.**
 
-The supported packaging systems are:
+Panbuild lets you manage build workspaces when developing desktop applications.
+Workspaces are sandboxed and dependencies are installed on a per-project basis.
+Manifests from the following packaging systems are supported:
 * flatpak;
 * snap;
 * debian packages (via debian `control` files);
