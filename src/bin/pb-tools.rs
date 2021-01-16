@@ -19,7 +19,14 @@ fn main() {
     if command_name == &"import-modules".to_string() {
         let stdin = io::stdin();
         for line in stdin.lock().lines() {
-            println!("{}", line.unwrap());
+            let line_str = line.unwrap();
+            let repo_dir = match panbuild::utils::clone_git_repo(line_str.to_string()) {
+                Ok(d) => d,
+                Err(e) => {
+                    eprintln!("Could not clone repo {}", line_str);
+                    continue;
+                },
+            };
         }
         println!("ici");
     }

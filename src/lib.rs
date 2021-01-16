@@ -7,7 +7,7 @@ mod execution_context;
 mod logger;
 mod manifests;
 mod projects;
-mod utils;
+pub mod utils;
 mod version;
 
 pub use manifests::manifest::AbstractManifest;
