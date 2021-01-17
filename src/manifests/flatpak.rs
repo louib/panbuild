@@ -381,6 +381,19 @@ pub struct FlatpakModule {
     pub modules: Vec<FlatpakModule>,
 }
 
+pub const ALLOWED_SOURCE_TYPES: [&'static str; 10] = [
+    "archive",
+    "git",
+    "bzr",
+    "svn",
+    "dir",
+    "file",
+    "script",
+    "shell",
+    "patch",
+    "extra-data",
+];
+
 // The sources are a list pointer to the source code that needs to be extracted into
 // the build directory before the build starts.
 // They can be of several types, distinguished by the type property.
@@ -391,17 +404,6 @@ pub struct FlatpakModule {
 #[derive(Debug, Default, Deserialize, Serialize)]
 #[serde(rename_all = "kebab-case")]
 pub struct FlatpakSource {
-    // Allowed source types are:
-    //   * archive,
-    //   * git,
-    //   * bzr,
-    //   * svn,
-    //   * dir,
-    //   * file,
-    //   * script,
-    //   * shell,
-    //   * patch,
-    //   * extra-data,
     #[serde(skip_serializing_if = "String::is_empty")]
     pub r#type: String,
 
@@ -590,6 +592,15 @@ pub fn get_modules(manifest: &FlatpakManifest) -> Vec<crate::manifests::manifest
         if module.buildsystem == "qmake" {
             abstract_module.build_system = crate::manifests::manifest::BuildSystem::Qmake;
         }
+
+        // Skip the flatpak modules with more than 1 source, because those are harder
+        // to map with a source code repository.
+        if module.sources.len() != 1 {
+            continue;
+        }
+
+        let sources = &module.sources[0];
+
 
         // TODO fetch the version from the sources.
         // FIXME should we check for duplicates here??
