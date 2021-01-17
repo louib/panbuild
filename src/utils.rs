@@ -6,7 +6,8 @@ use std::time::SystemTime;
 
 pub fn clone_git_repo(repo_url: String) -> Result<String, String> {
     let timestamp = SystemTime::now().duration_since(SystemTime::UNIX_EPOCH);
-    let repo_dir = format!("/tmp/panbuild-git-clone-{}", timestamp.unwrap().as_secs());
+    let project_name = repo_url.split("/").last().unwrap();
+    let repo_dir = format!("/tmp/panbuild-git-clone-{}-{}", project_name, timestamp.unwrap().as_secs());
     if let Err(e) = fs::create_dir(&repo_dir) {
         return Err(e.to_string());
     }
