@@ -338,21 +338,25 @@ pub struct AbstractModule {
     pub module_type: ModuleType,
     pub name: String,
     pub version: String,
-    pub url: String,
-    pub url_type: SourceType,
-    pub build_system: BuildSystem,
-    pub packaging_system: PackagingSystem,
-    pub install_instructions: String,
-    pub install_path: String,
     // The tag associated with the module, if any.
     pub tag: String,
     // The hash of the commit associated with the module, if any.
     pub commit: String,
-    // The sha256 checksum of the modules.
-    pub sha256: String,
+    pub download_urls: Vec<String>,
+    pub url: String,
+    pub build_system: BuildSystem,
+    pub packaging_system: PackagingSystem,
+    pub archive_checksum: String,
+    pub source_checksum: String,
+    // When we have reproducible builds.
+    pub executable_checksum: String,
+
+    // Fields mostly taken from the Flatpak manifest.
     pub config_options: String,
     // Array of files and directories to cleanup after installing.
     pub cleanup_files: Vec<String>,
+    pub install_instructions: String,
+    pub install_path: String,
     pub is_primary: bool,
 }
 

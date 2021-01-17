@@ -28,7 +28,6 @@ pub fn get_modules() -> Vec<crate::manifests::manifest::AbstractModule> {
                 module.tag = project_version.to_string();
                 if project.vcs_urls.len() != 0 {
                     module.url = project.vcs_urls[0].to_string();
-                    module.url_type = crate::manifests::manifest::SourceType::Git;
                 }
                 modules.push(module);
                 // println!("Project {} could install {} version {}.", project.name, artifact_name, project_version);
