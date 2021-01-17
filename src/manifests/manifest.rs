@@ -192,21 +192,6 @@ pub enum OS {
     // Add misc Oses like calculators and PAs???
 }
 
-// Also called distribution.
-pub struct OSVersion {
-    pub os: OS,
-    pub is_distribution: bool,
-    // pub name: String,
-    // pub codename: String,
-}
-
-const JESSIE: OSVersion = OSVersion {
-    os: OS::Linux,
-    is_distribution: true,
-    // name: String::from("jessie"),
-    // codename: String::from("stretch"),
-};
-
 #[derive(Debug, Serialize, Deserialize)]
 pub enum PackagingSystem {
     Flatpak,
