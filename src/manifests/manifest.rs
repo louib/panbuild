@@ -49,6 +49,7 @@ pub enum NativeManifest {
     Flatpak(crate::manifests::flatpak::FlatpakManifest),
     Debian(crate::manifests::debian::DebianManifest),
     Snapcraft(crate::manifests::snap::SnapcraftManifest),
+    Javascript(crate::manifests::javascript::JavascriptPackageManifest),
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -90,6 +91,8 @@ impl AbstractManifest {
             native_manifest = Some(NativeManifest::Snapcraft(snapcraft_manifest));
         } else if let Some(debian_manifest) = crate::manifests::debian::DebianManifest::parse(&manifest_content) {
             native_manifest = Some(NativeManifest::Debian(debian_manifest));
+        } else if let Some(js_manifest) = crate::manifests::javascript::JavascriptPackageManifest::parse(&manifest_content) {
+            native_manifest = Some(NativeManifest::Javascript(js_manifest));
         } else {
             return None;
         }
