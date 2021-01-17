@@ -4,6 +4,8 @@
 // And
 // https://wiki.archlinux.org/index.php/Arch_package_guidelines
 // for details on the pkgbuild format.
+// TODO use the list of all arch packages at
+// https://www.archlinux.org/packages/
 
 pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
     let mut response = crate::manifests::manifest::AbstractManifest::default();
