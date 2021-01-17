@@ -1,3 +1,4 @@
+use std::path;
 use std::env;
 use std::process::exit;
 use std::io::{self, BufRead};
@@ -26,6 +27,13 @@ fn main() {
                     eprintln!("Could not clone repo {}", line_str);
                     continue;
                 },
+            };
+            let file_paths = match panbuild::utils::get_all_paths(path::Path::new(&repo_dir)) {
+                Ok(paths) => paths,
+                Err(message) => {
+                    eprintln!("Could not get the file paths :sad: {}", message);
+                    continue;
+                }
             };
         }
     }
