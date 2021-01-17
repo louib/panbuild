@@ -90,7 +90,8 @@ mod tests {
 
         "###
             .to_string(),
-        ).is_none());
+        )
+        .is_none());
     }
 
     #[test]
