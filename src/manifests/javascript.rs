@@ -69,6 +69,31 @@ mod tests {
     use super::*;
 
     #[test]
+    pub fn test_parse_missing_scripts_section() {
+        assert!(JavascriptPackageManifest::parse(
+            &r###"
+            {
+              "name": "user/package",
+              "version": "3.1.110",
+              "repository": "https://github.com/user/package",
+              "engines": {
+                "node": ">=12.9.0",
+                "npm": ">=6.10.2"
+              },
+              "files": [
+                "dist/src"
+              ],
+              "description": "The Package from the User",
+              "main": "dist/src/index.js",
+              "typings": "dist/src/index.d.ts"
+            }
+
+        "###
+            .to_string(),
+        ).is_none());
+    }
+
+    #[test]
     pub fn test_parse() {
         match JavascriptPackageManifest::parse(
             &r###"
