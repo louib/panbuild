@@ -35,6 +35,9 @@ fn main() {
                     continue;
                 }
             };
+            for file in file_paths.iter() {
+
+            }
         }
     }
 

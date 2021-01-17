@@ -69,11 +69,12 @@ impl Default for AbstractManifest {
     }
 }
 impl AbstractManifest {
-    pub fn load_from_file(file_path: String) -> Option<AbstractManifest> {
-        let manifest_content = match fs::read_to_string(path::Path::new(&file_path)) {
+    pub fn load_from_file(path: String) -> Option<AbstractManifest> {
+        let file_path = path::Path::new(&path);
+        let manifest_content = match fs::read_to_string(file_path) {
             Ok(content) => content,
             Err(e) => {
-                eprintln!("could not read manifest file {}: {}.", file_path, e);
+                eprintln!("could not read manifest file {}: {}.", path, e);
                 return None;
             }
         };
@@ -89,14 +90,14 @@ impl AbstractManifest {
         }
 
         let mut manifest_format = ManifestFormat::TEXT;
-        if file_path.ends_with(".json") {
+        if path.ends_with(".json") {
             manifest_format = ManifestFormat::JSON;
-        } else if file_path.ends_with(".yaml") || file_path.ends_with(".yml") {
+        } else if path.ends_with(".yaml") || path.ends_with(".yml") {
             manifest_format = ManifestFormat::YAML;
         }
 
         let manifest = AbstractManifest {
-            path: file_path,
+            path: path,
             format: manifest_format,
             native_manifest: native_manifest,
         };

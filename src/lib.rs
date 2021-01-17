@@ -296,7 +296,7 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
         for path in file_paths.iter() {
             let file_path = path;
             let file_path_str = file_path.to_str().unwrap();
-            if file_path.is_dir() {
+            if !file_path.is_file() {
                 continue;
             }
 
