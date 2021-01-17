@@ -13,7 +13,13 @@ pub fn clone_git_repo(repo_url: String) -> Result<String, String> {
     }
 
     println!("Cloning repo {}", repo_url);
-    let mut output = Command::new("git").arg("clone").arg(repo_url.to_string()).arg(&repo_dir).stdout(Stdio::piped()).spawn().unwrap();
+    let mut output = Command::new("git")
+        .arg("clone")
+        .arg(repo_url.to_string())
+        .arg(&repo_dir)
+        .stdout(Stdio::piped())
+        .spawn()
+        .unwrap();
 
     let mut output = match output.wait_with_output() {
         Ok(o) => o,
