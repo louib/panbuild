@@ -116,21 +116,21 @@ impl DebianManifest {
     pub fn parse(manifest_content: &String) -> Option<DebianManifest> {
         let paragraphs = parse_paragraphs(manifest_content);
         if paragraphs.len() < 2 {
-            eprintln!("There is only {} paragraphs in the debian control file?", paragraphs.len());
+            eprintln!("There is only {} paragraph in the debian control file?", paragraphs.len());
             return None;
         }
 
         let mut debian_manifest = DebianManifest::default();
 
         let first_paragraph = parse_paragraph(&paragraphs[0]);
-        debian_manifest.source = first_paragraph.get("Source").unwrap().to_string();
+        debian_manifest.source = first_paragraph.get("Source").unwrap_or(&"".to_string()).to_string();
         debian_manifest.maintainer = first_paragraph.get("Maintainer").unwrap_or(&"".to_string()).to_string();
         debian_manifest.version = first_paragraph.get("Version").unwrap_or(&"".to_string()).to_string();
         debian_manifest.priority = first_paragraph.get("Priority").unwrap_or(&"".to_string()).to_string();
         debian_manifest.standards_version = first_paragraph.get("Standards-Version").unwrap_or(&"".to_string()).to_string();
         debian_manifest.vcs_browser = first_paragraph.get("Homepage").unwrap_or(&"".to_string()).to_string();
 
-        let build_depends = first_paragraph.get("Build-Depends").unwrap().to_string();
+        let build_depends = first_paragraph.get("Build-Depends").unwrap_or(&"".to_string()).to_string();
         for dependency in build_depends.split(',') {
             if dependency.is_empty() {
                 continue;

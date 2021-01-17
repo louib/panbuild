@@ -13,12 +13,15 @@ pub fn clone_git_repo(repo_url: String) -> Result<String, String> {
     }
 
     println!("Cloning repo {}", repo_url);
-    let mut output = Command::new("git").arg("clone").arg(repo_url.to_string()).arg(&repo_dir).spawn();
+    let mut output = Command::new("git").arg("clone").arg(repo_url.to_string()).arg(&repo_dir).stdout(Stdio::piped()).spawn().unwrap();
 
-    let mut output = match output {
+    let mut output = match output.wait_with_output() {
         Ok(o) => o,
         Err(e) => return Err(e.to_string()),
     };
+    if !output.status.success() {
+        return Err("Could not clone repo.".to_string());
+    }
 
     Ok(repo_dir)
 }
