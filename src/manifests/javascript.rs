@@ -50,3 +50,66 @@ pub struct JavascriptPackageAuthor {
     pub name: String,
     pub email: String,
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    pub fn test_parse() {
+        match JavascriptPackageManifest::parse(
+            &r###"
+            {
+              "name": "user/package",
+              "version": "3.1.110",
+              "repository": "https://github.com/user/package",
+              "engines": {
+                "node": ">=12.9.0",
+                "npm": ">=6.10.2"
+              },
+              "files": [
+                "dist/src"
+              ],
+              "description": "The Package from the User",
+              "main": "dist/src/index.js",
+              "typings": "dist/src/index.d.ts",
+              "scripts": {
+                "test": "npm run compile && NODE_ENV=test nyc mocha --config test/mocharc.js 'dist/test/**/*.js'"
+              },
+              "pre-commit": [
+                "lint",
+                "test"
+              ],
+              "author": {
+                "name": "User",
+                "email": "hello@example.io"
+              },
+              "license": "LicenseRef-LICENSE",
+              "devDependencies": {
+                "@types/chai": "4.x",
+                "@types/mocha": "8.x",
+                "@types/sinon": "7.0.1",
+                "chai": "4.x",
+                "mocha": "8.x",
+                "pre-commit": "1.x",
+                "sinon": "7.x"
+              },
+              "dependencies": {
+                "@types/bluebird": "3.x",
+                "@types/lodash": "4.x",
+                "@types/node": "12.x",
+                "bluebird": "3.x",
+                "lodash": "4.x"
+              }
+            }
+
+        "###
+            .to_string(),
+        ) {
+            None => panic!("Error while parsing the flatpak manifest."),
+            Some(manifest) => {
+                assert_eq!(manifest.name, "user/package");
+            }
+        }
+    }
+}
