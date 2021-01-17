@@ -220,6 +220,7 @@ impl Default for PackagingSystem {
 pub enum BuildSystem {
     Make,
     Cmake,
+    Qmake,
     Autotools,
     Meson,
     Cargo,

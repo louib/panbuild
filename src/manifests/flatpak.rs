@@ -570,6 +570,27 @@ pub fn get_modules(manifest: &FlatpakManifest) -> Vec<crate::manifests::manifest
     for module in &manifest.modules {
         let mut abstract_module = crate::manifests::manifest::AbstractModule::default();
         abstract_module.name = module.name.to_string();
+        if module.buildsystem == "cmake" {
+            abstract_module.build_system = crate::manifests::manifest::BuildSystem::Cmake;
+        }
+        if module.buildsystem == "autotools" {
+            abstract_module.build_system = crate::manifests::manifest::BuildSystem::Autotools;
+        }
+        if module.buildsystem == "meson" {
+            abstract_module.build_system = crate::manifests::manifest::BuildSystem::Meson;
+        }
+        // FIXME not sure what to do with this one. Maybe we should support having a list
+        // of build systems?
+        if module.buildsystem == "cmake-ninja" {
+            abstract_module.build_system = crate::manifests::manifest::BuildSystem::Meson;
+        }
+        if module.buildsystem == "simple" {
+            abstract_module.build_system = crate::manifests::manifest::BuildSystem::Unknown;
+        }
+        if module.buildsystem == "qmake" {
+            abstract_module.build_system = crate::manifests::manifest::BuildSystem::Qmake;
+        }
+
         // TODO fetch the version from the sources.
         // FIXME should we check for duplicates here??
         response.push(abstract_module);
