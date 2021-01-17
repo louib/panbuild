@@ -18,6 +18,8 @@ fn main() {
     let command_name = &args[1];
 
     if command_name == &"import-modules".to_string() {
+        let mut modules: Vec<panbuild::manifests::manifest::AbstractModule> = vec![];
+
         let stdin = io::stdin();
         for line in stdin.lock().lines() {
             let line_str = line.unwrap();
@@ -28,15 +30,29 @@ fn main() {
                     continue;
                 },
             };
-            let file_paths = match panbuild::utils::get_all_paths(path::Path::new(&repo_dir)) {
+            let repo_file_paths = match panbuild::utils::get_all_paths(path::Path::new(&repo_dir)) {
                 Ok(paths) => paths,
                 Err(message) => {
                     eprintln!("Could not get the file paths :sad: {}", message);
                     continue;
                 }
             };
-            for file in file_paths.iter() {
-
+            for file_path in repo_file_paths.iter() {
+                let abstract_manifest = match panbuild::manifests::manifest::AbstractManifest::load_from_file(file_path.to_str().unwrap().to_string()) {
+                    Some(m) => m,
+                    None => {
+                        continue;
+                    },
+                };
+                let manifest_modules = match abstract_manifest.get_modules() {
+                    Ok(m) => m,
+                    Err(m) => {
+                        continue;
+                    },
+                };
+                for module in manifest_modules {
+                    modules.push(module);
+                }
             }
         }
     }

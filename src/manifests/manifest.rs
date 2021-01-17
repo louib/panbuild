@@ -71,6 +71,11 @@ impl Default for AbstractManifest {
 impl AbstractManifest {
     pub fn load_from_file(path: String) -> Option<AbstractManifest> {
         let file_path = path::Path::new(&path);
+        if !file_path.is_file() {
+            eprintln!("{} is not a file.", path);
+            return None;
+        }
+
         let manifest_content = match fs::read_to_string(file_path) {
             Ok(content) => content,
             Err(e) => {
