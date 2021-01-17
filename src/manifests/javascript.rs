@@ -11,7 +11,6 @@ pub struct JavascriptPackageManifest {
     // FIXME could be translated to a semver.
     pub version: String,
     pub description: String,
-    pub typings: String,
 
     pub repository: String,
 
@@ -22,6 +21,8 @@ pub struct JavascriptPackageManifest {
 
     pub dependencies: BTreeMap<String, String>,
     pub dev_dependencies: BTreeMap<String, String>,
+
+    pub scripts: BTreeMap<String, String>,
 }
 impl JavascriptPackageManifest {
     pub fn parse(manifest_content: &String) -> Option<JavascriptPackageManifest> {
@@ -36,6 +37,18 @@ impl JavascriptPackageManifest {
         // TODO I think there's other fields to validate here.
         if js_package_manifest.name.is_empty() {
             log::debug!("Required top-level field name is missing from the Javascript package manifest.");
+            return None;
+        }
+        if js_package_manifest.version.is_empty() {
+            log::debug!("Required top-level field version is missing from the Javascript package manifest.");
+            return None;
+        }
+        if js_package_manifest.repository.is_empty() {
+            log::debug!("Required top-level field repository is missing from the Javascript package manifest.");
+            return None;
+        }
+        if js_package_manifest.scripts.len() == 0 {
+            log::debug!("The scripts section is missing from the Javascript package manifest.");
             return None;
         }
 
@@ -109,6 +122,8 @@ mod tests {
             None => panic!("Error while parsing the flatpak manifest."),
             Some(manifest) => {
                 assert_eq!(manifest.name, "user/package");
+                assert_eq!(manifest.repository, "https://github.com/user/package");
+                assert_eq!(manifest.version, "3.1.110");
             }
         }
     }
