@@ -1,7 +1,8 @@
 use std::path;
+use std::fs;
 use std::env;
 use std::process::exit;
-use std::io::{self, BufRead};
+use std::io::{self, BufRead, Write};
 
 fn main() {
     let mut exit_code = 0;
@@ -54,6 +55,16 @@ fn main() {
                     modules.push(module);
                 }
             }
+
+            let modules_dump = serde_yaml::to_string(&modules).unwrap();
+            let output_file_path = "./modules.yaml".to_string();
+            match fs::write(path::Path::new(&output_file_path), modules_dump) {
+                Ok(content) => content,
+                Err(e) => {
+                    eprintln!("could not write file {}.", &output_file_path);
+                    return;
+                }
+            };
         }
     }
 
