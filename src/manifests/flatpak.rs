@@ -381,18 +381,7 @@ pub struct FlatpakModule {
     pub modules: Vec<FlatpakModule>,
 }
 
-pub const ALLOWED_SOURCE_TYPES: [&'static str; 10] = [
-    "archive",
-    "git",
-    "bzr",
-    "svn",
-    "dir",
-    "file",
-    "script",
-    "shell",
-    "patch",
-    "extra-data",
-];
+pub const ALLOWED_SOURCE_TYPES: [&'static str; 10] = ["archive", "git", "bzr", "svn", "dir", "file", "script", "shell", "patch", "extra-data"];
 
 // The sources are a list pointer to the source code that needs to be extracted into
 // the build directory before the build starts.
@@ -600,7 +589,6 @@ pub fn get_modules(manifest: &FlatpakManifest) -> Vec<crate::manifests::manifest
         }
 
         let sources = &module.sources[0];
-
 
         // TODO fetch the version from the sources.
         // FIXME should we check for duplicates here??
