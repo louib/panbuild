@@ -32,6 +32,37 @@ pub fn clone_git_repo(repo_url: String) -> Result<String, String> {
     Ok(repo_dir)
 }
 
+pub fn get_git_repo_initial_commit(repo_path: String) -> Result<String, String> {
+    // FIXME there can actually be more than 1 parentless commit
+    // in a git repo, in the case of a merger. A parentless commit
+    // can also be found in multiple projects in the case of a fork.
+    println!("Getting initial commit for repo at {}", repo_path);
+
+    let mut output = Command::new("git")
+        .arg("rev-list")
+        .arg("HEAD")
+        .arg("work-tree=".to_owned() + &repo_path.to_string())
+        .stdout(Stdio::piped())
+        .spawn()
+        .unwrap();
+
+    let mut output = match output.wait_with_output() {
+        Ok(o) => o,
+        Err(e) => return Err(e.to_string()),
+    };
+    if !output.status.success() {
+        return Err("Could not clone repo.".to_string());
+    }
+    let all_hashes = match std::str::from_utf8(&output.stdout) {
+        Ok(v) => v,
+        Err(e) => panic!("Invalid UTF-8 sequence: {}", e),
+    };
+
+    let first_hash = all_hashes.split('\n').last().unwrap();
+
+    Ok(first_hash.to_string())
+}
+
 pub fn get_all_paths(dir: &Path) -> Result<Vec<std::path::PathBuf>, String> {
     let mut all_paths: Vec<std::path::PathBuf> = vec![];
 
