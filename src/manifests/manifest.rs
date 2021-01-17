@@ -42,6 +42,14 @@ pub enum License {
     Proprietary,
     Unknown,
 }
+impl License {
+    fn parse(license: String) -> License {
+        if license.contains("copyright") {
+            return License::Proprietary;
+        }
+        return License::Unknown;
+    }
+}
 pub const DEFAULT_LICENSE: License = License::Gpl2;
 
 #[derive(Debug, Serialize, Deserialize)]
