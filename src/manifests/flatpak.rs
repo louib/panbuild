@@ -618,10 +618,7 @@ pub fn get_modules(manifest: &FlatpakManifest) -> Vec<AbstractModule> {
 }
 
 // Returns the updated list of modules in the manifest.
-pub fn add_module(
-    manifest: &mut FlatpakManifest,
-    new_module: &AbstractModule,
-) -> Result<Vec<AbstractModule>, String> {
+pub fn add_module(manifest: &mut FlatpakManifest, new_module: &AbstractModule) -> Result<Vec<AbstractModule>, String> {
     for module in &manifest.modules {
         if module.name == new_module.name {
             return Err(format!("Already a module named {}.", module.name));

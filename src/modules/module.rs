@@ -134,6 +134,8 @@ impl Default for ModuleType {
 #[derive(Default, Debug, Serialize, Deserialize)]
 /// Generic representation of a software module.
 pub struct AbstractModule {
+    // A UUID for the module.
+    pub id: Option<String>,
     pub module_type: ModuleType,
     pub name: String,
     pub version: String,
