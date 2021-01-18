@@ -98,3 +98,18 @@ pub fn ask_yes_no_question(question: String) -> bool {
     }
     return false;
 }
+
+pub fn normalize_name(name: &String) -> String {
+    let mut response: String = "".to_string();
+    for c in name.chars() {
+        if c.is_alphabetic() || c.is_numeric() {
+            response.push_str(&c.to_string())
+        }
+        // We don't want to add multiple hyphens in a row.
+        if response.ends_with("-") {
+            continue;
+        }
+        response.push_str("-")
+    }
+    response
+}
