@@ -171,26 +171,7 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
     }
 
     if command_name == "make" {
-        let workspace_name = match &config.current_workspace {
-            Some(w) => w,
-            None => {
-                eprintln!("Not currently in a workspace. Use `ls` to list the available workspaces and manifests.");
-                return 1;
-            }
-        };
-
-        if !config.workspaces.contains_key(workspace_name) {
-            eprintln!(
-                "Workspace {} does not exist. Use `ls` to list the available workspaces and manifests.",
-                workspace_name
-            );
-            return 1;
-        }
-
-        let manifest_file_path = config.workspaces.get(workspace_name).unwrap().to_string();
-        log::debug!("Using manifest file {}.", &manifest_file_path);
-
-        let mut abstract_manifest = match crate::manifests::manifest::AbstractManifest::load_from_file(manifest_file_path.to_string()) {
+        let mut abstract_manifest = match crate::config::load_manifest_from_config() {
             Some(m) => m,
             None => return 1,
         };
@@ -198,7 +179,7 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
         match abstract_manifest.run_build() {
             Ok(content) => content,
             Err(e) => {
-                eprintln!("could not run build for manifest file {}: {}", &manifest_file_path, e);
+                eprintln!("could not run build for manifest file {}: {}", &abstract_manifest.path, e);
                 return 1;
             }
         };
@@ -207,26 +188,7 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
     }
 
     if command_name == "run" {
-        let workspace_name = match &config.current_workspace {
-            Some(w) => w,
-            None => {
-                eprintln!("Not currently in a workspace. Use `ls` to list the available workspaces and manifests.");
-                return 1;
-            }
-        };
-
-        if !config.workspaces.contains_key(workspace_name) {
-            eprintln!(
-                "Workspace {} does not exist. Use `ls` to list the available workspaces and manifests.",
-                workspace_name
-            );
-            return 1;
-        }
-
-        let manifest_file_path = config.workspaces.get(workspace_name).unwrap().to_string();
-        log::debug!("Using manifest file {}.", &manifest_file_path);
-
-        let mut abstract_manifest = match crate::manifests::manifest::AbstractManifest::load_from_file(manifest_file_path.to_string()) {
+        let mut abstract_manifest = match crate::config::load_manifest_from_config() {
             Some(m) => m,
             None => return 1,
         };
@@ -235,12 +197,12 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
             Some(n) => n,
             None => panic!("A command to run is required."),
         };
-        println!("Running command `{}` in workspace {}", command, workspace_name);
+        println!("Running command `{}` in workspace {}", command, config.current_workspace.unwrap());
 
         match abstract_manifest.run_command(command) {
             Ok(content) => content,
             Err(e) => {
-                eprintln!("could not run build for manifest file {}: {}", &manifest_file_path, e);
+                eprintln!("could not run build for manifest file {}: {}", &abstract_manifest.path, e);
                 return 1;
             }
         };
