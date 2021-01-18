@@ -117,26 +117,7 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
     }
 
     if command_name == "install" {
-        let workspace_name = match &config.current_workspace {
-            Some(w) => w,
-            None => {
-                eprintln!("Not currently in a workspace. Use `ls` to list the available workspaces and manifests.");
-                return 1;
-            }
-        };
-
-        if !config.workspaces.contains_key(workspace_name) {
-            eprintln!(
-                "Workspace {} does not exist. Use `ls` to list the available workspaces and manifests.",
-                workspace_name
-            );
-            return 1;
-        }
-
-        let manifest_file_path = config.workspaces.get(workspace_name).unwrap().to_string();
-        log::debug!("Using manifest file {}.", &manifest_file_path);
-
-        let mut abstract_manifest = match crate::manifests::manifest::AbstractManifest::load_from_file(manifest_file_path.to_string()) {
+        let mut abstract_manifest = match crate::config::load_manifest_from_config() {
             Some(m) => m,
             None => return 1,
         };
@@ -179,10 +160,10 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
             Err(e) => return 1,
         };
 
-        match fs::write(path::Path::new(&manifest_file_path), manifest_dump) {
+        match fs::write(path::Path::new(&abstract_manifest.path), manifest_dump) {
             Ok(content) => content,
             Err(e) => {
-                eprintln!("could not write file {}.", &manifest_file_path);
+                eprintln!("could not write file {}.", &abstract_manifest.path);
                 return 1;
             }
         };
