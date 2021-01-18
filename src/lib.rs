@@ -9,6 +9,7 @@ pub mod utils;
 mod config;
 mod logger;
 mod projects;
+mod modules;
 mod version;
 
 pub use manifests::manifest::AbstractManifest;
