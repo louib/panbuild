@@ -65,7 +65,7 @@ pub fn load_manifest_from_config() -> Option<crate::manifests::manifest::Abstrac
         Err(e) => {
             eprintln!("Could not load or init config: {}", e);
             return None;
-        },
+        }
     };
 
     let workspace_name = match &config.current_workspace {
