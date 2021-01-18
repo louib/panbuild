@@ -335,12 +335,11 @@ pub struct AbstractModule {
     pub executable_checksum: String,
 
     // Fields mostly taken from the Flatpak manifest.
-    pub config_options: String,
     // Array of files and directories to cleanup after installing.
-    pub cleanup_files: Vec<String>,
+    pub config_options: Vec<String>,
+    pub build_commands: Vec<String>,
     pub install_instructions: String,
     pub install_path: String,
-    pub is_primary: bool,
 }
 
 #[derive(Default, Debug, Serialize, Deserialize)]

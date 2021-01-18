@@ -601,6 +601,9 @@ pub fn get_modules(manifest: &FlatpakManifest) -> Vec<crate::manifests::manifest
 
         abstract_module.tag = sources.tag.as_ref().unwrap_or(&"".to_string()).to_string();
 
+        abstract_module.config_options = module.config_opts.to_owned();
+        abstract_module.build_commands = module.build_commands.to_owned();
+
         // TODO fetch the version from the sources.
         // FIXME should we check for duplicates here??
         response.push(abstract_module);
