@@ -2,7 +2,8 @@ use std::collections::HashMap;
 
 use serde::{Deserialize, Serialize};
 
-use crate::manifests::manifest::{AbstractManifest, AbstractModule};
+use crate::manifests::manifest::AbstractManifest;
+use crate::modules::module::AbstractModule;
 
 const CONTROL_FILE_SEPARATOR: &str = ":";
 

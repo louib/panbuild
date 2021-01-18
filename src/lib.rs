@@ -4,16 +4,16 @@
 use std::collections::HashMap;
 
 pub mod manifests;
+pub mod modules;
 pub mod utils;
 
 mod config;
 mod logger;
 mod projects;
-mod modules;
 mod version;
 
 pub use manifests::manifest::AbstractManifest;
-pub use manifests::manifest::AbstractModule;
+pub use modules::module::AbstractModule;
 
 use std::env;
 use std::fs;
@@ -108,7 +108,7 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
         }
         eprintln!("Search for {} in the projects database.", &search_term);
 
-        let packages: Vec<crate::manifests::manifest::AbstractModule> = crate::projects::get_modules();
+        let packages: Vec<AbstractModule> = crate::projects::get_modules();
         eprintln!("Searching in {:#?} packages for installation candidates 🕰", packages.len());
         for package in &packages {
             if package.name.contains(search_term) {
@@ -130,8 +130,8 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
         }
         eprintln!("Installing module {:#?}", &package_name);
 
-        let packages: Vec<crate::manifests::manifest::AbstractModule> = crate::projects::get_modules();
-        let mut installed_package: Option<&crate::manifests::manifest::AbstractModule> = None;
+        let packages: Vec<AbstractModule> = crate::projects::get_modules();
+        let mut installed_package: Option<&AbstractModule> = None;
         eprintln!("Searching in {:#?} packages for installation candidates 🕰", packages.len());
         for package in &packages {
             if package.name.contains(package_name) {

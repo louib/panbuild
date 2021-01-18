@@ -4,6 +4,9 @@ use std::env;
 use std::process::exit;
 use std::io::{self, BufRead, Write};
 
+use panbuild::manifests::manifest::AbstractManifest;
+use panbuild::modules::module::AbstractModule;
+
 fn main() {
     let mut exit_code = 0;
 
@@ -19,7 +22,7 @@ fn main() {
     let command_name = &args[1];
 
     if command_name == &"import-modules".to_string() {
-        let mut modules: Vec<panbuild::manifests::manifest::AbstractModule> = vec![];
+        let mut modules: Vec<AbstractModule> = vec![];
 
         let stdin = io::stdin();
         for line in stdin.lock().lines() {
@@ -39,7 +42,7 @@ fn main() {
                 }
             };
             for file_path in repo_file_paths.iter() {
-                let abstract_manifest = match panbuild::manifests::manifest::AbstractManifest::load_from_file(file_path.to_str().unwrap().to_string()) {
+                let abstract_manifest = match AbstractManifest::load_from_file(file_path.to_str().unwrap().to_string()) {
                     Some(m) => m,
                     None => {
                         continue;

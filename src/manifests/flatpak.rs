@@ -5,6 +5,8 @@ use std::time::SystemTime;
 
 use serde::{Deserialize, Serialize};
 
+use crate::modules::module::{AbstractModule, BuildSystem};
+
 const DEFAULT_FLATPAK_BUILDER_CACHE_DIR: &str = ".flatpak-builder";
 const DEFAULT_FLATPAK_OUTPUT_DIR: &str = "build";
 
@@ -559,31 +561,31 @@ pub struct FlatpakBuildOptions {
     pub arch: BTreeMap<String, FlatpakBuildOptions>,
 }
 
-pub fn get_modules(manifest: &FlatpakManifest) -> Vec<crate::manifests::manifest::AbstractModule> {
+pub fn get_modules(manifest: &FlatpakManifest) -> Vec<AbstractModule> {
     let mut response = vec![];
     // FIXME we should fetch those recursively.
     for module in &manifest.modules {
-        let mut abstract_module = crate::manifests::manifest::AbstractModule::default();
+        let mut abstract_module = AbstractModule::default();
         abstract_module.name = module.name.to_string();
         if module.buildsystem == "cmake" {
-            abstract_module.build_system = crate::manifests::manifest::BuildSystem::Cmake;
+            abstract_module.build_system = BuildSystem::Cmake;
         }
         if module.buildsystem == "autotools" {
-            abstract_module.build_system = crate::manifests::manifest::BuildSystem::Autotools;
+            abstract_module.build_system = BuildSystem::Autotools;
         }
         if module.buildsystem == "meson" {
-            abstract_module.build_system = crate::manifests::manifest::BuildSystem::Meson;
+            abstract_module.build_system = BuildSystem::Meson;
         }
         // FIXME not sure what to do with this one. Maybe we should support having a list
         // of build systems?
         if module.buildsystem == "cmake-ninja" {
-            abstract_module.build_system = crate::manifests::manifest::BuildSystem::Meson;
+            abstract_module.build_system = BuildSystem::Meson;
         }
         if module.buildsystem == "simple" {
-            abstract_module.build_system = crate::manifests::manifest::BuildSystem::Unknown;
+            abstract_module.build_system = BuildSystem::Unknown;
         }
         if module.buildsystem == "qmake" {
-            abstract_module.build_system = crate::manifests::manifest::BuildSystem::Qmake;
+            abstract_module.build_system = BuildSystem::Qmake;
         }
 
         // Skip the flatpak modules with more than 1 source, because those are harder
@@ -618,8 +620,8 @@ pub fn get_modules(manifest: &FlatpakManifest) -> Vec<crate::manifests::manifest
 // Returns the updated list of modules in the manifest.
 pub fn add_module(
     manifest: &mut FlatpakManifest,
-    new_module: &crate::manifests::manifest::AbstractModule,
-) -> Result<Vec<crate::manifests::manifest::AbstractModule>, String> {
+    new_module: &AbstractModule,
+) -> Result<Vec<AbstractModule>, String> {
     for module in &manifest.modules {
         if module.name == new_module.name {
             return Err(format!("Already a module named {}.", module.name));
