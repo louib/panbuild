@@ -206,6 +206,10 @@ pub struct FlatpakManifest {
     pub modules: Vec<FlatpakModule>,
 }
 impl FlatpakManifest {
+    pub fn get_type(&self) -> &str {
+        return "flatpak";
+    }
+
     pub fn parse(manifest_content: &String) -> Option<FlatpakManifest> {
         let flatpak_manifest: FlatpakManifest = match serde_yaml::from_str(&manifest_content) {
             Ok(m) => m,

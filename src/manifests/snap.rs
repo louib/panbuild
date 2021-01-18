@@ -141,6 +141,10 @@ pub struct SnapcraftManifest {
     pub parts: HashMap<String, SnapcraftPart>,
 }
 impl SnapcraftManifest {
+    pub fn get_type(&self) -> &str {
+        return "snapcraft";
+    }
+
     pub fn parse(manifest_content: &String) -> Option<SnapcraftManifest> {
         let snapcraft_manifest: SnapcraftManifest = match serde_yaml::from_str(&manifest_content) {
             Ok(m) => m,

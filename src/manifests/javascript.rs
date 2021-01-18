@@ -25,6 +25,10 @@ pub struct JavascriptPackageManifest {
     pub scripts: BTreeMap<String, String>,
 }
 impl JavascriptPackageManifest {
+    pub fn get_type(&self) -> &str {
+        return "javascript";
+    }
+
     pub fn parse(manifest_content: &String) -> Option<JavascriptPackageManifest> {
         let js_package_manifest: JavascriptPackageManifest = match serde_json::from_str(&manifest_content) {
             Ok(m) => m,

@@ -78,6 +78,19 @@ impl Default for AbstractManifest {
     }
 }
 impl AbstractManifest {
+    pub fn get_type(&self) -> Option<&str> {
+        match &self.native_manifest {
+            Some(m) => match m {
+                NativeManifest::Flatpak(m) => return Some(m.get_type()),
+                NativeManifest::Snapcraft(m) => return Some(m.get_type()),
+                NativeManifest::Javascript(m) => return Some(m.get_type()),
+                NativeManifest::Debian(m) => return Some(m.get_type()),
+                _ => return None,
+            },
+            None => return None,
+        }
+    }
+
     pub fn load_from_file(path: String) -> Option<AbstractManifest> {
         let file_path = path::Path::new(&path);
         if !file_path.is_file() {
@@ -117,7 +130,8 @@ impl AbstractManifest {
             format: manifest_format,
             native_manifest: native_manifest,
         };
-        log::debug!("Parsed abstract manifest. Resulting manifest is {:#?}", &manifest);
+        log::info!("Successfully parsed manifest of type `{}`.", manifest.get_type().unwrap_or("unknown"));
+        log::debug!("Parsed manifest. Resulting manifest is {:#?}", &manifest);
         Some(manifest)
     }
 

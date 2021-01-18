@@ -113,6 +113,10 @@ pub struct DebianManifest {
     pub vcs_git: String,
 }
 impl DebianManifest {
+    pub fn get_type(&self) -> &str {
+        return "debian";
+    }
+
     pub fn parse(manifest_content: &String) -> Option<DebianManifest> {
         let paragraphs = parse_paragraphs(manifest_content);
         if paragraphs.len() < 2 {
