@@ -192,22 +192,6 @@ pub enum OS {
     // Add misc Oses like calculators and PAs???
 }
 
-#[derive(Debug, Serialize, Deserialize)]
-pub enum PackagingSystem {
-    Flatpak,
-    Snap,
-    Debian,
-    Arch,
-    Homebrew,
-    Unknown,
-}
-pub const DEFAULT_PACKAGING_SYSTEM: PackagingSystem = PackagingSystem::Unknown;
-impl Default for PackagingSystem {
-    fn default() -> Self {
-        DEFAULT_PACKAGING_SYSTEM
-    }
-}
-
 // TODO Should we allow those systems to be available
 // when the generated manifest will be used? We could
 // consider optionally downloading those dependencies
@@ -345,7 +329,6 @@ pub struct AbstractModule {
     pub download_urls: Vec<String>,
     pub url: String,
     pub build_system: BuildSystem,
-    pub packaging_system: PackagingSystem,
     pub archive_checksum: String,
     pub source_checksum: String,
     // When we have reproducible builds.

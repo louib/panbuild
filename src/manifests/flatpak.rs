@@ -589,6 +589,17 @@ pub fn get_modules(manifest: &FlatpakManifest) -> Vec<crate::manifests::manifest
         }
 
         let sources = &module.sources[0];
+        // Not handling those.
+        if sources.path.is_some() {
+            continue;
+        }
+
+        if sources.url.is_none() {
+            continue;
+        }
+        abstract_module.url = sources.url.as_ref().unwrap().to_string();
+
+        abstract_module.tag = sources.tag.as_ref().unwrap_or(&"".to_string()).to_string();
 
         // TODO fetch the version from the sources.
         // FIXME should we check for duplicates here??
