@@ -103,13 +103,15 @@ pub fn normalize_name(name: &String) -> String {
     let mut response: String = "".to_string();
     for c in name.chars() {
         if c.is_alphabetic() || c.is_numeric() {
-            response.push_str(&c.to_string())
-        }
-        // We don't want to add multiple hyphens in a row.
-        if response.ends_with("-") {
+            response.push_str(&c.to_string());
             continue;
         }
-        response.push_str("-")
+        // We don't want to add multiple hyphens or dots in a row, and we want
+        // to start the name with an alphanum character.
+        if response.ends_with("-") || response.ends_with(".") || response.is_empty() {
+            continue;
+        }
+        response.push_str(&c.to_string());
     }
     response
 }
