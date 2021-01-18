@@ -6,7 +6,7 @@ use std::collections::HashMap;
 pub mod manifests;
 pub mod utils;
 
-mod execution_context;
+mod config;
 mod logger;
 mod projects;
 mod version;
@@ -35,7 +35,7 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
 
     log::debug!("running command {}.", command_name);
 
-    let mut config = match crate::execution_context::read_or_init_config() {
+    let mut config = match crate::config::read_or_init_config() {
         Ok(c) => c,
         Err(e) => panic!("Could not load or init config: {}", e),
     };
@@ -335,7 +335,7 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
         }
 
         config.current_workspace = Some(env_name.to_string());
-        match crate::execution_context::write_config(&config) {
+        match crate::config::write_config(&config) {
             Ok(c) => c,
             Err(e) => panic!("Could not write config: {}", e),
         };
@@ -370,7 +370,7 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
 
         config.workspaces.insert(env_name.to_string(), manifest_file_path.to_string());
         config.current_workspace = Some(env_name.to_string());
-        match crate::execution_context::write_config(&config) {
+        match crate::config::write_config(&config) {
             Ok(c) => c,
             Err(e) => panic!("Could not write config: {}", e),
         };

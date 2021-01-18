@@ -7,19 +7,6 @@ use serde::{Deserialize, Serialize};
 // Make that more robust maybe?
 pub const DEFAULT_CACHE_DIR: &str = ".panbuild/";
 
-pub struct ExecutionContext {
-    pub data_dir: String,
-    pub manifest: crate::manifests::manifest::AbstractManifest,
-}
-impl Default for ExecutionContext {
-    fn default() -> Self {
-        return ExecutionContext {
-            data_dir: "".to_string(),
-            manifest: crate::manifests::manifest::AbstractManifest::default(),
-        };
-    }
-}
-
 #[derive(Deserialize, Serialize, Debug, Default)]
 #[serde(default)]
 pub struct PanbuildConfig {
