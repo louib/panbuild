@@ -1,6 +1,8 @@
 use std::env;
 use std::fs;
 
+pub const MODULES_DIR: &str = "~/.panbuild/modules/";
+
 pub fn get_all() -> Vec<crate::modules::module::AbstractModule> {
     let mut core_modules = self::get_core_modules();
 

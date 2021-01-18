@@ -19,7 +19,6 @@ use std::env;
 use std::fs;
 use std::path;
 
-const DEFAULT_CACHE_DIR: &str = ".panbuild/";
 const DEFAULT_GIT_CACHE_DIR: &str = ".git/";
 const DEFAULT_PACKAGE_LIST_SEP: &str = ",";
 
