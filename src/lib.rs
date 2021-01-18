@@ -35,8 +35,6 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
 
     log::debug!("running command {}.", command_name);
 
-    let mut ctx = crate::execution_context::ExecutionContext::default();
-
     let mut config = match crate::execution_context::read_or_init_config() {
         Ok(c) => c,
         Err(e) => panic!("Could not load or init config: {}", e),
@@ -45,14 +43,12 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
     if command_name == "lint" {
         let manifest_file_path = args.get("manifest_file_path").expect("an input file is required!");
 
-        let abstract_manifest = match crate::manifests::manifest::AbstractManifest::load_from_file(manifest_file_path.to_string()) {
+        let mut abstract_manifest = match crate::manifests::manifest::AbstractManifest::load_from_file(manifest_file_path.to_string()) {
             Some(m) => m,
             None => return 1,
         };
 
-        ctx.manifest = abstract_manifest;
-
-        let manifest_dump = match ctx.manifest.dump() {
+        let manifest_dump = match abstract_manifest.dump() {
             Ok(d) => d,
             Err(e) => return 1,
         };
@@ -72,19 +68,17 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
     if command_name == "get-package-list" {
         let manifest_file_path = args.get("manifest_file_path").expect("a manifest file is required!");
 
-        let abstract_manifest = match crate::manifests::manifest::AbstractManifest::load_from_file(manifest_file_path.to_string()) {
+        let mut abstract_manifest = match crate::manifests::manifest::AbstractManifest::load_from_file(manifest_file_path.to_string()) {
             Some(m) => m,
             None => return 1,
         };
-
-        ctx.manifest = abstract_manifest;
 
         let mut separator = DEFAULT_PACKAGE_LIST_SEP;
         if args.contains_key("separator") {
             separator = args.get("separator").unwrap();
         }
 
-        let modules = match ctx.manifest.get_modules() {
+        let modules = match abstract_manifest.get_modules() {
             Ok(m) => m,
             Err(m) => return 1,
         };
@@ -142,12 +136,10 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
         let manifest_file_path = config.workspaces.get(workspace_name).unwrap().to_string();
         log::debug!("Using manifest file {}.", &manifest_file_path);
 
-        let abstract_manifest = match crate::manifests::manifest::AbstractManifest::load_from_file(manifest_file_path.to_string()) {
+        let mut abstract_manifest = match crate::manifests::manifest::AbstractManifest::load_from_file(manifest_file_path.to_string()) {
             Some(m) => m,
             None => return 1,
         };
-
-        ctx.manifest = abstract_manifest;
 
         let package_name = args.get("package_name").expect("A package name to install is required!");
         if package_name.len() < 3 {
@@ -165,7 +157,7 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
                 let question = format!("Do you want to install {} ({})", package.name, package.url);
                 if crate::utils::ask_yes_no_question(question) {
                     println!("installing {}.", package.name);
-                    ctx.manifest.add_module(package);
+                    abstract_manifest.add_module(package);
                     installed_package = Some(package);
                     break;
                 }
@@ -182,7 +174,7 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
         let installed_package_name = &installed_package_name.name;
         println!("Installed package {}.", installed_package_name);
 
-        let manifest_dump = match ctx.manifest.dump() {
+        let manifest_dump = match abstract_manifest.dump() {
             Ok(d) => d,
             Err(e) => return 1,
         };
@@ -217,14 +209,12 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
         let manifest_file_path = config.workspaces.get(workspace_name).unwrap().to_string();
         log::debug!("Using manifest file {}.", &manifest_file_path);
 
-        let abstract_manifest = match crate::manifests::manifest::AbstractManifest::load_from_file(manifest_file_path.to_string()) {
+        let mut abstract_manifest = match crate::manifests::manifest::AbstractManifest::load_from_file(manifest_file_path.to_string()) {
             Some(m) => m,
             None => return 1,
         };
 
-        ctx.manifest = abstract_manifest;
-
-        match ctx.manifest.run_build() {
+        match abstract_manifest.run_build() {
             Ok(content) => content,
             Err(e) => {
                 eprintln!("could not run build for manifest file {}: {}", &manifest_file_path, e);
@@ -255,12 +245,10 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
         let manifest_file_path = config.workspaces.get(workspace_name).unwrap().to_string();
         log::debug!("Using manifest file {}.", &manifest_file_path);
 
-        let abstract_manifest = match crate::manifests::manifest::AbstractManifest::load_from_file(manifest_file_path.to_string()) {
+        let mut abstract_manifest = match crate::manifests::manifest::AbstractManifest::load_from_file(manifest_file_path.to_string()) {
             Some(m) => m,
             None => return 1,
         };
-
-        ctx.manifest = abstract_manifest;
 
         let command = match args.get("command") {
             Some(n) => n,
@@ -268,7 +256,7 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
         };
         println!("Running command `{}` in workspace {}", command, workspace_name);
 
-        match ctx.manifest.run_command(command) {
+        match abstract_manifest.run_command(command) {
             Ok(content) => content,
             Err(e) => {
                 eprintln!("could not run build for manifest file {}: {}", &manifest_file_path, e);
