@@ -32,7 +32,7 @@ pub fn clone_git_repo(repo_url: String) -> Result<String, String> {
     Ok(repo_dir)
 }
 
-pub fn get_git_repo_initial_commit(repo_path: String) -> Result<String, String> {
+pub fn get_git_repo_initial_commits(repo_path: String) -> Result<Vec<String>, String> {
     // FIXME there can actually be more than 1 parentless commit
     // in a git repo, in the case of a merger. A parentless commit
     // can also be found in multiple projects in the case of a fork.
@@ -40,6 +40,7 @@ pub fn get_git_repo_initial_commit(repo_path: String) -> Result<String, String> 
 
     let mut output = Command::new("git")
         .arg("rev-list")
+        .arg("max-parents=0".to_owned())
         .arg("HEAD")
         .arg("work-tree=".to_owned() + &repo_path.to_string())
         .stdout(Stdio::piped())
@@ -58,9 +59,7 @@ pub fn get_git_repo_initial_commit(repo_path: String) -> Result<String, String> 
         Err(e) => panic!("Invalid UTF-8 sequence: {}", e),
     };
 
-    let first_hash = all_hashes.split('\n').last().unwrap();
-
-    Ok(first_hash.to_string())
+    Ok(all_hashes.split('\n').map(|s| s.to_string()).collect())
 }
 
 pub fn get_all_paths(dir: &Path) -> Result<Vec<std::path::PathBuf>, String> {
