@@ -3,7 +3,9 @@ pub mod module;
 
 use uuid::Uuid;
 
-pub fn get_modules() {}
+pub fn get_modules() -> Vec<module::AbstractModule> {
+    db::get_all()
+}
 
 pub fn search_modules() {}
 
