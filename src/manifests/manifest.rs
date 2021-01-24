@@ -105,8 +105,11 @@ impl AbstractManifest {
             native_manifest = Some(NativeManifest::Flatpak(flatpak_manifest));
         } else if let Some(snapcraft_manifest) = crate::manifests::snap::SnapcraftManifest::parse(&manifest_content) {
             native_manifest = Some(NativeManifest::Snapcraft(snapcraft_manifest));
-        } else if let Some(debian_manifest) = crate::manifests::debian::DebianManifest::parse(&manifest_content) {
-            native_manifest = Some(NativeManifest::Debian(debian_manifest));
+        } else if crate::manifests::debian::DebianManifest::file_path_matches(file_path.to_str().unwrap()) {
+            native_manifest = match crate::manifests::debian::DebianManifest::parse(&manifest_content) {
+                Some(m) => Some(NativeManifest::Debian(m)),
+                None => None,
+            };
         } else if let Some(js_manifest) = crate::manifests::javascript::JavascriptPackageManifest::parse(&manifest_content) {
             native_manifest = Some(NativeManifest::Javascript(js_manifest));
         } else if let Some(cargo_manifest) = crate::manifests::cargo::CargoManifest::parse(&manifest_content) {

@@ -118,6 +118,14 @@ impl DebianManifest {
         return "debian";
     }
 
+    pub fn file_path_matches(path: &str) -> bool {
+        if path.to_lowercase().ends_with("debian/control") {
+            return true;
+        }
+        return false;
+    }
+
+
     pub fn parse(manifest_content: &String) -> Option<DebianManifest> {
         let paragraphs = parse_paragraphs(manifest_content);
         if paragraphs.len() < 2 {
@@ -275,13 +283,6 @@ fn is_commented_line(line: &str) -> bool {
     return false;
 }
 
-pub fn file_path_matches(path: &str) -> bool {
-    if path.to_lowercase().ends_with("debian/control") {
-        return true;
-    }
-    return false;
-}
-
 // Currently the documentation comes from the Debian control file documentation.
 pub enum Priority {
     // Packages which are necessary for the proper functioning of the system (usually,
@@ -404,14 +405,14 @@ mod tests {
 
     #[test]
     pub fn test_file_path_matches() {
-        assert!(file_path_matches("debian/control"));
-        assert!(file_path_matches("path/to/the/debian/control"));
-        assert!(file_path_matches("the/Debian/CONTROL"));
-        assert!(!file_path_matches("control"));
-        assert!(!file_path_matches(".flatpak-builder/cache/objects/54/.file/user/1000/keyring/control"));
-        assert!(!file_path_matches("/path/to/file.yaml"));
-        assert!(!file_path_matches("/path/to/file.json"));
-        assert!(!file_path_matches(""));
-        assert!(!file_path_matches("/////////////"));
+        assert!(DebianManifest::file_path_matches("debian/control"));
+        assert!(DebianManifest::file_path_matches("path/to/the/debian/control"));
+        assert!(DebianManifest::file_path_matches("the/Debian/CONTROL"));
+        assert!(!DebianManifest::file_path_matches("control"));
+        assert!(!DebianManifest::file_path_matches(".flatpak-builder/cache/objects/54/.file/user/1000/keyring/control"));
+        assert!(!DebianManifest::file_path_matches("/path/to/file.yaml"));
+        assert!(!DebianManifest::file_path_matches("/path/to/file.json"));
+        assert!(!DebianManifest::file_path_matches(""));
+        assert!(!DebianManifest::file_path_matches("/////////////"));
     }
 }
