@@ -7,9 +7,8 @@
 // TODO use the list of all arch packages at
 // https://www.archlinux.org/packages/
 
-pub fn parse(content: &str) -> crate::manifests::manifest::AbstractManifest {
-    let mut response = crate::manifests::manifest::AbstractManifest::default();
-    return response;
+pub struct ArchManifest {
+
 }
 
 pub fn file_path_matches(path: &str) -> bool {

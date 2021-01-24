@@ -71,15 +71,6 @@ pub struct AbstractManifest {
     pub format: ManifestFormat,
     pub native_manifest: Option<NativeManifest>,
 }
-impl Default for AbstractManifest {
-    fn default() -> Self {
-        AbstractManifest {
-            path: "".to_string(),
-            format: ManifestFormat::TEXT,
-            native_manifest: None,
-        }
-    }
-}
 impl AbstractManifest {
     pub fn get_type(&self) -> Option<&str> {
         match &self.native_manifest {
