@@ -57,21 +57,37 @@ impl Database {
     }
 
     pub fn get_all_modules() -> Vec<crate::modules::SoftwareModule> {
-        let json_modules_db_path = env::var("PB_MODULES_DB_PATH").unwrap_or(String::from("")).to_string();
-        if json_modules_db_path.is_empty() {
-            return vec![];
-        }
-
-        let json_modules = match fs::read_to_string(&json_modules_db_path) {
-            Ok(content) => content,
+        let modules_path = Database::get_modules_db_path();
+        let modules_path = path::Path::new(&modules_path);
+        let all_modules_paths = match crate::utils::get_all_paths(modules_path) {
+            Ok(paths) => paths,
             Err(e) => {
-                eprintln!("could not read file {}.", json_modules_db_path);
                 return vec![];
             }
         };
-        let mut db_modules: Vec<crate::modules::SoftwareModule> = serde_json::from_str(&json_modules).unwrap();
-
-        db_modules
+        let mut modules: Vec<crate::modules::SoftwareModule> = vec![];
+        for module_path in all_modules_paths.iter() {
+            if !module_path.is_file() {
+                log::debug!("{} is not a file.", &module_path.to_str().unwrap());
+                continue;
+            }
+            let module_content = match fs::read_to_string(module_path) {
+                Ok(content) => content,
+                Err(e) => {
+                    log::debug!("Could not read module file {}: {}.", &module_path.to_str().unwrap(), e);
+                    continue;
+                }
+            };
+            let module = match serde_yaml::from_str(&module_content) {
+                Ok(m) => m,
+                Err(e) => {
+                    log::debug!("Could not parse module file at {}: {}.", &module_path.to_str().unwrap(), e);
+                    continue;
+                }
+            };
+            modules.push(module);
+        }
+        modules
     }
 
     pub fn search_modules() {}
