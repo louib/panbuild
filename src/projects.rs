@@ -1,4 +1,3 @@
-pub mod db;
 pub mod project;
 
 // Dump the project in the format required by the database.rs file.
@@ -12,14 +11,14 @@ pub fn parse_project(serialized_project: String) -> crate::projects::project::Pr
 }
 
 pub fn get_projects() -> Vec<project::Project> {
-    return db::get_all();
+    return crate::db::Database::get_all_projects();
 }
 
 // Get the potential modules that are inferable from the
 // projects.
 pub fn get_modules() -> Vec<crate::modules::module::SoftwareModule> {
     let mut modules = vec![];
-    for project in db::get_all() {
+    for project in crate::db::Database::get_all_projects() {
         for project_version in &project.versions {
             for artifact_name in &project.artifact_names {
                 let mut module = crate::modules::module::SoftwareModule::default();
