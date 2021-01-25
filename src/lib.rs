@@ -10,6 +10,7 @@ pub mod utils;
 mod config;
 mod hubs;
 mod logger;
+mod db;
 mod projects;
 mod version;
 
