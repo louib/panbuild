@@ -113,10 +113,16 @@ impl AbstractManifest {
                 Some(m) => Some(NativeManifest::Debian(m)),
                 None => None,
             };
-        } else if let Some(js_manifest) = crate::manifests::javascript::JavascriptPackageManifest::parse(&manifest_content) {
-            native_manifest = Some(NativeManifest::Javascript(js_manifest));
-        } else if let Some(cargo_manifest) = crate::manifests::cargo::CargoManifest::parse(&manifest_content) {
-            native_manifest = Some(NativeManifest::Cargo(cargo_manifest));
+        } else if crate::manifests::javascript::JavascriptPackageManifest::file_path_matches(file_path.to_str().unwrap()) {
+            native_manifest = match crate::manifests::javascript::JavascriptPackageManifest::parse(&manifest_content) {
+                Some(m) => Some(NativeManifest::Javascript(m)),
+                None => None,
+            };
+        } else if crate::manifests::cargo::CargoManifest::file_path_matches(file_path.to_str().unwrap()) {
+            native_manifest = match crate::manifests::cargo::CargoManifest::parse(&manifest_content) {
+                Some(m) => Some(NativeManifest::Cargo(m)),
+                None => None,
+            };
         } else {
             return None;
         }

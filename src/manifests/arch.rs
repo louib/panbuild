@@ -7,9 +7,7 @@
 // TODO use the list of all arch packages at
 // https://www.archlinux.org/packages/
 
-pub struct ArchManifest {
-
-}
+pub struct ArchManifest {}
 
 pub fn file_path_matches(path: &str) -> bool {
     if path.to_uppercase().ends_with("PKGBUILD") {

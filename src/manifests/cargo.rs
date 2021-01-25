@@ -11,6 +11,13 @@ impl CargoManifest {
         return "cargo";
     }
 
+    pub fn file_path_matches(path: &str) -> bool {
+        if path.to_lowercase().ends_with("Cargo.toml") {
+            return true;
+        }
+        return false;
+    }
+
     pub fn parse(manifest_content: &String) -> Option<CargoManifest> {
         let cargo_manifest: CargoManifest = match toml::from_str(&manifest_content) {
             Ok(m) => m,

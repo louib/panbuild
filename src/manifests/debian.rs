@@ -125,7 +125,6 @@ impl DebianManifest {
         return false;
     }
 
-
     pub fn parse(manifest_content: &String) -> Option<DebianManifest> {
         let paragraphs = parse_paragraphs(manifest_content);
         if paragraphs.len() < 2 {
@@ -409,7 +408,9 @@ mod tests {
         assert!(DebianManifest::file_path_matches("path/to/the/debian/control"));
         assert!(DebianManifest::file_path_matches("the/Debian/CONTROL"));
         assert!(!DebianManifest::file_path_matches("control"));
-        assert!(!DebianManifest::file_path_matches(".flatpak-builder/cache/objects/54/.file/user/1000/keyring/control"));
+        assert!(!DebianManifest::file_path_matches(
+            ".flatpak-builder/cache/objects/54/.file/user/1000/keyring/control"
+        ));
         assert!(!DebianManifest::file_path_matches("/path/to/file.yaml"));
         assert!(!DebianManifest::file_path_matches("/path/to/file.json"));
         assert!(!DebianManifest::file_path_matches(""));

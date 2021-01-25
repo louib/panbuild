@@ -29,6 +29,13 @@ impl JavascriptPackageManifest {
         return "javascript";
     }
 
+    pub fn file_path_matches(path: &str) -> bool {
+        if path.to_lowercase().ends_with("package.json") {
+            return true;
+        }
+        return false;
+    }
+
     pub fn parse(manifest_content: &String) -> Option<JavascriptPackageManifest> {
         let js_package_manifest: JavascriptPackageManifest = match serde_json::from_str(&manifest_content) {
             Ok(m) => m,
