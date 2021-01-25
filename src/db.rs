@@ -5,14 +5,20 @@ use std::path;
 use uuid::Uuid;
 
 pub const MODULES_DIR: &str = "~/.panbuild/modules/";
+pub const PROJECTS_DIR: &str = "~/.panbuild/projects/";
+
 
 pub struct Database {
     pub projects: Vec<crate::projects::project::Project>,
     pub modules: Vec<crate::modules::SoftwareModule>,
 }
 impl Database {
-    pub fn get_loaded_database() -> Option<Vec<Database>> {
-        None
+    pub fn get_database() -> Database {
+        // FIXME error handle the init.
+        Database {
+            projects: Database::get_all_projects(),
+            modules: Database::get_all_modules(),
+        }
     }
 
     pub fn get_all_projects() -> Vec<crate::projects::project::Project> {
@@ -57,7 +63,6 @@ impl Database {
     pub fn add_module(new_module: &mut crate::modules::SoftwareModule) {
         let new_uuid = Uuid::new_v4();
         new_module.id = Some(new_uuid.to_string());
-        // FIXME format the names to be valid filenames!
         let mut new_module_path = format!(
             "{}/{}-{}",
             crate::db::MODULES_DIR,

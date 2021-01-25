@@ -2,8 +2,6 @@ use serde::{Deserialize, Serialize};
 
 use std::process::Command;
 
-pub const PROJECTS_DIR: &str = "~/.panbuild/projects/";
-
 #[derive(Serialize, Deserialize, Default)]
 pub struct Project {
     // Unique project id, if available
