@@ -7,8 +7,6 @@ use uuid::Uuid;
 pub const DEFAULT_DB_PATH: &str = "~/.panbuild-db";
 pub const MODULES_DB_SUBDIR: &str = "/modules";
 pub const PROJECTS_DB_SUBDIR: &str = "/projects";
-pub const MODULES_DIR: &str = "~/.panbuild/modules/";
-pub const PROJECTS_DIR: &str = "~/.panbuild/projects/";
 
 pub struct Database {
     pub projects: Vec<crate::projects::project::Project>,
@@ -96,9 +94,10 @@ impl Database {
     pub fn add_module(new_module: &mut crate::modules::SoftwareModule) {
         let new_uuid = Uuid::new_v4();
         new_module.id = Some(new_uuid.to_string());
+        let modules_path = Database::get_modules_db_path();
         let mut new_module_path = format!(
             "{}/{}-{}",
-            crate::db::MODULES_DIR,
+            modules_path,
             crate::utils::normalize_name(&new_module.name),
             new_module.id.as_ref().unwrap()
         );
