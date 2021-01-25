@@ -1,2 +1,2 @@
-pub mod hub;
 pub mod github;
+pub mod hub;
