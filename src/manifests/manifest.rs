@@ -11,6 +11,7 @@ use crate::modules::module::AbstractModule;
 pub enum ManifestFormat {
     JSON,
     YAML,
+    TOML,
     TEXT,
 }
 
@@ -163,6 +164,8 @@ impl AbstractManifest {
             manifest_format = ManifestFormat::JSON;
         } else if path.ends_with(".yaml") || path.ends_with(".yml") {
             manifest_format = ManifestFormat::YAML;
+        } else if path.ends_with(".toml") {
+            manifest_format = ManifestFormat::TOML;
         }
 
         let manifest = AbstractManifest {
