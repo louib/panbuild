@@ -6,6 +6,8 @@
 // for details on the pkgbuild format.
 // TODO use the list of all arch packages at
 // https://www.archlinux.org/packages/
+// and all the packages in a git access are here
+// https://github.com/archlinux/svntogit-packages
 
 pub struct ArchManifest {}
 
