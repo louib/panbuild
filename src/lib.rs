@@ -10,6 +10,7 @@ pub mod utils;
 mod config;
 mod logger;
 mod projects;
+mod hubs;
 mod version;
 
 pub use manifests::manifest::AbstractManifest;
