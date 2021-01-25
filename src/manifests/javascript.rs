@@ -33,7 +33,7 @@ impl JavascriptPackageManifest {
         if path.to_lowercase().ends_with("package.json") {
             return true;
         }
-        return false;
+        false
     }
 
     pub fn parse(manifest_content: &String) -> Option<JavascriptPackageManifest> {
@@ -78,6 +78,16 @@ pub struct JavascriptPackageAuthor {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    pub fn test_file_path_matches() {
+        assert!(JavascriptPackageManifest::file_path_matches("package.json"));
+        assert!(JavascriptPackageManifest::file_path_matches("./package.json"));
+        assert!(JavascriptPackageManifest::file_path_matches("./path/to/the/package.json"));
+        assert!(!JavascriptPackageManifest::file_path_matches("com.example.appName.yaml"));
+        assert!(!JavascriptPackageManifest::file_path_matches(""));
+        assert!(!JavascriptPackageManifest::file_path_matches("/////////////"));
+    }
 
     #[test]
     pub fn test_parse_missing_scripts_section() {

@@ -4,4 +4,5 @@ pub mod debian;
 pub mod flatpak;
 pub mod javascript;
 pub mod manifest;
+pub mod pyproject;
 pub mod snap;
