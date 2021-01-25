@@ -26,3 +26,9 @@ Make sure to run `rustfmt` on your code before commiting:
 ```
 rustup component add rustfmt
 ```
+
+## Logging
+You can use the `PB_LOG_LEVEL` to tune the logging level, for example:
+```
+PB_LOG_LEVEL=debug panbuild lint Cargo.toml
+```
