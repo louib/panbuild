@@ -6,13 +6,13 @@ use std::path;
 
 use uuid::Uuid;
 
-pub fn get_modules() -> Vec<module::AbstractModule> {
+pub fn get_modules() -> Vec<module::SoftwareModule> {
     db::get_all()
 }
 
 pub fn search_modules() {}
 
-pub fn add_module(new_module: &mut module::AbstractModule) {
+pub fn add_module(new_module: &mut module::SoftwareModule) {
     let new_uuid = Uuid::new_v4();
     new_module.id = Some(new_uuid.to_string());
     // FIXME format the names to be valid filenames!

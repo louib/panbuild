@@ -5,7 +5,7 @@ use std::process::Output;
 
 use serde::{Deserialize, Serialize};
 
-use crate::modules::module::AbstractModule;
+use crate::modules::module::SoftwareModule;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub enum ManifestFormat {
@@ -189,7 +189,7 @@ impl AbstractManifest {
         }
     }
 
-    pub fn get_modules(&self) -> Result<Vec<AbstractModule>, String> {
+    pub fn get_modules(&self) -> Result<Vec<SoftwareModule>, String> {
         match &self.native_manifest {
             Some(n) => match n {
                 NativeManifest::Flatpak(m) => Ok(crate::manifests::flatpak::get_modules(&m)),
@@ -199,7 +199,7 @@ impl AbstractManifest {
         }
     }
 
-    pub fn add_module(&mut self, module: &AbstractModule) -> Result<Vec<AbstractModule>, String> {
+    pub fn add_module(&mut self, module: &SoftwareModule) -> Result<Vec<SoftwareModule>, String> {
         match &mut self.native_manifest {
             Some(n) => match n {
                 NativeManifest::Flatpak(m) => crate::manifests::flatpak::add_module(m, module),

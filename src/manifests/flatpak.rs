@@ -5,7 +5,7 @@ use std::time::SystemTime;
 
 use serde::{Deserialize, Serialize};
 
-use crate::modules::module::{AbstractModule, BuildSystem};
+use crate::modules::module::{BuildSystem, SoftwareModule};
 
 const DEFAULT_FLATPAK_BUILDER_CACHE_DIR: &str = ".flatpak-builder";
 const DEFAULT_FLATPAK_OUTPUT_DIR: &str = "build";
@@ -591,11 +591,11 @@ pub struct FlatpakBuildOptions {
     pub arch: BTreeMap<String, FlatpakBuildOptions>,
 }
 
-pub fn get_modules(manifest: &FlatpakManifest) -> Vec<AbstractModule> {
+pub fn get_modules(manifest: &FlatpakManifest) -> Vec<SoftwareModule> {
     let mut response = vec![];
     // FIXME we should fetch those recursively.
     for module in &manifest.modules {
-        let mut abstract_module = AbstractModule::default();
+        let mut abstract_module = SoftwareModule::default();
         abstract_module.name = module.name.to_string();
         if module.buildsystem == "cmake" {
             abstract_module.build_system = BuildSystem::Cmake;
@@ -648,7 +648,7 @@ pub fn get_modules(manifest: &FlatpakManifest) -> Vec<AbstractModule> {
 }
 
 // Returns the updated list of modules in the manifest.
-pub fn add_module(manifest: &mut FlatpakManifest, new_module: &AbstractModule) -> Result<Vec<AbstractModule>, String> {
+pub fn add_module(manifest: &mut FlatpakManifest, new_module: &SoftwareModule) -> Result<Vec<SoftwareModule>, String> {
     for module in &manifest.modules {
         if module.name == new_module.name {
             return Err(format!("Already a module named {}.", module.name));

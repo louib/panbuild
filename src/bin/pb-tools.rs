@@ -5,7 +5,7 @@ use std::process::exit;
 use std::io::{self, BufRead, Write};
 
 use panbuild::manifests::manifest::AbstractManifest;
-use panbuild::modules::module::AbstractModule;
+use panbuild::modules::module::SoftwareModule;
 
 fn main() {
     let mut exit_code = 0;
@@ -22,7 +22,7 @@ fn main() {
     let command_name = &args[1];
 
     if command_name == &"import-modules".to_string() {
-        let mut modules: Vec<AbstractModule> = vec![];
+        let mut modules: Vec<SoftwareModule> = vec![];
 
         let stdin = io::stdin();
         for line in stdin.lock().lines() {

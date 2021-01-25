@@ -14,7 +14,7 @@ mod projects;
 mod version;
 
 pub use manifests::manifest::AbstractManifest;
-pub use modules::module::AbstractModule;
+pub use modules::module::SoftwareModule;
 
 use std::env;
 use std::fs;
@@ -108,7 +108,7 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
         }
         eprintln!("Search for {} in the projects database.", &search_term);
 
-        let packages: Vec<AbstractModule> = crate::projects::get_modules();
+        let packages: Vec<SoftwareModule> = crate::projects::get_modules();
         eprintln!("Searching in {:#?} packages for installation candidates 🕰", packages.len());
         for package in &packages {
             if package.name.contains(search_term) {
@@ -130,8 +130,8 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
         }
         eprintln!("Installing module {:#?}", &package_name);
 
-        let packages: Vec<AbstractModule> = crate::projects::get_modules();
-        let mut installed_package: Option<&AbstractModule> = None;
+        let packages: Vec<SoftwareModule> = crate::projects::get_modules();
+        let mut installed_package: Option<&SoftwareModule> = None;
         eprintln!("Searching in {:#?} packages for installation candidates 🕰", packages.len());
         for package in &packages {
             if package.name.contains(package_name) {
