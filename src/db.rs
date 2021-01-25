@@ -10,7 +10,6 @@ pub const PROJECTS_DB_SUBDIR: &str = "/projects";
 pub const MODULES_DIR: &str = "~/.panbuild/modules/";
 pub const PROJECTS_DIR: &str = "~/.panbuild/projects/";
 
-
 pub struct Database {
     pub projects: Vec<crate::projects::project::Project>,
     pub modules: Vec<crate::modules::SoftwareModule>,
