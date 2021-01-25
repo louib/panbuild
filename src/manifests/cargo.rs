@@ -5,8 +5,8 @@ use serde::{Deserialize, Serialize};
 #[derive(Deserialize, Serialize, Debug, Default)]
 #[serde(default)]
 pub struct CargoManifest {
-    package: CargoPackage,
-    dependencies: BTreeMap<String, CargoDependency>,
+    pub package: CargoPackage,
+    pub dependencies: BTreeMap<String, CargoDependency>,
 }
 impl CargoManifest {
     pub fn get_type(&self) -> &str {
