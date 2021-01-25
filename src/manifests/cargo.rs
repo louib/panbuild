@@ -1,10 +1,12 @@
+use std::collections::BTreeMap;
+
 use serde::{Deserialize, Serialize};
 
 #[derive(Deserialize, Serialize, Debug, Default)]
 #[serde(default)]
 pub struct CargoManifest {
     package: CargoPackage,
-    dependencies: CargoDependencies,
+    dependencies: BTreeMap<String, CargoDependency>,
 }
 impl CargoManifest {
     pub fn get_type(&self) -> &str {
@@ -59,6 +61,19 @@ pub struct CargoPackage {
 #[derive(Deserialize, Serialize, Debug, Default)]
 #[serde(default)]
 pub struct CargoDependencies {}
+
+#[derive(Debug, Deserialize, Serialize)]
+#[serde(untagged)]
+pub enum CargoDependency {
+    Version(String),
+    VersionObject(CargoVersionObject),
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct CargoVersionObject {
+    pub version: String,
+    pub features: Vec<String>,
+}
 
 #[cfg(test)]
 mod tests {
