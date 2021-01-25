@@ -30,6 +30,14 @@ impl Database {
         }
     }
 
+    pub fn get_modules_db_path() -> String {
+        Database::get_db_path() + MODULES_DB_SUBDIR
+    }
+
+    pub fn get_projects_db_path() -> String {
+        Database::get_db_path() + PROJECTS_DB_SUBDIR
+    }
+
     pub fn get_all_projects() -> Vec<crate::projects::project::Project> {
         let json_projects_db_path = env::var("PB_PROJECTS_DB_PATH").unwrap_or(String::from("")).to_string();
         if json_projects_db_path.is_empty() {
