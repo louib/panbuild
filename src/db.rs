@@ -4,6 +4,9 @@ use std::path;
 
 use uuid::Uuid;
 
+pub const DEFAULT_DB_PATH: &str = "~/.panbuild-db";
+pub const MODULES_DB_SUBDIR: &str = "/modules";
+pub const PROJECTS_DB_SUBDIR: &str = "/projects";
 pub const MODULES_DIR: &str = "~/.panbuild/modules/";
 pub const PROJECTS_DIR: &str = "~/.panbuild/projects/";
 
@@ -18,6 +21,13 @@ impl Database {
         Database {
             projects: Database::get_all_projects(),
             modules: Database::get_all_modules(),
+        }
+    }
+
+    pub fn get_db_path() -> String {
+        match env::var("PB_DB_PATH") {
+            Ok(path) => return path.to_string(),
+            Err(e) => return "~/.panbuild".to_string(),
         }
     }
 
