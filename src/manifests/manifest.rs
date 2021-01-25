@@ -93,32 +93,63 @@ impl AbstractManifest {
             return None;
         }
 
-        let manifest_content = match fs::read_to_string(file_path) {
-            Ok(content) => content,
-            Err(e) => {
-                eprintln!("could not read manifest file {}: {}.", path, e);
-                return None;
-            }
-        };
         let mut native_manifest: Option<NativeManifest> = None;
-        if let Some(flatpak_manifest) = crate::manifests::flatpak::FlatpakManifest::parse(&manifest_content) {
-            native_manifest = Some(NativeManifest::Flatpak(flatpak_manifest));
-        } else if crate::manifests::snap::SnapcraftManifest::file_path_matches(file_path.to_str().unwrap()) {
+        if crate::manifests::flatpak::FlatpakManifest::file_path_matches(&file_path.to_str().unwrap()) {
+            let manifest_content = match fs::read_to_string(file_path) {
+                Ok(content) => content,
+                Err(e) => {
+                    eprintln!("could not read manifest file {}: {}.", path, e);
+                    return None;
+                }
+            };
+            native_manifest = match crate::manifests::flatpak::FlatpakManifest::parse(&manifest_content) {
+                Some(m) => Some(NativeManifest::Flatpak(m)),
+                None => None,
+            };
+        } else if crate::manifests::snap::SnapcraftManifest::file_path_matches(&file_path.to_str().unwrap()) {
+            let manifest_content = match fs::read_to_string(file_path) {
+                Ok(content) => content,
+                Err(e) => {
+                    eprintln!("could not read manifest file {}: {}.", path, e);
+                    return None;
+                }
+            };
             native_manifest = match crate::manifests::snap::SnapcraftManifest::parse(&manifest_content) {
                 Some(m) => Some(NativeManifest::Snapcraft(m)),
                 None => None,
             };
-        } else if crate::manifests::debian::DebianManifest::file_path_matches(file_path.to_str().unwrap()) {
+        } else if crate::manifests::debian::DebianManifest::file_path_matches(&file_path.to_str().unwrap()) {
+            let manifest_content = match fs::read_to_string(file_path) {
+                Ok(content) => content,
+                Err(e) => {
+                    eprintln!("could not read manifest file {}: {}.", path, e);
+                    return None;
+                }
+            };
             native_manifest = match crate::manifests::debian::DebianManifest::parse(&manifest_content) {
                 Some(m) => Some(NativeManifest::Debian(m)),
                 None => None,
             };
-        } else if crate::manifests::javascript::JavascriptPackageManifest::file_path_matches(file_path.to_str().unwrap()) {
+        } else if crate::manifests::javascript::JavascriptPackageManifest::file_path_matches(&file_path.to_str().unwrap()) {
+            let manifest_content = match fs::read_to_string(file_path) {
+                Ok(content) => content,
+                Err(e) => {
+                    eprintln!("could not read manifest file {}: {}.", path, e);
+                    return None;
+                }
+            };
             native_manifest = match crate::manifests::javascript::JavascriptPackageManifest::parse(&manifest_content) {
                 Some(m) => Some(NativeManifest::Javascript(m)),
                 None => None,
             };
-        } else if crate::manifests::cargo::CargoManifest::file_path_matches(file_path.to_str().unwrap()) {
+        } else if crate::manifests::cargo::CargoManifest::file_path_matches(&file_path.to_str().unwrap()) {
+            let manifest_content = match fs::read_to_string(file_path) {
+                Ok(content) => content,
+                Err(e) => {
+                    eprintln!("could not read manifest file {}: {}.", path, e);
+                    return None;
+                }
+            };
             native_manifest = match crate::manifests::cargo::CargoManifest::parse(&manifest_content) {
                 Some(m) => Some(NativeManifest::Cargo(m)),
                 None => None,

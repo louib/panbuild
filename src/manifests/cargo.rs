@@ -12,7 +12,7 @@ impl CargoManifest {
     }
 
     pub fn file_path_matches(path: &str) -> bool {
-        if path.to_lowercase().ends_with("Cargo.toml") {
+        if path.to_lowercase().ends_with("cargo.toml") {
             return true;
         }
         return false;
@@ -59,3 +59,18 @@ pub struct CargoPackage {
 #[derive(Deserialize, Serialize, Debug, Default)]
 #[serde(default)]
 pub struct CargoDependencies {}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    pub fn test_file_path_matches() {
+        assert!(CargoManifest::file_path_matches("Cargo.toml"));
+        assert!(CargoManifest::file_path_matches("./Cargo.toml"));
+        assert!(CargoManifest::file_path_matches("./path/to/the/Cargo.toml"));
+        assert!(!CargoManifest::file_path_matches("com.example.appName.yaml"));
+        assert!(!CargoManifest::file_path_matches(""));
+        assert!(!CargoManifest::file_path_matches("/////////////"));
+    }
+}

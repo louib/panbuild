@@ -236,6 +236,7 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
 
             if let Some(manifest) = crate::manifests::manifest::AbstractManifest::load_from_file(file_path_str.to_string()) {
                 println!("{} {}", manifest.get_type().unwrap_or("unknown"), file_path_str);
+                found_manifest = true;
             }
         }
 
