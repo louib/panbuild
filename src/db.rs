@@ -65,21 +65,26 @@ impl Database {
         };
         let mut modules: Vec<crate::modules::SoftwareModule> = vec![];
         for module_path in all_modules_paths.iter() {
+            let module_path_str = module_path.to_str().unwrap();
             if !module_path.is_file() {
-                log::debug!("{} is not a file.", &module_path.to_str().unwrap());
+                log::debug!("{} is not a file.", &module_path_str);
+                continue;
+            }
+            // Don't even try to open it if it's not a yaml file.
+            if !module_path_str.ends_with("yml") && !module_path_str.ends_with("yaml") {
                 continue;
             }
             let module_content = match fs::read_to_string(module_path) {
                 Ok(content) => content,
                 Err(e) => {
-                    log::debug!("Could not read module file {}: {}.", &module_path.to_str().unwrap(), e);
+                    log::debug!("Could not read module file {}: {}.", &module_path_str, e);
                     continue;
                 }
             };
             let module = match serde_yaml::from_str(&module_content) {
                 Ok(m) => m,
                 Err(e) => {
-                    log::debug!("Could not parse module file at {}: {}.", &module_path.to_str().unwrap(), e);
+                    log::debug!("Could not parse module file at {}: {}.", &module_path_str, e);
                     continue;
                 }
             };
@@ -91,7 +96,7 @@ impl Database {
     pub fn search_modules() {}
     pub fn remove_module() {}
 
-    pub fn add_module(new_module: &mut crate::modules::SoftwareModule) {
+    pub fn add_module(&mut self, new_module: &mut crate::modules::SoftwareModule) {
         let new_uuid = Uuid::new_v4();
         new_module.id = Some(new_uuid.to_string());
         let modules_path = Database::get_modules_db_path();
@@ -112,5 +117,6 @@ impl Database {
                 eprintln!("could not write new module at {}.", new_module_path.to_string());
             }
         };
+        // self.modules.push(new_module);
     }
 }
