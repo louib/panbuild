@@ -231,13 +231,11 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
             if !file_path.is_file() {
                 continue;
             }
-
             // TODO Test that if it starts with the cache directories listed above,
             // you skip the file.
 
-            if crate::manifests::flatpak::file_path_matches(file_path_str) {
-                found_manifest = true;
-                println!("flatpak {}", file_path_str);
+            if let Some(manifest) = crate::manifests::manifest::AbstractManifest::load_from_file(file_path_str.to_string()) {
+                println!("{} {}", manifest.get_type().unwrap_or("unknown"), file_path_str);
             }
         }
 

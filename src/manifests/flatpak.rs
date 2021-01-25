@@ -212,6 +212,36 @@ impl FlatpakManifest {
         return "flatpak";
     }
 
+    pub fn file_path_matches(path: &str) -> bool {
+        let parts: Vec<&str> = path.split("/").collect();
+        if parts.len() == 0 {
+            return false;
+        }
+        let last_part = parts[parts.len() - 1].to_lowercase();
+        if !last_part.ends_with("yaml") && !last_part.ends_with("yml") && !last_part.ends_with("json") {
+            return false;
+        }
+        let mut dot_count = 0;
+        for c in last_part.chars() {
+            if c == '.' {
+                dot_count = dot_count + 1;
+                continue;
+            }
+            if c.is_alphabetic() || c.is_numeric() {
+                continue;
+            }
+            return false;
+        }
+        // The reverse DNS notation is used for the
+        // flatpak app IDs and the associated manifest
+        // files. This means at least 3 dots in the
+        // resulting name.
+        if dot_count < 3 {
+            return false;
+        }
+        return true;
+    }
+
     pub fn parse(manifest_content: &String) -> Option<FlatpakManifest> {
         let flatpak_manifest: FlatpakManifest = match serde_yaml::from_str(&manifest_content) {
             Ok(m) => m,
@@ -704,54 +734,24 @@ pub fn run_command(abstract_manifest: &crate::manifests::manifest::AbstractManif
     Ok(String::from("lol"))
 }
 
-pub fn file_path_matches(path: &str) -> bool {
-    let parts: Vec<&str> = path.split("/").collect();
-    if parts.len() == 0 {
-        return false;
-    }
-    let last_part = parts[parts.len() - 1].to_lowercase();
-    if !last_part.ends_with("yaml") && !last_part.ends_with("yml") && !last_part.ends_with("json") {
-        return false;
-    }
-    let mut dot_count = 0;
-    for c in last_part.chars() {
-        if c == '.' {
-            dot_count = dot_count + 1;
-            continue;
-        }
-        if c.is_alphabetic() || c.is_numeric() {
-            continue;
-        }
-        return false;
-    }
-    // The reverse DNS notation is used for the
-    // flatpak app IDs and the associated manifest
-    // files. This means at least 3 dots in the
-    // resulting name.
-    if dot_count < 3 {
-        return false;
-    }
-    return true;
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
 
     #[test]
     pub fn test_file_path_matches() {
-        assert!(file_path_matches("com.example.appName.yaml"));
-        assert!(file_path_matches("io.github.user.repo.Devel.yaml"));
-        assert!(file_path_matches("/path/to/com.example.appName.yaml"));
-        assert!(file_path_matches("/path/to/com.example.appName.yml"));
-        assert!(file_path_matches("/path/to/com.example.department.product.yaml"));
-        assert!(!file_path_matches("/path/to/file.yaml"));
-        assert!(!file_path_matches("/path/to/file.json"));
-        assert!(!file_path_matches("/path/to/___432423fdsf.json"));
-        assert!(!file_path_matches("/path/to/example.com.json"));
-        assert!(!file_path_matches("/path/to/example.com.json."));
-        assert!(!file_path_matches(""));
-        assert!(!file_path_matches("/////////////"));
+        assert!(FlatpakManifest::file_path_matches("com.example.appName.yaml"));
+        assert!(FlatpakManifest::file_path_matches("io.github.user.repo.Devel.yaml"));
+        assert!(FlatpakManifest::file_path_matches("/path/to/com.example.appName.yaml"));
+        assert!(FlatpakManifest::file_path_matches("/path/to/com.example.appName.yml"));
+        assert!(FlatpakManifest::file_path_matches("/path/to/com.example.department.product.yaml"));
+        assert!(!FlatpakManifest::file_path_matches("/path/to/file.yaml"));
+        assert!(!FlatpakManifest::file_path_matches("/path/to/file.json"));
+        assert!(!FlatpakManifest::file_path_matches("/path/to/___432423fdsf.json"));
+        assert!(!FlatpakManifest::file_path_matches("/path/to/example.com.json"));
+        assert!(!FlatpakManifest::file_path_matches("/path/to/example.com.json."));
+        assert!(!FlatpakManifest::file_path_matches(""));
+        assert!(!FlatpakManifest::file_path_matches("/////////////"));
     }
 
     #[test]
