@@ -8,9 +8,9 @@ pub mod modules;
 pub mod utils;
 
 mod config;
+mod db;
 mod hubs;
 mod logger;
-mod db;
 mod projects;
 mod version;
 
