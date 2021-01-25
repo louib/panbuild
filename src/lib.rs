@@ -235,10 +235,6 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
             // TODO Test that if it starts with the cache directories listed above,
             // you skip the file.
 
-            if crate::manifests::snap::file_path_matches(file_path_str) {
-                found_manifest = true;
-                println!("snap {}", file_path_str);
-            }
             if crate::manifests::flatpak::file_path_matches(file_path_str) {
                 found_manifest = true;
                 println!("flatpak {}", file_path_str);

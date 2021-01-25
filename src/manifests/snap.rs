@@ -145,6 +145,16 @@ impl SnapcraftManifest {
         return "snapcraft";
     }
 
+    pub fn file_path_matches(path: &str) -> bool {
+        if path.to_lowercase().ends_with("snapcraft.yaml") {
+            return true;
+        }
+        if path.to_lowercase().ends_with("snapcraft.yml") {
+            return true;
+        }
+        return false;
+    }
+
     pub fn parse(manifest_content: &String) -> Option<SnapcraftManifest> {
         let snapcraft_manifest: SnapcraftManifest = match serde_yaml::from_str(&manifest_content) {
             Ok(m) => m,
@@ -604,33 +614,19 @@ pub struct SnapcraftOptionalPackages {
     r#try: Vec<String>,
 }
 
-pub fn file_path_matches(path: &str) -> bool {
-    if path.to_lowercase().ends_with("snapcraft.yaml") {
-        return true;
-    }
-    if path.to_lowercase().ends_with("snapcraft.yml") {
-        return true;
-    }
-    return false;
-}
-
-pub fn file_content_matches(content: &str) -> bool {
-    return false;
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
 
     #[test]
     pub fn test_file_path_matches() {
-        assert!(file_path_matches("snapcraft.yaml"));
-        assert!(file_path_matches("/path/to/snapcraft.yml"));
-        assert!(file_path_matches("/path/to/Snapcraft.YAML"));
-        assert!(!file_path_matches("/path/to/file.yaml"));
-        assert!(!file_path_matches("/path/to/file.json"));
-        assert!(!file_path_matches(""));
-        assert!(!file_path_matches("/////////////"));
+        assert!(SnapcraftManifest::file_path_matches("snapcraft.yaml"));
+        assert!(SnapcraftManifest::file_path_matches("/path/to/snapcraft.yml"));
+        assert!(SnapcraftManifest::file_path_matches("/path/to/Snapcraft.YAML"));
+        assert!(!SnapcraftManifest::file_path_matches("/path/to/file.yaml"));
+        assert!(!SnapcraftManifest::file_path_matches("/path/to/file.json"));
+        assert!(!SnapcraftManifest::file_path_matches(""));
+        assert!(!SnapcraftManifest::file_path_matches("/////////////"));
     }
 
     #[test]
