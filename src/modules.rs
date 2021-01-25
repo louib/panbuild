@@ -1,4 +1,3 @@
-pub mod db;
 pub mod module;
 
 use std::fs;
@@ -7,10 +6,8 @@ use std::path;
 use uuid::Uuid;
 
 pub fn get_modules() -> Vec<module::SoftwareModule> {
-    db::get_all()
+    crate::db::Database::get_all_modules()
 }
-
-pub fn search_modules() {}
 
 pub fn add_module(new_module: &mut module::SoftwareModule) {
     let new_uuid = Uuid::new_v4();
@@ -18,7 +15,7 @@ pub fn add_module(new_module: &mut module::SoftwareModule) {
     // FIXME format the names to be valid filenames!
     let mut new_module_path = format!(
         "{}/{}-{}",
-        db::MODULES_DIR,
+        crate::db::MODULES_DIR,
         crate::utils::normalize_name(&new_module.name),
         new_module.id.as_ref().unwrap()
     );
@@ -35,4 +32,3 @@ pub fn add_module(new_module: &mut module::SoftwareModule) {
     };
 }
 
-pub fn remove_module() {}
