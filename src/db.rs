@@ -1,11 +1,14 @@
 use std::env;
 use std::fs;
+use std::path;
+
+use uuid::Uuid;
 
 pub const MODULES_DIR: &str = "~/.panbuild/modules/";
 
 pub struct Database {
     pub projects: Vec<crate::projects::project::Project>,
-    pub modules: Vec<crate::modules::module::SoftwareModule>,
+    pub modules: Vec<crate::modules::SoftwareModule>,
 }
 impl Database {
     pub fn get_loaded_database() -> Option<Vec<Database>> {
@@ -30,7 +33,7 @@ impl Database {
         db_projects
     }
 
-    pub fn get_all_modules() -> Vec<crate::modules::module::SoftwareModule> {
+    pub fn get_all_modules() -> Vec<crate::modules::SoftwareModule> {
         let json_modules_db_path = env::var("PB_MODULES_DB_PATH").unwrap_or(String::from("")).to_string();
         if json_modules_db_path.is_empty() {
             return vec![];
@@ -43,11 +46,34 @@ impl Database {
                 return vec![];
             }
         };
-        let mut db_modules: Vec<crate::modules::module::SoftwareModule> = serde_json::from_str(&json_modules).unwrap();
+        let mut db_modules: Vec<crate::modules::SoftwareModule> = serde_json::from_str(&json_modules).unwrap();
 
         db_modules
     }
 
     pub fn search_modules() {}
     pub fn remove_module() {}
+
+    pub fn add_module(new_module: &mut crate::modules::SoftwareModule) {
+        let new_uuid = Uuid::new_v4();
+        new_module.id = Some(new_uuid.to_string());
+        // FIXME format the names to be valid filenames!
+        let mut new_module_path = format!(
+            "{}/{}-{}",
+            crate::db::MODULES_DIR,
+            crate::utils::normalize_name(&new_module.name),
+            new_module.id.as_ref().unwrap()
+        );
+        log::info!("Adding module at {}", new_module_path);
+        let mut new_module_fs_path = path::Path::new(&new_module_path);
+        if new_module_fs_path.exists() {
+            panic!("Path {} already exists. This should not happen!!", new_module_path);
+        }
+        match fs::write(new_module_fs_path, serde_yaml::to_string(&new_module).unwrap()) {
+            Ok(content) => content,
+            Err(e) => {
+                eprintln!("could not write new module at {}.", new_module_path.to_string());
+            }
+        };
+    }
 }

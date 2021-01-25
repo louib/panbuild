@@ -5,7 +5,7 @@ use std::time::SystemTime;
 
 use serde::{Deserialize, Serialize};
 
-use crate::modules::module::{BuildSystem, SoftwareModule};
+use crate::modules::{BuildSystem, SoftwareModule};
 
 const DEFAULT_FLATPAK_BUILDER_CACHE_DIR: &str = ".flatpak-builder";
 const DEFAULT_FLATPAK_OUTPUT_DIR: &str = "build";

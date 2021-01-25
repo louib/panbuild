@@ -51,7 +51,7 @@ pub struct ProjectVersion {
     // Name of the version. Normally follows sem ver.
     pub name: String,
     pub url: String,
-    pub url_type: crate::modules::module::SourceType,
+    pub url_type: crate::modules::SourceType,
     pub tag: String,
     pub branch: String,
     pub sha256sum: String,

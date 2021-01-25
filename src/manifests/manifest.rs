@@ -5,7 +5,7 @@ use std::process::Output;
 
 use serde::{Deserialize, Serialize};
 
-use crate::modules::module::SoftwareModule;
+use crate::modules::SoftwareModule;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub enum ManifestFormat {

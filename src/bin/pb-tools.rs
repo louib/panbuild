@@ -5,7 +5,7 @@ use std::process::exit;
 use std::io::{self, BufRead, Write};
 
 use panbuild::manifests::manifest::AbstractManifest;
-use panbuild::modules::module::SoftwareModule;
+use panbuild::modules::SoftwareModule;
 
 fn main() {
     let mut exit_code = 0;

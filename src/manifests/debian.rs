@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use serde::{Deserialize, Serialize};
 
 use crate::manifests::manifest::AbstractManifest;
-use crate::modules::module::SoftwareModule;
+use crate::modules::SoftwareModule;
 
 const CONTROL_FILE_SEPARATOR: &str = ":";
 

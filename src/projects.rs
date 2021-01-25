@@ -16,12 +16,12 @@ pub fn get_projects() -> Vec<project::Project> {
 
 // Get the potential modules that are inferable from the
 // projects.
-pub fn get_modules() -> Vec<crate::modules::module::SoftwareModule> {
+pub fn get_modules() -> Vec<crate::modules::SoftwareModule> {
     let mut modules = vec![];
     for project in crate::db::Database::get_all_projects() {
         for project_version in &project.versions {
             for artifact_name in &project.artifact_names {
-                let mut module = crate::modules::module::SoftwareModule::default();
+                let mut module = crate::modules::SoftwareModule::default();
                 module.name = artifact_name.to_string();
                 module.version = project_version.to_string();
                 module.tag = project_version.to_string();
