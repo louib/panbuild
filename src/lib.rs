@@ -109,12 +109,11 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
         }
         eprintln!("Search for {} in the projects database.", &search_term);
 
-        let packages: Vec<SoftwareModule> = crate::projects::get_modules();
-        eprintln!("Searching in {:#?} packages for installation candidates 🕰", packages.len());
-        for package in &packages {
-            if package.name.contains(search_term) {
-                println!("found candidate artifact in {}.", package.name);
-            }
+        let db = crate::db::Database::get_database();
+        let modules: Vec<&SoftwareModule> = db.search_modules(search_term);
+        eprintln!("Searching in {:#?} modules for installation candidates 🕰", modules.len());
+        for module in modules {
+            println!("found candidate artifact in {}.", module.name);
         }
     }
 

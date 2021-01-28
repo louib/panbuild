@@ -93,7 +93,16 @@ impl Database {
         modules
     }
 
-    pub fn search_modules() {}
+    pub fn search_modules(&self, search_term: &str) -> Vec<&crate::modules::SoftwareModule> {
+        let mut modules: Vec<&crate::modules::SoftwareModule> = vec![];
+        for module in &self.modules {
+            if module.name.contains(&search_term) {
+                modules.push(&module);
+            }
+        }
+        modules
+    }
+
     pub fn remove_module() {}
 
     pub fn add_module(&mut self, new_module: &mut crate::modules::SoftwareModule) {
