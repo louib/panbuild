@@ -88,8 +88,11 @@ fn main() {
                 panic!("Could not get paths in flathub shared modules repo.");
             }
         };
+
+        let mut flatpak_modules: Vec<panbuild::manifests::flatpak::FlatpakModule> = vec![];
         for file_path in &all_repo_paths {
             let file_path_str = file_path.to_str().unwrap();
+
             let file_content = match fs::read_to_string(file_path) {
                 Ok(content) => content,
                 Err(e) => {
@@ -98,14 +101,21 @@ fn main() {
                 }
             };
 
-            let module: panbuild::modules::SoftwareModule = match serde_json::from_str(&file_content) {
+            println!("Trying to parse Flatpak module at {}.", file_path_str);
+            let module: panbuild::manifests::flatpak::FlatpakModule = match serde_json::from_str(&file_content) {
                 Ok(m) => m,
-                Err(e) => continue,
+                Err(e) => {
+                    log::debug!("could not parse file {}: {}.", file_path_str, e);
+                    continue;
+                }
             };
 
-            db.add_module(module);
-            print!("Parsed Flatpak module at {}.", file_path_str);
+            println!("Parsed Flatpak module at {}.", file_path_str);
+            flatpak_modules.push(module);
         }
+
+        println!("Imported {} Flatpak module.", flatpak_modules.len());
+
     }
 
     exit(exit_code);
