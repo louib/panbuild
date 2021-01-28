@@ -71,5 +71,42 @@ fn main() {
         }
     }
 
+    if command_name == &"import-flatpak-shared-modules".to_string() {
+        let mut modules: Vec<SoftwareModule> = vec![];
+        let mut db = panbuild::db::Database::get_database();
+        let repo_path = match panbuild::utils::clone_git_repo(
+            "https://github.com/flathub/shared-modules.git".to_string()
+        ) {
+            Ok(p) => p,
+            Err(e) => {
+                panic!("Could not glone flathub shared modules repo.");
+            }
+        };
+        let all_repo_paths = match panbuild::utils::get_all_paths(path::Path::new(&repo_path)) {
+            Ok(p) => p,
+            Err(e) => {
+                panic!("Could not get paths in flathub shared modules repo.");
+            }
+        };
+        for file_path in &all_repo_paths {
+            let file_path_str = file_path.to_str().unwrap();
+            let file_content = match fs::read_to_string(file_path) {
+                Ok(content) => content,
+                Err(e) => {
+                    eprintln!("could not read file {}: {}.", file_path_str, e);
+                    continue;
+                }
+            };
+
+            let module: panbuild::modules::SoftwareModule = match serde_json::from_str(&file_content) {
+                Ok(m) => m,
+                Err(e) => continue,
+            };
+
+            db.add_module(module);
+            print!("Parsed Flatpak module at {}.", file_path_str);
+        }
+    }
+
     exit(exit_code);
 }

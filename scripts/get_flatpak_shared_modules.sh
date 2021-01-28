@@ -1,6 +1,4 @@
 #!/usr/bin/env bash
-# Get the packages of type "source" from the most common
-# debian and debian derivative repositories.
 
 die() { echo "🔥 Error: $*" 1>&2; exit 1; }
 

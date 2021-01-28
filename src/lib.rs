@@ -6,9 +6,9 @@ use std::collections::HashMap;
 pub mod manifests;
 pub mod modules;
 pub mod utils;
+pub mod db;
 
 mod config;
-mod db;
 mod hubs;
 mod logger;
 mod projects;

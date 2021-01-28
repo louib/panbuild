@@ -105,7 +105,7 @@ impl Database {
 
     pub fn remove_module() {}
 
-    pub fn add_module(&mut self, new_module: &mut crate::modules::SoftwareModule) {
+    pub fn add_module(&mut self, mut new_module: crate::modules::SoftwareModule) {
         let new_uuid = Uuid::new_v4();
         new_module.id = Some(new_uuid.to_string());
         let modules_path = Database::get_modules_db_path();
@@ -126,6 +126,6 @@ impl Database {
                 eprintln!("could not write new module at {}.", new_module_path.to_string());
             }
         };
-        // self.modules.push(new_module);
+        self.modules.push(new_module);
     }
 }
