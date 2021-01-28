@@ -3,10 +3,10 @@
 //! `panbuild` is the universal builder.
 use std::collections::HashMap;
 
+pub mod db;
 pub mod manifests;
 pub mod modules;
 pub mod utils;
-pub mod db;
 
 mod config;
 mod hubs;
