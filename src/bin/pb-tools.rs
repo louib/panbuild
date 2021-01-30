@@ -101,7 +101,7 @@ fn main() {
                 }
             };
 
-            println!("Trying to parse Flatpak module at {}.", file_path_str);
+            log::debug!("Trying to parse Flatpak module at {}.", file_path_str);
             let module: panbuild::manifests::flatpak::FlatpakModule = match serde_json::from_str(&file_content) {
                 Ok(m) => m,
                 Err(e) => {

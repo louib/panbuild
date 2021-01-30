@@ -4,7 +4,7 @@ use std::path;
 
 use uuid::Uuid;
 
-pub const DEFAULT_DB_PATH: &str = "~/.panbuild-db";
+pub const DEFAULT_DB_PATH: &str = ".panbuild-db";
 pub const MODULES_DB_SUBDIR: &str = "/modules";
 pub const PROJECTS_DB_SUBDIR: &str = "/projects";
 
@@ -14,6 +14,12 @@ pub struct Database {
 }
 impl Database {
     pub fn get_database() -> Database {
+        if let Err(e) = fs::create_dir_all(Database::get_modules_db_path()) {
+            panic!("Could not initialize database directory: {}.", e);
+        }
+        if let Err(e) = fs::create_dir_all(Database::get_projects_db_path()) {
+            panic!("Could not initialize database directory: {}.", e);
+        }
         // FIXME error handle the init.
         Database {
             projects: Database::get_all_projects(),
@@ -22,10 +28,13 @@ impl Database {
     }
 
     pub fn get_db_path() -> String {
-        match env::var("PB_DB_PATH") {
-            Ok(path) => return path.to_string(),
-            Err(e) => return "~/.panbuild".to_string(),
+        if let Ok(path) = env::var("PB_DB_PATH") {
+            return path.to_string();
         }
+        if let Ok(path) = env::var("HOME") {
+            return path + "/" + &DEFAULT_DB_PATH.to_string();
+        }
+        return DEFAULT_DB_PATH.to_string();
     }
 
     pub fn get_modules_db_path() -> String {
@@ -110,7 +119,7 @@ impl Database {
         new_module.id = Some(new_uuid.to_string());
         let modules_path = Database::get_modules_db_path();
         let mut new_module_path = format!(
-            "{}/{}-{}",
+            "{}/{}-{}.yaml",
             modules_path,
             crate::utils::normalize_name(&new_module.name),
             new_module.id.as_ref().unwrap()
@@ -123,7 +132,7 @@ impl Database {
         match fs::write(new_module_fs_path, serde_yaml::to_string(&new_module).unwrap()) {
             Ok(content) => content,
             Err(e) => {
-                eprintln!("could not write new module at {}.", new_module_path.to_string());
+                eprintln!("Could not write new module at {}: {}", new_module_path.to_string(), e);
             }
         };
         self.modules.push(new_module);
