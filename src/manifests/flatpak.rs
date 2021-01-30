@@ -277,6 +277,17 @@ impl FlatpakManifest {
 
         Err(format!("Invalid format for Flatpak manifest."))
     }
+
+    pub fn get_modules(&self) -> Vec<SoftwareModule> {
+        let mut response = vec![];
+        // FIXME we should fetch those recursively.
+        for module in &self.modules {
+            let software_module = module.to_module();
+            // FIXME should we check for duplicates here??
+            response.push(software_module);
+        }
+        response
+    }
 }
 
 // Each module specifies a source that has to be separately built and installed.
@@ -415,6 +426,58 @@ pub struct FlatpakModule {
     // yaml file that contains a module.
     #[serde(skip_serializing_if = "Vec::is_empty")]
     pub modules: Vec<FlatpakModule>,
+}
+impl FlatpakModule {
+    pub fn to_module(&self) -> SoftwareModule {
+        let mut software_module = SoftwareModule::default();
+        software_module.name = self.name.to_string();
+        if self.buildsystem == "cmake" {
+            software_module.build_system = BuildSystem::Cmake;
+        }
+        if self.buildsystem == "autotools" {
+            software_module.build_system = BuildSystem::Autotools;
+        }
+        if self.buildsystem == "meson" {
+            software_module.build_system = BuildSystem::Meson;
+        }
+        // FIXME not sure what to do with this one. Maybe we should support having a list
+        // of build systems?
+        if self.buildsystem == "cmake-ninja" {
+            software_module.build_system = BuildSystem::Meson;
+        }
+        if self.buildsystem == "simple" {
+            software_module.build_system = BuildSystem::Unknown;
+        }
+        if self.buildsystem == "qmake" {
+            software_module.build_system = BuildSystem::Qmake;
+        }
+
+        // Skip the flatpak modules with more than 1 source, because those are harder
+        // to map with a source code repository.
+        if self.sources.len() == 0 {
+            panic!("Cannot convert flatpak module: no sources available.");
+        }
+
+        let sources = &self.sources[0];
+        // Not handling those.
+        if sources.path.is_some() {
+            return software_module;
+        }
+
+        if sources.url.is_none() {
+            return software_module;
+        }
+
+        software_module.url = sources.url.as_ref().unwrap().to_string();
+
+        software_module.tag = sources.tag.as_ref().unwrap_or(&"".to_string()).to_string();
+
+        software_module.config_options = self.config_opts.to_owned();
+        software_module.build_commands = self.build_commands.to_owned();
+
+        // TODO fetch the version from the sources.
+        software_module
+    }
 }
 
 pub const ALLOWED_SOURCE_TYPES: [&'static str; 10] = ["archive", "git", "bzr", "svn", "dir", "file", "script", "shell", "patch", "extra-data"];
@@ -591,62 +654,6 @@ pub struct FlatpakBuildOptions {
     pub arch: BTreeMap<String, FlatpakBuildOptions>,
 }
 
-pub fn get_modules(manifest: &FlatpakManifest) -> Vec<SoftwareModule> {
-    let mut response = vec![];
-    // FIXME we should fetch those recursively.
-    for module in &manifest.modules {
-        let mut abstract_module = SoftwareModule::default();
-        abstract_module.name = module.name.to_string();
-        if module.buildsystem == "cmake" {
-            abstract_module.build_system = BuildSystem::Cmake;
-        }
-        if module.buildsystem == "autotools" {
-            abstract_module.build_system = BuildSystem::Autotools;
-        }
-        if module.buildsystem == "meson" {
-            abstract_module.build_system = BuildSystem::Meson;
-        }
-        // FIXME not sure what to do with this one. Maybe we should support having a list
-        // of build systems?
-        if module.buildsystem == "cmake-ninja" {
-            abstract_module.build_system = BuildSystem::Meson;
-        }
-        if module.buildsystem == "simple" {
-            abstract_module.build_system = BuildSystem::Unknown;
-        }
-        if module.buildsystem == "qmake" {
-            abstract_module.build_system = BuildSystem::Qmake;
-        }
-
-        // Skip the flatpak modules with more than 1 source, because those are harder
-        // to map with a source code repository.
-        if module.sources.len() != 1 {
-            continue;
-        }
-
-        let sources = &module.sources[0];
-        // Not handling those.
-        if sources.path.is_some() {
-            continue;
-        }
-
-        if sources.url.is_none() {
-            continue;
-        }
-        abstract_module.url = sources.url.as_ref().unwrap().to_string();
-
-        abstract_module.tag = sources.tag.as_ref().unwrap_or(&"".to_string()).to_string();
-
-        abstract_module.config_options = module.config_opts.to_owned();
-        abstract_module.build_commands = module.build_commands.to_owned();
-
-        // TODO fetch the version from the sources.
-        // FIXME should we check for duplicates here??
-        response.push(abstract_module);
-    }
-    response
-}
-
 // Returns the updated list of modules in the manifest.
 pub fn add_module(manifest: &mut FlatpakManifest, new_module: &SoftwareModule) -> Result<Vec<SoftwareModule>, String> {
     for module in &manifest.modules {
@@ -666,7 +673,7 @@ pub fn add_module(manifest: &mut FlatpakManifest, new_module: &SoftwareModule) -
 
     manifest.modules.insert(0, new_flatpak_module);
 
-    Ok(get_modules(manifest))
+    Ok(manifest.get_modules())
 }
 
 pub fn run_build(abstract_manifest: &crate::manifests::manifest::AbstractManifest) -> Result<String, String> {

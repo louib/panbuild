@@ -192,7 +192,7 @@ impl AbstractManifest {
     pub fn get_modules(&self) -> Result<Vec<SoftwareModule>, String> {
         match &self.native_manifest {
             Some(n) => match n {
-                NativeManifest::Flatpak(m) => Ok(crate::manifests::flatpak::get_modules(&m)),
+                NativeManifest::Flatpak(m) => Ok(m.get_modules()),
                 _ => Err("Getting the modules is not supported for this manifest format.".to_string()),
             },
             None => Err("No manifest to get the modules from!".to_string()),
