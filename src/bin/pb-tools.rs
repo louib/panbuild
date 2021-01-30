@@ -96,7 +96,7 @@ fn main() {
             let file_content = match fs::read_to_string(file_path) {
                 Ok(content) => content,
                 Err(e) => {
-                    eprintln!("could not read file {}: {}.", file_path_str, e);
+                    log::debug!("Could not read file {}: {}.", file_path_str, e);
                     continue;
                 }
             };
@@ -105,7 +105,7 @@ fn main() {
             let module: panbuild::manifests::flatpak::FlatpakModule = match serde_json::from_str(&file_content) {
                 Ok(m) => m,
                 Err(e) => {
-                    log::debug!("could not parse file {}: {}.", file_path_str, e);
+                    log::debug!("Could not parse file {}: {}.", file_path_str, e);
                     continue;
                 }
             };
@@ -115,6 +115,10 @@ fn main() {
         }
 
         for flatpak_module in &flatpak_modules {
+            if flatpak_module.sources.len() == 0 {
+                continue;
+            }
+
             let software_module = flatpak_module.to_module();
             db.add_module(software_module);
         }

@@ -54,7 +54,7 @@ impl Database {
         let json_projects = match fs::read_to_string(&json_projects_db_path) {
             Ok(content) => content,
             Err(e) => {
-                eprintln!("could not read file {}.", json_projects_db_path);
+                eprintln!("Could not read file {}.", json_projects_db_path);
                 return vec![];
             }
         };
