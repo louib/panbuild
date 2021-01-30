@@ -114,6 +114,10 @@ fn main() {
             flatpak_modules.push(module);
         }
 
+        for flatpak_module in &flatpak_modules {
+            let software_module = flatpak_module.to_module();
+            db.add_module(software_module);
+        }
         println!("Imported {} Flatpak module.", flatpak_modules.len());
 
     }
