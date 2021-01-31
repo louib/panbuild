@@ -24,13 +24,13 @@ impl CargoManifest {
         let cargo_manifest: CargoManifest = match toml::from_str(&manifest_content) {
             Ok(m) => m,
             Err(e) => {
-                eprintln!("Failed to parse the Cargo manifest: {}.", e);
+                log::debug!("Failed to parse the Cargo manifest: {}.", e);
                 return None;
             }
         };
 
         if cargo_manifest.package.name.is_empty() {
-            eprintln!("Required package name is missing from cargo manifest.");
+            log::debug!("Required package name is missing from cargo manifest.");
             return None;
         }
 
@@ -72,7 +72,7 @@ pub enum CargoDependency {
 #[derive(Debug, Deserialize, Serialize)]
 pub struct CargoVersionObject {
     pub version: String,
-    pub features: Vec<String>,
+    pub features: Option<Vec<String>>,
 }
 
 #[cfg(test)]
