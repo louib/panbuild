@@ -32,6 +32,31 @@ pub fn clone_git_repo(repo_url: String) -> Result<String, String> {
     Ok(repo_dir)
 }
 
+pub fn fetch_file(file_url: String) -> Result<String, String> {
+    let file_name_parts = file_url.split("/");
+    let file_name = file_name_parts.last().unwrap();
+
+    println!("Getting file at {}", file_url);
+    let mut output = Command::new("wget")
+        .arg(file_url.to_string())
+        .arg("-P /tmp/")
+        .stdout(Stdio::piped())
+        .spawn()
+        .unwrap();
+
+    let local_file_path = "/tmp/".to_owned() + &file_name.to_owned();
+
+    let mut output = match output.wait_with_output() {
+        Ok(o) => o,
+        Err(e) => return Err(e.to_string()),
+    };
+    if !output.status.success() {
+        return Err("Could not fetch file.".to_string());
+    }
+
+    Ok(local_file_path)
+}
+
 pub fn get_git_repo_initial_commits(repo_path: String) -> Result<Vec<String>, String> {
     // FIXME there can actually be more than 1 parentless commit
     // in a git repo, in the case of a merger. A parentless commit
