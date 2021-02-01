@@ -1,6 +1,14 @@
 # Hack the planet!!
 
+## Install using cargo
+```
+cargo install panbuild
+```
+
 ## Building from sources
+
+### Dependencies
+* libssl-dev
 
 ### Building with Cargo
 ```

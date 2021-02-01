@@ -22,23 +22,7 @@ Manifests from the following packaging systems are supported:
 
 ## Install
 
-### Using cargo
-```
-cargo install panbuild
-```
-
-### Using flatpak
-```
-# Make sure you have flathub installed.
-# This is not working yet.
-flatpak install net.louib.panbuild
-```
-
-### Install the binary
-TODO
-
-### Install from sources
-See [HACKING.md](./HACKING.md).
+See [HACKING.md](./HACKING.md)
 
 ## License
 BSD-3

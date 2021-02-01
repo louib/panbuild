@@ -7,9 +7,9 @@ pub mod db;
 pub mod manifests;
 pub mod modules;
 pub mod utils;
+pub mod hubs;
 
 mod config;
-mod hubs;
 mod logger;
 mod projects;
 mod version;

@@ -71,7 +71,7 @@ fn main() {
         }
     }
 
-    if command_name == &"import-flatpak-shared-modules".to_string() {
+    if command_name == &"import-flathub-shared-modules".to_string() {
         let mut modules: Vec<SoftwareModule> = vec![];
         let mut db = panbuild::db::Database::get_database();
         let repo_path = match panbuild::utils::clone_git_repo(
@@ -124,6 +124,10 @@ fn main() {
         }
         println!("Imported {} Flatpak module.", flatpak_modules.len());
 
+    }
+
+    if command_name == &"import-flathub-manifests".to_string() {
+        let all_flathub_repos = panbuild::hubs::github::get_org_repos("flathub");
     }
 
     exit(exit_code);
