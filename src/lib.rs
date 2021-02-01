@@ -4,10 +4,10 @@
 use std::collections::HashMap;
 
 pub mod db;
+pub mod hubs;
 pub mod manifests;
 pub mod modules;
 pub mod utils;
-pub mod hubs;
 
 mod config;
 mod logger;

@@ -1,7 +1,7 @@
 use std::env;
 
-use reqwest::header;
 use futures::executor::block_on;
+use reqwest::header;
 use serde::{Deserialize, Serialize};
 
 pub fn get_org_repos(repo_name: &str) -> Vec<String> {
@@ -13,20 +13,13 @@ pub fn get_org_repos(repo_name: &str) -> Vec<String> {
         headers.insert("Authorization", header::HeaderValue::from_str(&token).unwrap());
     }
 
-    let client = reqwest::blocking::Client::builder()
-        .default_headers(headers)
-        .build()
-        .unwrap();
+    let client = reqwest::blocking::Client::builder().default_headers(headers).build().unwrap();
 
     repos
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-struct GitHubRepo {
-
-}
+struct GitHubRepo {}
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct GitHub {
-
-}
+pub struct GitHub {}
