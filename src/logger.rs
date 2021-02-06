@@ -4,7 +4,7 @@ extern crate simple_logging;
 use std::env;
 use std::str::FromStr;
 
-const DEFAULT_LOG_LEVEL: log::LevelFilter = log::LevelFilter::Info;
+const DEFAULT_LOG_LEVEL: log::LevelFilter = log::LevelFilter::Warn;
 
 pub fn init() {
     simple_logging::log_to_stderr(get_log_level());
