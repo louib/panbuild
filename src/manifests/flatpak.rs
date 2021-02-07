@@ -1,5 +1,6 @@
 use std::collections::BTreeMap;
 use std::path;
+use std::str;
 use std::process::{Command, Output, Stdio};
 use std::time::SystemTime;
 
@@ -714,6 +715,52 @@ pub fn add_module(manifest: &mut FlatpakManifest, new_module: &SoftwareModule) -
     manifest.modules.insert(0, new_flatpak_module);
 
     Ok(manifest.get_modules())
+}
+
+/// Setup the system
+pub fn setup(abstract_manifest: &crate::manifests::manifest::AbstractManifest) -> Result<String, String> {
+    let child = Command::new("flatpak")
+        .arg("remote-add")
+        .arg("--if-not-exists")
+        .arg("--user")
+        .arg("flathub")
+        .stdout(Stdio::piped())
+        .spawn()
+        .unwrap();
+
+    let output = match child.wait_with_output() {
+        Ok(o) => o,
+        Err(e) => return Err(e.to_string()),
+    };
+    if !output.status.success() {
+        return Ok("it went ok".to_string());
+    }
+    Ok(String::from("lol"))
+}
+
+pub fn is_setup(abstract_manifest: &crate::manifests::manifest::AbstractManifest) -> bool {
+    let child = Command::new("flatpak")
+        .arg("remote-list")
+        .arg("--user")
+        .stdout(Stdio::piped())
+        .spawn()
+        .unwrap();
+
+    let output = match child.wait_with_output() {
+        Ok(o) => o,
+        Err(e) => return false,
+    };
+    if !output.status.success() {
+        return false;
+    }
+    let stdout = match str::from_utf8(&output.stdout) {
+        Ok(v) => v,
+        Err(e) => {
+            log::warn!("Invalid UTF-8 sequence printed by `flatpak remote-list`.");
+            return false;
+        },
+    };
+    return true;
 }
 
 pub fn run_build(abstract_manifest: &crate::manifests::manifest::AbstractManifest) -> Result<String, String> {
