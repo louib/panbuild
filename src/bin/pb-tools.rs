@@ -128,6 +128,7 @@ fn main() {
 
     if command_name == &"import-flathub-manifests".to_string() {
         let all_flathub_repos = panbuild::hubs::github::get_org_repos("flathub");
+        println!("There are {} flathub repos.", all_flathub_repos.len());
     }
 
     exit(exit_code);
