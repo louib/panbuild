@@ -1,7 +1,7 @@
 use std::collections::BTreeMap;
 use std::path;
-use std::str;
 use std::process::{Command, Output, Stdio};
+use std::str;
 use std::time::SystemTime;
 
 use serde::{Deserialize, Serialize};
@@ -739,12 +739,7 @@ pub fn setup(abstract_manifest: &crate::manifests::manifest::AbstractManifest) -
 }
 
 pub fn is_setup(abstract_manifest: &crate::manifests::manifest::AbstractManifest) -> bool {
-    let child = Command::new("flatpak")
-        .arg("remote-list")
-        .arg("--user")
-        .stdout(Stdio::piped())
-        .spawn()
-        .unwrap();
+    let child = Command::new("flatpak").arg("remote-list").arg("--user").stdout(Stdio::piped()).spawn().unwrap();
 
     let output = match child.wait_with_output() {
         Ok(o) => o,
@@ -758,7 +753,7 @@ pub fn is_setup(abstract_manifest: &crate::manifests::manifest::AbstractManifest
         Err(e) => {
             log::warn!("Invalid UTF-8 sequence printed by `flatpak remote-list`.");
             return false;
-        },
+        }
     };
     return true;
 }
