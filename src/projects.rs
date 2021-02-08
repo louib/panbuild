@@ -1,5 +1,28 @@
 pub mod project;
 
+pub const CORE_PROJECTS: [&'static str; 20] = [
+    "https://git.savannah.gnu.org/cgit/bash.git",
+    "https://git.savannah.gnu.org/cgit/make.git",
+    "https://git.savannah.gnu.org/cgit/diffutils.git",
+    "https://git.savannah.gnu.org/cgit/findutils.git",
+    "https://git.savannah.gnu.org/cgit/gzip.git",
+    "https://git.savannah.gnu.org/git/grep.git",
+    "https://git.savannah.gnu.org/cgit/tar.git",
+    "https://git.savannah.gnu.org/git/libtool.git",
+    "https://git.lysator.liu.se/lsh/lsh.git",
+    "https://git.savannah.gnu.org/cgit/gawk.git",
+    "https://github.com/gwsw/less.git",
+    "https://github.com/openbsd/src.git",
+    "https://gcc.gnu.org/git/gcc.git",
+    "https://git.sv.gnu.org/cgit/coreutils.git",
+    "https://sourceware.org/git/binutils-gdb.git",
+    "https://sourceware.org/git/glibc.git",
+    "https://gitlab.gnome.org/GNOME/gtk.git",
+    "https://gitlab.gnome.org/GNOME/glib.git",
+    "https://dev.gnupg.org/source/gnupg.git",
+    "https://gitlab.com/gnutls/gnutls.git",
+];
+
 // Dump the project in the format required by the database.rs file.
 pub fn dump_project(project: crate::projects::project::Project) -> String {
     return serde_json::to_string(&project).unwrap();
