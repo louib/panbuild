@@ -22,8 +22,13 @@ pub struct GitLabProject {
     pub tag_list: Vec<String>,
 }
 impl GitLabProject {
-    pub fn to_software_project(&self) -> crate::modules::SoftwareModule {
-        return crate::modules::SoftwareModule::default();
+    pub fn to_software_project(self) -> crate::projects::project::Project {
+        let mut project = crate::projects::project::Project::default();
+        project.name = self.name;
+        project.description = self.description.unwrap_or("".to_string());
+        project.vcs_urls.push(self.http_url_to_repo);
+        project.keywords = self.tag_list;
+        project
     }
 }
 
