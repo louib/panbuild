@@ -32,9 +32,9 @@ impl GitLabProject {
     }
 }
 
-pub fn get_repos(gitlab_domain: &str) -> Vec<String> {
+pub fn get_repos(gitlab_domain: &str) -> Vec<crate::projects::project::Project> {
     let mut next_url = format!("https://{}/api/v4/projects?per_page=100", gitlab_domain);
-    let mut repos = vec![];
+    let mut projects: Vec<crate::projects::project::Project> = vec![];
 
     let mut headers = header::HeaderMap::new();
     let client = reqwest::blocking::Client::builder().default_headers(headers).build().unwrap();
@@ -43,11 +43,11 @@ pub fn get_repos(gitlab_domain: &str) -> Vec<String> {
         // TODO make this really asynchronous with async/await.
         let mut response = match client.get(&next_url).send() {
             Ok(r) => r,
-            Err(e) => return repos,
+            Err(e) => return projects,
         };
 
         if response.status().as_u16() == 204 {
-            return repos;
+            return projects;
         }
 
         // let response_content = response.text().unwrap();
@@ -55,15 +55,18 @@ pub fn get_repos(gitlab_domain: &str) -> Vec<String> {
 
         let link_header = match &response_headers.get("link") {
             Some(h) => h.to_str().unwrap(),
-            None => return repos,
+            None => return projects,
         };
-        // next_url = get_next_page_url(link_header).to_string();
-        //
-        let projects: Vec<GitLabProject> = match serde_yaml::from_str(&response.text().unwrap()) {
+        next_url = crate::utils::get_next_page_url(link_header).to_string();
+
+        let gitlab_projects: Vec<GitLabProject> = match serde_yaml::from_str(&response.text().unwrap()) {
             Ok(p) => p,
             Err(e) => continue,
         };
+        for gitlab_project in gitlab_projects {
+            projects.push(gitlab_project.to_software_project());
+        }
     }
 
-    repos
+    projects
 }

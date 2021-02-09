@@ -140,3 +140,19 @@ pub fn normalize_name(name: &String) -> String {
     }
     response
 }
+
+// See https://www.w3.org/wiki/LinkHeader
+pub fn get_next_page_url(link_header: &str) -> &str {
+    for link in link_header.split(",") {
+        let mut link_parts = link.split(";");
+        let url = link_parts.nth(0).unwrap();
+        let rel = link_parts.nth(1).unwrap();
+        if !rel.contains("rel=\"next\"") {
+            continue;
+        }
+        let mut next_page_url = url.trim();
+        next_page_url = &next_page_url[1..next_page_url.len() - 1];
+        return next_page_url;
+    }
+    ""
+}
