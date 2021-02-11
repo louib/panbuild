@@ -17,7 +17,7 @@ pub fn get_org_repos(repo_name: &str) -> Vec<String> {
 
     let client = reqwest::blocking::Client::builder().default_headers(headers).build().unwrap();
 
-    while (next_url.len() != 0) {
+    while next_url.len() != 0 {
         // TODO make this really asynchronous with async/await.
         let mut response = match client.get(&next_url).send() {
             Ok(r) => r,

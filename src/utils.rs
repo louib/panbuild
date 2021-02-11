@@ -156,3 +156,50 @@ pub fn get_next_page_url(link_header: &str) -> &str {
     }
     ""
 }
+
+///```
+///let mut reverse_dns = panbuild::utils::repo_url_to_reverse_dns("https://github.com/louib/panbuild.git");
+///assert_eq!(reverse_dns, "com.github.louib.panbuild");
+///reverse_dns = panbuild::utils::repo_url_to_reverse_dns("https://gitlab.com/louib/panbuild.git");
+///assert_eq!(reverse_dns, "com.gitlab.louib.panbuild");
+///reverse_dns = panbuild::utils::repo_url_to_reverse_dns("https://git.savannah.gnu.org/cgit/make.git");
+///assert_eq!(reverse_dns, "org.gnu.savannah.git.cgit.make");
+///```
+pub fn repo_url_to_reverse_dns(repo_url: &str) -> String {
+    if !repo_url.starts_with("https://") {
+        panic!("Only supports https urls: {}", repo_url);
+    }
+    if !repo_url.ends_with(".git") {
+        panic!("Only supports git repositories: {}", repo_url);
+    }
+    let mut sanitized_url = repo_url[8..].to_string();
+    // Removing the .git at the end of the url.
+    // There has to be a better way to do this...
+    // But rust has no negative index for the list
+    // comprehension.
+    sanitized_url.pop();
+    sanitized_url.pop();
+    sanitized_url.pop();
+    sanitized_url.pop();
+
+    let mut repo_url_parts = sanitized_url.split("/");
+    let domain = repo_url_parts.next().unwrap();
+    let mut reversed_domain: String = "".to_string();
+
+    let mut domain_parts = domain.split(".");
+    for domain_part in domain_parts {
+        if reversed_domain.len() == 0 {
+            reversed_domain = domain_part.to_string();
+        } else {
+            reversed_domain = format!("{}.{}", domain_part, reversed_domain);
+        }
+    }
+
+    let mut next_url_part = repo_url_parts.next();
+    while next_url_part.is_some() {
+        reversed_domain += ".";
+        reversed_domain += next_url_part.unwrap();
+        next_url_part = repo_url_parts.next();
+    }
+    reversed_domain
+}
