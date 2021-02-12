@@ -131,10 +131,14 @@ fn main() {
         println!("There are {} flathub repos.", all_flathub_repos.len());
     }
 
-    if command_name == &"import-gnome-gitlab-projects".to_string() {
+    if command_name == &"import-projects-from-gitlabs".to_string() {
         log::info!("Getting all gnome gitlab projects.");
         let all_gitlab_repos = panbuild::hubs::gitlab::get_repos("gitlab.gnome.org");
         println!("There are {} gnome gitlab projects.", all_gitlab_repos.len());
+
+        log::info!("Getting all purism gitlab projects.");
+        let all_purism_repos = panbuild::hubs::gitlab::get_repos("source.puri.sm");
+        println!("There are {} purism gitlab projects.", all_purism_repos.len());
     }
 
     exit(exit_code);
