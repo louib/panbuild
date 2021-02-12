@@ -132,8 +132,9 @@ fn main() {
     }
 
     if command_name == &"import-gnome-gitlab-projects".to_string() {
+        log::info!("Getting all gnome gitlab projects.");
         let all_gitlab_repos = panbuild::hubs::gitlab::get_repos("gitlab.gnome.org");
-        println!("There are {} gnome gitlab repos.", all_gitlab_repos.len());
+        println!("There are {} gnome gitlab projects.", all_gitlab_repos.len());
     }
 
     exit(exit_code);

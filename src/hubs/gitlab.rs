@@ -40,7 +40,7 @@ pub fn get_repos(gitlab_domain: &str) -> Vec<crate::projects::project::Project> 
     let client = reqwest::blocking::Client::builder().default_headers(headers).build().unwrap();
 
     while next_url.len() != 0 {
-        log::info!("Getting GitLab projects page at {}.", next_url);
+        println!("Getting GitLab projects page at {}.", next_url);
         // TODO make this really asynchronous with async/await.
         let mut response = match client.get(&next_url).send() {
             Ok(r) => r,
@@ -65,6 +65,7 @@ pub fn get_repos(gitlab_domain: &str) -> Vec<crate::projects::project::Project> 
             Err(e) => continue,
         };
         for gitlab_project in gitlab_projects {
+            log::info!("Adding GitLab project {}.", gitlab_project.name);
             projects.push(gitlab_project.to_software_project());
         }
     }
