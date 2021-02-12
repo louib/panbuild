@@ -131,5 +131,10 @@ fn main() {
         println!("There are {} flathub repos.", all_flathub_repos.len());
     }
 
+    if command_name == &"import-gnome-gitlab-projects".to_string() {
+        let all_gitlab_repos = panbuild::hubs::gitlab::get_repos("gitlab.gnome.org");
+        println!("There are {} gnome gitlab repos.", all_gitlab_repos.len());
+    }
+
     exit(exit_code);
 }

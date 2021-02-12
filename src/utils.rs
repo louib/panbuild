@@ -141,12 +141,26 @@ pub fn normalize_name(name: &String) -> String {
     response
 }
 
-// See https://www.w3.org/wiki/LinkHeader
+/// See https://www.w3.org/wiki/LinkHeader
+///```
+///let link_header = r###"
+///<https://gitlab.gnome.org/api/v4/projects?page=4&per_page=100>; rel="prev",
+///<https://gitlab.gnome.org/api/v4/projects?page=6&per_page=100>; rel="next",
+///<https://gitlab.gnome.org/api/v4/projects?page=1&per_page=100>; rel="first",
+///<https://gitlab.gnome.org/api/v4/projects?page=118&per_page=100>; rel="last"
+///"###;
+///assert_eq!(
+///  panbuild::utils::get_next_page_url(link_header),
+///  "https://gitlab.gnome.org/api/v4/projects?page=6&per_page=100",
+///);
+///
+///```
 pub fn get_next_page_url(link_header: &str) -> &str {
+    log::debug!("Getting next page from header {}.", link_header);
     for link in link_header.split(",") {
         let mut link_parts = link.split(";");
-        let url = link_parts.nth(0).unwrap();
-        let rel = link_parts.nth(1).unwrap();
+        let url = link_parts.next().unwrap();
+        let rel = link_parts.next().unwrap();
         if !rel.contains("rel=\"next\"") {
             continue;
         }

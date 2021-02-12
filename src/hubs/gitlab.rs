@@ -40,6 +40,7 @@ pub fn get_repos(gitlab_domain: &str) -> Vec<crate::projects::project::Project> 
     let client = reqwest::blocking::Client::builder().default_headers(headers).build().unwrap();
 
     while next_url.len() != 0 {
+        log::info!("Getting GitLab projects page at {}.", next_url);
         // TODO make this really asynchronous with async/await.
         let mut response = match client.get(&next_url).send() {
             Ok(r) => r,
