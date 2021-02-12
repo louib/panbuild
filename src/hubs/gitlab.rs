@@ -32,43 +32,61 @@ impl GitLabProject {
     }
 }
 
-pub fn get_repos(gitlab_domain: &str) -> Vec<crate::projects::project::Project> {
-    let mut next_url = format!("https://{}/api/v4/projects?per_page=100", gitlab_domain);
+pub struct PagedResponse {
+    pub next_page_url: Option<String>,
+    pub results: Vec<crate::projects::project::Project>,
+}
+
+pub struct PagedRequest {
+    pub next_page_url: Option<String>,
+    pub domain: String,
+}
+
+pub fn get_repos(request: PagedRequest) -> PagedResponse {
+    let mut next_url = format!("https://{}/api/v4/projects?per_page=100", request.domain);
+    if let Some(url) = request.next_page_url {
+        next_url = url;
+    }
+
     let mut projects: Vec<crate::projects::project::Project> = vec![];
+    let default_response = PagedResponse {
+        results: vec![],
+        next_page_url: None,
+    };
 
     let mut headers = header::HeaderMap::new();
     let client = reqwest::blocking::Client::builder().default_headers(headers).build().unwrap();
 
-    while next_url.len() != 0 {
-        println!("Getting GitLab projects page at {}.", next_url);
-        // TODO make this really asynchronous with async/await.
-        let mut response = match client.get(&next_url).send() {
-            Ok(r) => r,
-            Err(e) => return projects,
-        };
+    println!("Getting GitLab projects page at {}.", next_url);
+    // TODO make this really asynchronous with async/await.
+    let mut response = match client.get(&next_url).send() {
+        Ok(r) => r,
+        Err(e) => return default_response,
+    };
 
-        if response.status().as_u16() == 204 {
-            return projects;
-        }
-
-        // let response_content = response.text().unwrap();
-        let response_headers = response.headers();
-
-        let link_header = match &response_headers.get("link") {
-            Some(h) => h.to_str().unwrap(),
-            None => return projects,
-        };
-        next_url = crate::utils::get_next_page_url(link_header).to_string();
-
-        let gitlab_projects: Vec<GitLabProject> = match serde_yaml::from_str(&response.text().unwrap()) {
-            Ok(p) => p,
-            Err(e) => continue,
-        };
-        for gitlab_project in gitlab_projects {
-            log::info!("Adding GitLab project {}.", gitlab_project.name);
-            projects.push(gitlab_project.to_software_project());
-        }
+    if response.status().as_u16() == 204 {
+        return default_response;
     }
 
-    projects
+    let response_headers = response.headers();
+
+    let link_header = match &response_headers.get("link") {
+        Some(h) => h.to_str().unwrap(),
+        None => return default_response,
+    };
+    next_url = crate::utils::get_next_page_url(link_header).to_string();
+
+    let gitlab_projects: Vec<GitLabProject> = match serde_yaml::from_str(&response.text().unwrap()) {
+        Ok(p) => p,
+        Err(e) => return default_response,
+    };
+    for gitlab_project in gitlab_projects {
+        log::info!("Adding GitLab project {}.", gitlab_project.name);
+        projects.push(gitlab_project.to_software_project());
+    }
+
+    PagedResponse {
+        results: projects,
+        next_page_url: Some(next_url),
+    }
 }

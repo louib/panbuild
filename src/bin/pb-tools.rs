@@ -133,12 +133,13 @@ fn main() {
 
     if command_name == &"import-projects-from-gitlabs".to_string() {
         log::info!("Getting all gnome gitlab projects.");
-        let all_gitlab_repos = panbuild::hubs::gitlab::get_repos("gitlab.gnome.org");
-        println!("There are {} gnome gitlab projects.", all_gitlab_repos.len());
-
-        log::info!("Getting all purism gitlab projects.");
-        let all_purism_repos = panbuild::hubs::gitlab::get_repos("source.puri.sm");
-        println!("There are {} purism gitlab projects.", all_purism_repos.len());
+        let paged_response = panbuild::hubs::gitlab::get_repos(
+            panbuild::hubs::gitlab::PagedRequest {
+                domain: "gitlab.gnome.org".to_string(),
+                next_page_url: None,
+            }
+        );
+        println!("There are {} gnome gitlab projects.", paged_response.results.len());
     }
 
     exit(exit_code);
