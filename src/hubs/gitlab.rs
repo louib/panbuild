@@ -15,7 +15,7 @@ pub struct GitLabProject {
     pub forks_count: i32,
     pub star_count: i32,
     pub description: Option<String>,
-    pub default_branch: String,
+    pub default_branch: Option<String>,
     pub ssh_url_to_repo: String,
     pub http_url_to_repo: String,
     pub readme_url: String,
@@ -78,11 +78,22 @@ pub fn get_repos(request: PagedRequest) -> PagedResponse {
 
     let gitlab_projects: Vec<GitLabProject> = match serde_yaml::from_str(&response.text().unwrap()) {
         Ok(p) => p,
-        Err(e) => return default_response,
+        Err(e) => {
+            eprintln!("Could not parse gitlab projects {}.", e);
+            return default_response;
+        }
     };
     for gitlab_project in gitlab_projects {
         log::info!("Adding GitLab project {}.", gitlab_project.name);
         projects.push(gitlab_project.to_software_project());
+    }
+
+    // FIXME next_url should already be an option!
+    if next_url.len() == 0 {
+        return PagedResponse {
+            results: projects,
+            next_page_url: None,
+        };
     }
 
     PagedResponse {

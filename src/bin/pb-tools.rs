@@ -133,13 +133,30 @@ fn main() {
 
     if command_name == &"import-projects-from-gitlabs".to_string() {
         log::info!("Getting all gnome gitlab projects.");
-        let paged_response = panbuild::hubs::gitlab::get_repos(
+        let mut paged_response = panbuild::hubs::gitlab::get_repos(
             panbuild::hubs::gitlab::PagedRequest {
                 domain: "gitlab.gnome.org".to_string(),
                 next_page_url: None,
             }
         );
-        println!("There are {} gnome gitlab projects.", paged_response.results.len());
+        let mut projects = paged_response.results;
+        while projects.len() > 0 {
+            for project in projects {
+                println!("Adding project {}.", project.name);
+            }
+
+            if paged_response.next_page_url.is_none() {
+                break;
+            }
+
+            paged_response = panbuild::hubs::gitlab::get_repos(
+                panbuild::hubs::gitlab::PagedRequest {
+                    domain: "gitlab.gnome.org".to_string(),
+                    next_page_url: paged_response.next_page_url,
+                }
+            );
+            projects = paged_response.results;
+        }
     }
 
     exit(exit_code);
