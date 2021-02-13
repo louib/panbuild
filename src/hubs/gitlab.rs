@@ -46,6 +46,36 @@ pub struct PagedRequest {
     pub domain: String,
 }
 
+pub fn get_and_add_repos(domain: &str, db: &mut crate::db::Database) {
+    log::info!("Getting all projects from GitLab instance at {}.", domain);
+    let mut paged_response = get_repos(
+        PagedRequest {
+            domain: domain.to_string(),
+            next_page_url: None,
+        }
+    );
+    let mut projects = paged_response.results;
+    while projects.len() > 0 {
+        for project in projects {
+            println!("Adding project {}.", &project.name);
+            db.add_project(project);
+        }
+
+        if paged_response.next_page_url.is_none() {
+            break;
+        }
+
+        paged_response = get_repos(
+            PagedRequest {
+                domain: domain.to_string(),
+                next_page_url: paged_response.next_page_url,
+            }
+        );
+        projects = paged_response.results;
+    }
+
+}
+
 pub fn get_repos(request: PagedRequest) -> PagedResponse {
     let mut next_url = format!("https://{}/api/v4/projects?per_page=100", request.domain);
     if let Some(url) = request.next_page_url {
