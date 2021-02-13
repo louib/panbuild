@@ -148,7 +148,8 @@ impl Database {
         log::info!("Adding module at {}", new_module_path);
         let mut new_module_fs_path = path::Path::new(&new_module_path);
         if new_module_fs_path.exists() {
-            panic!("Path {} already exists. This should not happen!!", new_module_path);
+            // FIXME we should update the module if it already exists!
+            return;
         }
         match fs::write(new_module_fs_path, serde_yaml::to_string(&new_module).unwrap()) {
             Ok(content) => content,
@@ -168,7 +169,8 @@ impl Database {
         log::info!("Adding project at {}", new_project_path);
         let mut new_project_fs_path = path::Path::new(&new_project_path);
         if new_project_fs_path.exists() {
-            panic!("Path {} already exists. This should not happen!!", new_project_path);
+            // FIXME we should update the project if it already exists!
+            return;
         }
         match fs::write(new_project_fs_path, serde_yaml::to_string(&project).unwrap()) {
             Ok(content) => content,
