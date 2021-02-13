@@ -5,21 +5,56 @@ use serde::{Deserialize, Serialize};
 #[derive(Debug, Serialize, Deserialize)]
 pub struct HomebrewRecipe {
     pub name: String,
+    pub full_name: String,
+    pub tap: String,
+    pub aliases: Vec<String>,
+    pub license: Vec<String>,
     pub desc: String,
     pub homepage: String,
 
+    pub disabled: bool,
+    pub deprecated: bool,
+    pub outdated: bool,
+    pub pinned: bool,
+
     // pub urls: String,
-    // pub versions: String,
+    pub versions: HomebrewRecipeVersions,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct HomebrewRecipeVersions {
+    pub stable: String,
+    pub bottle: bool,
+    pub head: Option<String>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct HomebrewRecipeUrls {
+    pub stable: HomebrewRecipeUrl,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct HomebrewRecipeUrl {
+    pub url: String,
+    pub tag: String,
+    pub revision: String,
 }
 
 pub fn get_projects() -> Vec<crate::projects::project::SoftwareProject> {
     // All the formulae for macOS
-    // wget https://formulae.brew.sh/api/formula.json
-
+    let all_mac_formulas_url = "https://formulae.brew.sh/api/formula.json";
     // All the formulae for Linux
-    // wget https://formulae.brew.sh/api/formula-linux.json
+    let all_linux_formulas_url = "https://formulae.brew.sh/api/formula-linux.json";
+    // All casks
+    let all_casks_formulas_url = "https://formulae.brew.sh/api/cask.json";
 
-    // All the casks
-    // wget https://formulae.brew.sh/api/cask.json
+    let client = reqwest::blocking::Client::builder().build().unwrap();
+
+    // TODO make this really asynchronous with async/await.
+    let mut response = match client.get(all_mac_formulas_url).send() {
+        Ok(r) => r,
+        Err(e) => return vec![],
+    };
+
     vec![]
 }
