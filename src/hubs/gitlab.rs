@@ -25,11 +25,12 @@ pub struct GitLabProject {
     // From the API doc:
     // If the project is a fork, and you provide a valid token to authenticate,
     // the forked_from_project field appears in the response.
+    // FIXME there is actually an object defined in there.
     pub forked_from_project: Option<bool>,
 }
 impl GitLabProject {
-    pub fn to_software_project(self) -> crate::projects::project::Project {
-        let mut project = crate::projects::project::Project::default();
+    pub fn to_software_project(self) -> crate::projects::project::SoftwareProject {
+        let mut project = crate::projects::project::SoftwareProject::default();
         project.id = crate::utils::repo_url_to_reverse_dns(&self.http_url_to_repo);
         project.name = self.name;
         if let Some(branch) = self.default_branch {
@@ -44,7 +45,7 @@ impl GitLabProject {
 
 pub struct PagedResponse {
     pub next_page_url: Option<String>,
-    pub results: Vec<crate::projects::project::Project>,
+    pub results: Vec<crate::projects::project::SoftwareProject>,
 }
 
 pub struct PagedRequest {
@@ -83,7 +84,7 @@ pub fn get_repos(request: PagedRequest) -> PagedResponse {
         next_url = url;
     }
 
-    let mut projects: Vec<crate::projects::project::Project> = vec![];
+    let mut projects: Vec<crate::projects::project::SoftwareProject> = vec![];
     let default_response = PagedResponse {
         results: vec![],
         next_page_url: None,

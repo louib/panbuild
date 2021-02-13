@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 use std::process::Command;
 
 #[derive(Serialize, Deserialize, Default)]
-pub struct Project {
+pub struct SoftwareProject {
     // Project ids are based on the reverse DNS notation, and
     // are either derived from build manifests found in the project
     // using the same reverse DNS notation, or from the git urls
@@ -33,11 +33,11 @@ pub struct Project {
     // but rather a spread factor and a max layer should be configured.
     pub layer: i32,
 }
-impl Project {
+impl SoftwareProject {
     // Serializes the project to a native Rust struct creation.
     // This is used to include projects to the internal db.
     fn to_rust(self: &Self) -> String {
-        let mut response: String = String::from("crate::projects::project::Project {\n");
+        let mut response: String = String::from("crate::projects::project::SoftwareProject {\n");
         response.push_str(&format!("    id: \"{}\".to_string(),", self.id).to_string());
         response.push_str(&format!("    name: \"{}\".to_string(),", self.name).to_string());
         response.push_str(&format!("    summary: \"{}\".to_string(),", self.summary).to_string());

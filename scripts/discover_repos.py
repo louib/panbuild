@@ -110,39 +110,6 @@ def get_projects_from_github():
     return projects
 
 
-def get_all_projects_from_gitlab(gitlab_url):
-    # FIXME must be authenticated to use simple=false
-    # By default the number of results per page is 20. The max number we can set is 100.
-    projects_url = "https://{0}/api/v4/projects?visibility=public&simple=false&per_page=100".format(gitlab_url)
-    projects = []
-
-    next_page = '1'
-    while next_page:
-        next_page_url = projects_url + "&page=" + next_page
-
-        print("Calling projects endpoint at " + next_page_url)
-        response = requests.get(next_page_url)
-
-        try:
-            # Making sure there was no error.
-            response.raise_for_status()
-        except Exception as e:
-            print(e)
-            break
-
-        gitlab_projects = response.json()
-        projects.extend(gitlab_projects)
-        print("Projects endpoint returned {0} projects ".format(len(gitlab_projects)))
-
-        total_pages = response.headers.get('x-total-pages', 1)
-        if total_pages != 1 and next_page == '1':
-            print("There are {0} total pages, will have to paginate".format(total_pages))
-
-        next_page = response.headers.get('x-next-page')
-
-    return projects
-
-
 def get_projects_from_savannah(savannah_url):
     # FIXME must be authenticated to use simple=false
     projects_endpoint = "https://{savannah_url}/projects?visibility=public&simple=false"
