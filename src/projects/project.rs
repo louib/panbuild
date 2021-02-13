@@ -18,6 +18,7 @@ pub struct Project {
     // Name of the artifacts that this project produces. Can be binaries, libraries or assets.
     pub artifact_names: Vec<String>,
     pub maintainers: Vec<String>,
+    pub default_branch: String,
     // Thos
     pub versions: Vec<String>,
     pub keywords: Vec<String>,

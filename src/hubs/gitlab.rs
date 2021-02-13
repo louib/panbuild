@@ -26,6 +26,9 @@ impl GitLabProject {
         let mut project = crate::projects::project::Project::default();
         project.id = crate::utils::repo_url_to_reverse_dns(&self.http_url_to_repo);
         project.name = self.name;
+        if let Some(branch) = self.default_branch {
+            project.default_branch = branch;
+        }
         project.description = self.description.unwrap_or("".to_string());
         project.vcs_urls.push(self.http_url_to_repo);
         project.keywords = self.tag_list;
