@@ -178,4 +178,14 @@ impl Database {
         };
         self.projects.push(project);
     }
+
+    pub fn search_projects(&self, search_term: &str) -> Vec<&crate::projects::project::Project> {
+        let mut projects: Vec<&crate::projects::project::Project> = vec![];
+        for project in &self.projects {
+            if project.name.contains(&search_term) {
+                projects.push(&project);
+            }
+        }
+        projects
+    }
 }

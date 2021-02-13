@@ -16,6 +16,7 @@ mod version;
 
 pub use manifests::manifest::AbstractManifest;
 pub use modules::SoftwareModule;
+pub use projects::project::Project;
 
 use std::env;
 use std::fs;
@@ -111,9 +112,12 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
 
         let db = crate::db::Database::get_database();
         let modules: Vec<&SoftwareModule> = db.search_modules(search_term);
-        eprintln!("Searching in {:#?} modules for installation candidates 🕰", modules.len());
         for module in modules {
             println!("found candidate artifact in {}.", module.name);
+        }
+        let projects: Vec<&Project> = db.search_projects(search_term);
+        for project in projects {
+            println!("found candidate artifact in {}.", project.name);
         }
     }
 
