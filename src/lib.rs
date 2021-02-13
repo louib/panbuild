@@ -16,7 +16,7 @@ mod version;
 
 pub use manifests::manifest::AbstractManifest;
 pub use modules::SoftwareModule;
-pub use projects::project::SoftwareProject;
+pub use projects::SoftwareProject;
 
 use std::env;
 use std::fs;

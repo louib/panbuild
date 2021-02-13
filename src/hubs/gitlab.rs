@@ -29,8 +29,8 @@ pub struct GitLabProject {
     pub forked_from_project: Option<bool>,
 }
 impl GitLabProject {
-    pub fn to_software_project(self) -> crate::projects::project::SoftwareProject {
-        let mut project = crate::projects::project::SoftwareProject::default();
+    pub fn to_software_project(self) -> crate::projects::SoftwareProject {
+        let mut project = crate::projects::SoftwareProject::default();
         project.id = crate::utils::repo_url_to_reverse_dns(&self.http_url_to_repo);
         project.name = self.name;
         if let Some(branch) = self.default_branch {
@@ -45,7 +45,7 @@ impl GitLabProject {
 
 pub struct PagedResponse {
     pub next_page_url: Option<String>,
-    pub results: Vec<crate::projects::project::SoftwareProject>,
+    pub results: Vec<crate::projects::SoftwareProject>,
 }
 
 pub struct PagedRequest {
@@ -84,7 +84,7 @@ pub fn get_repos(request: PagedRequest) -> PagedResponse {
         next_url = url;
     }
 
-    let mut projects: Vec<crate::projects::project::SoftwareProject> = vec![];
+    let mut projects: Vec<crate::projects::SoftwareProject> = vec![];
     let default_response = PagedResponse {
         results: vec![],
         next_page_url: None,

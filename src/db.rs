@@ -9,7 +9,7 @@ pub const MODULES_DB_SUBDIR: &str = "/modules";
 pub const PROJECTS_DB_SUBDIR: &str = "/projects";
 
 pub struct Database {
-    pub projects: Vec<crate::projects::project::SoftwareProject>,
+    pub projects: Vec<crate::projects::SoftwareProject>,
     pub modules: Vec<crate::modules::SoftwareModule>,
 }
 impl Database {
@@ -45,7 +45,7 @@ impl Database {
         Database::get_db_path() + PROJECTS_DB_SUBDIR
     }
 
-    pub fn get_all_projects() -> Vec<crate::projects::project::SoftwareProject> {
+    pub fn get_all_projects() -> Vec<crate::projects::SoftwareProject> {
         let projects_path = Database::get_projects_db_path();
         let projects_path = path::Path::new(&projects_path);
         let all_projects_paths = match crate::utils::get_all_paths(projects_path) {
@@ -54,7 +54,7 @@ impl Database {
                 return vec![];
             }
         };
-        let mut projects: Vec<crate::projects::project::SoftwareProject> = vec![];
+        let mut projects: Vec<crate::projects::SoftwareProject> = vec![];
         for project_path in all_projects_paths.iter() {
             let project_path_str = project_path.to_str().unwrap();
             if !project_path.is_file() {
@@ -160,7 +160,7 @@ impl Database {
         self.modules.push(new_module);
     }
 
-    pub fn add_project(&mut self, mut project: crate::projects::project::SoftwareProject) {
+    pub fn add_project(&mut self, mut project: crate::projects::SoftwareProject) {
         let projects_path = Database::get_projects_db_path();
         if project.id.len() == 0 {
             panic!("Trying to add a project to the db without an id!");
@@ -181,8 +181,8 @@ impl Database {
         self.projects.push(project);
     }
 
-    pub fn search_projects(&self, search_term: &str) -> Vec<&crate::projects::project::SoftwareProject> {
-        let mut projects: Vec<&crate::projects::project::SoftwareProject> = vec![];
+    pub fn search_projects(&self, search_term: &str) -> Vec<&crate::projects::SoftwareProject> {
+        let mut projects: Vec<&crate::projects::SoftwareProject> = vec![];
         for project in &self.projects {
             if project.name.contains(&search_term) {
                 projects.push(&project);

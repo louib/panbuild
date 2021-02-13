@@ -40,7 +40,7 @@ pub struct HomebrewRecipeUrl {
     pub revision: Option<String>,
 }
 
-pub fn get_projects() -> Vec<crate::projects::project::SoftwareProject> {
+pub fn get_projects() -> Vec<crate::projects::SoftwareProject> {
     // All the formulae for macOS
     let all_mac_formulas_url = "https://formulae.brew.sh/api/formula.json";
     // All the formulae for Linux
