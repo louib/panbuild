@@ -132,6 +132,8 @@ fn main() {
     }
 
     if command_name == &"import-projects-from-gitlabs".to_string() {
+        let mut db = panbuild::db::Database::get_database();
+
         log::info!("Getting all gnome gitlab projects.");
         let mut paged_response = panbuild::hubs::gitlab::get_repos(
             panbuild::hubs::gitlab::PagedRequest {
@@ -142,7 +144,8 @@ fn main() {
         let mut projects = paged_response.results;
         while projects.len() > 0 {
             for project in projects {
-                println!("Adding project {}.", project.name);
+                println!("Adding project {}.", &project.name);
+                db.add_project(project);
             }
 
             if paged_response.next_page_url.is_none() {

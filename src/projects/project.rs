@@ -4,7 +4,10 @@ use std::process::Command;
 
 #[derive(Serialize, Deserialize, Default)]
 pub struct Project {
-    // Unique project id, if available
+    // Project ids are based on the reverse DNS notation, and
+    // are either derived from build manifests found in the project
+    // using the same reverse DNS notation, or from the git urls
+    // associated to the project.
     pub id: String,
     pub name: String,
     // Basically a short description, or a title.
@@ -53,11 +56,11 @@ pub struct ProjectVersion {
     pub tag: String,
     pub branch: String,
     pub sha256sum: String,
-    pub dependencies: Vec<Dependancy>,
+    pub dependencies: Vec<Dependency>,
 }
 
 #[derive(Serialize, Deserialize, Default)]
-pub struct Dependancy {
+pub struct Dependency {
     pub min_version: crate::version::SemanticVersion,
     pub max_version: crate::version::SemanticVersion,
     pub project_id: String,

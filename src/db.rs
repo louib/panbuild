@@ -137,4 +137,15 @@ impl Database {
         };
         self.modules.push(new_module);
     }
+
+    pub fn add_project(&mut self, mut project: crate::projects::project::Project) {
+        let projects_path = Database::get_projects_db_path();
+        let mut new_project_path = format!(
+            "{}/{}.yaml",
+            projects_path,
+            &project.id,
+        );
+        log::info!("Adding project at {}", new_project_path);
+
+    }
 }
