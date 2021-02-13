@@ -140,12 +140,25 @@ impl Database {
 
     pub fn add_project(&mut self, mut project: crate::projects::project::Project) {
         let projects_path = Database::get_projects_db_path();
+        if project.id.len() == 0 {
+            panic!("Trying to add a project to the db without an id!");
+        }
         let mut new_project_path = format!(
             "{}/{}.yaml",
             projects_path,
             &project.id,
         );
         log::info!("Adding project at {}", new_project_path);
-
+        let mut new_project_fs_path = path::Path::new(&new_project_path);
+        if new_project_fs_path.exists() {
+            panic!("Path {} already exists. This should not happen!!", new_project_path);
+        }
+        match fs::write(new_project_fs_path, serde_yaml::to_string(&project).unwrap()) {
+            Ok(content) => content,
+            Err(e) => {
+                eprintln!("Could not write new project at {}: {}", new_project_path.to_string(), e);
+            }
+        };
+        self.projects.push(project);
     }
 }
