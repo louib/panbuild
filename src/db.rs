@@ -164,11 +164,7 @@ impl Database {
         if project.id.len() == 0 {
             panic!("Trying to add a project to the db without an id!");
         }
-        let mut new_project_path = format!(
-            "{}/{}.yaml",
-            projects_path,
-            &project.id,
-        );
+        let mut new_project_path = format!("{}/{}.yaml", projects_path, &project.id,);
         log::info!("Adding project at {}", new_project_path);
         let mut new_project_fs_path = path::Path::new(&new_project_path);
         if new_project_fs_path.exists() {
