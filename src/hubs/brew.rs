@@ -8,7 +8,7 @@ pub struct HomebrewRecipe {
     pub full_name: String,
     pub tap: String,
     pub aliases: Vec<String>,
-    pub license: Vec<String>,
+    pub license: Option<String>,
     pub desc: String,
     pub homepage: String,
 
@@ -36,8 +36,8 @@ pub struct HomebrewRecipeUrls {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct HomebrewRecipeUrl {
     pub url: String,
-    pub tag: String,
-    pub revision: String,
+    pub tag: Option<String>,
+    pub revision: Option<String>,
 }
 
 pub fn get_projects() -> Vec<crate::projects::project::SoftwareProject> {
@@ -54,6 +54,14 @@ pub fn get_projects() -> Vec<crate::projects::project::SoftwareProject> {
     let mut response = match client.get(all_mac_formulas_url).send() {
         Ok(r) => r,
         Err(e) => return vec![],
+    };
+
+    let brew_recipes: Vec<HomebrewRecipe> = match serde_json::from_str(&response.text().unwrap()) {
+        Ok(r) => r,
+        Err(e) => {
+            eprintln!("Could not parse brew recipes {}.", e);
+            return vec![];
+        }
     };
 
     vec![]

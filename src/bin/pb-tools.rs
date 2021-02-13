@@ -152,5 +152,10 @@ fn main() {
         panbuild::hubs::gitlab::get_and_add_repos("gitlab.com", &mut db);
     }
 
+    if command_name == &"import-brew-recipes".to_string() {
+        let mut db = panbuild::db::Database::get_database();
+        panbuild::hubs::brew::get_projects();
+    }
+
     exit(exit_code);
 }
