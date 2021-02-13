@@ -180,7 +180,6 @@ if __name__ == '__main__':
 
     # There is a list of all the source forges online here:
     # https://wiki.p2pfoundation.net/List_of_Community-Hosted_Code_Forge_Instances
-    # The Linux kernel at https://git.kernel.org/
     # sourceforge?
     # Example of downloading boost https://sourceforge.net/projects/boost/files/latest/download
     # https://sourceforge.net/software/customer-service/?page=2
