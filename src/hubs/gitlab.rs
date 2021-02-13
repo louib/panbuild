@@ -5,6 +5,8 @@ use serde::{Deserialize, Serialize};
 #[derive(Debug, Serialize, Deserialize)]
 pub struct GitLab {}
 
+// GitLab API described here
+// https://docs.gitlab.com/ee/api/projects.html
 #[derive(Debug, Serialize, Deserialize)]
 pub struct GitLabProject {
     pub id: String,
@@ -20,6 +22,10 @@ pub struct GitLabProject {
     pub http_url_to_repo: String,
     pub readme_url: String,
     pub tag_list: Vec<String>,
+    // From the API doc:
+    // If the project is a fork, and you provide a valid token to authenticate,
+    // the forked_from_project field appears in the response.
+    pub forked_from_project: Option<bool>,
 }
 impl GitLabProject {
     pub fn to_software_project(self) -> crate::projects::project::Project {
