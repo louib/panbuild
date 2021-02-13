@@ -143,40 +143,6 @@ def get_all_projects_from_gitlab(gitlab_url):
     return projects
 
 
-def get_projects_from_gitlab(gitlab_url):
-    gitlab_projects = get_all_projects_from_gitlab(gitlab_url)
-
-    projects = []
-    # Project fields in simple (unauthenticated) mode:
-    # id, description, name, name_with_namespace, path, path_with_namespace,
-    # created_at, default_branch, tag_list, ssh_url_to_repo, http_url_to_repo,
-    # web_url, readme_url, avatar_url, star_count, forks_count,
-    # last_activity_at, namespace
-    for gitlab_project in gitlab_projects:
-        # We require at least 1 fork for the project to be considered.
-        if gitlab_project.get('forks_count', 0) <= 0:
-            continue
-
-        project = {}
-        project['name'] = normalize_project_name(gitlab_project['name'])
-        project['description'] = gitlab_project['description']
-        project['tags'] = gitlab_project['tag_list']
-        project['tags'] = sorted(project['tags'])
-        project['urls'] = []
-        project['urls'].append(gitlab_project['web_url'])
-        project['urls'] = sorted(project['urls'])
-        project['vcs_urls'] = []
-        project['vcs_urls'].append(gitlab_project['http_url_to_repo'])
-        project['vcs_urls'].append(gitlab_project['ssh_url_to_repo'])
-        project['vcs_urls'] = sorted(project['vcs_urls'])
-
-        # TODO use the README for the long description
-
-        projects.append(project)
-
-    return projects
-
-
 def get_projects_from_savannah(savannah_url):
     # FIXME must be authenticated to use simple=false
     projects_endpoint = "https://{savannah_url}/projects?visibility=public&simple=false"
@@ -238,21 +204,6 @@ if __name__ == '__main__':
     projects = []
 
     projects.extend(get_projects_from_github())
-
-    # There is a list of all the public GitLab instances
-    # hosted here
-    # https://wiki.p2pfoundation.net/List_of_Community-Hosted_GitLab_Instances
-    # projects.extend(get_projects_from_gitlab("gitlab.com"))
-    # projects.extend(get_projects_from_gitlab("source.puri.sm"))
-    # projects.extend(get_projects_from_gitlab("salsa.debian.org"))
-    # KDE was recently migrated to GitLab.
-    # See https://gitlab.com/gitlab-org/gitlab-foss/-/issues/53206 for details.
-    # projects.extend(get_projects_from_gitlab("invent.kde.org"))
-    # projects.extend(get_projects_from_gitlab("gitlab.gnome.org"))
-    # projects.extend(get_projects_from_gitlab("code.videolan.org"))
-    # projects.extend(get_projects_from_gitlab("gitlab.haskell.org"))
-    # projects.extend(get_projects_from_gitlab("devel.trisquel.info"))
-    # projects.extend(get_projects_from_gitlab("gitlab.freedesktop.org"))
 
     # You can browse all the projects at http://git.savannah.gnu.org/git/
     # projects.extend(get_projects_from_savannah("savannah.gnu.org"))

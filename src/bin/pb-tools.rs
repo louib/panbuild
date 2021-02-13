@@ -132,9 +132,24 @@ fn main() {
     }
 
     if command_name == &"import-projects-from-gitlabs".to_string() {
+        // There is a list of all the public GitLab instances hosted here
+        // https://wiki.p2pfoundation.net/List_of_Community-Hosted_GitLab_Instances
         let mut db = panbuild::db::Database::get_database();
-
         panbuild::hubs::gitlab::get_and_add_repos("gitlab.gnome.org", &mut db);
+        panbuild::hubs::gitlab::get_and_add_repos("source.puri.sm", &mut db);
+        panbuild::hubs::gitlab::get_and_add_repos("salsa.debian.org", &mut db);
+        // KDE was recently migrated to GitLab.
+        // See https://gitlab.com/gitlab-org/gitlab-foss/-/issues/53206 for details.
+        panbuild::hubs::gitlab::get_and_add_repos("invent.kde.org", &mut db);
+        panbuild::hubs::gitlab::get_and_add_repos("code.videolan.org", &mut db);
+        panbuild::hubs::gitlab::get_and_add_repos("gitlab.haskell.org", &mut db);
+        panbuild::hubs::gitlab::get_and_add_repos("devel.trisquel.info", &mut db);
+        panbuild::hubs::gitlab::get_and_add_repos("gitlab.freedesktop.org", &mut db);
+    }
+
+    if command_name == &"import-projects-from-gitlab-com".to_string() {
+        let mut db = panbuild::db::Database::get_database();
+        panbuild::hubs::gitlab::get_and_add_repos("gitlab.com", &mut db);
     }
 
     exit(exit_code);
