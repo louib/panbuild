@@ -46,21 +46,42 @@ impl Database {
     }
 
     pub fn get_all_projects() -> Vec<crate::projects::project::Project> {
-        let json_projects_db_path = env::var("PB_PROJECTS_DB_PATH").unwrap_or(String::from("")).to_string();
-        if json_projects_db_path.is_empty() {
-            return vec![];
-        }
-
-        let json_projects = match fs::read_to_string(&json_projects_db_path) {
-            Ok(content) => content,
+        let projects_path = Database::get_projects_db_path();
+        let projects_path = path::Path::new(&projects_path);
+        let all_projects_paths = match crate::utils::get_all_paths(projects_path) {
+            Ok(paths) => paths,
             Err(e) => {
-                eprintln!("Could not read file {}.", json_projects_db_path);
                 return vec![];
             }
         };
-        let mut db_projects: Vec<crate::projects::project::Project> = serde_json::from_str(&json_projects).unwrap();
-
-        db_projects
+        let mut projects: Vec<crate::projects::project::Project> = vec![];
+        for project_path in all_projects_paths.iter() {
+            let project_path_str = project_path.to_str().unwrap();
+            if !project_path.is_file() {
+                log::debug!("{} is not a file.", &project_path_str);
+                continue;
+            }
+            // Don't even try to open it if it's not a yaml file.
+            if !project_path_str.ends_with("yml") && !project_path_str.ends_with("yaml") {
+                continue;
+            }
+            let project_content = match fs::read_to_string(project_path) {
+                Ok(content) => content,
+                Err(e) => {
+                    log::debug!("Could not read project file {}: {}.", &project_path_str, e);
+                    continue;
+                }
+            };
+            let project = match serde_yaml::from_str(&project_content) {
+                Ok(p) => p,
+                Err(e) => {
+                    log::debug!("Could not parse project file at {}: {}.", &project_path_str, e);
+                    continue;
+                }
+            };
+            projects.push(project);
+        }
+        projects
     }
 
     pub fn get_all_modules() -> Vec<crate::modules::SoftwareModule> {
