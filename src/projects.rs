@@ -23,20 +23,6 @@ pub const CORE_PROJECTS: [&'static str; 20] = [
     "https://gitlab.com/gnutls/gnutls.git",
 ];
 
-// Dump the project in the format required by the database.rs file.
-pub fn dump_project(project: crate::projects::project::Project) -> String {
-    return serde_json::to_string(&project).unwrap();
-}
-
-pub fn parse_project(serialized_project: String) -> crate::projects::project::Project {
-    let project: crate::projects::project::Project = serde_json::from_str(&serialized_project).unwrap();
-    return project;
-}
-
-pub fn get_projects() -> Vec<project::Project> {
-    return crate::db::Database::get_all_projects();
-}
-
 // Get the potential modules that are inferable from the
 // projects.
 pub fn get_modules() -> Vec<crate::modules::SoftwareModule> {
