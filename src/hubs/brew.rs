@@ -24,12 +24,11 @@ impl HomebrewRecipe {
     pub fn to_software_project(self) -> crate::projects::SoftwareProject {
         let mut project = crate::projects::SoftwareProject::default();
         if self.urls.stable.url.ends_with(".git") {
-          project.id = crate::utils::repo_url_to_reverse_dns(&self.urls.stable.url);
-          project.vcs_urls.push(self.urls.stable.url);
+            project.id = crate::utils::repo_url_to_reverse_dns(&self.urls.stable.url);
+            project.vcs_urls.push(self.urls.stable.url);
         }
         project
     }
-
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -86,7 +85,6 @@ pub fn get_projects(formulae_url: &str) -> Vec<crate::projects::SoftwareProject>
             return vec![];
         }
     };
-
 
     for brew_recipe in brew_recipes {
         let project = brew_recipe.to_software_project();
