@@ -62,10 +62,8 @@ pub fn get_and_add_recipes(db: &mut crate::db::Database) {
         db.add_project(project);
     }
 
-    // All casks
-    for project in get_projects("https://formulae.brew.sh/api/cask.json") {
-        db.add_project(project);
-    }
+    // There are also the cask formulae, but they have a different format.
+    // https://formulae.brew.sh/api/cask.json
 }
 
 pub fn get_projects(formulae_url: &str) -> Vec<crate::projects::SoftwareProject> {
