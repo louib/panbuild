@@ -17,13 +17,16 @@ pub struct HomebrewRecipe {
     pub outdated: bool,
     pub pinned: bool,
 
-    // pub urls: String,
+    pub urls: HomebrewRecipeUrls,
     pub versions: HomebrewRecipeVersions,
 }
 impl HomebrewRecipe {
     pub fn to_software_project(self) -> crate::projects::SoftwareProject {
         let mut project = crate::projects::SoftwareProject::default();
-        // project.id = crate::utils::repo_url_to_reverse_dns(&self.http_url_to_repo);
+        if self.urls.stable.url.ends_with(".git") {
+          project.id = crate::utils::repo_url_to_reverse_dns(&self.urls.stable.url);
+          project.vcs_urls.push(self.urls.stable.url);
+        }
         project
     }
 
@@ -53,10 +56,12 @@ pub fn get_and_add_recipes(db: &mut crate::db::Database) {
     for project in get_projects("https://formulae.brew.sh/api/formula.json") {
         db.add_project(project);
     }
+
     // All the formulae for Linux
     for project in get_projects("https://formulae.brew.sh/api/formula-linux.json") {
         db.add_project(project);
     }
+
     // All casks
     for project in get_projects("https://formulae.brew.sh/api/cask.json") {
         db.add_project(project);
