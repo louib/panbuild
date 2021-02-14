@@ -23,7 +23,8 @@ pub struct HomebrewRecipe {
 impl HomebrewRecipe {
     pub fn to_software_project(self) -> crate::projects::SoftwareProject {
         let mut project = crate::projects::SoftwareProject::default();
-        if self.urls.stable.url.ends_with(".git") {
+        // We filter out http:// urls for now, but could try to convert to https in the future.
+        if self.urls.stable.url.ends_with(".git") && self.urls.stable.url.starts_with("https") {
             project.id = crate::utils::repo_url_to_reverse_dns(&self.urls.stable.url);
             project.vcs_urls.push(self.urls.stable.url);
         }
