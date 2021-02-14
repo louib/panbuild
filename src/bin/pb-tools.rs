@@ -154,7 +154,7 @@ fn main() {
 
     if command_name == &"import-brew-recipes".to_string() {
         let mut db = panbuild::db::Database::get_database();
-        panbuild::hubs::brew::get_projects();
+        panbuild::hubs::brew::get_and_add_recipes(&mut db);
     }
 
     exit(exit_code);

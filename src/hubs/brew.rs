@@ -20,6 +20,14 @@ pub struct HomebrewRecipe {
     // pub urls: String,
     pub versions: HomebrewRecipeVersions,
 }
+impl HomebrewRecipe {
+    pub fn to_software_project(self) -> crate::projects::SoftwareProject {
+        let mut project = crate::projects::SoftwareProject::default();
+        // project.id = crate::utils::repo_url_to_reverse_dns(&self.http_url_to_repo);
+        project
+    }
+
+}
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct HomebrewRecipeVersions {
@@ -40,18 +48,28 @@ pub struct HomebrewRecipeUrl {
     pub revision: Option<String>,
 }
 
-pub fn get_projects() -> Vec<crate::projects::SoftwareProject> {
+pub fn get_and_add_recipes(db: &mut crate::db::Database) {
     // All the formulae for macOS
-    let all_mac_formulas_url = "https://formulae.brew.sh/api/formula.json";
+    for project in get_projects("https://formulae.brew.sh/api/formula.json") {
+        db.add_project(project);
+    }
     // All the formulae for Linux
-    let all_linux_formulas_url = "https://formulae.brew.sh/api/formula-linux.json";
+    for project in get_projects("https://formulae.brew.sh/api/formula-linux.json") {
+        db.add_project(project);
+    }
     // All casks
-    let all_casks_formulas_url = "https://formulae.brew.sh/api/cask.json";
+    for project in get_projects("https://formulae.brew.sh/api/cask.json") {
+        db.add_project(project);
+    }
+}
+
+pub fn get_projects(formulae_url: &str) -> Vec<crate::projects::SoftwareProject> {
+    let mut projects: Vec<crate::projects::SoftwareProject> = vec![];
 
     let client = reqwest::blocking::Client::builder().build().unwrap();
 
     // TODO make this really asynchronous with async/await.
-    let mut response = match client.get(all_mac_formulas_url).send() {
+    let mut response = match client.get(formulae_url).send() {
         Ok(r) => r,
         Err(e) => return vec![],
     };
@@ -64,5 +82,15 @@ pub fn get_projects() -> Vec<crate::projects::SoftwareProject> {
         }
     };
 
-    vec![]
+
+    for brew_recipe in brew_recipes {
+        let project = brew_recipe.to_software_project();
+        if project.id.len() == 0 {
+            continue;
+        }
+        log::info!("Adding project {} from brew recipe.", project.name);
+        projects.push(project);
+    }
+
+    projects
 }
