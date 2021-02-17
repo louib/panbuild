@@ -41,8 +41,39 @@ pub fn get_org_repos(repo_name: &str) -> Vec<String> {
     repos
 }
 
+// See https://docs.github.com/en/rest/reference/repos
 #[derive(Debug, Serialize, Deserialize)]
-struct GitHubRepo {}
+struct GitHubRepo {
+    id: String,
+    name: String,
+    full_name: String,
+    description: String,
+    fork: bool,
+    is_template: bool,
+    archived: bool,
+    disabled: bool,
+    topics: Vec<String>,
+    clone_url: String,
+    git_url: String,
+    homepage: String,
+    forks_count: i64,
+    stargazers_count: i64,
+    watchers_count: i64,
+    size: i64,
+    default_branch: String,
+}
+impl GitHubRepo {
+    pub fn to_software_project(self) -> crate::projects::SoftwareProject {
+        let mut project = crate::projects::SoftwareProject::default();
+        project.id = crate::utils::repo_url_to_reverse_dns(&self.clone_url);
+        project.name = self.name;
+        project.default_branch = self.default_branch;
+        project.description = self.description;
+        project.vcs_urls.push(self.clone_url);
+        project.keywords = self.topics;
+        project
+    }
+}
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct GitHub {}
