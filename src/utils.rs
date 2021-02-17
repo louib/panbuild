@@ -1,13 +1,23 @@
 use std::fs::{self, DirEntry};
 use std::io::{stdin, stdout, Write};
+use std::env;
 use std::path::Path;
 use std::process::{Command, Output, Stdio};
 use std::time::SystemTime;
 
+// Gets the path the repos should be located at.
+// FIXME not sure this function belongs in utils...
+pub fn get_repos_dir_path() -> String {
+    if let Ok(path) = env::var("PB_REPOS_PATH") {
+        return path.to_string();
+    }
+    "/tmp".to_string()
+}
+
 pub fn clone_git_repo(repo_url: String) -> Result<String, String> {
-    let timestamp = SystemTime::now().duration_since(SystemTime::UNIX_EPOCH);
-    let project_name = repo_url.split("/").last().unwrap();
-    let repo_dir = format!("/tmp/panbuild-git-clone-{}-{}", project_name, timestamp.unwrap().as_secs());
+    let project_id = repo_url_to_reverse_dns(&repo_url);
+    let repos_dir = get_repos_dir_path();
+    let repo_dir = format!("{}/{}", repos_dir, project_id);
     if let Err(e) = fs::create_dir(&repo_dir) {
         return Err(e.to_string());
     }
