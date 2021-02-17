@@ -43,19 +43,9 @@ impl GitLabProject {
     }
 }
 
-pub struct PagedResponse {
-    pub next_page_url: Option<String>,
-    pub results: Vec<crate::projects::SoftwareProject>,
-}
-
-pub struct PagedRequest {
-    pub next_page_url: Option<String>,
-    pub domain: String,
-}
-
 pub fn get_and_add_repos(domain: &str, db: &mut crate::db::Database) {
     log::info!("Getting all projects from GitLab instance at {}.", domain);
-    let mut paged_response = get_repos(PagedRequest {
+    let mut paged_response = get_repos(crate::utils::PagedRequest {
         domain: domain.to_string(),
         next_page_url: None,
     });
@@ -70,7 +60,7 @@ pub fn get_and_add_repos(domain: &str, db: &mut crate::db::Database) {
             break;
         }
 
-        paged_response = get_repos(PagedRequest {
+        paged_response = get_repos(crate::utils::PagedRequest {
             domain: domain.to_string(),
             next_page_url: paged_response.next_page_url,
         });
@@ -78,14 +68,14 @@ pub fn get_and_add_repos(domain: &str, db: &mut crate::db::Database) {
     }
 }
 
-pub fn get_repos(request: PagedRequest) -> PagedResponse {
+pub fn get_repos(request: crate::utils::PagedRequest) -> crate::utils::PagedResponse {
     let mut next_url = format!("https://{}/api/v4/projects?per_page=100", request.domain);
     if let Some(url) = request.next_page_url {
         next_url = url;
     }
 
     let mut projects: Vec<crate::projects::SoftwareProject> = vec![];
-    let default_response = PagedResponse {
+    let default_response = crate::utils::PagedResponse {
         results: vec![],
         next_page_url: None,
     };
@@ -126,13 +116,13 @@ pub fn get_repos(request: PagedRequest) -> PagedResponse {
 
     // FIXME next_url should already be an option!
     if next_url.len() == 0 {
-        return PagedResponse {
+        return crate::utils::PagedResponse {
             results: projects,
             next_page_url: None,
         };
     }
 
-    PagedResponse {
+    crate::utils::PagedResponse {
         results: projects,
         next_page_url: Some(next_url),
     }
