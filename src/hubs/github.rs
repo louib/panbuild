@@ -4,9 +4,44 @@ use futures::executor::block_on;
 use reqwest::header;
 use serde::{Deserialize, Serialize};
 
-pub fn get_org_repos(repo_name: &str) -> Vec<String> {
-    let mut next_url = format!("https://api.github.com/orgs/{}/repos?type=all&per_page=100", repo_name);
-    let mut repos = vec![];
+pub fn get_org_repos(org_name: &str) -> Vec<crate::projects::SoftwareProject> {
+    let mut paged_response = get_repos(crate::utils::PagedRequest {
+        domain: "".to_string(),
+        next_page_url: Some(format!("https://api.github.com/orgs/{}/repos?type=all&per_page=100", org_name)),
+    });
+    let mut all_projects = vec![];
+    let mut projects = paged_response.results;
+    while projects.len() > 0 {
+        for project in projects {
+            println!("Adding project {}.", &project.name);
+            all_projects.push(project);
+        }
+
+        if paged_response.next_page_url.is_none() {
+            break;
+        }
+
+        paged_response = get_repos(crate::utils::PagedRequest {
+            domain: "".to_string(),
+            next_page_url: paged_response.next_page_url,
+        });
+        projects = paged_response.results;
+    }
+    all_projects
+}
+
+pub fn get_repos(request: crate::utils::PagedRequest) -> crate::utils::PagedResponse {
+    // By default, we get all the repos.
+    let mut next_url = format!("https://api.github.com/repos?type=all&per_page=100");
+    if let Some(url) = request.next_page_url {
+        next_url = url;
+    }
+
+    let mut projects: Vec<crate::projects::SoftwareProject> = vec![];
+    let default_response = crate::utils::PagedResponse {
+        results: vec![],
+        next_page_url: None,
+    };
 
     let mut headers = header::HeaderMap::new();
     if let Ok(token) = env::var("PB_GITHUB_TOKEN") {
@@ -17,28 +52,49 @@ pub fn get_org_repos(repo_name: &str) -> Vec<String> {
 
     let client = reqwest::blocking::Client::builder().default_headers(headers).build().unwrap();
 
-    while next_url.len() != 0 {
-        // TODO make this really asynchronous with async/await.
-        let mut response = match client.get(&next_url).send() {
-            Ok(r) => r,
-            Err(e) => return repos,
-        };
+    println!("Getting GitHub projects page at {}.", next_url);
+    // TODO make this really asynchronous with async/await.
+    let mut response = match client.get(&next_url).send() {
+        Ok(r) => r,
+        Err(e) => return default_response,
+    };
 
-        if response.status().as_u16() == 204 {
-            return repos;
-        }
-
-        // let response_content = response.text().unwrap();
-        let response_headers = response.headers();
-
-        let link_header = match &response_headers.get("link") {
-            Some(h) => h.to_str().unwrap(),
-            None => return repos,
-        };
-        next_url = crate::utils::get_next_page_url(link_header).to_string();
+    if response.status().as_u16() == 204 {
+        return default_response;
     }
 
-    repos
+    let response_headers = response.headers();
+
+    let link_header = match &response_headers.get("link") {
+        Some(h) => h.to_str().unwrap(),
+        None => return default_response,
+    };
+    next_url = crate::utils::get_next_page_url(link_header).to_string();
+
+    let github_repos: Vec<GitHubRepo> = match serde_yaml::from_str(&response.text().unwrap()) {
+        Ok(p) => p,
+        Err(e) => {
+            eprintln!("Could not parse GitHub repos {}.", e);
+            return default_response;
+        }
+    };
+    for github_project in github_repos {
+        log::info!("Adding GitHub repo {}.", github_project.name);
+        projects.push(github_project.to_software_project());
+    }
+
+    // FIXME next_url should already be an option!
+    if next_url.len() == 0 {
+        return crate::utils::PagedResponse {
+            results: projects,
+            next_page_url: None,
+        };
+    }
+
+    crate::utils::PagedResponse {
+        results: projects,
+        next_page_url: Some(next_url),
+    }
 }
 
 // See https://docs.github.com/en/rest/reference/repos
