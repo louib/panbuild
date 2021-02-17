@@ -145,7 +145,21 @@ fn main() {
                     continue;
                 }
             };
-            for file_path in repo_file_paths {
+            for file_path in &repo_file_paths {
+                // We're a bit aggressive here, we could try parsing only the files
+                // that match the flatpak path convention.
+                let manifest_content = match fs::read_to_string(file_path) {
+                    Ok(content) => content,
+                    Err(e) => {
+                        log::debug!("Could not read manifest file {}: {}.", &file_path.to_str().unwrap(), e);
+                        continue;
+                    }
+                };
+                let native_manifest = match panbuild::manifests::flatpak::FlatpakManifest::parse(&manifest_content) {
+                    Some(m) => m,
+                    None => continue,
+                };
+
                 // TODO try parsing that file to a flatpak manifest.
                 // TODO save the modules from the manifest.
                 // TODO infer projects from the modules when possible.

@@ -99,7 +99,7 @@ impl AbstractManifest {
             let manifest_content = match fs::read_to_string(file_path) {
                 Ok(content) => content,
                 Err(e) => {
-                    eprintln!("could not read manifest file {}: {}.", path, e);
+                    eprintln!("Could not read manifest file {}: {}.", path, e);
                     return None;
                 }
             };
@@ -111,7 +111,7 @@ impl AbstractManifest {
             let manifest_content = match fs::read_to_string(file_path) {
                 Ok(content) => content,
                 Err(e) => {
-                    eprintln!("could not read manifest file {}: {}.", path, e);
+                    eprintln!("Could not read manifest file {}: {}.", path, e);
                     return None;
                 }
             };
@@ -123,7 +123,7 @@ impl AbstractManifest {
             let manifest_content = match fs::read_to_string(file_path) {
                 Ok(content) => content,
                 Err(e) => {
-                    eprintln!("could not read manifest file {}: {}.", path, e);
+                    eprintln!("Could not read manifest file {}: {}.", path, e);
                     return None;
                 }
             };
@@ -135,7 +135,7 @@ impl AbstractManifest {
             let manifest_content = match fs::read_to_string(file_path) {
                 Ok(content) => content,
                 Err(e) => {
-                    eprintln!("could not read manifest file {}: {}.", path, e);
+                    eprintln!("Could not read manifest file {}: {}.", path, e);
                     return None;
                 }
             };
@@ -147,7 +147,7 @@ impl AbstractManifest {
             let manifest_content = match fs::read_to_string(file_path) {
                 Ok(content) => content,
                 Err(e) => {
-                    eprintln!("could not read manifest file {}: {}.", path, e);
+                    eprintln!("Could not read manifest file {}: {}.", path, e);
                     return None;
                 }
             };
