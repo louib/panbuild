@@ -1,6 +1,6 @@
+use std::env;
 use std::fs::{self, DirEntry};
 use std::io::{stdin, stdout, Write};
-use std::env;
 use std::path::Path;
 use std::process::{Command, Output, Stdio};
 use std::time::SystemTime;
@@ -160,7 +160,6 @@ pub struct PagedRequest {
     pub next_page_url: Option<String>,
     pub domain: String,
 }
-
 
 /// See https://www.w3.org/wiki/LinkHeader
 ///```
