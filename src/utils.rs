@@ -8,14 +8,14 @@ use std::time::SystemTime;
 // Gets the path the repos should be located at.
 // FIXME not sure this function belongs in utils...
 pub fn get_repos_dir_path() -> String {
-    if let Ok(path) = env::var("PB_REPOS_PATH") {
+    if let Ok(path) = env::var("PB_REPOS_DIR_PATH") {
         return path.to_string();
     }
     "/tmp".to_string()
 }
 
-pub fn clone_git_repo(repo_url: String) -> Result<String, String> {
-    let project_id = repo_url_to_reverse_dns(&repo_url);
+pub fn clone_git_repo(repo_url: &str) -> Result<String, String> {
+    let project_id = repo_url_to_reverse_dns(repo_url);
     let repos_dir = get_repos_dir_path();
     let repo_dir = format!("{}/{}", repos_dir, project_id);
     if let Err(e) = fs::create_dir(&repo_dir) {
@@ -25,7 +25,7 @@ pub fn clone_git_repo(repo_url: String) -> Result<String, String> {
     println!("Cloning repo {}", repo_url);
     let mut output = Command::new("git")
         .arg("clone")
-        .arg(repo_url.to_string())
+        .arg(repo_url)
         .arg(&repo_dir)
         .stdout(Stdio::piped())
         .spawn()

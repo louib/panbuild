@@ -27,7 +27,7 @@ fn main() {
         let stdin = io::stdin();
         for line in stdin.lock().lines() {
             let line_str = line.unwrap();
-            let repo_dir = match panbuild::utils::clone_git_repo(line_str.to_string()) {
+            let repo_dir = match panbuild::utils::clone_git_repo(&line_str) {
                 Ok(d) => d,
                 Err(e) => {
                     eprintln!("Could not clone repo {}: {}", line_str, e);
@@ -75,7 +75,7 @@ fn main() {
         let mut modules: Vec<SoftwareModule> = vec![];
         let mut db = panbuild::db::Database::get_database();
         let repo_path = match panbuild::utils::clone_git_repo(
-            "https://github.com/flathub/shared-modules.git".to_string()
+            &"https://github.com/flathub/shared-modules.git"
         ) {
             Ok(p) => p,
             Err(e) => {
@@ -128,6 +128,30 @@ fn main() {
 
     if command_name == &"import-flathub-manifests".to_string() {
         let all_flathub_repos = panbuild::hubs::github::get_org_repos("flathub");
+        for flathub_repo in &all_flathub_repos {
+            let repo_url = &flathub_repo.vcs_urls[0];
+            let repo_dir = match panbuild::utils::clone_git_repo(&repo_url) {
+                Ok(d) => d,
+                Err(e) => {
+                    eprintln!("Could not clone repo {}: {}", &repo_url, e);
+                    continue;
+                },
+            };
+            // TODO we should also rewind on all the commits of that repo?
+            let repo_file_paths = match panbuild::utils::get_all_paths(path::Path::new(&repo_dir)) {
+                Ok(paths) => paths,
+                Err(message) => {
+                    log::error!("Could not get the file paths for {} :sad: {}", repo_dir, message);
+                    continue;
+                }
+            };
+            for file_path in repo_file_paths {
+                // TODO try parsing that file to a flatpak manifest.
+                // TODO save the modules from the manifest.
+                // TODO infer projects from the modules when possible.
+            }
+
+        }
         println!("There are {} flathub repos.", all_flathub_repos.len());
     }
 
