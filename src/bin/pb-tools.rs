@@ -127,6 +127,7 @@ fn main() {
     }
 
     if command_name == &"import-flathub-manifests".to_string() {
+        let mut db = panbuild::db::Database::get_database();
         let all_flathub_repos = panbuild::hubs::github::get_org_repos("flathub");
         for flathub_repo in &all_flathub_repos {
             let repo_url = &flathub_repo.vcs_urls[0];
@@ -155,13 +156,16 @@ fn main() {
                         continue;
                     }
                 };
-                let native_manifest = match panbuild::manifests::flatpak::FlatpakManifest::parse(&manifest_content) {
+                let flatpak_manifest = match panbuild::manifests::flatpak::FlatpakManifest::parse(&manifest_content) {
                     Some(m) => m,
                     None => continue,
                 };
 
-                // TODO try parsing that file to a flatpak manifest.
-                // TODO save the modules from the manifest.
+                let modules = flatpak_manifest.get_modules();
+                for module in modules {
+                    db.add_module(module);
+                }
+
                 // TODO infer projects from the modules when possible.
             }
 
