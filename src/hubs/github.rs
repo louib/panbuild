@@ -44,6 +44,9 @@ pub fn get_repos(request: crate::utils::PagedRequest) -> crate::utils::PagedResp
     };
 
     let mut headers = header::HeaderMap::new();
+    // User agent is required when using the GitHub API.
+    // See https://docs.github.com/en/rest/overview/resources-in-the-rest-api#user-agent-required
+    headers.insert("User-Agent", header::HeaderValue::from_str("panbuild").unwrap());
     if let Ok(token) = env::var("PB_GITHUB_TOKEN") {
         headers.insert("Authorization", header::HeaderValue::from_str(&token).unwrap());
     } else {
@@ -98,10 +101,10 @@ struct GitHubRepo {
     full_name: String,
     description: String,
     fork: bool,
-    is_template: bool,
+    is_template: Option<bool>,
     archived: bool,
     disabled: bool,
-    topics: Vec<String>,
+    topics: Option<Vec<String>>,
     clone_url: String,
     git_url: String,
     homepage: String,
@@ -119,7 +122,9 @@ impl GitHubRepo {
         project.default_branch = self.default_branch;
         project.description = self.description;
         project.vcs_urls.push(self.clone_url);
-        project.keywords = self.topics;
+        if let Some(topics) = self.topics {
+            project.keywords = topics;
+        }
         project
     }
 }

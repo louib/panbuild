@@ -179,8 +179,14 @@ pub fn get_next_page_url(link_header: &str) -> Option<String> {
     log::debug!("Getting next page from header {}.", link_header);
     for link in link_header.split(",") {
         let mut link_parts = link.split(";");
-        let url = link_parts.next().unwrap();
-        let rel = link_parts.next().unwrap();
+        let url = match link_parts.next() {
+            Some(u) => u,
+            None => continue,
+        };
+        let rel = match link_parts.next() {
+            Some(u) => u,
+            None => continue,
+        };
         if !rel.contains("rel=\"next\"") {
             continue;
         }
