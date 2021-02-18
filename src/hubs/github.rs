@@ -32,9 +32,9 @@ pub fn get_org_repos(org_name: &str) -> Vec<crate::projects::SoftwareProject> {
 
 pub fn get_repos(request: crate::utils::PagedRequest) -> crate::utils::PagedResponse {
     // By default, we get all the repos.
-    let mut next_url = format!("https://api.github.com/repos?type=all&per_page=100");
+    let mut current_url = format!("https://api.github.com/repos?type=all&per_page=100");
     if let Some(url) = request.next_page_url {
-        next_url = url;
+        current_url = url;
     }
 
     let mut projects: Vec<crate::projects::SoftwareProject> = vec![];
@@ -52,24 +52,25 @@ pub fn get_repos(request: crate::utils::PagedRequest) -> crate::utils::PagedResp
 
     let client = reqwest::blocking::Client::builder().default_headers(headers).build().unwrap();
 
-    println!("Getting GitHub projects page at {}.", next_url);
+    println!("Getting GitHub projects page at {}.", current_url);
     // TODO make this really asynchronous with async/await.
-    let mut response = match client.get(&next_url).send() {
+    let response = match client.get(&current_url).send() {
         Ok(r) => r,
-        Err(e) => return default_response,
+        Err(e) => {
+            eprintln!("Could not fetch GitHub url {}: {}.", current_url, e);
+            return default_response;
+        },
     };
 
     if response.status().as_u16() == 204 {
         return default_response;
     }
 
-    let response_headers = response.headers();
-
-    let link_header = match &response_headers.get("link") {
+    let link_header = match &response.headers().get("link") {
         Some(h) => h.to_str().unwrap(),
-        None => return default_response,
+        None => "",
     };
-    next_url = crate::utils::get_next_page_url(link_header).to_string();
+    let next_page_url = crate::utils::get_next_page_url(link_header);
 
     let github_repos: Vec<GitHubRepo> = match serde_yaml::from_str(&response.text().unwrap()) {
         Ok(p) => p,
@@ -83,17 +84,9 @@ pub fn get_repos(request: crate::utils::PagedRequest) -> crate::utils::PagedResp
         projects.push(github_project.to_software_project());
     }
 
-    // FIXME next_url should already be an option!
-    if next_url.len() == 0 {
-        return crate::utils::PagedResponse {
-            results: projects,
-            next_page_url: None,
-        };
-    }
-
     crate::utils::PagedResponse {
         results: projects,
-        next_page_url: Some(next_url),
+        next_page_url: next_page_url,
     }
 }
 

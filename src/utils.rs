@@ -175,7 +175,7 @@ pub struct PagedRequest {
 ///);
 ///
 ///```
-pub fn get_next_page_url(link_header: &str) -> &str {
+pub fn get_next_page_url(link_header: &str) -> Option<String> {
     log::debug!("Getting next page from header {}.", link_header);
     for link in link_header.split(",") {
         let mut link_parts = link.split(";");
@@ -186,9 +186,9 @@ pub fn get_next_page_url(link_header: &str) -> &str {
         }
         let mut next_page_url = url.trim();
         next_page_url = &next_page_url[1..next_page_url.len() - 1];
-        return next_page_url;
+        return Some(next_page_url.to_string());
     }
-    ""
+    None
 }
 
 ///```

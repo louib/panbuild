@@ -69,9 +69,9 @@ pub fn get_and_add_repos(domain: &str, db: &mut crate::db::Database) {
 }
 
 pub fn get_repos(request: crate::utils::PagedRequest) -> crate::utils::PagedResponse {
-    let mut next_url = format!("https://{}/api/v4/projects?per_page=100", request.domain);
+    let mut current_url = format!("https://{}/api/v4/projects?per_page=100", request.domain);
     if let Some(url) = request.next_page_url {
-        next_url = url;
+        current_url = url;
     }
 
     let mut projects: Vec<crate::projects::SoftwareProject> = vec![];
@@ -83,11 +83,14 @@ pub fn get_repos(request: crate::utils::PagedRequest) -> crate::utils::PagedResp
     let mut headers = header::HeaderMap::new();
     let client = reqwest::blocking::Client::builder().default_headers(headers).build().unwrap();
 
-    println!("Getting GitLab projects page at {}.", next_url);
+    println!("Getting GitLab projects page at {}.", current_url);
     // TODO make this really asynchronous with async/await.
-    let mut response = match client.get(&next_url).send() {
+    let mut response = match client.get(&current_url).send() {
         Ok(r) => r,
-        Err(e) => return default_response,
+        Err(e) => {
+            eprintln!("Could not fetch GitLab url {}: {}.", current_url, e);
+            return default_response;
+        },
     };
 
     if response.status().as_u16() == 204 {
@@ -98,9 +101,9 @@ pub fn get_repos(request: crate::utils::PagedRequest) -> crate::utils::PagedResp
 
     let link_header = match &response_headers.get("link") {
         Some(h) => h.to_str().unwrap(),
-        None => return default_response,
+        None => "",
     };
-    next_url = crate::utils::get_next_page_url(link_header).to_string();
+    let next_page_url = crate::utils::get_next_page_url(link_header);
 
     let gitlab_projects: Vec<GitLabProject> = match serde_yaml::from_str(&response.text().unwrap()) {
         Ok(p) => p,
@@ -114,16 +117,8 @@ pub fn get_repos(request: crate::utils::PagedRequest) -> crate::utils::PagedResp
         projects.push(gitlab_project.to_software_project());
     }
 
-    // FIXME next_url should already be an option!
-    if next_url.len() == 0 {
-        return crate::utils::PagedResponse {
-            results: projects,
-            next_page_url: None,
-        };
-    }
-
     crate::utils::PagedResponse {
         results: projects,
-        next_page_url: Some(next_url),
+        next_page_url: next_page_url,
     }
 }
