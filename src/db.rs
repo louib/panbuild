@@ -2,8 +2,6 @@ use std::env;
 use std::fs;
 use std::path;
 
-use uuid::Uuid;
-
 pub const DEFAULT_DB_PATH: &str = ".panbuild-db";
 pub const MODULES_DB_SUBDIR: &str = "/modules";
 pub const PROJECTS_DB_SUBDIR: &str = "/projects";
@@ -136,15 +134,27 @@ impl Database {
     pub fn remove_module() {}
 
     pub fn add_module(&mut self, mut new_module: crate::modules::SoftwareModule) {
-        let new_uuid = Uuid::new_v4();
-        new_module.id = Some(new_uuid.to_string());
+        if new_module.version.len() == 0 {
+            eprintln!("Tried to add module {} which does not have a version!", new_module.version);
+        }
         let modules_path = Database::get_modules_db_path();
-        let mut new_module_path = format!(
-            "{}/{}-{}.yaml",
-            modules_path,
-            crate::utils::normalize_name(&new_module.name),
-            new_module.id.as_ref().unwrap()
-        );
+        let mut new_module_path = "".to_string();
+        if let Some(project_id) = &new_module.project_id {
+            new_module_path = format!(
+                "{}/{}-{}-{}.yaml",
+                modules_path,
+                project_id,
+                crate::utils::normalize_name(&new_module.name),
+                new_module.version,
+            );
+        } else {
+            new_module_path = format!(
+                "{}/{}-{}.yaml",
+                modules_path,
+                crate::utils::normalize_name(&new_module.name),
+                new_module.version,
+            );
+        }
         log::info!("Adding module at {}", new_module_path);
         let mut new_module_fs_path = path::Path::new(&new_module_path);
         if new_module_fs_path.exists() {

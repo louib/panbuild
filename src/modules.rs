@@ -134,11 +134,11 @@ impl Default for ModuleType {
 #[derive(Default, Debug, Serialize, Deserialize)]
 /// Generic representation of a software module.
 pub struct SoftwareModule {
-    // A UUID for the module.
-    pub id: Option<String>,
-    pub module_type: ModuleType,
     pub name: String,
     pub version: String,
+    pub project_id: Option<String>,
+
+    pub module_type: ModuleType,
     // The tag associated with the module, if any.
     pub tag: String,
     // The hash of the commit associated with the module, if any.
