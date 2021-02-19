@@ -173,8 +173,12 @@ pub struct PagedRequest {
 ///<https://gitlab.gnome.org/api/v4/projects?page=118&per_page=100>; rel="last"
 ///"###;
 ///assert_eq!(
-///  panbuild::utils::get_next_page_url(link_header),
+///  panbuild::utils::get_next_page_url(link_header).unwrap(),
 ///  "https://gitlab.gnome.org/api/v4/projects?page=6&per_page=100",
+///);
+///assert_eq!(
+///  panbuild::utils::get_next_page_url(""),
+///  None,
 ///);
 ///
 ///```
