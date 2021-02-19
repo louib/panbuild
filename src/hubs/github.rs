@@ -48,7 +48,8 @@ pub fn get_repos(request: crate::utils::PagedRequest) -> crate::utils::PagedResp
     // See https://docs.github.com/en/rest/overview/resources-in-the-rest-api#user-agent-required
     headers.insert("User-Agent", header::HeaderValue::from_str("panbuild").unwrap());
     if let Ok(token) = env::var("PB_GITHUB_TOKEN") {
-        headers.insert("Authorization", header::HeaderValue::from_str(&token).unwrap());
+        let auth_header_value = format!("token {}", &token);
+        headers.insert("Authorization", header::HeaderValue::from_str(&auth_header_value.to_string()).unwrap());
     } else {
         log::warn!("No GitHub API token located at PB_GITHUB_TOKEN. We will get rate limited faster.");
     }
@@ -75,7 +76,8 @@ pub fn get_repos(request: crate::utils::PagedRequest) -> crate::utils::PagedResp
     };
     let next_page_url = crate::utils::get_next_page_url(link_header);
 
-    let github_repos: Vec<GitHubRepo> = match serde_yaml::from_str(&response.text().unwrap()) {
+    let response_content = response.text().unwrap();
+    let github_repos: Vec<GitHubRepo> = match serde_yaml::from_str(&response_content) {
         Ok(p) => p,
         Err(e) => {
             eprintln!("Could not parse GitHub repos {}.", e);

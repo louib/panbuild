@@ -18,6 +18,9 @@ pub fn clone_git_repo(repo_url: &str) -> Result<String, String> {
     let project_id = repo_url_to_reverse_dns(repo_url);
     let repos_dir = get_repos_dir_path();
     let repo_dir = format!("{}/{}", repos_dir, project_id);
+    if Path::new(&repo_dir).is_dir() {
+        return Ok(repo_dir);
+    }
     if let Err(e) = fs::create_dir(&repo_dir) {
         return Err(e.to_string());
     }
