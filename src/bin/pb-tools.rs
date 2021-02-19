@@ -148,7 +148,10 @@ fn main() {
             };
             for file_path in &repo_file_paths {
                 // We're a bit aggressive here, we could try parsing only the files
-                // that match the flatpak path convention.
+                // that match exactly the flatpak path convention.
+                if !file_path.ends_with(".json") && !file_path.ends_with(".yaml") && !file_path.ends_with(".yml") {
+                    continue;
+                }
                 let manifest_content = match fs::read_to_string(file_path) {
                     Ok(content) => content,
                     Err(e) => {
