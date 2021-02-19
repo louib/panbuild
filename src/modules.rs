@@ -135,14 +135,17 @@ impl Default for ModuleType {
 /// Generic representation of a software module.
 pub struct SoftwareModule {
     pub name: String,
-    pub version: String,
     pub project_id: Option<String>,
 
-    pub module_type: ModuleType,
+    // The version of the current module.
+    pub version: String,
     // The tag associated with the module, if any.
     pub tag: String,
     // The hash of the commit associated with the module, if any.
     pub commit: String,
+
+    pub module_type: ModuleType,
+
     pub download_urls: Vec<String>,
     pub url: String,
     pub build_system: BuildSystem,
@@ -157,6 +160,21 @@ pub struct SoftwareModule {
     pub build_commands: Vec<String>,
     pub install_instructions: String,
     pub install_path: String,
+}
+impl SoftwareModule {
+    pub fn get_identifier(&self) -> &str {
+        if self.version.len() != 0 {
+            return self.version.as_str();
+        }
+        if self.tag.len() != 0 {
+            return self.tag.as_str();
+        }
+        if self.commit.len() != 0 {
+            return self.commit.as_str();
+        }
+        return "";
+
+    }
 }
 
 #[derive(Default, Debug, Serialize, Deserialize)]

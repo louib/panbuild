@@ -134,8 +134,10 @@ impl Database {
     pub fn remove_module() {}
 
     pub fn add_module(&mut self, mut new_module: crate::modules::SoftwareModule) {
-        if new_module.version.len() == 0 {
-            eprintln!("Tried to add module {} which does not have a version!", new_module.version);
+        let module_id = new_module.get_identifier();
+        if module_id.len() == 0 {
+            eprintln!("Tried to add module {} which does not have an identifier!", module_id);
+            return;
         }
         let modules_path = Database::get_modules_db_path();
         let mut new_module_path = "".to_string();
@@ -145,14 +147,14 @@ impl Database {
                 modules_path,
                 project_id,
                 crate::utils::normalize_name(&new_module.name),
-                new_module.version,
+                module_id,
             );
         } else {
             new_module_path = format!(
                 "{}/{}-{}.yaml",
                 modules_path,
                 crate::utils::normalize_name(&new_module.name),
-                new_module.version,
+                module_id,
             );
         }
         log::info!("Adding module at {}", new_module_path);

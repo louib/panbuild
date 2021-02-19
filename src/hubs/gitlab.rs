@@ -113,7 +113,7 @@ pub fn get_repos(request: crate::utils::PagedRequest) -> crate::utils::PagedResp
         }
     };
     for gitlab_project in gitlab_projects {
-        log::info!("Adding GitLab project {}.", gitlab_project.name);
+        log::debug!("Adding GitLab project {}.", gitlab_project.name);
         projects.push(gitlab_project.to_software_project());
     }
 

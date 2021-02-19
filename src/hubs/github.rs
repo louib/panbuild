@@ -83,7 +83,7 @@ pub fn get_repos(request: crate::utils::PagedRequest) -> crate::utils::PagedResp
         }
     };
     for github_project in github_repos {
-        log::info!("Adding GitHub repo {}.", github_project.name);
+        log::debug!("Adding GitHub repo {}.", github_project.name);
         projects.push(github_project.to_software_project());
     }
 
