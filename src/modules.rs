@@ -173,7 +173,6 @@ impl SoftwareModule {
             return self.commit.as_str();
         }
         return "";
-
     }
 }
 

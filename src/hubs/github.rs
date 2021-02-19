@@ -63,7 +63,7 @@ pub fn get_repos(request: crate::utils::PagedRequest) -> crate::utils::PagedResp
         Err(e) => {
             eprintln!("Could not fetch GitHub url {}: {}.", current_url, e);
             return default_response;
-        },
+        }
     };
 
     if response.status().as_u16() == 204 {

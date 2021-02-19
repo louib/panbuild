@@ -150,12 +150,7 @@ impl Database {
                 module_id,
             );
         } else {
-            new_module_path = format!(
-                "{}/{}-{}.yaml",
-                modules_path,
-                crate::utils::normalize_name(&new_module.name),
-                module_id,
-            );
+            new_module_path = format!("{}/{}-{}.yaml", modules_path, crate::utils::normalize_name(&new_module.name), module_id,);
         }
         log::info!("Adding module at {}", new_module_path);
         let mut new_module_fs_path = path::Path::new(&new_module_path);
