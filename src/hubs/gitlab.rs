@@ -113,6 +113,10 @@ pub fn get_repos(request: crate::utils::PagedRequest) -> crate::utils::PagedResp
         }
     };
     for gitlab_project in gitlab_projects {
+        if let Some(parent_project) = gitlab_project.forked_from_project {
+            log::debug!("Skipping forked project {}.", &gitlab_project.name);
+            continue;
+        }
         log::debug!("Adding GitLab project {}.", gitlab_project.name);
         projects.push(gitlab_project.to_software_project());
     }
