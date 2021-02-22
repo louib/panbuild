@@ -157,11 +157,13 @@ pub fn normalize_name(name: &String) -> String {
 pub struct PagedResponse {
     pub next_page_url: Option<String>,
     pub results: Vec<crate::projects::SoftwareProject>,
+    pub token: Option<String>,
 }
 
 pub struct PagedRequest {
     pub next_page_url: Option<String>,
     pub domain: String,
+    pub token: Option<String>,
 }
 
 /// See https://www.w3.org/wiki/LinkHeader

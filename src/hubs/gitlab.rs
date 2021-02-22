@@ -1,3 +1,5 @@
+use std::env;
+
 use reqwest::header;
 
 use serde::{Deserialize, Serialize};
@@ -43,12 +45,23 @@ impl GitLabProject {
     }
 }
 
-pub fn get_and_add_repos(domain: &str, db: &mut crate::db::Database) {
+pub fn get_and_add_repos(domain: &str, token_env_var_name: &str, db: &mut crate::db::Database) {
     log::info!("Getting all projects from GitLab instance at {}.", domain);
-    let mut paged_response = get_repos(crate::utils::PagedRequest {
+    let mut request = crate::utils::PagedRequest {
         domain: domain.to_string(),
+        token: None,
         next_page_url: None,
-    });
+    };
+    if let Ok(token) = env::var(token_env_var_name) {
+        // See https://docs.gitlab.com/ee/api/#oauth2-tokens
+        // for documentation on OAuth authentication.
+        request.token = Some(token);
+    } else {
+        log::warn!("No GitLab API token located at {} for instance at {}. Aborting.", token_env_var_name, domain);
+        return;
+    }
+    let mut paged_response = get_repos(request);
+
     let mut projects = paged_response.results;
     while projects.len() > 0 {
         for project in projects {
@@ -62,6 +75,7 @@ pub fn get_and_add_repos(domain: &str, db: &mut crate::db::Database) {
 
         paged_response = get_repos(crate::utils::PagedRequest {
             domain: domain.to_string(),
+            token: paged_response.token,
             next_page_url: paged_response.next_page_url,
         });
         projects = paged_response.results;
@@ -77,6 +91,7 @@ pub fn get_repos(request: crate::utils::PagedRequest) -> crate::utils::PagedResp
     let mut projects: Vec<crate::projects::SoftwareProject> = vec![];
     let default_response = crate::utils::PagedResponse {
         results: vec![],
+        token: None,
         next_page_url: None,
     };
 
@@ -123,6 +138,7 @@ pub fn get_repos(request: crate::utils::PagedRequest) -> crate::utils::PagedResp
 
     crate::utils::PagedResponse {
         results: projects,
+        token: request.token,
         next_page_url: next_page_url,
     }
 }

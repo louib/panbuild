@@ -7,6 +7,7 @@ use serde::{Deserialize, Serialize};
 pub fn get_org_repos(org_name: &str) -> Vec<crate::projects::SoftwareProject> {
     let mut paged_response = get_repos(crate::utils::PagedRequest {
         domain: "".to_string(),
+        token: None,
         next_page_url: Some(format!("https://api.github.com/orgs/{}/repos?type=all&per_page=100", org_name)),
     });
     let mut all_projects = vec![];
@@ -23,6 +24,7 @@ pub fn get_org_repos(org_name: &str) -> Vec<crate::projects::SoftwareProject> {
 
         paged_response = get_repos(crate::utils::PagedRequest {
             domain: "".to_string(),
+            token: None,
             next_page_url: paged_response.next_page_url,
         });
         projects = paged_response.results;
@@ -40,6 +42,7 @@ pub fn get_repos(request: crate::utils::PagedRequest) -> crate::utils::PagedResp
     let mut projects: Vec<crate::projects::SoftwareProject> = vec![];
     let default_response = crate::utils::PagedResponse {
         results: vec![],
+        token: None,
         next_page_url: None,
     };
 
@@ -91,6 +94,7 @@ pub fn get_repos(request: crate::utils::PagedRequest) -> crate::utils::PagedResp
 
     crate::utils::PagedResponse {
         results: projects,
+        token: None,
         next_page_url: next_page_url,
     }
 }
