@@ -27,8 +27,7 @@ pub struct GitLabProject {
     // From the API doc:
     // If the project is a fork, and you provide a valid token to authenticate,
     // the forked_from_project field appears in the response.
-    // FIXME there is actually an object defined in there.
-    pub forked_from_project: Option<bool>,
+    pub forked_from_project: Option<GitLabParentProject>,
 }
 impl GitLabProject {
     pub fn to_software_project(self) -> crate::projects::SoftwareProject {
@@ -44,6 +43,13 @@ impl GitLabProject {
         project
     }
 }
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct GitLabParentProject {
+    pub id: String,
+    pub name: String,
+}
+
 
 pub fn get_and_add_repos(domain: &str, token_env_var_name: &str, db: &mut crate::db::Database) {
     log::info!("Getting all projects from GitLab instance at {}.", domain);
@@ -65,7 +71,7 @@ pub fn get_and_add_repos(domain: &str, token_env_var_name: &str, db: &mut crate:
     let mut projects = paged_response.results;
     while projects.len() > 0 {
         for project in projects {
-            println!("Adding project {}.", &project.name);
+            log::debug!("Adding project {}.", &project.name);
             db.add_project(project);
         }
 
@@ -83,7 +89,7 @@ pub fn get_and_add_repos(domain: &str, token_env_var_name: &str, db: &mut crate:
 }
 
 pub fn get_repos(request: crate::utils::PagedRequest) -> crate::utils::PagedResponse {
-    let mut current_url = format!("https://{}/api/v4/projects?per_page=100", request.domain);
+    let mut current_url = format!("https://{}/api/v4/projects?per_page=100&simple=false", request.domain);
     if let Some(url) = request.next_page_url {
         current_url = url;
     }
@@ -96,6 +102,9 @@ pub fn get_repos(request: crate::utils::PagedRequest) -> crate::utils::PagedResp
     };
 
     let mut headers = header::HeaderMap::new();
+    let auth_header_value = format!("Bearer {}", request.token.as_ref().unwrap());
+    let auth_header = header::HeaderValue::from_str(&auth_header_value.to_string()).unwrap();
+    headers.insert("Authorization", auth_header);
     let client = reqwest::blocking::Client::builder().default_headers(headers).build().unwrap();
 
     println!("Getting GitLab projects page at {}.", current_url);
