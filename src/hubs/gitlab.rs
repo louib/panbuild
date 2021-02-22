@@ -50,7 +50,6 @@ pub struct GitLabParentProject {
     pub name: String,
 }
 
-
 pub fn get_and_add_repos(domain: &str, token_env_var_name: &str, db: &mut crate::db::Database) {
     log::info!("Getting all projects from GitLab instance at {}.", domain);
     let mut request = crate::utils::PagedRequest {
