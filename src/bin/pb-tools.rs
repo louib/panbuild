@@ -9,6 +9,7 @@ use panbuild::modules::SoftwareModule;
 
 fn main() {
     let mut exit_code = 0;
+    panbuild::logger::init();
 
     // TODO might need to use std::env::args_os instead, if
     // the args contain unicode.
