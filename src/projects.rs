@@ -1,3 +1,4 @@
+use std::path::Path;
 use serde::{Deserialize, Serialize};
 
 use std::process::Command;
@@ -57,16 +58,16 @@ pub struct SoftwareProject {
     pub layer: i32,
 }
 impl SoftwareProject {
-    // Serializes the project to a native Rust struct creation.
-    // This is used to include projects to the internal db.
-    fn to_rust(self: &Self) -> String {
-        let mut response: String = String::from("crate::projects::SoftwareProject {\n");
-        response.push_str(&format!("    id: \"{}\".to_string(),", self.id).to_string());
-        response.push_str(&format!("    name: \"{}\".to_string(),", self.name).to_string());
-        response.push_str(&format!("    summary: \"{}\".to_string(),", self.summary).to_string());
-        response.push_str(&format!("    description: \"{}\".to_string(),", self.description).to_string());
-        response.push_str("}");
-        response
+    pub fn harvest(repo_path: &str) -> SoftwareProject {
+        let mut project = SoftwareProject::default();
+        for file_path in crate::utils::get_all_paths(Path::new(&repo_path)) {
+
+        }
+        project
+    }
+
+    pub fn merge(self, other_project: SoftwareProject) {
+
     }
 }
 
