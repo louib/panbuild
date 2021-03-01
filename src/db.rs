@@ -1,14 +1,19 @@
+use std::collections::BTreeMap;
 use std::env;
 use std::fs;
 use std::path;
+
+use crate::modules::SoftwareModule;
+use crate::projects::SoftwareProject;
 
 pub const DEFAULT_DB_PATH: &str = ".panbuild-db";
 pub const MODULES_DB_SUBDIR: &str = "/modules";
 pub const PROJECTS_DB_SUBDIR: &str = "/projects";
 
 pub struct Database {
-    pub projects: Vec<crate::projects::SoftwareProject>,
-    pub modules: Vec<crate::modules::SoftwareModule>,
+    pub projects: Vec<SoftwareProject>,
+    pub modules: Vec<SoftwareModule>,
+    pub indexed_projects: BTreeMap<String, SoftwareProject>,
 }
 impl Database {
     pub fn get_database() -> Database {
@@ -18,10 +23,12 @@ impl Database {
         if let Err(e) = fs::create_dir_all(Database::get_projects_db_path()) {
             panic!("Could not initialize database directory: {}.", e);
         }
+        let mut indexed_projects: BTreeMap<String, SoftwareProject> = BTreeMap::new();
         // FIXME error handle the init.
         Database {
             projects: Database::get_all_projects(),
             modules: Database::get_all_modules(),
+            indexed_projects: indexed_projects,
         }
     }
 
@@ -43,7 +50,7 @@ impl Database {
         Database::get_db_path() + PROJECTS_DB_SUBDIR
     }
 
-    pub fn get_all_projects() -> Vec<crate::projects::SoftwareProject> {
+    pub fn get_all_projects() -> Vec<SoftwareProject> {
         let projects_path = Database::get_projects_db_path();
         let projects_path = path::Path::new(&projects_path);
         let all_projects_paths = match crate::utils::get_all_paths(projects_path) {
@@ -52,7 +59,7 @@ impl Database {
                 return vec![];
             }
         };
-        let mut projects: Vec<crate::projects::SoftwareProject> = vec![];
+        let mut projects: Vec<SoftwareProject> = vec![];
         for project_path in all_projects_paths.iter() {
             let project_path_str = project_path.to_str().unwrap();
             if !project_path.is_file() {
@@ -82,7 +89,7 @@ impl Database {
         projects
     }
 
-    pub fn get_all_modules() -> Vec<crate::modules::SoftwareModule> {
+    pub fn get_all_modules() -> Vec<SoftwareModule> {
         let modules_path = Database::get_modules_db_path();
         let modules_path = path::Path::new(&modules_path);
         let all_modules_paths = match crate::utils::get_all_paths(modules_path) {
@@ -91,7 +98,7 @@ impl Database {
                 return vec![];
             }
         };
-        let mut modules: Vec<crate::modules::SoftwareModule> = vec![];
+        let mut modules: Vec<SoftwareModule> = vec![];
         for module_path in all_modules_paths.iter() {
             let module_path_str = module_path.to_str().unwrap();
             if !module_path.is_file() {
@@ -121,8 +128,8 @@ impl Database {
         modules
     }
 
-    pub fn search_modules(&self, search_term: &str) -> Vec<&crate::modules::SoftwareModule> {
-        let mut modules: Vec<&crate::modules::SoftwareModule> = vec![];
+    pub fn search_modules(&self, search_term: &str) -> Vec<&SoftwareModule> {
+        let mut modules: Vec<&SoftwareModule> = vec![];
         for module in &self.modules {
             if module.name.contains(&search_term) {
                 modules.push(&module);
@@ -133,7 +140,7 @@ impl Database {
 
     pub fn remove_module() {}
 
-    pub fn add_module(&mut self, mut new_module: crate::modules::SoftwareModule) {
+    pub fn add_module(&mut self, mut new_module: SoftwareModule) {
         let module_id = new_module.get_identifier();
         if module_id.len() == 0 {
             eprintln!("Tried to add module {} which does not have an identifier!", module_id);
@@ -167,14 +174,37 @@ impl Database {
         self.modules.push(new_module);
     }
 
-    pub fn add_project(&mut self, mut project: crate::projects::SoftwareProject) {
+    pub fn update_project(&mut self, project: &SoftwareProject) {
+        let projects_path = Database::get_projects_db_path();
+        if project.id.len() == 0 {
+            panic!("Trying to update a project to the db without an id!");
+        }
+        let mut new_project_path = format!("{}/{}.yaml", projects_path, &project.id);
+        let mut project_fs_path = path::Path::new(&new_project_path);
+        if !project_fs_path.exists() {
+            panic!("Project {} does not exist", project.id);
+            return;
+        }
+        log::info!("Updating project at {}", new_project_path);
+
+        match fs::write(project_fs_path, serde_yaml::to_string(&project).unwrap()) {
+            Ok(content) => content,
+            Err(e) => {
+                eprintln!("Could not write new project at {}: {}", new_project_path.to_string(), e);
+            }
+        };
+        // TODO update the project in the database.
+        // self.projects.push(project);
+    }
+
+    pub fn add_project(&mut self, mut project: SoftwareProject) {
         let projects_path = Database::get_projects_db_path();
         if project.id.len() == 0 {
             panic!("Trying to add a project to the db without an id!");
         }
-        let mut new_project_path = format!("{}/{}.yaml", projects_path, &project.id,);
-        log::info!("Adding project at {}", new_project_path);
-        let mut new_project_fs_path = path::Path::new(&new_project_path);
+        let mut project_path = format!("{}/{}.yaml", projects_path, &project.id);
+        log::info!("Adding project at {}", project_path);
+        let mut new_project_fs_path = path::Path::new(&project_path);
         if new_project_fs_path.exists() {
             // FIXME we should update the project if it already exists!
             return;
@@ -182,19 +212,23 @@ impl Database {
         match fs::write(new_project_fs_path, serde_yaml::to_string(&project).unwrap()) {
             Ok(content) => content,
             Err(e) => {
-                eprintln!("Could not write new project at {}: {}", new_project_path.to_string(), e);
+                eprintln!("Could not write new project at {}: {}", project_path.to_string(), e);
             }
         };
         self.projects.push(project);
     }
 
-    pub fn search_projects(&self, search_term: &str) -> Vec<&crate::projects::SoftwareProject> {
-        let mut projects: Vec<&crate::projects::SoftwareProject> = vec![];
+    pub fn search_projects(&self, search_term: &str) -> Vec<&SoftwareProject> {
+        let mut projects: Vec<&SoftwareProject> = vec![];
         for project in &self.projects {
             if project.name.contains(&search_term) {
                 projects.push(&project);
             }
         }
         projects
+    }
+
+    pub fn get_project(&self, project_id: &str) -> Option<SoftwareProject> {
+        None
     }
 }

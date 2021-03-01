@@ -41,6 +41,8 @@ pub struct SoftwareProject {
     pub vcs_urls: Vec<String>,
     // Name of the artifacts that this project produces. Can be binaries, libraries or assets.
     pub artifact_names: Vec<String>,
+    // Name of the build systems seen on the project.
+    pub build_systems: Vec<String>,
     pub maintainers: Vec<String>,
     pub default_branch: String,
     // Thos
@@ -65,6 +67,8 @@ impl SoftwareProject {
                 Some(m) => m,
                 None => continue,
             };
+            project.build_systems.push(abstract_manifest.get_type().unwrap().to_string());
+            // TODO harvest executable names
         }
         project
     }
