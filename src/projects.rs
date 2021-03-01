@@ -65,8 +65,10 @@ pub struct SoftwareProject {
     pub layer: i32,
 }
 impl SoftwareProject {
-    pub fn harvest(repo_path: &str) -> SoftwareProject {
+    pub fn harvest(repo_url: &str) -> SoftwareProject {
         let mut project = SoftwareProject::default();
+        let repo_path = crate::utils::clone_git_repo(repo_url).unwrap();
+        project.id = crate::utils::repo_url_to_reverse_dns(repo_url);
         for file_path in crate::utils::get_all_paths(Path::new(&repo_path)).unwrap() {
             let mut abstract_manifest = match crate::manifests::manifest::AbstractManifest::load_from_file(file_path.to_str().unwrap().to_string()) {
                 Some(m) => m,

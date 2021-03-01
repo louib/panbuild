@@ -207,8 +207,7 @@ fn main() {
     if command_name == &"harvest-project".to_string() {
         let mut db = panbuild::db::Database::get_database();
         let repo_url = &args[2];
-        let repo_path = panbuild::utils::clone_git_repo(repo_url).unwrap();
-        let project = panbuild::projects::SoftwareProject::harvest(&repo_path);
+        let project = panbuild::projects::SoftwareProject::harvest(&repo_url);
         if db.has_project(&project.id) {
             db.update_project(&project);
         } else {
