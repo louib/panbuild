@@ -24,6 +24,9 @@ impl Database {
             panic!("Could not initialize database directory: {}.", e);
         }
         let mut indexed_projects: BTreeMap<String, SoftwareProject> = BTreeMap::new();
+        for project in Database::get_all_projects() {
+            indexed_projects.insert(project.id.clone(), project);
+        }
         // FIXME error handle the init.
         Database {
             projects: Database::get_all_projects(),
@@ -179,6 +182,8 @@ impl Database {
         if project.id.len() == 0 {
             panic!("Trying to update a project to the db without an id!");
         }
+        let mut existing_project = self.indexed_projects.get_mut(&project.id).unwrap();
+
         let mut new_project_path = format!("{}/{}.yaml", projects_path, &project.id);
         let mut project_fs_path = path::Path::new(&new_project_path);
         if !project_fs_path.exists() {
@@ -187,14 +192,13 @@ impl Database {
         }
         log::info!("Updating project at {}", new_project_path);
 
-        match fs::write(project_fs_path, serde_yaml::to_string(&project).unwrap()) {
+        existing_project.merge(project);
+        match fs::write(project_fs_path, serde_yaml::to_string(&existing_project).unwrap()) {
             Ok(content) => content,
             Err(e) => {
                 eprintln!("Could not write new project at {}: {}", new_project_path.to_string(), e);
             }
         };
-        // TODO update the project in the database.
-        // self.projects.push(project);
     }
 
     pub fn add_project(&mut self, mut project: SoftwareProject) {

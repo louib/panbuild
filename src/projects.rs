@@ -73,7 +73,7 @@ impl SoftwareProject {
         project
     }
 
-    pub fn merge(self, other_project: SoftwareProject) {}
+    pub fn merge(&mut self, other_project: &SoftwareProject) {}
 }
 
 #[derive(Serialize, Deserialize, Default)]
