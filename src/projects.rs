@@ -37,16 +37,21 @@ pub struct SoftwareProject {
     // Basically a short description, or a title.
     pub summary: String,
     pub description: String,
+    // TODO should be a HashSet instead
     pub web_urls: Vec<String>,
+    // TODO should be a HashSet instead
     pub vcs_urls: Vec<String>,
     // Name of the artifacts that this project produces. Can be binaries, libraries or assets.
+    // TODO should be a HashSet instead
     pub artifact_names: Vec<String>,
     // Name of the build systems seen on the project.
+    // TODO should be a HashSet instead
     pub build_systems: Vec<String>,
+    // TODO should be a HashSet instead
     pub maintainers: Vec<String>,
     pub default_branch: String,
-    // Thos
     pub versions: Vec<String>,
+    // TODO should be a HashSet instead
     pub keywords: Vec<String>,
     // Whether the project is part of the internal projects db.
     pub is_core: bool,

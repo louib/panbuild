@@ -209,6 +209,11 @@ fn main() {
         let repo_url = &args[2];
         let repo_path = panbuild::utils::clone_git_repo(repo_url).unwrap();
         let project = panbuild::projects::SoftwareProject::harvest(&repo_path);
+        if db.has_project(&project.id) {
+            db.update_project(&project);
+        } else {
+            db.add_project(project);
+        }
     }
 
     exit(exit_code);

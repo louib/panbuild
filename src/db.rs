@@ -235,4 +235,8 @@ impl Database {
     pub fn get_project(&self, project_id: &str) -> Option<SoftwareProject> {
         None
     }
+
+    pub fn has_project(&self, project_id: &str) -> bool {
+        self.indexed_projects.contains_key(project_id)
+    }
 }
