@@ -73,7 +73,11 @@ impl SoftwareProject {
         project
     }
 
-    pub fn merge(&mut self, other_project: &SoftwareProject) {}
+    pub fn merge(&mut self, other_project: &SoftwareProject) {
+        for build_system in &other_project.build_systems {
+            self.build_systems.push(build_system.clone());
+        }
+    }
 }
 
 #[derive(Serialize, Deserialize, Default)]
