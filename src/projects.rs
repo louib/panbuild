@@ -1,5 +1,5 @@
-use std::path::Path;
 use serde::{Deserialize, Serialize};
+use std::path::Path;
 
 use std::process::Command;
 
@@ -60,15 +60,16 @@ pub struct SoftwareProject {
 impl SoftwareProject {
     pub fn harvest(repo_path: &str) -> SoftwareProject {
         let mut project = SoftwareProject::default();
-        for file_path in crate::utils::get_all_paths(Path::new(&repo_path)) {
-
+        for file_path in crate::utils::get_all_paths(Path::new(&repo_path)).unwrap() {
+            let mut abstract_manifest = match crate::manifests::manifest::AbstractManifest::load_from_file(file_path.to_str().unwrap().to_string()) {
+                Some(m) => m,
+                None => continue,
+            };
         }
         project
     }
 
-    pub fn merge(self, other_project: SoftwareProject) {
-
-    }
+    pub fn merge(self, other_project: SoftwareProject) {}
 }
 
 #[derive(Serialize, Deserialize, Default)]

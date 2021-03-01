@@ -8,8 +8,8 @@ pub mod hubs;
 pub mod logger;
 pub mod manifests;
 pub mod modules;
-pub mod utils;
 pub mod projects;
+pub mod utils;
 
 mod config;
 mod developers;
