@@ -13,26 +13,27 @@ struct GitHubRepo {
     description: String,
     fork: bool,
     is_template: Option<bool>,
-    archived: bool,
-    disabled: bool,
+    archived: Option<bool>,
+    disabled: Option<bool>,
     topics: Option<Vec<String>>,
-    clone_url: String,
-    git_url: String,
-    homepage: String,
-    forks_count: i64,
-    stargazers_count: i64,
-    watchers_count: i64,
-    size: i64,
-    default_branch: String,
+    clone_url: Option<String>,
+    git_url: Option<String>,
+    homepage: Option<String>,
+    forks_count: Option<i64>,
+    stargazers_count: Option<i64>,
+    watchers_count: Option<i64>,
+    size: Option<i64>,
+    default_branch: Option<String>,
 }
 impl GitHubRepo {
     pub fn to_software_project(self) -> crate::projects::SoftwareProject {
         let mut project = crate::projects::SoftwareProject::default();
-        project.id = crate::utils::repo_url_to_reverse_dns(&self.clone_url);
+        let git_url = format!("https://github.com/{}.git", self.full_name);
+        project.id = crate::utils::repo_url_to_reverse_dns(&git_url);
         project.name = self.name;
         project.default_branch = self.default_branch;
         project.description = self.description;
-        project.vcs_urls.push(self.clone_url);
+        project.vcs_urls.push(git_url);
         if let Some(topics) = self.topics {
             project.keywords = topics;
         }
@@ -42,6 +43,12 @@ impl GitHubRepo {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct GitHub {}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct GitHubError {
+    pub message: String,
+    pub documentation_url: String,
+}
 
 pub fn get_org_repos(org_name: &str) -> Vec<crate::projects::SoftwareProject> {
     let mut paged_response = get_repos(crate::utils::PagedRequest {
@@ -53,7 +60,7 @@ pub fn get_org_repos(org_name: &str) -> Vec<crate::projects::SoftwareProject> {
     let mut projects = paged_response.results;
     while projects.len() > 0 {
         for project in projects {
-            println!("Adding project {}.", &project.name);
+            log::info!("Adding project {}.", &project.name);
             all_projects.push(project);
         }
 
@@ -83,7 +90,7 @@ pub fn get_and_add_repos(db: &mut crate::db::Database) {
     let mut projects = paged_response.results;
     while projects.len() > 0 {
         for project in projects {
-            log::debug!("Adding project {}.", &project.name);
+            log::info!("Adding project {}.", &project.name);
             db.add_project(project);
         }
 
@@ -102,7 +109,7 @@ pub fn get_and_add_repos(db: &mut crate::db::Database) {
 
 pub fn get_repos(request: crate::utils::PagedRequest) -> crate::utils::PagedResponse {
     // By default, we get all the repos.
-    let mut current_url = format!("https://api.github.com/repos?type=all&per_page=100");
+    let mut current_url = format!("https://api.github.com/repositories?type=all&per_page=2");
     if let Some(url) = request.next_page_url {
         current_url = url;
     }
@@ -118,6 +125,7 @@ pub fn get_repos(request: crate::utils::PagedRequest) -> crate::utils::PagedResp
     // User agent is required when using the GitHub API.
     // See https://docs.github.com/en/rest/overview/resources-in-the-rest-api#user-agent-required
     headers.insert("User-Agent", header::HeaderValue::from_str("panbuild").unwrap());
+    headers.insert("Accept", header::HeaderValue::from_str("application/vnd.github.v3+json").unwrap());
     if let Ok(token) = env::var("PB_GITHUB_TOKEN") {
         let auth_header_value = format!("token {}", &token);
         headers.insert("Authorization", header::HeaderValue::from_str(&auth_header_value.to_string()).unwrap());
@@ -127,17 +135,29 @@ pub fn get_repos(request: crate::utils::PagedRequest) -> crate::utils::PagedResp
 
     let client = reqwest::blocking::Client::builder().default_headers(headers).build().unwrap();
 
-    println!("Getting GitHub projects page at {}.", current_url);
+    log::info!("Getting GitHub projects page at {}.", current_url);
     // TODO make this really asynchronous with async/await.
     let response = match client.get(&current_url).send() {
         Ok(r) => r,
         Err(e) => {
-            eprintln!("Could not fetch GitHub url {}: {}.", current_url, e);
+            log::error!("Could not fetch GitHub url {}: {}.", current_url, e);
             return default_response;
         }
     };
 
     if response.status().as_u16() == 204 {
+        return default_response;
+    }
+
+    if response.status().as_u16() > 399 {
+        let error_object: GitHubError = match serde_yaml::from_str(&response.text().unwrap()) {
+            Ok(e) => e,
+            Err(e) => {
+                log::error!("Could not parse GitHub error {}.", e);
+                return default_response;
+            }
+        };
+        log::error!("Error returned by the GitHub API: {}", error_object.message);
         return default_response;
     }
 
@@ -151,7 +171,7 @@ pub fn get_repos(request: crate::utils::PagedRequest) -> crate::utils::PagedResp
     let github_repos: Vec<GitHubRepo> = match serde_yaml::from_str(&response_content) {
         Ok(p) => p,
         Err(e) => {
-            eprintln!("Could not parse GitHub repos {}.", e);
+            log::error!("Could not parse GitHub repos {}.", e);
             return default_response;
         }
     };

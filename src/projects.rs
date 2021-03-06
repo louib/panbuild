@@ -49,7 +49,7 @@ pub struct SoftwareProject {
     pub build_systems: Vec<String>,
     // TODO should be a HashSet instead
     pub maintainers: Vec<String>,
-    pub default_branch: String,
+    pub default_branch: Option<String>,
     pub versions: Vec<String>,
     // TODO should be a HashSet instead
     pub keywords: Vec<String>,

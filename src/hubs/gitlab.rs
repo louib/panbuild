@@ -34,9 +34,7 @@ impl GitLabProject {
         let mut project = crate::projects::SoftwareProject::default();
         project.id = crate::utils::repo_url_to_reverse_dns(&self.http_url_to_repo);
         project.name = self.name;
-        if let Some(branch) = self.default_branch {
-            project.default_branch = branch;
-        }
+        project.default_branch = self.default_branch;
         project.description = self.description.unwrap_or("".to_string());
         project.vcs_urls.push(self.http_url_to_repo);
         project.keywords = self.tag_list;
@@ -106,12 +104,12 @@ pub fn get_repos(request: crate::utils::PagedRequest) -> crate::utils::PagedResp
     headers.insert("Authorization", auth_header);
     let client = reqwest::blocking::Client::builder().default_headers(headers).build().unwrap();
 
-    println!("Getting GitLab projects page at {}.", current_url);
+    log::info!("Getting GitLab projects page at {}.", current_url);
     // TODO make this really asynchronous with async/await.
     let mut response = match client.get(&current_url).send() {
         Ok(r) => r,
         Err(e) => {
-            eprintln!("Could not fetch GitLab url {}: {}.", current_url, e);
+            log::error!("Could not fetch GitLab url {}: {}.", current_url, e);
             return default_response;
         }
     };
@@ -131,7 +129,7 @@ pub fn get_repos(request: crate::utils::PagedRequest) -> crate::utils::PagedResp
     let gitlab_projects: Vec<GitLabProject> = match serde_yaml::from_str(&response.text().unwrap()) {
         Ok(p) => p,
         Err(e) => {
-            eprintln!("Could not parse gitlab projects {}.", e);
+            log::error!("Could not parse gitlab projects {}.", e);
             return default_response;
         }
     };
