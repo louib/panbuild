@@ -4,6 +4,45 @@ use futures::executor::block_on;
 use reqwest::header;
 use serde::{Deserialize, Serialize};
 
+// See https://docs.github.com/en/rest/reference/repos
+#[derive(Debug, Serialize, Deserialize)]
+struct GitHubRepo {
+    id: String,
+    name: String,
+    full_name: String,
+    description: String,
+    fork: bool,
+    is_template: Option<bool>,
+    archived: bool,
+    disabled: bool,
+    topics: Option<Vec<String>>,
+    clone_url: String,
+    git_url: String,
+    homepage: String,
+    forks_count: i64,
+    stargazers_count: i64,
+    watchers_count: i64,
+    size: i64,
+    default_branch: String,
+}
+impl GitHubRepo {
+    pub fn to_software_project(self) -> crate::projects::SoftwareProject {
+        let mut project = crate::projects::SoftwareProject::default();
+        project.id = crate::utils::repo_url_to_reverse_dns(&self.clone_url);
+        project.name = self.name;
+        project.default_branch = self.default_branch;
+        project.description = self.description;
+        project.vcs_urls.push(self.clone_url);
+        if let Some(topics) = self.topics {
+            project.keywords = topics;
+        }
+        project
+    }
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct GitHub {}
+
 pub fn get_org_repos(org_name: &str) -> Vec<crate::projects::SoftwareProject> {
     let mut paged_response = get_repos(crate::utils::PagedRequest {
         domain: "".to_string(),
@@ -88,6 +127,9 @@ pub fn get_repos(request: crate::utils::PagedRequest) -> crate::utils::PagedResp
         }
     };
     for github_project in github_repos {
+        if github_project.fork {
+            continue;
+        }
         log::debug!("Adding GitHub repo {}.", github_project.name);
         projects.push(github_project.to_software_project());
     }
@@ -98,42 +140,3 @@ pub fn get_repos(request: crate::utils::PagedRequest) -> crate::utils::PagedResp
         next_page_url: next_page_url,
     }
 }
-
-// See https://docs.github.com/en/rest/reference/repos
-#[derive(Debug, Serialize, Deserialize)]
-struct GitHubRepo {
-    id: String,
-    name: String,
-    full_name: String,
-    description: String,
-    fork: bool,
-    is_template: Option<bool>,
-    archived: bool,
-    disabled: bool,
-    topics: Option<Vec<String>>,
-    clone_url: String,
-    git_url: String,
-    homepage: String,
-    forks_count: i64,
-    stargazers_count: i64,
-    watchers_count: i64,
-    size: i64,
-    default_branch: String,
-}
-impl GitHubRepo {
-    pub fn to_software_project(self) -> crate::projects::SoftwareProject {
-        let mut project = crate::projects::SoftwareProject::default();
-        project.id = crate::utils::repo_url_to_reverse_dns(&self.clone_url);
-        project.name = self.name;
-        project.default_branch = self.default_branch;
-        project.description = self.description;
-        project.vcs_urls.push(self.clone_url);
-        if let Some(topics) = self.topics {
-            project.keywords = topics;
-        }
-        project
-    }
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-pub struct GitHub {}
