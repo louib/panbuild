@@ -8,18 +8,15 @@
 <!-- [![GitHub release](https://img.shields.io/github/release/louib/panbuild)](https://github.com/louib/panbuild/releases/) -->
 
 [Panbuild](https://github.com/louib/panbuild) is a virtual workspace manager for
-desktop and mobile app development.
+desktop and mobile app development based on Flatpak manifests.
 
 > **This repo is a work-in-progress and is not ready for general use.
   The command-line options, command names and file formats might change
   at any time until the project reaches version 1.0.0.**
 
 Panbuild lets you manage build workspaces when developing open source applications.
-Workspaces are sandboxed and dependencies are installed on a per-project basis.
-Manifests from the following packaging systems are supported:
-* flatpak;
-* snap;
-* debian packages (via debian `control` files);
+Workspaces are sandboxed and dependencies are installed on a per-project basis using
+Flatpak manifests and an internal database of available open source projects.
 
 ## Install
 
