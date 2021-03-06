@@ -71,6 +71,35 @@ pub fn get_org_repos(org_name: &str) -> Vec<crate::projects::SoftwareProject> {
     all_projects
 }
 
+pub fn get_and_add_repos(db: &mut crate::db::Database) {
+    log::info!("Getting all projects from github.com");
+    let mut request = crate::utils::PagedRequest {
+        domain: "".to_string(),
+        token: None,
+        next_page_url: None,
+    };
+    let mut paged_response = get_repos(request);
+
+    let mut projects = paged_response.results;
+    while projects.len() > 0 {
+        for project in projects {
+            log::debug!("Adding project {}.", &project.name);
+            db.add_project(project);
+        }
+
+        if paged_response.next_page_url.is_none() {
+            break;
+        }
+
+        paged_response = get_repos(crate::utils::PagedRequest {
+            domain: "".to_string(),
+            token: paged_response.token,
+            next_page_url: paged_response.next_page_url,
+        });
+        projects = paged_response.results;
+    }
+}
+
 pub fn get_repos(request: crate::utils::PagedRequest) -> crate::utils::PagedResponse {
     // By default, we get all the repos.
     let mut current_url = format!("https://api.github.com/repos?type=all&per_page=100");

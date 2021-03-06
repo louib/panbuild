@@ -198,6 +198,11 @@ fn main() {
         panbuild::hubs::gitlab::get_and_add_repos("gitlab.com", "PB_GITLAB_TOKEN", &mut db);
     }
 
+    if command_name == &"import-projects-from-github-com".to_string() {
+        let mut db = panbuild::db::Database::get_database();
+        panbuild::hubs::github::get_and_add_repos(&mut db);
+    }
+
     if command_name == &"import-brew-recipes".to_string() {
         let mut db = panbuild::db::Database::get_database();
         panbuild::hubs::brew::get_and_add_recipes(&mut db);
