@@ -9,6 +9,7 @@ cargo install panbuild
 
 ### Dependencies
 * libssl-dev
+* pkg-config
 
 ### Building with Cargo
 ```
