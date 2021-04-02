@@ -1,0 +1,45 @@
+[package]
+name = "panbuild"
+version = "0.0.11"
+authors = ["louib <code@louib.net>"]
+edition = "2018"
+description = "The universal builder."
+license = "BSD-3-Clause"
+repository = "https://github.com/louib/panbuild/"
+readme = "README.md"
+keywords = [
+  "flatpak",
+  "snap",
+  "packages",
+  "manifest",
+  "workspace",
+]
+
+[[bin]]
+name = "panbuild"
+path = "main.rs"
+
+[[bin]]
+name = "pb-tools"
+path = "bin/pb-tools.rs"
+
+[lib]
+path = "lib.rs"
+
+[dependencies]
+clap = {version = "2.33.1", features = ["yaml"]}
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+serde_yaml = "0.8"
+# toml is used with serde as well.
+toml = "0.5"
+
+log = "0.4"
+simple-logging = "2.0.2"
+
+# HTTP related dependencies.
+reqwest = { version = "0.11", features = ["cookies", "blocking", "json"] }
+tokio = { version = "1.1.1", features = ["full"] }
+futures = "0.3"
+
+uuid = { version = "0.4", features = ["serde", "v4"] }
