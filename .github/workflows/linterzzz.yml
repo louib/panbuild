@@ -22,4 +22,4 @@ jobs:
     - name: running shellcheck on shell scripts
       run: shellcheck tests/*.sh
     - name: running rustfmt
-      run: rustfmt --check src/*.rs
+      run: rustfmt --check panbuild/*.rs
