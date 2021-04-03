@@ -14,7 +14,7 @@ app_version=$(cat "$version_file_path")
 
 echo "Verifying that version is $app_version everywhere."
 
-main_file_path="$SCRIPT_DIR/../src/main.rs"
+main_file_path="$SCRIPT_DIR/../panbuild/main.rs"
 if [[ ! -f "$main_file_path" ]]; then
     die "Could not find main file $main_file_path";
 fi
@@ -23,7 +23,7 @@ if [[ -z "$is_in_main" ]]; then
     die "Application version $app_version not found in main file $main_file_path";
 fi
 
-cargo_file_path="$SCRIPT_DIR/../Cargo.toml"
+cargo_file_path="$SCRIPT_DIR/../panbuild/Cargo.toml"
 if [[ ! -f "$cargo_file_path" ]]; then
     die "Could not find Cargo file $cargo_file_path";
 fi
