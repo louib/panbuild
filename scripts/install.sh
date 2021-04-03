@@ -8,7 +8,7 @@ if [[ -z "$PANBUILD_INSTALL_DIR" ]]; then
 fi
 
 cargo build --bins --release
-cargo install --path .
+cargo install --path panbuild/
 mkdir -p "$PANBUILD_INSTALL_DIR"
 install ./target/release/panbuild "$PANBUILD_INSTALL_DIR"
 
