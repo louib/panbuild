@@ -626,14 +626,11 @@ name = "panbuild"
 version = "0.0.11"
 dependencies = [
  "clap",
- "futures",
  "log",
- "reqwest",
  "serde 1.0.119",
  "serde_json",
  "serde_yaml",
  "simple-logging",
- "tokio",
  "toml",
  "uuid",
 ]
@@ -667,7 +664,6 @@ dependencies = [
 name = "pb-tools"
 version = "0.0.11"
 dependencies = [
- "clap",
  "futures",
  "log",
  "panbuild",
@@ -678,7 +674,6 @@ dependencies = [
  "simple-logging",
  "tokio",
  "toml",
- "uuid",
 ]
 
 [[package]]
