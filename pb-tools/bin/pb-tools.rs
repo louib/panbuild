@@ -129,7 +129,7 @@ fn main() {
 
     if command_name == &"import-flathub-manifests".to_string() {
         let mut db = panbuild::db::Database::get_database();
-        let all_flathub_repos = panbuild::hubs::github::get_org_repos("flathub");
+        let all_flathub_repos = pb_tools::hubs::github::get_org_repos("flathub");
         for flathub_repo in &all_flathub_repos {
             let repo_url = &flathub_repo.vcs_urls[0];
             let repo_dir = match panbuild::utils::clone_git_repo(&repo_url) {
@@ -181,31 +181,31 @@ fn main() {
         // There is a list of all the public GitLab instances hosted here
         // https://wiki.p2pfoundation.net/List_of_Community-Hosted_GitLab_Instances
         let mut db = panbuild::db::Database::get_database();
-        panbuild::hubs::gitlab::get_and_add_repos("gitlab.gnome.org", "PB_GNOME_GITLAB_TOKEN", &mut db);
-        panbuild::hubs::gitlab::get_and_add_repos("source.puri.sm", "PB_PURISM_GITLAB_TOKEN", &mut db);
-        panbuild::hubs::gitlab::get_and_add_repos("salsa.debian.org", "PB_DEBIAN_GITLAB_TOKEN", &mut db);
+        pb_tools::hubs::gitlab::get_and_add_repos("gitlab.gnome.org", "PB_GNOME_GITLAB_TOKEN", &mut db);
+        pb_tools::hubs::gitlab::get_and_add_repos("source.puri.sm", "PB_PURISM_GITLAB_TOKEN", &mut db);
+        pb_tools::hubs::gitlab::get_and_add_repos("salsa.debian.org", "PB_DEBIAN_GITLAB_TOKEN", &mut db);
         // KDE was recently migrated to GitLab.
         // See https://gitlab.com/gitlab-org/gitlab-foss/-/issues/53206 for details.
-        panbuild::hubs::gitlab::get_and_add_repos("invent.kde.org", "PB_KDE_GITLAB_TOKEN", &mut db);
-        panbuild::hubs::gitlab::get_and_add_repos("code.videolan.org", "PB_VLC_GITLAB_TOKEN", &mut db);
-        panbuild::hubs::gitlab::get_and_add_repos("gitlab.haskell.org", "PB_HASKELL_GITLAB_TOKEN", &mut db);
-        panbuild::hubs::gitlab::get_and_add_repos("devel.trisquel.info", "PB_TRISQUEL_GITLAB_TOKEN", &mut db);
-        panbuild::hubs::gitlab::get_and_add_repos("gitlab.freedesktop.org", "PB_XDG_GITLAB_TOKEN", &mut db);
+        pb_tools::hubs::gitlab::get_and_add_repos("invent.kde.org", "PB_KDE_GITLAB_TOKEN", &mut db);
+        pb_tools::hubs::gitlab::get_and_add_repos("code.videolan.org", "PB_VLC_GITLAB_TOKEN", &mut db);
+        pb_tools::hubs::gitlab::get_and_add_repos("gitlab.haskell.org", "PB_HASKELL_GITLAB_TOKEN", &mut db);
+        pb_tools::hubs::gitlab::get_and_add_repos("devel.trisquel.info", "PB_TRISQUEL_GITLAB_TOKEN", &mut db);
+        pb_tools::hubs::gitlab::get_and_add_repos("gitlab.freedesktop.org", "PB_XDG_GITLAB_TOKEN", &mut db);
     }
 
     if command_name == &"import-projects-from-gitlab-com".to_string() {
         let mut db = panbuild::db::Database::get_database();
-        panbuild::hubs::gitlab::get_and_add_repos("gitlab.com", "PB_GITLAB_TOKEN", &mut db);
+        pb_tools::hubs::gitlab::get_and_add_repos("gitlab.com", "PB_GITLAB_TOKEN", &mut db);
     }
 
     if command_name == &"import-projects-from-github-com".to_string() {
         let mut db = panbuild::db::Database::get_database();
-        panbuild::hubs::github::get_and_add_repos(&mut db);
+        pb_tools::hubs::github::get_and_add_repos(&mut db);
     }
 
     if command_name == &"import-brew-recipes".to_string() {
         let mut db = panbuild::db::Database::get_database();
-        panbuild::hubs::brew::get_and_add_recipes(&mut db);
+        pb_tools::hubs::brew::get_and_add_recipes(&mut db);
     }
 
     // Used for manually harvesting a single project.

@@ -4,7 +4,6 @@
 use std::collections::HashMap;
 
 pub mod db;
-pub mod hubs;
 pub mod logger;
 pub mod manifests;
 pub mod modules;

@@ -1,9 +1,9 @@
 [package]
-name = "panbuild"
+name = "pb-tools"
 version = "0.0.11"
 authors = ["louib <code@louib.net>"]
 edition = "2018"
-description = "The universal builder."
+description = "Panbuild tools."
 license = "BSD-3-Clause"
 repository = "https://github.com/louib/panbuild/"
 readme = "README.md"
@@ -16,13 +16,15 @@ keywords = [
 ]
 
 [[bin]]
-name = "panbuild"
-path = "main.rs"
+name = "pb-tools"
+path = "bin/pb-tools.rs"
 
 [lib]
 path = "lib.rs"
 
 [dependencies]
+panbuild = { path = "../panbuild" }
+
 clap = {version = "2.33.1", features = ["yaml"]}
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"

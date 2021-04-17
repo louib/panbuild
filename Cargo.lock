@@ -664,6 +664,24 @@ dependencies = [
 ]
 
 [[package]]
+name = "pb-tools"
+version = "0.0.11"
+dependencies = [
+ "clap",
+ "futures",
+ "log",
+ "panbuild",
+ "reqwest",
+ "serde 1.0.119",
+ "serde_json",
+ "serde_yaml",
+ "simple-logging",
+ "tokio",
+ "toml",
+ "uuid",
+]
+
+[[package]]
 name = "percent-encoding"
 version = "2.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"

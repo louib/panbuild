@@ -30,9 +30,9 @@ pub struct GitLabProject {
     pub forked_from_project: Option<GitLabParentProject>,
 }
 impl GitLabProject {
-    pub fn to_software_project(self) -> crate::projects::SoftwareProject {
-        let mut project = crate::projects::SoftwareProject::default();
-        project.id = crate::utils::repo_url_to_reverse_dns(&self.http_url_to_repo);
+    pub fn to_software_project(self) -> panbuild::projects::SoftwareProject {
+        let mut project = panbuild::projects::SoftwareProject::default();
+        project.id = panbuild::utils::repo_url_to_reverse_dns(&self.http_url_to_repo);
         project.name = self.name;
         project.default_branch = self.default_branch;
         project.description = self.description.unwrap_or("".to_string());
@@ -48,9 +48,9 @@ pub struct GitLabParentProject {
     pub name: String,
 }
 
-pub fn get_and_add_repos(domain: &str, token_env_var_name: &str, db: &mut crate::db::Database) {
+pub fn get_and_add_repos(domain: &str, token_env_var_name: &str, db: &mut panbuild::db::Database) {
     log::info!("Getting all projects from GitLab instance at {}.", domain);
-    let mut request = crate::utils::PagedRequest {
+    let mut request = panbuild::utils::PagedRequest {
         domain: domain.to_string(),
         token: None,
         next_page_url: None,
@@ -76,7 +76,7 @@ pub fn get_and_add_repos(domain: &str, token_env_var_name: &str, db: &mut crate:
             break;
         }
 
-        paged_response = get_repos(crate::utils::PagedRequest {
+        paged_response = get_repos(panbuild::utils::PagedRequest {
             domain: domain.to_string(),
             token: paged_response.token,
             next_page_url: paged_response.next_page_url,
@@ -85,14 +85,14 @@ pub fn get_and_add_repos(domain: &str, token_env_var_name: &str, db: &mut crate:
     }
 }
 
-pub fn get_repos(request: crate::utils::PagedRequest) -> crate::utils::PagedResponse {
+pub fn get_repos(request: panbuild::utils::PagedRequest) -> panbuild::utils::PagedResponse {
     let mut current_url = format!("https://{}/api/v4/projects?per_page=100&simple=false", request.domain);
     if let Some(url) = request.next_page_url {
         current_url = url;
     }
 
-    let mut projects: Vec<crate::projects::SoftwareProject> = vec![];
-    let default_response = crate::utils::PagedResponse {
+    let mut projects: Vec<panbuild::projects::SoftwareProject> = vec![];
+    let default_response = panbuild::utils::PagedResponse {
         results: vec![],
         token: None,
         next_page_url: None,
@@ -124,7 +124,7 @@ pub fn get_repos(request: crate::utils::PagedRequest) -> crate::utils::PagedResp
         Some(h) => h.to_str().unwrap(),
         None => "",
     };
-    let next_page_url = crate::utils::get_next_page_url(link_header);
+    let next_page_url = panbuild::utils::get_next_page_url(link_header);
 
     let gitlab_projects: Vec<GitLabProject> = match serde_yaml::from_str(&response.text().unwrap()) {
         Ok(p) => p,
@@ -142,7 +142,7 @@ pub fn get_repos(request: crate::utils::PagedRequest) -> crate::utils::PagedResp
         projects.push(gitlab_project.to_software_project());
     }
 
-    crate::utils::PagedResponse {
+    panbuild::utils::PagedResponse {
         results: projects,
         token: request.token,
         next_page_url: next_page_url,

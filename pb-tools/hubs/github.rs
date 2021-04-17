@@ -26,10 +26,10 @@ struct GitHubRepo {
     default_branch: Option<String>,
 }
 impl GitHubRepo {
-    pub fn to_software_project(self) -> crate::projects::SoftwareProject {
-        let mut project = crate::projects::SoftwareProject::default();
+    pub fn to_software_project(self) -> panbuild::projects::SoftwareProject {
+        let mut project = panbuild::projects::SoftwareProject::default();
         let git_url = format!("https://github.com/{}.git", self.full_name);
-        project.id = crate::utils::repo_url_to_reverse_dns(&git_url);
+        project.id = panbuild::utils::repo_url_to_reverse_dns(&git_url);
         project.name = self.name;
         project.default_branch = self.default_branch;
         project.description = self.description;
@@ -50,8 +50,8 @@ pub struct GitHubError {
     pub documentation_url: String,
 }
 
-pub fn get_org_repos(org_name: &str) -> Vec<crate::projects::SoftwareProject> {
-    let mut paged_response = get_repos(crate::utils::PagedRequest {
+pub fn get_org_repos(org_name: &str) -> Vec<panbuild::projects::SoftwareProject> {
+    let mut paged_response = get_repos(panbuild::utils::PagedRequest {
         domain: "".to_string(),
         token: None,
         next_page_url: Some(format!("https://api.github.com/orgs/{}/repos?type=all&per_page=100", org_name)),
@@ -68,7 +68,7 @@ pub fn get_org_repos(org_name: &str) -> Vec<crate::projects::SoftwareProject> {
             break;
         }
 
-        paged_response = get_repos(crate::utils::PagedRequest {
+        paged_response = get_repos(panbuild::utils::PagedRequest {
             domain: "".to_string(),
             token: None,
             next_page_url: paged_response.next_page_url,
@@ -78,9 +78,9 @@ pub fn get_org_repos(org_name: &str) -> Vec<crate::projects::SoftwareProject> {
     all_projects
 }
 
-pub fn get_and_add_repos(db: &mut crate::db::Database) {
+pub fn get_and_add_repos(db: &mut panbuild::db::Database) {
     log::info!("Getting all projects from github.com");
-    let mut request = crate::utils::PagedRequest {
+    let mut request = panbuild::utils::PagedRequest {
         domain: "".to_string(),
         token: None,
         next_page_url: None,
@@ -98,7 +98,7 @@ pub fn get_and_add_repos(db: &mut crate::db::Database) {
             break;
         }
 
-        paged_response = get_repos(crate::utils::PagedRequest {
+        paged_response = get_repos(panbuild::utils::PagedRequest {
             domain: "".to_string(),
             token: paged_response.token,
             next_page_url: paged_response.next_page_url,
@@ -107,15 +107,15 @@ pub fn get_and_add_repos(db: &mut crate::db::Database) {
     }
 }
 
-pub fn get_repos(request: crate::utils::PagedRequest) -> crate::utils::PagedResponse {
+pub fn get_repos(request: panbuild::utils::PagedRequest) -> panbuild::utils::PagedResponse {
     // By default, we get all the repos.
     let mut current_url = format!("https://api.github.com/repositories?type=all&per_page=2");
     if let Some(url) = request.next_page_url {
         current_url = url;
     }
 
-    let mut projects: Vec<crate::projects::SoftwareProject> = vec![];
-    let default_response = crate::utils::PagedResponse {
+    let mut projects: Vec<panbuild::projects::SoftwareProject> = vec![];
+    let default_response = panbuild::utils::PagedResponse {
         results: vec![],
         token: None,
         next_page_url: None,
@@ -165,7 +165,7 @@ pub fn get_repos(request: crate::utils::PagedRequest) -> crate::utils::PagedResp
         Some(h) => h.to_str().unwrap(),
         None => "",
     };
-    let next_page_url = crate::utils::get_next_page_url(link_header);
+    let next_page_url = panbuild::utils::get_next_page_url(link_header);
 
     let response_content = response.text().unwrap();
     let github_repos: Vec<GitHubRepo> = match serde_yaml::from_str(&response_content) {
@@ -183,7 +183,7 @@ pub fn get_repos(request: crate::utils::PagedRequest) -> crate::utils::PagedResp
         projects.push(github_project.to_software_project());
     }
 
-    crate::utils::PagedResponse {
+    panbuild::utils::PagedResponse {
         results: projects,
         token: None,
         next_page_url: next_page_url,

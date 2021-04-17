@@ -21,11 +21,11 @@ pub struct HomebrewRecipe {
     pub versions: HomebrewRecipeVersions,
 }
 impl HomebrewRecipe {
-    pub fn to_software_project(self) -> crate::projects::SoftwareProject {
-        let mut project = crate::projects::SoftwareProject::default();
+    pub fn to_software_project(self) -> panbuild::projects::SoftwareProject {
+        let mut project = panbuild::projects::SoftwareProject::default();
         // We filter out http:// urls for now, but could try to convert to https in the future.
         if self.urls.stable.url.ends_with(".git") && self.urls.stable.url.starts_with("https") {
-            project.id = crate::utils::repo_url_to_reverse_dns(&self.urls.stable.url);
+            project.id = panbuild::utils::repo_url_to_reverse_dns(&self.urls.stable.url);
             project.vcs_urls.push(self.urls.stable.url);
         }
         project
@@ -51,7 +51,7 @@ pub struct HomebrewRecipeUrl {
     pub revision: Option<String>,
 }
 
-pub fn get_and_add_recipes(db: &mut crate::db::Database) {
+pub fn get_and_add_recipes(db: &mut panbuild::db::Database) {
     // All the formulae for macOS
     for project in get_projects("https://formulae.brew.sh/api/formula.json") {
         db.add_project(project);
@@ -66,8 +66,8 @@ pub fn get_and_add_recipes(db: &mut crate::db::Database) {
     // https://formulae.brew.sh/api/cask.json
 }
 
-pub fn get_projects(formulae_url: &str) -> Vec<crate::projects::SoftwareProject> {
-    let mut projects: Vec<crate::projects::SoftwareProject> = vec![];
+pub fn get_projects(formulae_url: &str) -> Vec<panbuild::projects::SoftwareProject> {
+    let mut projects: Vec<panbuild::projects::SoftwareProject> = vec![];
 
     let client = reqwest::blocking::Client::builder().build().unwrap();
 

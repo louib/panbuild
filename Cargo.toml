@@ -2,4 +2,5 @@
 
 members = [
     "panbuild",
+    "pb-tools",
 ]
