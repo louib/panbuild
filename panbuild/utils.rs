@@ -77,7 +77,7 @@ pub fn get_git_repo_root_hashes(repo_path: &str) -> Result<Vec<String>, String> 
     println!("Getting initial commit for repo at {}", repo_path);
 
     let mut output = Command::new("git")
-        .arg(format!("--work-tree={}", repo_path).to_owned())
+        .arg(format!("--git-dir={}/.git", repo_path).to_owned())
         .arg("rev-list")
         .arg("--max-parents=0".to_owned())
         .arg("HEAD")
