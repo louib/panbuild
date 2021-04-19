@@ -72,7 +72,6 @@ impl SoftwareProject {
             project.build_systems.push(abstract_manifest.get_type().unwrap().to_string());
 
             // TODO harvest executable names
-
         }
         match crate::utils::get_git_repo_root_hashes(&repo_path) {
             Ok(root_hashes) => project.root_hashes = root_hashes,
