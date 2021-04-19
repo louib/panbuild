@@ -14,6 +14,7 @@ mod config;
 mod developers;
 mod version;
 
+pub use manifests::flatpak::FlatpakModule;
 pub use manifests::manifest::AbstractManifest;
 pub use modules::SoftwareModule;
 pub use projects::SoftwareProject;
@@ -111,7 +112,7 @@ pub fn run(command_name: &str, args: HashMap<String, String>) -> i32 {
         eprintln!("Search for {} in the projects database.", &search_term);
 
         let db = crate::db::Database::get_database();
-        let modules: Vec<&SoftwareModule> = db.search_modules(search_term);
+        let modules: Vec<&FlatpakModule> = db.search_modules(search_term);
         for module in modules {
             println!("found candidate artifact in {}.", module.name);
         }

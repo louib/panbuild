@@ -3,6 +3,7 @@ use std::env;
 use std::fs;
 use std::path;
 
+use crate::manifests::flatpak::FlatpakModule;
 use crate::modules::SoftwareModule;
 use crate::projects::SoftwareProject;
 
@@ -13,6 +14,8 @@ pub const PROJECTS_DB_SUBDIR: &str = "/projects";
 pub struct Database {
     pub projects: Vec<SoftwareProject>,
     pub modules: Vec<SoftwareModule>,
+    // FIXME rename to just module after the migration.
+    pub flatpak_modules: Vec<FlatpakModule>,
     pub indexed_projects: BTreeMap<String, SoftwareProject>,
 }
 impl Database {
@@ -31,6 +34,7 @@ impl Database {
         Database {
             projects: Database::get_all_projects(),
             modules: Database::get_all_modules(),
+            flatpak_modules: vec![],
             indexed_projects: indexed_projects,
         }
     }
@@ -131,9 +135,9 @@ impl Database {
         modules
     }
 
-    pub fn search_modules(&self, search_term: &str) -> Vec<&SoftwareModule> {
-        let mut modules: Vec<&SoftwareModule> = vec![];
-        for module in &self.modules {
+    pub fn search_modules(&self, search_term: &str) -> Vec<&FlatpakModule> {
+        let mut modules: Vec<&FlatpakModule> = vec![];
+        for module in &self.flatpak_modules {
             if module.name.contains(&search_term) {
                 modules.push(&module);
             }
