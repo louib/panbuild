@@ -1,4 +1,6 @@
+use std::collections::hash_map::DefaultHasher;
 use std::collections::BTreeMap;
+use std::hash::{Hash, Hasher};
 use std::path;
 use std::process::{Command, Output, Stdio};
 use std::str;
@@ -337,6 +339,7 @@ impl FlatpakManifest {
 //
 // Modules can be nested, in order to turn related modules on and off with a single key.
 #[derive(Debug, Default, Deserialize, Serialize)]
+#[derive(Hash)]
 #[serde(rename_all = "kebab-case")]
 #[serde(default)]
 pub struct FlatpakModule {
@@ -519,6 +522,11 @@ impl FlatpakModule {
         // TODO fetch the version from the sources.
         software_module
     }
+    pub fn get_hash(&self) -> u64 {
+        let mut s = DefaultHasher::new();
+        self.hash(&mut s);
+        s.finish()
+    }
 }
 
 pub const ALLOWED_SOURCE_TYPES: [&'static str; 10] = ["archive", "git", "bzr", "svn", "dir", "file", "script", "shell", "patch", "extra-data"];
@@ -531,6 +539,7 @@ pub const ALLOWED_SOURCE_TYPES: [&'static str; 10] = ["archive", "git", "bzr", "
 // of a separate json or yaml file that is read and inserted at this
 // point. The file can contain a single source, or an array of sources.
 #[derive(Debug, Default, Deserialize, Serialize)]
+#[derive(Hash)]
 #[serde(rename_all = "kebab-case")]
 pub struct FlatpakSource {
     #[serde(skip_serializing_if = "String::is_empty")]
@@ -579,6 +588,7 @@ pub struct FlatpakExtension {
 // and can be specified globally as well as per-module.
 // Options can also be specified on a per-architecture basis using the arch property.
 #[derive(Deserialize, Serialize, Debug, Default)]
+#[derive(Hash)]
 #[serde(rename_all = "kebab-case")]
 #[serde(default)]
 pub struct FlatpakBuildOptions {
