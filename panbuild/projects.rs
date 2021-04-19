@@ -56,6 +56,11 @@ pub struct SoftwareProject {
     // Whether the project is part of the internal projects db.
     pub is_core: bool,
 
+    // The root git commit hashes associated with the project. This is used
+    // for project de-duplication, in the case a project has multiple remote
+    // git repositories.
+    pub root_hashes: Vec<String>,
+
     // Layer of the project. This means how central the project is to the
     // open source ecosystem in general. 0 being the most central layer
     // (firmwares, bootloaders, kernels, compilers, core utilities).
@@ -75,7 +80,15 @@ impl SoftwareProject {
                 None => continue,
             };
             project.build_systems.push(abstract_manifest.get_type().unwrap().to_string());
+
             // TODO harvest executable names
+
+            match crate::utils::get_git_repo_root_hashes(&repo_path) {
+                Ok(root_hashes) => project.root_hashes = root_hashes,
+                Err(e) => {
+                    log::warn!("Could not get root commit hashes for repo located at {}: {}.", &repo_path, e);
+                }
+            }
         }
         project
     }

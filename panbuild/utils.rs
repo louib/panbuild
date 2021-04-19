@@ -70,7 +70,7 @@ pub fn fetch_file(file_url: String) -> Result<String, String> {
     Ok(local_file_path)
 }
 
-pub fn get_git_repo_initial_commits(repo_path: String) -> Result<Vec<String>, String> {
+pub fn get_git_repo_root_hashes(repo_path: &str) -> Result<Vec<String>, String> {
     // FIXME there can actually be more than 1 parentless commit
     // in a git repo, in the case of a merger. A parentless commit
     // can also be found in multiple projects in the case of a fork.
