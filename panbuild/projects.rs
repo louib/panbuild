@@ -53,21 +53,11 @@ pub struct SoftwareProject {
     pub versions: Vec<String>,
     // TODO should be a HashSet instead
     pub keywords: Vec<String>,
-    // Whether the project is part of the internal projects db.
-    pub is_core: bool,
 
     // The root git commit hashes associated with the project. This is used
     // for project de-duplication, in the case a project has multiple remote
     // git repositories.
     pub root_hashes: Vec<String>,
-
-    // Layer of the project. This means how central the project is to the
-    // open source ecosystem in general. 0 being the most central layer
-    // (firmwares, bootloaders, kernels, compilers, core utilities).
-    //
-    // Beyond maybe 0 and 1, the exact layer should not be calculated manually,
-    // but rather a spread factor and a max layer should be configured.
-    pub layer: i32,
 }
 impl SoftwareProject {
     pub fn harvest(repo_url: &str) -> SoftwareProject {
