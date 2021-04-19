@@ -77,10 +77,10 @@ pub fn get_git_repo_root_hashes(repo_path: &str) -> Result<Vec<String>, String> 
     println!("Getting initial commit for repo at {}", repo_path);
 
     let mut output = Command::new("git")
+        .arg(format!("--work-tree={}", repo_path).to_owned())
         .arg("rev-list")
-        .arg("max-parents=0".to_owned())
+        .arg("--max-parents=0".to_owned())
         .arg("HEAD")
-        .arg("work-tree=".to_owned() + &repo_path.to_string())
         .stdout(Stdio::piped())
         .spawn()
         .unwrap();
@@ -90,14 +90,14 @@ pub fn get_git_repo_root_hashes(repo_path: &str) -> Result<Vec<String>, String> 
         Err(e) => return Err(e.to_string()),
     };
     if !output.status.success() {
-        return Err("Could not clone repo.".to_string());
+        return Err("Could not get root hashes.".to_string());
     }
     let all_hashes = match std::str::from_utf8(&output.stdout) {
         Ok(v) => v,
         Err(e) => panic!("Invalid UTF-8 sequence: {}", e),
     };
 
-    Ok(all_hashes.split('\n').map(|s| s.to_string()).collect())
+    Ok(all_hashes.split('\n').map(|s| s.trim().to_string()).filter(|s| s.len() != 0).collect())
 }
 
 pub fn get_all_paths(dir: &Path) -> Result<Vec<std::path::PathBuf>, String> {

@@ -73,11 +73,11 @@ impl SoftwareProject {
 
             // TODO harvest executable names
 
-            match crate::utils::get_git_repo_root_hashes(&repo_path) {
-                Ok(root_hashes) => project.root_hashes = root_hashes,
-                Err(e) => {
-                    log::warn!("Could not get root commit hashes for repo located at {}: {}.", &repo_path, e);
-                }
+        }
+        match crate::utils::get_git_repo_root_hashes(&repo_path) {
+            Ok(root_hashes) => project.root_hashes = root_hashes,
+            Err(e) => {
+                log::warn!("Could not get root commit hashes for repo located at {}: {}.", &repo_path, e);
             }
         }
         project
