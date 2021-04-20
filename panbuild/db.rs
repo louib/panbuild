@@ -3,9 +3,8 @@ use std::env;
 use std::fs;
 use std::path;
 
-use crate::manifests::flatpak::FlatpakModule;
-use crate::modules::SoftwareModule;
 use crate::projects::SoftwareProject;
+use crate::manifests::flatpak::FlatpakModule;
 
 pub const DEFAULT_DB_PATH: &str = ".panbuild-db";
 pub const MODULES_DB_SUBDIR: &str = "/modules";
@@ -13,9 +12,7 @@ pub const PROJECTS_DB_SUBDIR: &str = "/projects";
 
 pub struct Database {
     pub projects: Vec<SoftwareProject>,
-    pub modules: Vec<SoftwareModule>,
-    // FIXME rename to just module after the migration.
-    pub flatpak_modules: Vec<FlatpakModule>,
+    pub modules: Vec<FlatpakModule>,
     pub indexed_projects: BTreeMap<String, SoftwareProject>,
 }
 impl Database {
@@ -34,7 +31,6 @@ impl Database {
         Database {
             projects: Database::get_all_projects(),
             modules: Database::get_all_modules(),
-            flatpak_modules: vec![],
             indexed_projects: indexed_projects,
         }
     }
@@ -96,7 +92,7 @@ impl Database {
         projects
     }
 
-    pub fn get_all_modules() -> Vec<SoftwareModule> {
+    pub fn get_all_modules() -> Vec<FlatpakModule> {
         let modules_path = Database::get_modules_db_path();
         let modules_path = path::Path::new(&modules_path);
         let all_modules_paths = match crate::utils::get_all_paths(modules_path) {
@@ -105,7 +101,7 @@ impl Database {
                 return vec![];
             }
         };
-        let mut modules: Vec<SoftwareModule> = vec![];
+        let mut modules: Vec<FlatpakModule> = vec![];
         for module_path in all_modules_paths.iter() {
             let module_path_str = module_path.to_str().unwrap();
             if !module_path.is_file() {
@@ -137,7 +133,7 @@ impl Database {
 
     pub fn search_modules(&self, search_term: &str) -> Vec<&FlatpakModule> {
         let mut modules: Vec<&FlatpakModule> = vec![];
-        for module in &self.flatpak_modules {
+        for module in &self.modules {
             if module.name.contains(&search_term) {
                 modules.push(&module);
             }
@@ -167,7 +163,7 @@ impl Database {
                 eprintln!("Could not write new module at {}: {}", new_module_path.to_string(), e);
             }
         };
-        self.flatpak_modules.push(new_module);
+        self.modules.push(new_module);
     }
 
     pub fn update_project(&mut self, project: &SoftwareProject) {
