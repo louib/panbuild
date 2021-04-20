@@ -115,15 +115,14 @@ fn main() {
             flatpak_modules.push(module);
         }
 
-        for flatpak_module in &flatpak_modules {
+        println!("Importing {} Flatpak module.", &flatpak_modules.len());
+        for flatpak_module in flatpak_modules {
             if flatpak_module.sources.len() == 0 {
                 continue;
             }
 
-            let software_module = flatpak_module.to_module();
-            db.add_module(software_module);
+            db.add_module(flatpak_module);
         }
-        println!("Imported {} Flatpak module.", flatpak_modules.len());
 
     }
 
@@ -165,8 +164,7 @@ fn main() {
                     None => continue,
                 };
 
-                let modules = flatpak_manifest.get_modules();
-                for module in modules {
+                for module in flatpak_manifest.modules {
                     db.add_module(module);
                 }
 

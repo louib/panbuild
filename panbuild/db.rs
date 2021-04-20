@@ -147,25 +147,14 @@ impl Database {
 
     pub fn remove_module() {}
 
-    pub fn add_module(&mut self, mut new_module: SoftwareModule) {
-        let module_id = new_module.get_identifier();
-        if module_id.len() == 0 {
-            eprintln!("Tried to add module {} which does not have an identifier!", module_id);
-            return;
-        }
+    pub fn add_module(&mut self, mut new_module: FlatpakModule) {
+        let module_hash = new_module.get_hash();
         let modules_path = Database::get_modules_db_path();
-        let mut new_module_path = "".to_string();
-        if let Some(project_id) = &new_module.project_id {
-            new_module_path = format!(
-                "{}/{}-{}-{}.yaml",
-                modules_path,
-                project_id,
-                crate::utils::normalize_name(&new_module.name),
-                module_id,
-            );
-        } else {
-            new_module_path = format!("{}/{}-{}.yaml", modules_path, crate::utils::normalize_name(&new_module.name), module_id,);
-        }
+        let new_module_path = format!(
+            "{}/{}.yaml",
+            modules_path,
+            module_hash,
+        );
         log::info!("Adding module at {}", new_module_path);
         let mut new_module_fs_path = path::Path::new(&new_module_path);
         if new_module_fs_path.exists() {
@@ -178,7 +167,7 @@ impl Database {
                 eprintln!("Could not write new module at {}: {}", new_module_path.to_string(), e);
             }
         };
-        self.modules.push(new_module);
+        self.flatpak_modules.push(new_module);
     }
 
     pub fn update_project(&mut self, project: &SoftwareProject) {
