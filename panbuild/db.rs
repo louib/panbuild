@@ -3,8 +3,8 @@ use std::env;
 use std::fs;
 use std::path;
 
-use crate::projects::SoftwareProject;
 use crate::manifests::flatpak::FlatpakModule;
+use crate::projects::SoftwareProject;
 
 pub const DEFAULT_DB_PATH: &str = ".panbuild-db";
 pub const MODULES_DB_SUBDIR: &str = "/modules";
@@ -146,11 +146,7 @@ impl Database {
     pub fn add_module(&mut self, mut new_module: FlatpakModule) {
         let module_hash = new_module.get_hash();
         let modules_path = Database::get_modules_db_path();
-        let new_module_path = format!(
-            "{}/{}.yaml",
-            modules_path,
-            module_hash,
-        );
+        let new_module_path = format!("{}/{}.yaml", modules_path, module_hash,);
         log::info!("Adding module at {}", new_module_path);
         let mut new_module_fs_path = path::Path::new(&new_module_path);
         if new_module_fs_path.exists() {
